@@ -3,3 +3,5 @@
 *.a
 Builds/MacOSX/build/Debug/Wavetable5.app/Contents/MacOS/Wavetable5
 *.xcuserstate
+Builds/*
+JuceLibraryCode/*
