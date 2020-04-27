@@ -14,6 +14,7 @@
 class Wavetable
 {
 public:
+    /// Destructo!
     ~Wavetable()
     {
         delete[] sinWT;
@@ -65,6 +66,7 @@ private:
         sinOsc.setFrequency(frequency);
     }
     
+    /// populates wavetable with values for a sine wave cycle
     void populateSinWT()
     {
         sinOscSetup();
@@ -88,6 +90,7 @@ private:
             float outVal = sinWT[index];// FIX THIS     // value at wt[index] to outVal
             float denominator = 1.0f;                   // initialize denominator
             
+            // interpolate algorithm
             for (int j=-2; j<2; j++)
             {
                 if (j != i)
@@ -108,6 +111,7 @@ private:
     float frequency;
     float sampleRate;
     
+    // Playback parameters
     float readHeadPos = 0.0f;
     float increment;
     
@@ -117,3 +121,6 @@ private:
     // Instance of oscillators
     SinOsc sinOsc;
 };
+
+
+//========================================================================

@@ -49,10 +49,10 @@ public:
         // Sets sampleRates here
         sinOsc.setSampleRate(sampleRate);
         env.setSampleRate(sampleRate);
-        wtSynth.setSampleRate(sampleRate);
+        wtSineSynth.setSampleRate(sampleRate);
         
         // populates wavetables
-        wtSynth.populateWavetables();
+        wtSineSynth.populateWavetables();
         
         
         ADSR::Parameters envParams;
@@ -92,7 +92,7 @@ public:
         // Converts incoming MIDI note to frequency
         float freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         sinOsc.setFrequency(freq);
-        wtSynth.setIncrement(freq);
+        wtSineSynth.setIncrement(freq);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -156,7 +156,7 @@ public:
                 
                 // oscillator values scaled by number of oscs and envelope value
                 //float currentSample = sinOsc.process() * envVal;
-                float currentSample = wtSynth.process() * envVal;
+                float currentSample = wtSineSynth.process() * envVal;
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
@@ -209,7 +209,7 @@ private:
     ADSR env;
     
     // Wavetable Class Instance and dependencies
-    Wavetable wtSynth;
+    Wavetable wtSineSynth;
     
     SinOsc sinOsc;
     
