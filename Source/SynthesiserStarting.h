@@ -95,6 +95,7 @@ public:
         float freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         sinOsc.setFrequency(freq);
         wtSine.setIncrement(freq);
+        wtSaw.setIncrement(freq);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -158,7 +159,8 @@ public:
                 
                 // oscillator values scaled by number of oscs and envelope value
                 //float currentSample = sinOsc.process() * envVal;
-                float currentSample = wtSine.process() * envVal;
+                //float currentSample = wtSine.process() * envVal;
+                float currentSample = wtSaw.process() * envVal;
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)

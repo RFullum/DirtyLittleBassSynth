@@ -15,6 +15,13 @@
 class Wavetable
 {
 public:
+    Wavetable()
+    {
+        for (int i=0; i<waveTableSize; i++)
+        {
+            waveTable[i] = 0.0;
+        }
+    }
     /// Destructo!
     virtual ~Wavetable()
     {
@@ -34,7 +41,7 @@ public:
         populateWT();
     }
     
-    /// Main Playback of wavetable      BUST OUT INTO THREE SEPARATE for each wt?
+    /// Main Playback of wavetable
     float process()
     {
         float wtOut = lagrangeInterpolation();
@@ -133,7 +140,7 @@ private:
         {
             int index = floor(readHeadPos + (i + 1));   // index after readHeadPos in time
             index %= waveTableSize;                     // wrap index
-            float outVal = waveTable[index];// FIX THIS     // value at wt[index] to outVal
+            float outVal = waveTable[index];            // value at wt[index] to outVal
             float denominator = 1.0f;                   // initialize denominator
             
             // interpolate algorithm
@@ -173,58 +180,65 @@ public:
     }
     
 private:
-    //void oscSetup() override
-    void sawSetup()
+    /// Adds instances of SinOsc into sawHarmonics OwnedArray
+    void createHarmonics()
+    {
+        for (int i=0; i<numSawHarmonics; i++)
+        {
+            sawHarmonics.add( new SinOsc() );
+        }
+    }
+    
+    /// Sets sample rate for each SineOsc in saw harmonics
+    void setSawSampleRates()
+    {
+        for (int i=0; i<numSawHarmonics; i++)
+        {
+            sawHarmonics[i]->setSampleRate(sampleRate);
+            //std::cout << "\nsawHarmonic" << i << " " << sawHarmonics[i]->getSR();
+        }
+    }
+    
+    /// Sets frequency for each harmonic in the saw series
+    void setSawFrequencies()
     {
         float harmonicFreq;
-
-        for (int i=1; i==numSawHarmonics; i++)
+        
+        for (int i=0; i<numSawHarmonics; i++)
         {
-            sawHarmonics[i-1]->setSampleRate(sampleRate);
-            
-            if (i == 1)
+            if (i == 0)
             {
                 harmonicFreq = frequency;
             }
             else
             {
-                harmonicFreq = frequency * ( i / (i - 1) );
+                harmonicFreq = frequency * ( (i + 1) / i );
             }
             
-            sawHarmonics[i-1]->setFrequency(harmonicFreq);
+            sawHarmonics[i]->setFrequency(harmonicFreq);
         }
-        
-        /*
-        // TEMP TESTING
-        for (int i=0; i<numSawHarmonics; i++)
-        {
-            float currentFreq = sawHarmonics[i]->getFreq();
-            std::cout << "\nsawHarmonics " << currentFreq << "\n";
-        }
-        */
     }
     
+    //
+    //      CONTINUE BREAKING OUT LOOPS INTO SEPERATE FUNCTIONS
+    //
     /// Populates wavetable with values for band limited saw wave
     void populateSawWT()
     {
-        // Adds instances of SinOsc into sawHarmonics OwnedArray
-        for (int i=0; i<numSawHarmonics; i++)
-        {
-            sawHarmonics.add( new SinOsc() );
-        }
-        
-        sawSetup();
+        createHarmonics();
+        setSawSampleRates();
+        setSawFrequencies();
 
         // Process series of sine oscillators and sum into a sawtooth
         for (int i=0; i<waveTableSize; i++)
         {
-            waveTable[i] = 0.0f;
-            
             for (int j=0; j<numSawHarmonics; j++)
             {
                 float harmonicAmplitude = 1 / (j + 1);      // Amplitude of harmonic is 1/n where n is the harmonic number
                 waveTable[i] += sawHarmonics[j]->process() * harmonicAmplitude;
             }
+            
+            // std::cout << "\nwaveTable index val " << waveTable[i];
         }
         
         /*
