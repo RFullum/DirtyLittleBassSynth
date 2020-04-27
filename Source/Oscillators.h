@@ -54,6 +54,19 @@ public:
         phaseDelta = frequency / sampleRate;
     }
     
+    // TESTING
+    
+    float getFreq()
+    {
+        return frequency;
+    }
+    
+    float getSR()
+    {
+        return sampleRate;
+    }
+    
+    
 private:
     float frequency;
     float sampleRate;
