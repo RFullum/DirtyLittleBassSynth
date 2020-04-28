@@ -195,7 +195,6 @@ private:
         for (int i=0; i<numSawHarmonics; i++)
         {
             sawHarmonics[i]->setSampleRate(sampleRate);
-            //std::cout << "\nsawHarmonic" << i << " " << sawHarmonics[i]->getSR();
         }
     }
     
@@ -267,5 +266,84 @@ private:
 //Child class for spike wave (high-passed square wave)
 class SpikeWavetable : public Wavetable
 {
+public:
+    void populateWavetable() override
+    {
+        populateSpikeWT();
+    }
     
+private:
+    // Adds instances of SinOsc into spikeHarmonics OwnedArray
+    void createHarmonics()
+    {
+        for (int i=0; i<numSpikeHarmonics; i++)
+        {
+            spikeHarmonics.add( new SinOsc() );
+        }
+    }
+    
+    /// Sets sample rate for each SineOsc in saw harmonics
+    void setSpikeSampleRates()
+    {
+        for (int i=0; i<numSpikeHarmonics; i++)
+        {
+            spikeHarmonics[i]->setSampleRate(sampleRate);
+        }
+    }
+    
+    /// Sets frequency for each harmonic in the saw series
+    void setSpikeFrequencies()
+    {
+        int twiceOddHarmonics = numSpikeHarmonics * 2;
+        float* harmonicFreq = new float[twiceOddHarmonics];
+        
+        for (int i=0; i<twiceOddHarmonics; i++)
+        {
+            if (i == 0)
+            {
+                harmonicFreq[i] = frequency;
+            }
+            else
+            {
+                harmonicFreq[i] = harmonicFreq[i-1] * ( (i + 1.0f) / i );
+            }
+            
+            if (i % 2 == 0)
+            {
+                spikeHarmonics[i / 2]->setFrequency(harmonicFreq[i]);
+            }
+        }
+    }
+    
+    /// Runs process( ) function on each SinOsc and scales to the amplitude of that partial
+    void sumHarmonics()
+    {
+        for (int i=0; i<waveTableSize; i++)
+        {
+            for (int j=0; j<numSpikeHarmonics; j++)
+            {
+                float harmonicAmplitude = 1.0f / (j * 2.0f + 1.0f);    // Amplitude of harmonic is 1/n where n is the harmonic number
+                waveTable[i] += spikeHarmonics[j]-> process() * harmonicAmplitude;
+            }
+        }
+    }
+    
+    void populateSpikeWT()
+    {
+        createHarmonics();
+        setSpikeSampleRates();
+        setSpikeFrequencies();
+        sumHarmonics();
+        
+        /*
+         To Do:
+         -Highpass square wave at cutoff: frequency * 15
+         -Normalize
+         -Change both normalizations to Matthew's methods
+         */
+    }
+    
+    // Instance of oscillators
+    OwnedArray<SinOsc> spikeHarmonics;
+    int numSpikeHarmonics = 13;    // Fundamental + 12 partials -- Adjust this number to mod square timbre
 };

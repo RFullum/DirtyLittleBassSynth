@@ -51,10 +51,12 @@ public:
         env.setSampleRate(sampleRate);
         wtSine.setSampleRate(sampleRate);
         wtSaw.setSampleRate(sampleRate);
+        wtSpike.setSampleRate(sampleRate);
         
         // populates wavetables
         wtSine.populateWavetable();
         wtSaw.populateWavetable();
+        wtSpike.populateWavetable();
         
         
         ADSR::Parameters envParams;
