@@ -354,7 +354,7 @@ private:
     
     // Instance of oscillators
     OwnedArray<SinOsc> spikeHarmonics;
-    int numSpikeHarmonics = 13;    // Fundamental + 12 partials -- Adjust this number to mod square timbre
+    int numSpikeHarmonics = 57;    // Fundamental + 56 partials -- Adjust this number to mod square timbre
     
     // Highpass members
     IIRFilter highPass;
