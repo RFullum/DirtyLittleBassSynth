@@ -186,6 +186,13 @@
 			path = "Info-AU.plist";
 			sourceTree = "SOURCE_ROOT";
 		};
+		1214B929C174BC9C03EBB8C4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = OscillatorParameterControls.h;
+			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/OscillatorParameterControls.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		133908D7BCD9165C19009F88 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -631,6 +638,7 @@
 				C2664769D58CD565EFB411B4,
 				A81C60694117D0FE21456790,
 				16D54D710938ED5AFDE00722,
+				1214B929C174BC9C03EBB8C4,
 			);
 			name = Source;
 			sourceTree = "<group>";

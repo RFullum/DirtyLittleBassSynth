@@ -13,6 +13,7 @@
 #include "Oscillators.h"
 #include "Wavetable.h"
 #include "SubOscillator.h"
+#include "OscillatorParameterControls.h"
 
 // ===========================
 // ===========================
@@ -156,7 +157,10 @@ public:
             // Doing it up here does it once a block. Inside the DSP! loop
             // does it every sample. 
             //detuneOsc.setFrequency(freq - *detuneAmount);
-            std::cout << "\nOscMorph " << *oscillatorMorph;
+            float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
+            float spikeLevel = oscParamControl.spikeMorphGain(oscillatorMorph);
+            float sawLevel = oscParamControl.sawMorphGain(oscillatorMorph);
+            
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -167,10 +171,14 @@ public:
                 float envVal = env.getNextSample();
                 
                 
-                // oscillator values scaled by number of oscs and envelope value
-                //float currentSample = sinOsc.process() * envVal;
-                //float currentSample = wtSine.process() * envVal;
-                float currentSample = wtSaw.process() * envVal;
+                // wavetable values scaled by oscillatorMorph parameter
+                float sinOscSample = wtSine.process() * sineLevel;
+                float spikeOscSample = wtSpike.process() * spikeLevel;
+                float sawOscSample = wtSaw.process() * sawLevel;
+                
+                // Combine wavetables and scale by half (only two play at once) scaled by envelope
+                float currentSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f * envVal;
+                
                 //float currentSample = wtSquare.process() * envVal;
                 //float currentSample = wtSpike.process() * envVal;
                 //float currentSample = subOsc.process() * envVal;
@@ -235,5 +243,7 @@ private:
     SinOsc sinOsc;
     
     std::atomic<float>* oscillatorMorph;
+    
+    OscParamControl oscParamControl;
 
 };
