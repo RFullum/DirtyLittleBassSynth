@@ -5,6 +5,16 @@
     Created: 26 Apr 2020 2:38:54pm
     Author:  Robert Fullum
 
+ 
+ Parent Class: Wavetable
+ -Creates a sine wave wavetable
+ 
+ Children:
+ -SawWavetable
+ -SquareWavetable
+ 
+ Grandchildren:
+ -SpikeWavetable (child of SquareWavetable)
   ==============================================================================
 */
 
@@ -271,8 +281,8 @@ public:
         populateSquareWT();
     }
     
-private:
-    // Adds instances of SinOsc into squareHarmonics OwnedArray
+protected:
+    /// Adds instances of SinOsc into squareHarmonics OwnedArray
     void createHarmonics()
     {
         for (int i=0; i<numSquareHarmonics; i++)
@@ -327,6 +337,29 @@ private:
         }
     }
     
+private:
+    virtual void populateSquareWT()
+    {
+        createHarmonics();
+        setSquareSampleRates();
+        setSquareFrequencies();
+        sumHarmonics();
+        normalizeWaveTable();
+    }
+    
+    // Instance of oscillators
+    OwnedArray<SinOsc> squareHarmonics;
+    int numSquareHarmonics = 57;    // Fundamental + 56 partials -- Adjust this number to mod square timbre
+    
+};
+
+
+
+//========================================================================
+
+class SpikeWavetable : public SquareWavetable
+{
+private:
     // Highpasses wavetable
     void highPassSpike()
     {
@@ -342,20 +375,15 @@ private:
         
     }
     
-    void populateSquareWT()
+    void populateSquareWT() override
     {
         createHarmonics();
         setSquareSampleRates();
         setSquareFrequencies();
         sumHarmonics();
-        //highPassSpike();
+        highPassSpike();
         normalizeWaveTable();
     }
-    
-    // Instance of oscillators
-    OwnedArray<SinOsc> squareHarmonics;
-    int numSquareHarmonics = 57;    // Fundamental + 56 partials -- Adjust this number to mod square timbre
-    
     // Highpass members
     IIRFilter highPass;
     float cutoffFreq;

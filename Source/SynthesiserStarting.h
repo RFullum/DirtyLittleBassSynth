@@ -52,11 +52,13 @@ public:
         wtSine.setSampleRate(sampleRate);
         wtSaw.setSampleRate(sampleRate);
         wtSquare.setSampleRate(sampleRate);
+        wtSpike.setSampleRate(sampleRate);
         
         // populates wavetables
         wtSine.populateWavetable();
         wtSaw.populateWavetable();
         wtSquare.populateWavetable();
+        wtSpike.populateWavetable();
         
         
         ADSR::Parameters envParams;
@@ -99,6 +101,7 @@ public:
         wtSine.setIncrement(freq);
         wtSaw.setIncrement(freq);
         wtSquare.setIncrement(freq);
+        wtSpike.setIncrement(freq);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -126,10 +129,6 @@ public:
             playing = false;
         }
         
-        
-        // We'll come back to these later.
-        // clearCurrentNote();
-        // playing = false;
     }
     
     //--------------------------------------------------------------------------
@@ -164,7 +163,8 @@ public:
                 //float currentSample = sinOsc.process() * envVal;
                 //float currentSample = wtSine.process() * envVal;
                 //float currentSample = wtSaw.process() * envVal;
-                float currentSample = wtSquare.process() * envVal;
+                //float currentSample = wtSquare.process() * envVal;
+                float currentSample = wtSpike.process() * envVal;
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
@@ -220,6 +220,7 @@ private:
     Wavetable wtSine;
     SawWavetable wtSaw;
     SquareWavetable wtSquare;
+    SpikeWavetable wtSpike;
     
     SinOsc sinOsc;
     
