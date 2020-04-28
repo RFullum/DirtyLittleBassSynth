@@ -215,6 +215,7 @@ private:
     // Wavetable Class Instance and dependencies
     Wavetable wtSine;
     SawWavetable wtSaw;
+    SpikeWavetable wtSpike;
     
     SinOsc sinOsc;
     

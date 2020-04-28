@@ -214,7 +214,7 @@ private:
             {
                 harmonicFreq *= ( (i + 1.0f) / i );
             }
-            std::cout << "\nharmonicFreq" << i << " " << harmonicFreq;
+
             sawHarmonics[i]->setFrequency(harmonicFreq);
         }
     }
@@ -232,9 +232,20 @@ private:
         }
     }
     
-    //
-    //      CONTINUE BREAKING OUT LOOPS INTO SEPERATE FUNCTIONS
-    //
+    /// Normalizes wavetable between -1.0f and 1.0f
+    void normalizeWaveTable()
+    {
+        // Get min and max amplitudes in wavetable
+        float minAmp = findMinAmplitude(waveTable);
+        float maxAmp = findMaxAmplitude(waveTable);
+
+        // Normalize between -1.0f and 1.0f
+        for (int i=0; i<waveTableSize; i++)
+        {
+            waveTable[i] = jmap(waveTable[i], minAmp, maxAmp, -1.0f, 1.0f);
+        }
+    }
+
     /// Populates wavetable with values for band limited saw wave
     void populateSawWT()
     {
@@ -242,24 +253,19 @@ private:
         setSawSampleRates();
         setSawFrequencies();
         sumHarmonics();
-        
-        /*
-        FIX THE EXC_BAD_ADDRESS ISSUE THEN UNCOMMENT
-         
-        // Get min and max amplitudes in wavetable
-        float minAmp = findMinAmplitude(waveTable);
-        float maxAmp = findMaxAmplitude(waveTable);
-        std::cout << "\nThis is the Min Amplitude " << minAmp << "\n";
-        std::cout << "\nThis is the Max Amplitude " << maxAmp << "\n";
-        // Normalize between -1.0f and 1.0f
-        for (int i=0; i<waveTableSize; i++)
-        {
-            waveTable[i] = jmap(waveTable[i], minAmp, maxAmp, -1.0f, 1.0f);
-        }
-        */
+        normalizeWaveTable();
     }
     
     // Instance of oscillators
-    OwnedArray<SinOsc> sawHarmonics;    
+    OwnedArray<SinOsc> sawHarmonics;
     int numSawHarmonics = 57;   // Fundamental + 56 partials  -- Adjust this number to mod saw timbre
+};
+
+
+//========================================================================
+
+//Child class for spike wave (high-passed square wave)
+class SpikeWavetable : public Wavetable
+{
+    
 };
