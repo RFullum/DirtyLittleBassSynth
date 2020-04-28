@@ -102,4 +102,17 @@ public:
     {
         return sawMorphGain(subMorphVal);
     }
+    
+    /**
+     Converts parameter to denominator for octave frequency: 1, 2, or 4
+     */
+    int subOctaveSelector(std::atomic<float>* subOctVal)
+    {
+        int octave = (int)*subOctVal;
+        
+        if (octave == 3)
+            octave = 4;
+        
+        return octave;
+    }
 };

@@ -74,10 +74,12 @@ public:
         env.setParameters(envParams);
     }
     
-    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn)
+    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn, std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn)
     {
         oscillatorMorph = oscMorphIn;
         subOscMorph = subOscMorphIn;
+        subGain = subOscGainIn;
+        subOctave = subOctaveIn;
     }
     
     /*
@@ -103,6 +105,9 @@ public:
         playing = true;
         ending = false;
         
+        // Set Sub Octave
+        int incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
+        
         // Converts incoming MIDI note to frequency
         float freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         sinOsc.setFrequency(freq);
@@ -110,7 +115,7 @@ public:
         wtSaw.setIncrement(freq);
         wtSquare.setIncrement(freq);
         wtSpike.setIncrement(freq);
-        subOsc.setIncrement(freq);
+        subOsc.setIncrement(freq, incrementDenominator);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -188,8 +193,8 @@ public:
                 // Combine wavetables and scale by half (only two play at once) scaled by envelope
                 float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
                 
-                // sub wavetable values scaled by subOscillatorMorph
-                float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel);
+                // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
+                float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
                 // Combine main osc and sub values, scaled and enveloped
                 float currentSample = ( oscSample + subSample ) * 0.5f * envVal;
@@ -259,6 +264,8 @@ private:
     
     std::atomic<float>* oscillatorMorph;
     std::atomic<float>* subOscMorph;
+    std::atomic<float>* subGain;
+    std::atomic<float>* subOctave;
     
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;

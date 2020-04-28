@@ -26,7 +26,9 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
 parameters(*this, nullptr, "ParameterTree", {
     // id, description, min, max, default
     std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f)
 })
 
 // CONSTRUCTOR!
@@ -34,6 +36,8 @@ parameters(*this, nullptr, "ParameterTree", {
     // Parameter construction
     oscMorphParameter = parameters.getRawParameterValue("osc_morph");
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
+    subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
+    subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -48,7 +52,7 @@ parameters(*this, nullptr, "ParameterTree", {
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        v->setOscParamPointers(oscMorphParameter, subOscMorphParameter);
+        v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
     }
     
 }

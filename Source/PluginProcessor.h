@@ -60,6 +60,8 @@ private:
     AudioProcessorValueTreeState parameters;
     std::atomic<float>* oscMorphParameter;
     std::atomic<float>* subOscMorphParameter;
+    std::atomic<float>* subGainParameter;
+    std::atomic<float>* subOctaveParameter;
     
     // Instance of SynthesiZer class
     Synthesiser synth;

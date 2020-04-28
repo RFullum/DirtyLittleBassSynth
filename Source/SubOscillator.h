@@ -10,6 +10,7 @@
 
 #pragma once
 #include "Wavetable.h"
+#include "OscillatorParameterControls.h"
 
 class SubOsc
 {
@@ -37,9 +38,9 @@ public:
      When the value is 3 it needs to be 4 to get proper denominator
      */
     /// Sets playback frequency of sub oscillator scaled 0 to 2 octaves below
-    void setIncrement(float noteFreq)
+    void setIncrement(float noteFreq, int denom)
     {
-        float subFreq = noteFreq / (float)subDenominator;
+        float subFreq = noteFreq / (float)denom;
         
         sinSub.setIncrement(subFreq);
         squareSub.setIncrement(subFreq);
@@ -64,5 +65,5 @@ private:
     SawWavetable sawSub;
     
     // Member varibles
-    int subDenominator = 2; // Octave selector: Make adjustable parameter 1, 2, or 3... (3 = 4)
+    //int subDenominator = 1; // Octave selector: Make adjustable parameter 1, 2, or 3... (3 = 4)
 };
