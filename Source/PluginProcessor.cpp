@@ -21,9 +21,18 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
 #endif
+parameters(*this, nullptr, "ParameterTree", {
+    // id, description, min, max, default
+    std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f)
+})
+
+// CONSTRUCTOR!
 {
+    // Parameter construction
+    oscMorphParameter = parameters.getRawParameterValue("osc_morph");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -33,6 +42,12 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
     // Add sound for synth class
     synth.addSound( new MySynthSound() );
     
+    // Set Parameter Pointers for each voice
+    for (int i=0; i<voiceCount; i++)
+    {
+        MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
+        v->setOscParamPointers(oscMorphParameter);
+    }
     
 }
 
@@ -147,7 +162,7 @@ bool Wavetable5AudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 void Wavetable5AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-    
+        
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
@@ -159,7 +174,7 @@ bool Wavetable5AudioProcessor::hasEditor() const
 
 AudioProcessorEditor* Wavetable5AudioProcessor::createEditor()
 {
-    return new Wavetable5AudioProcessorEditor (*this);
+    return new GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================

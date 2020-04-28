@@ -71,8 +71,11 @@ public:
         envParams.release = 0.25f;  // time
         
         env.setParameters(envParams);
-        
-        
+    }
+    
+    void setOscParamPointers(std::atomic<float>* oscMorphIn)
+    {
+        oscillatorMorph = oscMorphIn;
     }
     
     /*
@@ -153,7 +156,7 @@ public:
             // Doing it up here does it once a block. Inside the DSP! loop
             // does it every sample. 
             //detuneOsc.setFrequency(freq - *detuneAmount);
-            
+            std::cout << "\nOscMorph " << *oscillatorMorph;
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -163,13 +166,14 @@ public:
                 // Gets value of next sample in envelope. Use to scale volume
                 float envVal = env.getNextSample();
                 
+                
                 // oscillator values scaled by number of oscs and envelope value
                 //float currentSample = sinOsc.process() * envVal;
                 //float currentSample = wtSine.process() * envVal;
-                //float currentSample = wtSaw.process() * envVal;
+                float currentSample = wtSaw.process() * envVal;
                 //float currentSample = wtSquare.process() * envVal;
                 //float currentSample = wtSpike.process() * envVal;
-                float currentSample = subOsc.process() * envVal;
+                //float currentSample = subOsc.process() * envVal;
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
@@ -230,5 +234,6 @@ private:
     
     SinOsc sinOsc;
     
+    std::atomic<float>* oscillatorMorph;
 
 };

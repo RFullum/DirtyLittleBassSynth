@@ -57,8 +57,13 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    AudioProcessorValueTreeState parameters;
+    std::atomic<float>* oscMorphParameter;
+    
+    // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;
+    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Wavetable5AudioProcessor)
