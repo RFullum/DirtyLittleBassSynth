@@ -62,6 +62,7 @@ private:
     std::atomic<float>* subOscMorphParameter;
     std::atomic<float>* subGainParameter;
     std::atomic<float>* subOctaveParameter;
+    std::atomic<float>* foldbackDistParameter;
     
     // Instance of SynthesiZer class
     Synthesiser synth;

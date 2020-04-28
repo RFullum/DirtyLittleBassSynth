@@ -82,6 +82,11 @@ public:
         subOctave = subOctaveIn;
     }
     
+    void setDistParamPointers(std::atomic<float>* foldDistIn)
+    {
+        foldbackDistortion = foldDistIn;
+    }
+    
     /*
     void setParameterPointers(std::atomic<float>* detuneIn)
     {
@@ -193,11 +198,14 @@ public:
                 // Combine wavetables and scale by half (only two play at once) scaled by envelope
                 float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
                 
+                // Apply foldback distortion to main oscillator
+                float oscDistSample = std::sin(oscSample * *foldbackDistortion);
+                
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
                 // Combine main osc and sub values, scaled and enveloped
-                float currentSample = ( oscSample + subSample ) * 0.5f * envVal;
+                float currentSample = (oscDistSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
                 //float currentSample = wtSquare.process() * envVal;
                 //float currentSample = wtSpike.process() * envVal;
@@ -248,7 +256,6 @@ private:
     bool ending = false;
     
     float freq;
-
     
     /// ADSR envelope instance
     ADSR env;
@@ -266,6 +273,7 @@ private:
     std::atomic<float>* subOscMorph;
     std::atomic<float>* subGain;
     std::atomic<float>* subOctave;
+    std::atomic<float>* foldbackDistortion;
     
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
