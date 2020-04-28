@@ -212,10 +212,23 @@ private:
             }
             else
             {
-                harmonicFreq = frequency * ( (i + 1) / i );
+                harmonicFreq *= ( (i + 1.0f) / i );
             }
-            
+            std::cout << "\nharmonicFreq" << i << " " << harmonicFreq;
             sawHarmonics[i]->setFrequency(harmonicFreq);
+        }
+    }
+    
+    /// Runs process( ) function on each SinOsc and scales to the amplitude of that partial
+    void sumHarmonics()
+    {
+        for (int i=0; i<waveTableSize; i++)
+        {
+            for (int j=0; j<numSawHarmonics; j++)
+            {
+                float harmonicAmplitude = 1.0f / (j + 1.0f);    // Amplitude of harmonic is 1/n where n is the harmonic number
+                waveTable[i] += sawHarmonics[j]-> process() * harmonicAmplitude;
+            }
         }
     }
     
@@ -228,18 +241,7 @@ private:
         createHarmonics();
         setSawSampleRates();
         setSawFrequencies();
-
-        // Process series of sine oscillators and sum into a sawtooth
-        for (int i=0; i<waveTableSize; i++)
-        {
-            for (int j=0; j<numSawHarmonics; j++)
-            {
-                float harmonicAmplitude = 1 / (j + 1);      // Amplitude of harmonic is 1/n where n is the harmonic number
-                waveTable[i] += sawHarmonics[j]->process() * harmonicAmplitude;
-            }
-            
-            // std::cout << "\nwaveTable index val " << waveTable[i];
-        }
+        sumHarmonics();
         
         /*
         FIX THE EXC_BAD_ADDRESS ISSUE THEN UNCOMMENT
@@ -258,6 +260,6 @@ private:
     }
     
     // Instance of oscillators
-    OwnedArray<SinOsc> sawHarmonics;
-    int numSawHarmonics = 13;   // Fundamental + 12 partials
+    OwnedArray<SinOsc> sawHarmonics;    
+    int numSawHarmonics = 57;   // Fundamental + 56 partials  -- Adjust this number to mod saw timbre
 };
