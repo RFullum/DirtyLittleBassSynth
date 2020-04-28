@@ -94,7 +94,16 @@ protected:
         return currentMin;
     }
     */
-    
+    /// Normalizes wavetable between -1.0f and 1.0f
+    void normalizeWaveTable()
+    {
+        float maxAmp = findMaxAmplitude(waveTable);
+        
+        for (int i=0; i<waveTableSize; i++)
+        {
+            waveTable[i] /= maxAmp;
+        }
+    }
     
     // Wavetable Parameters
     int waveTableSize = 1024;
@@ -234,16 +243,6 @@ private:
         }
     }
     
-    /// Normalizes wavetable between -1.0f and 1.0f
-    void normalizeWaveTable()
-    {
-        float maxAmp = findMaxAmplitude(waveTable);
-        
-        for (int i=0; i<waveTableSize; i++)
-        {
-            waveTable[i] /= maxAmp;
-        }
-    }
 
     /// Populates wavetable with values for band limited saw wave
     void populateSawWT()
@@ -350,12 +349,7 @@ private:
         setSpikeFrequencies();
         sumHarmonics();
         highPassSpike();
-        
-        /*
-         To Do:
-         -Normalize
-         -Change both normalizations to Matthew's methods
-         */
+        normalizeWaveTable();
     }
     
     // Instance of oscillators
