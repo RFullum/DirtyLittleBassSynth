@@ -328,16 +328,31 @@ private:
         }
     }
     
+    // Highpasses wavetable
+    void highPassSpike()
+    {
+        cutoffFreq = frequency * 15.0f;
+        
+        highPass.reset();
+        highPass.setCoefficients( IIRCoefficients::makeHighPass(sampleRate, cutoffFreq) );
+        
+        for (int i=0; i<waveTableSize; i++)
+        {
+            waveTable[i] = highPass.processSingleSampleRaw(waveTable[i]);
+        }
+        
+    }
+    
     void populateSpikeWT()
     {
         createHarmonics();
         setSpikeSampleRates();
         setSpikeFrequencies();
         sumHarmonics();
+        highPassSpike();
         
         /*
-         To Do:
-         -Highpass square wave at cutoff: frequency * 15
+         To Do: 
          -Normalize
          -Change both normalizations to Matthew's methods
          */
@@ -346,4 +361,8 @@ private:
     // Instance of oscillators
     OwnedArray<SinOsc> spikeHarmonics;
     int numSpikeHarmonics = 13;    // Fundamental + 12 partials -- Adjust this number to mod square timbre
+    
+    // Highpass members
+    IIRFilter highPass;
+    float cutoffFreq;
 };
