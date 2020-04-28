@@ -200,6 +200,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_AU.r";
 			sourceTree = "SOURCE_ROOT";
 		};
+		16D54D710938ED5AFDE00722 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SubOscillator.h;
+			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SubOscillator.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		1D3B54642C9EF0DBDE4F9E01 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -291,13 +298,6 @@
 			path = "../../JuceLibraryCode/include_juce_opengl.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
-		4CEC5EEF60576430AEF4622F = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.objcpp;
-			name = "include_juce_data_structures.mm";
-			path = "../../JuceLibraryCode/include_juce_data_structures.mm";
-			sourceTree = "SOURCE_ROOT";
-		};
 		4E019B5DA2D9A94FCEDB7995 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -339,6 +339,13 @@
 			name = CoreAudio.framework;
 			path = System/Library/Frameworks/CoreAudio.framework;
 			sourceTree = SDKROOT;
+		};
+		4CEC5EEF60576430AEF4622F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.objcpp;
+			name = "include_juce_data_structures.mm";
+			path = "../../JuceLibraryCode/include_juce_data_structures.mm";
+			sourceTree = "SOURCE_ROOT";
 		};
 		4FAF6D1835E104B7A8CB8538 = {
 			isa = PBXFileReference;
@@ -623,6 +630,7 @@
 				32E22E7568C954772F5A1AEE,
 				C2664769D58CD565EFB411B4,
 				A81C60694117D0FE21456790,
+				16D54D710938ED5AFDE00722,
 			);
 			name = Source;
 			sourceTree = "<group>";

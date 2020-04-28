@@ -15,6 +15,7 @@
       <FILE id="x5Acfg" name="SynthesiserStarting.h" compile="0" resource="0"
             file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SynthesiserStarting.h"/>
       <FILE id="nR7Dzb" name="Wavetable.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/Wavetable.h"/>
+      <FILE id="SDO0Fv" name="SubOscillator.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SubOscillator.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
