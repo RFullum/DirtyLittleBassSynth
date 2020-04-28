@@ -68,15 +68,16 @@ protected:
         
         for (int i=0; i<waveTableSize; i++)
         {
-            if (wt[i] > currentMax)
+            if ( fabsf(wt[i]) > currentMax )
             {
-                currentMax = wt[i];
+                currentMax = fabsf(wt[i]);
             }
         }
         
         return currentMax;
     }
     
+    /*      UNUSED???
     /// Finds minimum amplitude in wavetable argument
     float findMinAmplitude(float* wt)
     {
@@ -92,6 +93,8 @@ protected:
         
         return currentMin;
     }
+    */
+    
     
     // Wavetable Parameters
     int waveTableSize = 1024;
@@ -234,14 +237,11 @@ private:
     /// Normalizes wavetable between -1.0f and 1.0f
     void normalizeWaveTable()
     {
-        // Get min and max amplitudes in wavetable
-        float minAmp = findMinAmplitude(waveTable);
         float maxAmp = findMaxAmplitude(waveTable);
-
-        // Normalize between -1.0f and 1.0f
+        
         for (int i=0; i<waveTableSize; i++)
         {
-            waveTable[i] = jmap(waveTable[i], minAmp, maxAmp, -1.0f, 1.0f);
+            waveTable[i] /= maxAmp;
         }
     }
 
@@ -352,7 +352,7 @@ private:
         highPassSpike();
         
         /*
-         To Do: 
+         To Do:
          -Normalize
          -Change both normalizations to Matthew's methods
          */
