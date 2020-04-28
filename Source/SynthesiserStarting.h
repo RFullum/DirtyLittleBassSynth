@@ -74,9 +74,10 @@ public:
         env.setParameters(envParams);
     }
     
-    void setOscParamPointers(std::atomic<float>* oscMorphIn)
+    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn)
     {
         oscillatorMorph = oscMorphIn;
+        subOscMorph = subOscMorphIn;
     }
     
     /*
@@ -156,10 +157,18 @@ public:
             // allows params to adjust detune amount while playing
             // Doing it up here does it once a block. Inside the DSP! loop
             // does it every sample. 
+            
             //detuneOsc.setFrequency(freq - *detuneAmount);
+            
+            // Main Oscillator Wavetable Morph Values
             float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
             float spikeLevel = oscParamControl.spikeMorphGain(oscillatorMorph);
             float sawLevel = oscParamControl.sawMorphGain(oscillatorMorph);
+            
+            // Sub Oscillator Wavetable Morph Values
+            float sinSubLevel = subOscParamControl.sinSubGain(subOscMorph);
+            float squareSubLevel = subOscParamControl.squareSubGain(subOscMorph);
+            float sawSubLevel = subOscParamControl.sawSubGain(subOscMorph);
             
             
             // DSP!
@@ -171,13 +180,19 @@ public:
                 float envVal = env.getNextSample();
                 
                 
-                // wavetable values scaled by oscillatorMorph parameter
+                // osc wavetable values scaled by oscillatorMorph parameter
                 float sinOscSample = wtSine.process() * sineLevel;
                 float spikeOscSample = wtSpike.process() * spikeLevel;
                 float sawOscSample = wtSaw.process() * sawLevel;
                 
                 // Combine wavetables and scale by half (only two play at once) scaled by envelope
-                float currentSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f * envVal;
+                float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
+                
+                // sub wavetable values scaled by subOscillatorMorph
+                float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel);
+                
+                // Combine main osc and sub values, scaled and enveloped
+                float currentSample = ( oscSample + subSample ) * 0.5f * envVal;
                 
                 //float currentSample = wtSquare.process() * envVal;
                 //float currentSample = wtSpike.process() * envVal;
@@ -243,7 +258,9 @@ private:
     SinOsc sinOsc;
     
     std::atomic<float>* oscillatorMorph;
+    std::atomic<float>* subOscMorph;
     
     OscParamControl oscParamControl;
+    SubOscParamControl subOscParamControl;
 
 };

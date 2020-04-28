@@ -40,6 +40,10 @@ public:
         return outVal;
     }
     
+    /**
+     Takes the oscillatorMorph value and converts to sawWT gain level
+     0 = 0; 1 = 0; 2 = 1
+     */
     float sawMorphGain(std::atomic<float>* oscMorphVal)
     {
         float controlVal = 2.0f;
@@ -52,6 +56,10 @@ public:
     }
     
 private:
+    /**
+     Maps parameter value to gain value
+     0 to 2 :: 0 to 1
+     */
     float levelFormula(std::atomic<float>* MV, float CV)
     {
         float outVal = 1.0f - fabsf(*MV - CV);
@@ -59,4 +67,39 @@ private:
         return outVal;
     }
     
+};
+
+
+
+//=================================================================
+
+class SubOscParamControl : public OscParamControl
+{
+public:
+    /**
+    Takes the subOscMorph value and converts to sinSub's gain level:
+    0 = 1; 1 = 0; 2 = 0
+    */
+    float sinSubGain(std::atomic<float>* subMorphVal)
+    {
+        return sinMorphGain(subMorphVal);
+    }
+    
+    /**
+    Takes the subOscMorph value and converts to squareSub gain level:
+    0 = 0; 1 = 1; 2 = 0
+    */
+    float squareSubGain(std::atomic<float>* subMorphVal)
+    {
+        return spikeMorphGain(subMorphVal);
+    }
+    
+    /**
+    Takes the subOscMorph value and converts to sawSub gain level
+    0 = 0; 1 = 0; 2 = 1
+    */
+    float sawSubGain(std::atomic<float>* subMorphVal)
+    {
+        return sawMorphGain(subMorphVal);
+    }
 };

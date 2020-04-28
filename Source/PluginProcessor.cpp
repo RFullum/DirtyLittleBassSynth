@@ -25,13 +25,15 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
 #endif
 parameters(*this, nullptr, "ParameterTree", {
     // id, description, min, max, default
-    std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
 {
     // Parameter construction
     oscMorphParameter = parameters.getRawParameterValue("osc_morph");
+    subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -46,7 +48,7 @@ parameters(*this, nullptr, "ParameterTree", {
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        v->setOscParamPointers(oscMorphParameter);
+        v->setOscParamPointers(oscMorphParameter, subOscMorphParameter);
     }
     
 }
