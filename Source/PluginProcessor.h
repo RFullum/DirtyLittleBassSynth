@@ -72,6 +72,9 @@ private:
     // DryWet parameters
     // std::atomic<float>* dryWetMixParameter;
     
+    // RingMod parameters
+    std::atomic<float>* ringModPitchParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

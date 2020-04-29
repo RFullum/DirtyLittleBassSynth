@@ -15,6 +15,7 @@
 #include "SubOscillator.h"
 #include "OscillatorParameterControls.h"
 #include "DryWet.h"
+#include "RingModulator.h"
 
 // ===========================
 // ===========================
@@ -88,6 +89,11 @@ public:
         foldbackDistortion = foldDistIn;
     }
     
+    void setRingModParamPointers(std::atomic<float>* ringPitch)
+    {
+        ringModPitch = ringPitch;
+    }
+    
     /*
     void setParameterPointers(std::atomic<float>* detuneIn)
     {
@@ -116,12 +122,19 @@ public:
         
         // Converts incoming MIDI note to frequency
         float freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+        
+        // TEST
         sinOsc.setFrequency(freq);
+        
+        // Main Oscillators
         wtSine.setIncrement(freq);
         wtSaw.setIncrement(freq);
         wtSquare.setIncrement(freq);
         wtSpike.setIncrement(freq);
         subOsc.setIncrement(freq, incrementDenominator);
+        
+        // Ring Mod
+        ringMod.modFreq(freq, ringModPitch);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -278,7 +291,14 @@ private:
     std::atomic<float>* subOctave;
     std::atomic<float>* foldbackDistortion;
     
+    // Oscillator Parameter Controls
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
+    
+    // Ring Mod Instance
+    RingMod ringMod;
+    
+    // Ring Mod Parameters
+    std::atomic<float>* ringModPitch;
 
 };

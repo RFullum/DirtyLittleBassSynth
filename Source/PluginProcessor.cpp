@@ -29,17 +29,23 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
-    std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion", 1.0f, 200.0f, 1.0f)
+    std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion", 1.0f, 200.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch", 0.25f, 4.0f, 1.0f)
 })
 
 // CONSTRUCTOR!
 {
-    // Parameter construction
+    // Osc Parameter construction
     oscMorphParameter = parameters.getRawParameterValue("osc_morph");
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
+    
+    // Foldback Parameter construction
     foldbackDistParameter = parameters.getRawParameterValue("foldback_dist");
+    
+    // RingMod Parameter Construction
+    ringModPitchParameter = parameters.getRawParameterValue("ring_mod_pitch");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -56,6 +62,7 @@ parameters(*this, nullptr, "ParameterTree", {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
         v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->setDistParamPointers(foldbackDistParameter);
+        v->setRingModParamPointers(ringModPitchParameter);
     }
     
 }

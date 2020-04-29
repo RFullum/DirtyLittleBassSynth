@@ -571,6 +571,13 @@
 			path = "~/JUCE/modules/juce_audio_basics";
 			sourceTree = "<absolute>";
 		};
+		D9D177E8EE4DE30FF81C0135 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = RingModulator.h;
+			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/RingModulator.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		DDE20B356E5850FC0446EF96 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -647,6 +654,7 @@
 				16D54D710938ED5AFDE00722,
 				1214B929C174BC9C03EBB8C4,
 				E5AB3DB959CDFF6E43B17671,
+				D9D177E8EE4DE30FF81C0135,
 			);
 			name = Source;
 			sourceTree = "<group>";
