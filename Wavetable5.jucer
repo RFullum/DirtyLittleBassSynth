@@ -18,6 +18,7 @@
       <FILE id="SDO0Fv" name="SubOscillator.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SubOscillator.h"/>
       <FILE id="OliiBS" name="OscillatorParameterControls.h" compile="0"
             resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/OscillatorParameterControls.h"/>
+      <FILE id="ROV2bu" name="DryWet.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/DryWet.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

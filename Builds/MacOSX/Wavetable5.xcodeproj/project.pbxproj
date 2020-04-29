@@ -599,6 +599,13 @@
 			path = System/Library/Frameworks/WebKit.framework;
 			sourceTree = SDKROOT;
 		};
+		E5AB3DB959CDFF6E43B17671 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DryWet.h;
+			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/DryWet.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		E7EBBEC31562D0411E6761B6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -639,6 +646,7 @@
 				A81C60694117D0FE21456790,
 				16D54D710938ED5AFDE00722,
 				1214B929C174BC9C03EBB8C4,
+				E5AB3DB959CDFF6E43B17671,
 			);
 			name = Source;
 			sourceTree = "<group>";

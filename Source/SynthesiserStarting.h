@@ -14,6 +14,7 @@
 #include "Wavetable.h"
 #include "SubOscillator.h"
 #include "OscillatorParameterControls.h"
+#include "DryWet.h"
 
 // ===========================
 // ===========================
@@ -267,8 +268,10 @@ private:
     SpikeWavetable wtSpike;
     SubOsc subOsc;
     
+    // TESTING
     SinOsc sinOsc;
     
+    // Oscillator parameter members
     std::atomic<float>* oscillatorMorph;
     std::atomic<float>* subOscMorph;
     std::atomic<float>* subGain;

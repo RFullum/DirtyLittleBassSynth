@@ -57,12 +57,20 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    // Parameter members
     AudioProcessorValueTreeState parameters;
+    
+    // Oscillator parameter members
     std::atomic<float>* oscMorphParameter;
     std::atomic<float>* subOscMorphParameter;
     std::atomic<float>* subGainParameter;
     std::atomic<float>* subOctaveParameter;
+    
+    // Foldback distortion parameters
     std::atomic<float>* foldbackDistParameter;
+    
+    // DryWet parameters
+    // std::atomic<float>* dryWetMixParameter;
     
     // Instance of SynthesiZer class
     Synthesiser synth;
