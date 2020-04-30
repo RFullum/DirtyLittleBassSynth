@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Wavetable.h"
+#include "DryWet.h"
 
 class RingMod
 {
@@ -26,18 +27,24 @@ public:
     void modFreq(float fqncy, std::atomic<float>* offset)
     {
         float modFreq = fqncy * *offset;
-        
+
         wtSine.setIncrement(modFreq);
         wtSquare.setIncrement(modFreq);
     }
     
-    //
-    //  NEEDS DRY/WET (TONE KNOB) ON THE SINE/SQUARE
-    //
-    /// Process wavetable
-    float process()
+    void setRingToneSlider(std::atomic<float>* toneSlider)
     {
-        return wtSine.process();
+        ringToneSlider = toneSlider;
+    }
+    
+    /// Process wavetable: toneSlider controls amount of Sin/Square wave
+    float process() //(std::atomic<float>* toneSlider)
+    {
+        float sinVal = wtSine.process();
+        float sqVal = wtSquare.process();
+        float outVal = toneControl.dryWetMix(sinVal, sqVal, ringToneSlider);
+        
+        return outVal;
     }
     
 private:
@@ -56,6 +63,10 @@ private:
     Wavetable wtSine;
     SquareWavetable wtSquare;
     
+    // DryWet instance
+    DryWet toneControl;
+    
     // Member Variables
     float sampleRate;
+    std::atomic<float>* ringToneSlider;
 };

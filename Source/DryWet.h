@@ -18,7 +18,7 @@ public:
         drySample = dryIn;
         wetSample = wetIn;
         mixFactor = *mixVal;
-        
+
         return dryWetCalculation();
     }
     

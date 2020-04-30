@@ -58,6 +58,7 @@ public:
         wtSquare.setSampleRate(sampleRate);
         wtSpike.setSampleRate(sampleRate);
         subOsc.setSampleRate(sampleRate);
+        ringMod.setSampleRate(sampleRate);
         
         // populates wavetables
         wtSine.populateWavetable();
@@ -89,9 +90,11 @@ public:
         foldbackDistortion = foldDistIn;
     }
     
-    void setRingModParamPointers(std::atomic<float>* ringPitch)
+    void setRingModParamPointers(std::atomic<float>* ringPitch, std::atomic<float>* ringTone, std::atomic<float>* mix)
     {
         ringModPitch = ringPitch;
+        ringModTone = ringTone;
+        ringMix = mix;
     }
     
     /*
@@ -121,7 +124,7 @@ public:
         int incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
         
         // Converts incoming MIDI note to frequency
-        float freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+        freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         
         // TEST
         sinOsc.setFrequency(freq);
@@ -134,7 +137,7 @@ public:
         subOsc.setIncrement(freq, incrementDenominator);
         
         // Ring Mod
-        ringMod.modFreq(freq, ringModPitch);
+        //ringMod.modFreq(freq, ringModPitch);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -194,6 +197,10 @@ public:
             float squareSubLevel = subOscParamControl.squareSubGain(subOscMorph);
             float sawSubLevel = subOscParamControl.sawSubGain(subOscMorph);
             
+            // Ring Mod
+            ringMod.modFreq(freq, ringModPitch);
+            ringMod.setRingToneSlider(ringModTone);
+            
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -215,11 +222,17 @@ public:
                 // Apply foldback distortion to main oscillator
                 float oscDistSample = std::sin(oscSample * *foldbackDistortion);
                 
+                // Ring Modulation
+                float ringModSample = oscDistSample * ringMod.process();
+                
+                // Modulation Mix Samples
+                float oscRingSample = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMix);
+                
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
                 // Combine main osc and sub values, scaled and enveloped
-                float currentSample = (oscDistSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
+                float currentSample = (oscRingSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
                 //float currentSample = wtSquare.process() * envVal;
                 //float currentSample = wtSpike.process() * envVal;
@@ -297,8 +310,11 @@ private:
     
     // Ring Mod Instance
     RingMod ringMod;
+    DryWet ringModMix;
     
     // Ring Mod Parameters
     std::atomic<float>* ringModPitch;
+    std::atomic<float>* ringModTone;
+    std::atomic<float>* ringMix;
 
 };

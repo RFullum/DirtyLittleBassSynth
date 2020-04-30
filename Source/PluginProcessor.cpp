@@ -25,12 +25,19 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
 #endif
 parameters(*this, nullptr, "ParameterTree", {
     // id, description, min, max, default
+    // Main Osc Params
     std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
+    
+    // Foldback Distortion Params
     std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion", 1.0f, 200.0f, 1.0f),
-    std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch", 0.25f, 4.0f, 1.0f)
+    
+    // Ring Modulator Params
+    std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch", 0.25f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("ring_tone", "Ring Mod Tone", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("ring_mod_mix", "Ring Mod Mix", 0.0f, 1.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -46,6 +53,8 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // RingMod Parameter Construction
     ringModPitchParameter = parameters.getRawParameterValue("ring_mod_pitch");
+    ringToneParameter = parameters.getRawParameterValue("ring_tone");
+    ringModMixParameter = parameters.getRawParameterValue("ring_mod_mix");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -62,7 +71,7 @@ parameters(*this, nullptr, "ParameterTree", {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
         v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->setDistParamPointers(foldbackDistParameter);
-        v->setRingModParamPointers(ringModPitchParameter);
+        v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
     }
     
 }

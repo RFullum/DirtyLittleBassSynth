@@ -74,6 +74,8 @@ private:
     
     // RingMod parameters
     std::atomic<float>* ringModPitchParameter;
+    std::atomic<float>* ringToneParameter;
+    std::atomic<float>* ringModMixParameter;
     
     // Instance of SynthesiZer class
     Synthesiser synth;
