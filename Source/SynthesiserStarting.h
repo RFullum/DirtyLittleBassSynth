@@ -50,14 +50,21 @@ public:
     
     void init(float sampleRate)
     {
+        //
         // Sets sampleRates here
+        //
+        
+        // Main and Sub Osc
         env.setSampleRate(sampleRate);
         wtSine.setSampleRate(sampleRate);
         wtSaw.setSampleRate(sampleRate);
         wtSpike.setSampleRate(sampleRate);
         subOsc.setSampleRate(sampleRate);
+        
+        // Modifiers
         ringMod.setSampleRate(sampleRate);
         freqShift.setSampleRate(sampleRate);
+        sAndH.setSampleRate(sampleRate);
         
         // populates wavetables
         wtSine.populateWavetable();
@@ -99,6 +106,12 @@ public:
     {
         freqShiftPitch = shiftPitch;
         freqShiftMixVal = mix;
+    }
+    
+    void setSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
+    {
+        sAndHPitch = pitch;
+        sAndHMixVal = mix;
     }
     
     /*
@@ -204,6 +217,8 @@ public:
             freqShift.oscMorph(oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
             freqShift.modFreq(freq, freqShiftPitch);
             
+            // Sample and Hold
+            sAndH.modFreq(freq, sAndHPitch);
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -240,11 +255,18 @@ public:
                 float freqShiftSample = freqShift.process();   //  + oscRingSample; ???
                 float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixVal);
                 
+                float sAndHSample = sAndH.processSH(oscShiftSample);
+                float oscSandHSample = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixVal);
+                
+                //
+                // Sub Osc
+                //
+                
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
                 // Combine main osc and sub values, scaled and enveloped
-                float currentSample = (oscShiftSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
+                float currentSample = (oscSandHSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
                 
                 // for each channel, write the currentSample float to the output
@@ -313,7 +335,7 @@ private:
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
     
-    // Ring Mod Instance
+    // Ring Mod Instances
     RingMod ringMod;
     DryWet ringModMix;
     
@@ -322,13 +344,21 @@ private:
     std::atomic<float>* ringModTone;
     std::atomic<float>* ringMix;
     
-    // Frequency Shifter oscillators
+    // Frequency Shifter Instances
     FrequencyShifter freqShift;
     DryWet freqShiftMix;
     
     // Frequency Shifter Parameters
     std::atomic<float>* freqShiftPitch;
     std::atomic<float>* freqShiftMixVal;
+    
+    // Sample and Hold Instances
+    SampleAndHold sAndH;
+    DryWet sAndHMix;
+    
+    // Sample and Hold Parameters
+    std::atomic<float>* sAndHPitch;
+    std::atomic<float>* sAndHMixVal;
     
 
 };

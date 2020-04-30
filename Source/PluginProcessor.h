@@ -81,6 +81,10 @@ private:
     std::atomic<float>* freqShiftPitchParameter;
     std::atomic<float>* freqShiftMixParameter;
     
+    // Sample and Hold parameters
+    std::atomic<float>* sAndHPitchParameter;
+    std::atomic<float>* sAndHMixParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

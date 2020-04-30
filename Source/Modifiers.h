@@ -115,6 +115,7 @@ public:
         setFreqShiftIncrement();
     }
     
+    /// Follows main oscillator morph to morph between Sine/Spike/Saw wavetables
     void oscMorph(std::atomic<float>* morph)
     {
         sineLevel = oscParamControl.sinMorphGain(morph);
@@ -122,6 +123,7 @@ public:
         sawLevel = oscParamControl.sawMorphGain(morph);
     }
     
+    /// Does the frequency shifting and returns the sample value
     float process() override
     {
         return freqShiftProcess();
@@ -148,6 +150,7 @@ private:
         wtSpike.setIncrement(modFrequency);
     }
     
+    /// Does the frequency shifting and returns the sample value
     float freqShiftProcess()
     {
         float sinVal = wtSine.process() * sineLevel;
@@ -169,4 +172,73 @@ private:
     float sineLevel;
     float spikeLevel;
     float sawLevel;
+};
+
+
+//============================================================
+
+class SampleAndHold : public RingMod
+{
+public:
+    /// Sets sampleRate for member wavetables and populates them
+    void setSampleRate(float SR) override
+    {
+        sampleRate = SR;
+        setSampHoldWavetables();
+    }
+    
+    /// sets playback frequency
+    void modFreq(float fqncy, std::atomic<float>* offset) override
+    {
+        modFrequency = fqncy * *offset;
+        setSampHoldIncrement();
+    }
+    
+    /**
+     Takes in current oscillator sample value and processes through S&H
+     */
+    float processSH(float oscSampleValIn)
+    {
+        oscSampleVal = oscSampleValIn;
+        return sampleHoldProcess();
+    }
+    
+private:
+    /// Sets sampleRate for member wavetables and populates them
+    void setSampHoldWavetables()
+    {
+        wtSampHold.setSampleRate(sampleRate);
+        wtSampHold.populateWavetable();
+    }
+    
+    /// sets playback frequency
+    void setSampHoldIncrement()
+    {
+        wtSampHold.setIncrement(modFrequency);
+    }
+    
+    float sampleHoldProcess()
+    {
+        float outVal;
+        float sampHoldVal = wtSampHold.process();
+        
+        if (sampHoldVal >= 0.0f)
+        {
+            outVal = oscSampleVal;
+            holdSampleVal = outVal;
+        }
+        else
+        {
+            outVal = holdSampleVal;
+        }
+            
+        return outVal;
+    }
+    
+    // Wavetable instances
+    SquareWavetable wtSampHold;
+    
+    // Member Variables
+    float oscSampleVal;
+    float holdSampleVal= 0.0f;
 };

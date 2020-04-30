@@ -41,7 +41,11 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // Frequency Shifter Params
     std::make_unique<AudioParameterFloat>("freq_shift_pitch", "Freq Shift Pitch", 0.25f, 4.0f, 1.0f),
-    std::make_unique<AudioParameterFloat>("freq_shift_mix", "Freq Shift Mix", 0.0f, 1.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("freq_shift_mix", "Freq Shift Mix", 0.0f, 1.0f, 0.0f),
+    
+    // Sample and Hold Params
+    std::make_unique<AudioParameterFloat>("sandh_pitch", "S&H Pitch", 1.0f, 128.0f, 128.0f),
+    std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix", 0.0f, 1.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -64,6 +68,10 @@ parameters(*this, nullptr, "ParameterTree", {
     freqShiftPitchParameter = parameters.getRawParameterValue("freq_shift_pitch");
     freqShiftMixParameter = parameters.getRawParameterValue("freq_shift_mix");
     
+    // S&H Parameter Construction
+    sAndHPitchParameter = parameters.getRawParameterValue("sandh_pitch");
+    sAndHMixParameter = parameters.getRawParameterValue("sandh_mix");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -81,6 +89,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setDistParamPointers(foldbackDistParameter);
         v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
         v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
+        v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
     }
     
 }
