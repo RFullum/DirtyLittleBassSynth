@@ -51,11 +51,9 @@ public:
     void init(float sampleRate)
     {
         // Sets sampleRates here
-        sinOsc.setSampleRate(sampleRate);   // TESTING - UNUSED
         env.setSampleRate(sampleRate);
         wtSine.setSampleRate(sampleRate);
         wtSaw.setSampleRate(sampleRate);
-        wtSquare.setSampleRate(sampleRate);
         wtSpike.setSampleRate(sampleRate);
         subOsc.setSampleRate(sampleRate);
         ringMod.setSampleRate(sampleRate);
@@ -63,7 +61,6 @@ public:
         // populates wavetables
         wtSine.populateWavetable();
         wtSaw.populateWavetable();
-        wtSquare.populateWavetable();
         wtSpike.populateWavetable();
         subOsc.populateWavetable();
         
@@ -132,7 +129,6 @@ public:
         // Main Oscillators
         wtSine.setIncrement(freq);
         wtSaw.setIncrement(freq);
-        wtSquare.setIncrement(freq);
         wtSpike.setIncrement(freq);
         subOsc.setIncrement(freq, incrementDenominator);
         
@@ -234,9 +230,6 @@ public:
                 // Combine main osc and sub values, scaled and enveloped
                 float currentSample = (oscRingSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
-                //float currentSample = wtSquare.process() * envVal;
-                //float currentSample = wtSpike.process() * envVal;
-                //float currentSample = subOsc.process() * envVal;
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
@@ -290,13 +283,9 @@ private:
     // Wavetable Class Instance and dependencies
     Wavetable wtSine;
     SawWavetable wtSaw;
-    SquareWavetable wtSquare;
     SpikeWavetable wtSpike;
     SubOsc subOsc;
-    
-    // TESTING
-    SinOsc sinOsc;
-    
+
     // Oscillator parameter members
     std::atomic<float>* oscillatorMorph;
     std::atomic<float>* subOscMorph;
@@ -316,5 +305,9 @@ private:
     std::atomic<float>* ringModPitch;
     std::atomic<float>* ringModTone;
     std::atomic<float>* ringMix;
+    
+    // Frequency Shifter oscillators
+    
+    
 
 };
