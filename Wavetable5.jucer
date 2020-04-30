@@ -4,6 +4,7 @@
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="bK7WUZ" name="Wavetable5">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
+      <FILE id="K7LVCr" name="FilterSection.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/FilterSection.h"/>
       <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="UTZX9W" name="PluginProcessor.h" compile="0" resource="0"

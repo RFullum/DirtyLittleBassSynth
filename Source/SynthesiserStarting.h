@@ -16,6 +16,7 @@
 #include "OscillatorParameterControls.h"
 #include "DryWet.h"
 #include "Modifiers.h"
+#include "FilterSection.h"
 
 // ===========================
 // ===========================
