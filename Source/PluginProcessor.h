@@ -77,6 +77,10 @@ private:
     std::atomic<float>* ringToneParameter;
     std::atomic<float>* ringModMixParameter;
     
+    // Frequency Shift parameters
+    std::atomic<float>* freqShiftPitchParameter;
+    std::atomic<float>* freqShiftMixParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

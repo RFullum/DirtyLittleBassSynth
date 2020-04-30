@@ -37,7 +37,11 @@ parameters(*this, nullptr, "ParameterTree", {
     // Ring Modulator Params
     std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch", 0.25f, 4.0f, 1.0f),
     std::make_unique<AudioParameterFloat>("ring_tone", "Ring Mod Tone", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("ring_mod_mix", "Ring Mod Mix", 0.0f, 1.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("ring_mod_mix", "Ring Mod Mix", 0.0f, 1.0f, 0.0f),
+    
+    // Frequency Shifter Params
+    std::make_unique<AudioParameterFloat>("freq_shift_pitch", "Freq Shift Pitch", 0.25f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("freq_shift_mix", "Freq Shift Mix", 0.0f, 1.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -56,6 +60,10 @@ parameters(*this, nullptr, "ParameterTree", {
     ringToneParameter = parameters.getRawParameterValue("ring_tone");
     ringModMixParameter = parameters.getRawParameterValue("ring_mod_mix");
     
+    // Frequency Shift Parameter Construction
+    freqShiftPitchParameter = parameters.getRawParameterValue("freq_shift_pitch");
+    freqShiftMixParameter = parameters.getRawParameterValue("freq_shift_mix");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -72,6 +80,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->setDistParamPointers(foldbackDistParameter);
         v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
+        v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
     }
     
 }

@@ -57,6 +57,7 @@ public:
         wtSpike.setSampleRate(sampleRate);
         subOsc.setSampleRate(sampleRate);
         ringMod.setSampleRate(sampleRate);
+        freqShift.setSampleRate(sampleRate);
         
         // populates wavetables
         wtSine.populateWavetable();
@@ -94,6 +95,12 @@ public:
         ringMix = mix;
     }
     
+    void setFreqShiftParamPointers(std::atomic<float>* shiftPitch, std::atomic<float>* mix)
+    {
+        freqShiftPitch = shiftPitch;
+        freqShiftMixVal = mix;
+    }
+    
     /*
     void setParameterPointers(std::atomic<float>* detuneIn)
     {
@@ -123,8 +130,6 @@ public:
         // Converts incoming MIDI note to frequency
         freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         
-        // TEST
-        sinOsc.setFrequency(freq);
         
         // Main Oscillators
         wtSine.setIncrement(freq);
@@ -132,8 +137,6 @@ public:
         wtSpike.setIncrement(freq);
         subOsc.setIncrement(freq, incrementDenominator);
         
-        // Ring Mod
-        //ringMod.modFreq(freq, ringModPitch);
         
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
@@ -197,6 +200,10 @@ public:
             ringMod.modFreq(freq, ringModPitch);
             ringMod.setRingToneSlider(ringModTone);
             
+            // Frequency Shifter
+            freqShift.oscMorph(oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
+            freqShift.modFreq(freq, freqShiftPitch);
+            
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -206,6 +213,9 @@ public:
                 // Gets value of next sample in envelope. Use to scale volume
                 float envVal = env.getNextSample();
                 
+                //
+                // Main Oscillator Wavetable Processing + Foldback Distortion
+                //
                 
                 // osc wavetable values scaled by oscillatorMorph parameter
                 float sinOscSample = wtSine.process() * sineLevel;
@@ -218,17 +228,23 @@ public:
                 // Apply foldback distortion to main oscillator
                 float oscDistSample = std::sin(oscSample * *foldbackDistortion);
                 
+                //
+                // Modifier Processing: Currently Series. Make Parallel option?
+                //
+                
                 // Ring Modulation
                 float ringModSample = oscDistSample * ringMod.process();
-                
-                // Modulation Mix Samples
                 float oscRingSample = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMix);
+                
+                // Frequency Shifter
+                float freqShiftSample = freqShift.process();   //  + oscRingSample; ???
+                float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixVal);
                 
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
                 // Combine main osc and sub values, scaled and enveloped
-                float currentSample = (oscRingSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
+                float currentSample = (oscShiftSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
                 
                 // for each channel, write the currentSample float to the output
@@ -307,7 +323,12 @@ private:
     std::atomic<float>* ringMix;
     
     // Frequency Shifter oscillators
+    FrequencyShifter freqShift;
+    DryWet freqShiftMix;
     
+    // Frequency Shifter Parameters
+    std::atomic<float>* freqShiftPitch;
+    std::atomic<float>* freqShiftMixVal;
     
 
 };
