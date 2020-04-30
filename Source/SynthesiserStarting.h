@@ -15,7 +15,7 @@
 #include "SubOscillator.h"
 #include "OscillatorParameterControls.h"
 #include "DryWet.h"
-#include "RingModulator.h"
+#include "Modifiers.h"
 
 // ===========================
 // ===========================

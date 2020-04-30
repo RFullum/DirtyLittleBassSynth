@@ -445,6 +445,13 @@
 			path = "~/JUCE/modules/juce_events";
 			sourceTree = "<absolute>";
 		};
+		8E080BAADD1908D3EABD2EDD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Modifiers.h;
+			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/Modifiers.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		8EE763F46084181D44EC5646 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -571,13 +578,6 @@
 			path = "~/JUCE/modules/juce_audio_basics";
 			sourceTree = "<absolute>";
 		};
-		D9D177E8EE4DE30FF81C0135 = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = RingModulator.h;
-			path = ../../../../../../../../../Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/RingModulator.h;
-			sourceTree = "SOURCE_ROOT";
-		};
 		DDE20B356E5850FC0446EF96 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -654,7 +654,7 @@
 				16D54D710938ED5AFDE00722,
 				1214B929C174BC9C03EBB8C4,
 				E5AB3DB959CDFF6E43B17671,
-				D9D177E8EE4DE30FF81C0135,
+				8E080BAADD1908D3EABD2EDD,
 			);
 			name = Source;
 			sourceTree = "<group>";
