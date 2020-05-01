@@ -67,13 +67,22 @@ public:
         freqShift.setSampleRate(sampleRate);
         sAndH.setSampleRate(sampleRate);
         
-        // populates wavetables
+        // Filters
+        twoPoleLPF.setSampleRate(sampleRate);
+        
+        //
+        // Populates Wavetables
+        //
         wtSine.populateWavetable();
         wtSaw.populateWavetable();
         wtSpike.populateWavetable();
         subOsc.populateWavetable();
         
+        //
+        // ADSR Parameters
+        //
         
+        // Main Osc ADSR
         ADSR::Parameters envParams;
         envParams.attack = 0.1f;    // time
         envParams.decay = 0.25f;    // time
@@ -113,6 +122,12 @@ public:
     {
         sAndHPitch = pitch;
         sAndHMixVal = mix;
+    }
+    
+    void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res)
+    {
+        filterCutoffFreq = cutoff;
+        filterResonance = res;
     }
     
     /*
@@ -266,15 +281,24 @@ public:
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
                 
+                //
+                // (Main Osc + Foldback + Modifiers) + Sub Osc
+                //
+                
                 // Combine main osc and sub values, scaled and enveloped
                 float currentSample = (oscSandHSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
                 
+                //
+                // Filters
+                //
                 
+                float filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                //std::cout << "\nFiltSamp " << filterSample;
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
                 {
                     // The output sample is scaled by 0.2 so that it is not too loud by default
-                    outputBuffer.addSample (chan, sampleIndex, currentSample * 0.2);
+                    outputBuffer.addSample (chan, sampleIndex, filterSample * 0.5f);
                 }
                 
                 
@@ -361,5 +385,11 @@ private:
     std::atomic<float>* sAndHPitch;
     std::atomic<float>* sAndHMixVal;
     
+    // Filter Instances
+    TwoPoleLPF twoPoleLPF;
+    
+    // Filter Parameters
+    std::atomic<float>* filterCutoffFreq;
+    std::atomic<float>* filterResonance;
 
 };

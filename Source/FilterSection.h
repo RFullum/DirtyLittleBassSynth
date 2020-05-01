@@ -10,18 +10,22 @@
 
 #pragma once
 
-class twoPoleLPF
+class TwoPoleLPF
 {
 public:
     void setSampleRate(float SR)
     {
         sampleRate = SR;
+        
+        lowPass1.reset();
+        lowPass2.reset();
+        
     }
     
-    float processFilter(float freq, float res, float sampleIn)
+    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn)
     {
-        cutoffFreq = freq;
-        resonance = res;
+        keyMap(noteFreq, cutoff);
+        resonance = *res;
         inputSample = sampleIn;
         
         return process();
@@ -30,8 +34,8 @@ public:
 private:
     float process()
     {
-        lowPass1.reset();
-        lowPass2.reset();
+        //lowPass1.reset();
+        //lowPass2.reset();
         
         lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
         lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
@@ -40,6 +44,12 @@ private:
         float stage2 = lowPass2.processSingleSampleRaw(stage1);
         
         return stage2;
+    }
+    
+    void keyMap(float frqncy, std::atomic<float>* CO)
+    {
+        float cutoffPos = *CO;
+        cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, 17000.0f);
     }
     
     // IIRFilter instances
@@ -56,8 +66,5 @@ private:
 
 /*
  TO DO:
- -Set up in SynthesiserStarting
- -Test it works
- -Convert to dynamic parameters
  -Add child classes
  */

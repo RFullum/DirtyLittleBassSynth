@@ -85,6 +85,10 @@ private:
     std::atomic<float>* sAndHPitchParameter;
     std::atomic<float>* sAndHMixParameter;
     
+    // Filter parameters
+    std::atomic<float>* filterCutoffParameter;
+    std::atomic<float>* filterResonanceParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

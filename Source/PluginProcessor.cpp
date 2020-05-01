@@ -45,18 +45,22 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // Sample and Hold Params
     std::make_unique<AudioParameterFloat>("sandh_pitch", "S&H Pitch", 1.0f, 128.0f, 128.0f),
-    std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix", 0.0f, 1.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix", 0.0f, 1.0f, 0.0f),
+    
+    // Filter Params
+    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 0.0f, 100.0f, 100.0f),
+    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 10.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
 {
-    // Osc Parameter construction
+    // Osc Parameter Construction
     oscMorphParameter = parameters.getRawParameterValue("osc_morph");
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
     
-    // Foldback Parameter construction
+    // Foldback Parameter Construction
     foldbackDistParameter = parameters.getRawParameterValue("foldback_dist");
     
     // RingMod Parameter Construction
@@ -71,6 +75,10 @@ parameters(*this, nullptr, "ParameterTree", {
     // S&H Parameter Construction
     sAndHPitchParameter = parameters.getRawParameterValue("sandh_pitch");
     sAndHMixParameter = parameters.getRawParameterValue("sandh_mix");
+    
+    // Filter Parameter Construction
+    filterCutoffParameter = parameters.getRawParameterValue("filter_cutoff");
+    filterResonanceParameter = parameters.getRawParameterValue("filter_res");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -90,6 +98,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
         v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
         v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
+        v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter);
     }
     
 }
