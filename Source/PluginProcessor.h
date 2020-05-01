@@ -66,6 +66,12 @@ private:
     std::atomic<float>* subGainParameter;
     std::atomic<float>* subOctaveParameter;
     
+    // Amp ADSR parameters
+    std::atomic<float>* ampAttackParameter;
+    std::atomic<float>* ampDecayParameter;
+    std::atomic<float>* ampSustainParameter;
+    std::atomic<float>* ampReleaseParameter;
+    
     // Foldback distortion parameters
     std::atomic<float>* foldbackDistParameter;
     
@@ -88,6 +94,7 @@ private:
     // Filter parameters
     std::atomic<float>* filterCutoffParameter;
     std::atomic<float>* filterResonanceParameter;
+    std::atomic<float>* filterSelectorParameter;
     
     // Instance of SynthesiZer class
     Synthesiser synth;

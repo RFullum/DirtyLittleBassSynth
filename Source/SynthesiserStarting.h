@@ -69,6 +69,9 @@ public:
         
         // Filters
         twoPoleLPF.setSampleRate(sampleRate);
+        fourPoleLPF.setSampleRate(sampleRate);
+        eightPoleLPF.setSampleRate(sampleRate);
+        notchFilter.setSampleRate(sampleRate);
         
         //
         // Populates Wavetables
@@ -82,14 +85,16 @@ public:
         // ADSR Parameters
         //
         
+        /*
         // Main Osc ADSR
         ADSR::Parameters envParams;
-        envParams.attack = 0.1f;    // time
-        envParams.decay = 0.25f;    // time
-        envParams.sustain = 0.5f;   // amplitude
-        envParams.release = 0.25f;  // time
+        envParams.attack = *ampAttack;      // time
+        envParams.decay = *ampDecay;        // time
+        envParams.sustain = *ampSustain;    // amplitude
+        envParams.release = *ampRelease;    // time
         
         env.setParameters(envParams);
+        */
     }
     
     void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn, std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn)
@@ -98,6 +103,14 @@ public:
         subOscMorph = subOscMorphIn;
         subGain = subOscGainIn;
         subOctave = subOctaveIn;
+    }
+    
+    void setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    {
+        ampAttack = attack;
+        ampDecay = decay;
+        ampSustain = sustain;
+        ampRelease = release;
     }
     
     void setDistParamPointers(std::atomic<float>* foldDistIn)
@@ -124,10 +137,23 @@ public:
         sAndHMixVal = mix;
     }
     
-    void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res)
+    void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type)
     {
         filterCutoffFreq = cutoff;
         filterResonance = res;
+        filterSelector = type;
+    }
+    
+    // Main Osc ADSR
+    void setAmpADSRValues()
+    {
+        ADSR::Parameters envParams;
+        envParams.attack = *ampAttack;      // time
+        envParams.decay = *ampDecay;        // time
+        envParams.sustain = *ampSustain;    // amplitude
+        envParams.release = *ampRelease;    // time
+        
+        env.setParameters(envParams);
     }
     
     /*
@@ -152,6 +178,9 @@ public:
     {
         playing = true;
         ending = false;
+        
+        // Sets Amp ADSR for each note
+        setAmpADSRValues();
         
         // Set Sub Octave
         int incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
@@ -292,8 +321,17 @@ public:
                 // Filters
                 //
                 
-                float filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
-                //std::cout << "\nFiltSamp " << filterSample;
+                // Selects filter type
+                if ((int)*filterSelector == 0)
+                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                else if ((int)*filterSelector == 1)
+                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                else if ((int)*filterSelector == 2)
+                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                else if ((int)*filterSelector == 3)
+                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                
+                
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
                 {
@@ -360,6 +398,12 @@ private:
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
     
+    // Amp Envelope Parameter Controls
+    std::atomic<float>* ampAttack;
+    std::atomic<float>* ampDecay;
+    std::atomic<float>* ampSustain;
+    std::atomic<float>* ampRelease;
+    
     // Ring Mod Instances
     RingMod ringMod;
     DryWet ringModMix;
@@ -387,9 +431,14 @@ private:
     
     // Filter Instances
     TwoPoleLPF twoPoleLPF;
+    FourPoleLPF fourPoleLPF;
+    EightPoleLPF eightPoleLPF;
+    NotchFilter notchFilter;
     
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
     std::atomic<float>* filterResonance;
+    std::atomic<float>* filterSelector;
+    float filterSample;
 
 };

@@ -31,6 +31,12 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
     
+    // Amp ADSR Params
+    std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.001f, 4.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>("amp_decay", "Amp Decay", 0.001f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("amp_sustain", "Amp Sustain", 0.0f, 1.0f, 0.75f),
+    std::make_unique<AudioParameterFloat>("amp_release", "Amp Release", 0.001f, 4.0f, 0.1f),
+    
     // Foldback Distortion Params
     std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion", 1.0f, 200.0f, 1.0f),
     
@@ -48,8 +54,9 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix", 0.0f, 1.0f, 0.0f),
     
     // Filter Params
-    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 0.0f, 100.0f, 100.0f),
-    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 10.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 1.0f, 100.0f, 100.0f),
+    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 10.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -59,6 +66,12 @@ parameters(*this, nullptr, "ParameterTree", {
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
+    
+    // Amp ADSR Parameter Construction
+    ampAttackParameter = parameters.getRawParameterValue("amp_attack");
+    ampDecayParameter = parameters.getRawParameterValue("amp_decay");
+    ampSustainParameter = parameters.getRawParameterValue("amp_sustain");
+    ampReleaseParameter = parameters.getRawParameterValue("amp_release");
     
     // Foldback Parameter Construction
     foldbackDistParameter = parameters.getRawParameterValue("foldback_dist");
@@ -79,6 +92,7 @@ parameters(*this, nullptr, "ParameterTree", {
     // Filter Parameter Construction
     filterCutoffParameter = parameters.getRawParameterValue("filter_cutoff");
     filterResonanceParameter = parameters.getRawParameterValue("filter_res");
+    filterSelectorParameter = parameters.getRawParameterValue("filter_type");
     
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
@@ -94,11 +108,12 @@ parameters(*this, nullptr, "ParameterTree", {
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
         v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
+        v->setAmpADSRParamPointers(ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
         v->setDistParamPointers(foldbackDistParameter);
         v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
         v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
         v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
-        v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter);
+        v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
     }
     
 }
