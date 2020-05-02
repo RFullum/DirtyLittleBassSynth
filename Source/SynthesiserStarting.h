@@ -290,6 +290,7 @@ public:
             // Sample and Hold
             sAndH.modFreq(freq, sAndHPitch);
             
+            
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
             for (int sampleIndex = startSample;   sampleIndex < (startSample+numSamples);   sampleIndex++)

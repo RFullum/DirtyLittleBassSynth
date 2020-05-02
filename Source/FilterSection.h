@@ -55,6 +55,10 @@ protected:
         cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
     }
     
+    /**
+     Scales the ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
+     The current note frequency is the minimum, and the maxCutoff frequency is the maximum.
+     */
     void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
     {
         float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
@@ -68,8 +72,8 @@ protected:
     float resonance;
     float inputSample;
     float cutoffScale;
-    
     float envelopeVal;
+    
     std::atomic<float>* cutoffSend;
     std::atomic<float>* resSend;
     
