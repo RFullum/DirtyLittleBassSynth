@@ -30,16 +30,21 @@ public:
     }
     
     /**
-     takes current note frequency, cutoff frequency, resonance, and input sample value.
+     takes current note frequency, cutoff frequency, resonance, input sample value, envelope value, envelop to Cutoff
+     amount, and envelope to resonance amount.
      Returns keytracked low pass sample value
      */
-    virtual float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn)
+    virtual float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
     {
         keyMap(noteFreq, cutoff);
+        envelopeVal = envVal;
+        cutoffSend = amtToCO;
+        resSend = amtToRes;
+        
         resonance = *res;
         inputSample = sampleIn;
         
-        return process(); // noteFreq, cutoff
+        return process();
     }
     
 protected:
@@ -47,27 +52,43 @@ protected:
     void keyMap(float frqncy, std::atomic<float>* CO)
     {
         float cutoffPos = *CO;
-        cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, 17000.0f);
+        cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
+    }
+    
+    void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
+    {
+        float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
+        cutoffScale = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
     }
     
     // Member Variables
     float sampleRate;
+    float maxCutoff = 17000.0f;
     float cutoffFreq;
     float resonance;
     float inputSample;
+    float cutoffScale;
+    
+    float envelopeVal;
+    std::atomic<float>* cutoffSend;
+    std::atomic<float>* resSend;
     
 private:
     /// Cascades two IIRFilter lowpasses and returns the output sample value
-    float process() // float frqncy, std::atomic<float>* cutoffAmt
+    float process()
     {
-        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
-        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
+        filterEnvControl(envelopeVal, cutoffSend, resSend);
+        
+        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonance) );
+        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonance) );
         
         float stage1 = lowPass1.processSingleSampleRaw(inputSample);
         float stage2 = lowPass2.processSingleSampleRaw(stage1);
         
         return stage2;
     }
+
+    
     // IIRFilter instances
     IIRFilter lowPass1;
     IIRFilter lowPass2;
@@ -94,14 +115,14 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
     {
         keyMap(noteFreq, cutoff);
         resonance = *res;
         inputSample = sampleIn;
         
-        float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn);
-        float stage2 = twoPole2.processFilter(noteFreq, cutoff, res, stage1);
+        float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes);
+        float stage2 = twoPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes);
         
         return stage2;
     }
@@ -133,14 +154,14 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
     {
         keyMap(noteFreq, cutoff);
         resonance = *res;
         inputSample = sampleIn;
         
-        float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn);
-        float stage2 = fourPole2.processFilter(noteFreq, cutoff, res, stage1);
+        float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes);
+        float stage2 = fourPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes);
         
         return stage2;
     }
@@ -171,12 +192,12 @@ public:
     /**
      Processes Non-keytracked notch filter from 20Hz to 17KHz wth resonance
      */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
     {
         resonance = *res;
         inputSample = sampleIn;
         float cutFreq = *cutoff;
-        cutoffFreq = jmap(cutFreq, 1.0f, 100.0f, 20.0f, 17000.0f);
+        cutoffFreq = jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
         
         return processNotch();
     }
@@ -184,6 +205,8 @@ private:
     /// Sets notch coeffients and processes inputSample
     float processNotch()
     {
+        //filterEnvControl(envelopeVal, cutoffSend, resSend);
+        
         notchFilter.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
         
         return notchFilter.processSingleSampleRaw(inputSample);

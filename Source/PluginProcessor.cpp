@@ -56,7 +56,15 @@ parameters(*this, nullptr, "ParameterTree", {
     // Filter Params
     std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 1.0f, 100.0f, 100.0f),
     std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 10.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f),
+    
+    // Filter Env Params
+    std::make_unique<AudioParameterFloat>("filtEnv_attack", "Filter Attack", 0.001f, 4.0f, 0.01f),
+    std::make_unique<AudioParameterFloat>("filtEnv_decay", "Filter Decay", 0.001f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("filtEnv_sustain", "Filter Sustain", 0.0f, 1.0f, 0.75f),
+    std::make_unique<AudioParameterFloat>("filtEnv_release", "Filter Release", 0.001f, 4.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>("filtEnv_COAmt", "Filter Env to Cutoff", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("filtEnv_ResAmt", "Filter Env to Res", 0.0f, 1.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -94,6 +102,14 @@ parameters(*this, nullptr, "ParameterTree", {
     filterResonanceParameter = parameters.getRawParameterValue("filter_res");
     filterSelectorParameter = parameters.getRawParameterValue("filter_type");
     
+    // Filter ADSR Parameter Construction
+    filtEnvAttackParameter = parameters.getRawParameterValue("filtEnv_attack");
+    filtEnvDecayParameter = parameters.getRawParameterValue("filtEnv_decay");
+    filtEnvSustainParameter = parameters.getRawParameterValue("filtEnv_sustain");
+    filtEnvReleaseParameter = parameters.getRawParameterValue("filtEnv_release");
+    filtEnvAmtCOParameter = parameters.getRawParameterValue("filtEnv_COAmt");
+    filtEnvAmtResParameter = parameters.getRawParameterValue("filtEnv_ResAmt");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -114,6 +130,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
         v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
         v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
+        v->setFilterADSRParamPointers(filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
     }
     
 }

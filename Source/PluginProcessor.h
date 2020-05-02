@@ -96,6 +96,14 @@ private:
     std::atomic<float>* filterResonanceParameter;
     std::atomic<float>* filterSelectorParameter;
     
+    // Filter ADSR Parameters
+    std::atomic<float>* filtEnvAttackParameter;
+    std::atomic<float>* filtEnvDecayParameter;
+    std::atomic<float>* filtEnvSustainParameter;
+    std::atomic<float>* filtEnvReleaseParameter;
+    std::atomic<float>* filtEnvAmtCOParameter;
+    std::atomic<float>* filtEnvAmtResParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

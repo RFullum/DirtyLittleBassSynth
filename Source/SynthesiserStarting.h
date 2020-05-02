@@ -56,11 +56,11 @@ public:
         //
         
         // Main and Sub Osc
-        env.setSampleRate(sampleRate);
         wtSine.setSampleRate(sampleRate);
         wtSaw.setSampleRate(sampleRate);
         wtSpike.setSampleRate(sampleRate);
         subOsc.setSampleRate(sampleRate);
+        env.setSampleRate(sampleRate);
         
         // Modifiers
         ringMod.setSampleRate(sampleRate);
@@ -72,6 +72,7 @@ public:
         fourPoleLPF.setSampleRate(sampleRate);
         eightPoleLPF.setSampleRate(sampleRate);
         notchFilter.setSampleRate(sampleRate);
+        filtEnv.setSampleRate(sampleRate);
         
         //
         // Populates Wavetables
@@ -81,22 +82,13 @@ public:
         wtSpike.populateWavetable();
         subOsc.populateWavetable();
         
-        //
-        // ADSR Parameters
-        //
-        
-        /*
-        // Main Osc ADSR
-        ADSR::Parameters envParams;
-        envParams.attack = *ampAttack;      // time
-        envParams.decay = *ampDecay;        // time
-        envParams.sustain = *ampSustain;    // amplitude
-        envParams.release = *ampRelease;    // time
-        
-        env.setParameters(envParams);
-        */
     }
     
+    //
+    // Parameter Pointers Setup
+    //
+    
+    // Main Oscs
     void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn, std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn)
     {
         oscillatorMorph = oscMorphIn;
@@ -118,6 +110,7 @@ public:
         foldbackDistortion = foldDistIn;
     }
     
+    // Modifiers
     void setRingModParamPointers(std::atomic<float>* ringPitch, std::atomic<float>* ringTone, std::atomic<float>* mix)
     {
         ringModPitch = ringPitch;
@@ -137,6 +130,7 @@ public:
         sAndHMixVal = mix;
     }
     
+    // Filters
     void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type)
     {
         filterCutoffFreq = cutoff;
@@ -144,16 +138,39 @@ public:
         filterSelector = type;
     }
     
+    void setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release, std::atomic<float>* amtCO, std::atomic<float>* amtRes )
+    {
+        filterAttack = attack;
+        filterDecay = decay;
+        filterSustain = sustain;
+        filterRelease = release;
+        filterADSRCutOffAmount = amtCO;
+        filterADSRResAmount = amtRes;
+    }
+    
+    //
+    // ADSR Values
+    //
+    
     // Main Osc ADSR
     void setAmpADSRValues()
     {
         ADSR::Parameters envParams;
-        envParams.attack = *ampAttack;      // time
-        envParams.decay = *ampDecay;        // time
-        envParams.sustain = *ampSustain;    // amplitude
-        envParams.release = *ampRelease;    // time
+        envParams.attack = *ampAttack;      // time (sec)
+        envParams.decay = *ampDecay;        // time (sec)
+        envParams.sustain = *ampSustain;    // amplitude 0.0f to 1.0f
+        envParams.release = *ampRelease;    // time (sec)
         
         env.setParameters(envParams);
+    }
+    
+    void setFilterADSRValues()
+    {
+        ADSR::Parameters filtEnvParams;
+        filtEnvParams.attack = *filterAttack;
+        filtEnvParams.decay = *filterDecay;
+        filtEnvParams.sustain = *filterSustain;
+        filtEnvParams.release = *filterRelease;
     }
     
     /*
@@ -181,6 +198,7 @@ public:
         
         // Sets Amp ADSR for each note
         setAmpADSRValues();
+        setFilterADSRValues();
         
         // Set Sub Octave
         int incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
@@ -196,8 +214,14 @@ public:
         subOsc.setIncrement(freq, incrementDenominator);
         
         
+        // Envelopes
+        // Amp envelope
         env.reset();    // Resets note
         env.noteOn();   // Start envelope
+        
+        //Filter Envelope
+        filtEnv.reset();
+        filtEnv.noteOn();
     
     }
     //--------------------------------------------------------------------------
@@ -214,6 +238,7 @@ public:
         {
             // ends envelope over release time
             env.noteOff();
+            filtEnv.noteOff();
             ending = true;
         }
         else
@@ -272,6 +297,7 @@ public:
                 
                 // Gets value of next sample in envelope. Use to scale volume
                 float envVal = env.getNextSample();
+                float filtEnvVal = filtEnv.getNextSample();
                 
                 //
                 // Main Oscillator Wavetable Processing + Foldback Distortion
@@ -315,7 +341,7 @@ public:
                 //
                 
                 // Combine main osc and sub values, scaled and enveloped
-                float currentSample = (oscSandHSample + subSample) * 0.5f * envVal; //( oscSample + subSample ) * 0.5f * envVal;
+                float currentSample = (oscSandHSample + subSample) * 0.5f * envVal;
                 
                 //
                 // Filters
@@ -323,13 +349,21 @@ public:
                 
                 // Selects filter type
                 if ((int)*filterSelector == 0)
-                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                {
+                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                }
                 else if ((int)*filterSelector == 1)
-                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                {
+                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                }
                 else if ((int)*filterSelector == 2)
-                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                {
+                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                }
                 else if ((int)*filterSelector == 3)
-                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample);
+                {
+                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                }
                 
                 
                 // for each channel, write the currentSample float to the output
@@ -380,6 +414,7 @@ private:
     
     /// ADSR envelope instance
     ADSR env;
+    ADSR filtEnv;
     
     // Wavetable Class Instance and dependencies
     Wavetable wtSine;
@@ -440,5 +475,13 @@ private:
     std::atomic<float>* filterResonance;
     std::atomic<float>* filterSelector;
     float filterSample;
+    
+    // Filter Envelope Parameters
+    std::atomic<float>* filterAttack;
+    std::atomic<float>* filterDecay;
+    std::atomic<float>* filterSustain;
+    std::atomic<float>* filterRelease;
+    std::atomic<float>* filterADSRCutOffAmount;
+    std::atomic<float>* filterADSRResAmount;
 
 };
