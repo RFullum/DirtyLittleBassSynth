@@ -62,17 +62,26 @@ protected:
      */
     void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
     {
+        // Cutoff envelope scaling
         float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
         cutoffScale = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
+        
+        float resHeadroom = (maxResonance - resonance) * *amtToRes;
+        resonanceScale = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
     }
     
     // Member Variables
     float sampleRate;
     float maxCutoff = 17000.0f;
+    float maxResonance = 3.0f;
+    
     float cutoffFreq;
     float resonance;
     float inputSample;
+    
     float cutoffScale;
+    float resonanceScale;
+    
     float envelopeVal;
     
     std::atomic<float>* cutoffSend;
@@ -84,8 +93,8 @@ private:
     {
         filterEnvControl(envelopeVal, cutoffSend, resSend);
         
-        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonance) );
-        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonance) );
+        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonanceScale) );
+        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonanceScale) );
         
         float stage1 = lowPass1.processSingleSampleRaw(inputSample);
         float stage2 = lowPass2.processSingleSampleRaw(stage1);

@@ -55,7 +55,7 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // Filter Params
     std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 1.0f, 100.0f, 100.0f),
-    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 10.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f),
     
     // Filter Env Params
