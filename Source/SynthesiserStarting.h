@@ -171,6 +171,8 @@ public:
         filtEnvParams.decay = *filterDecay;
         filtEnvParams.sustain = *filterSustain;
         filtEnvParams.release = *filterRelease;
+        
+        filtEnv.setParameters(filtEnvParams);
     }
     
     /*

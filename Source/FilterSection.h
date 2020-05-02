@@ -37,6 +37,7 @@ public:
     virtual float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
     {
         keyMap(noteFreq, cutoff);
+        
         envelopeVal = envVal;
         cutoffSend = amtToCO;
         resSend = amtToRes;
@@ -122,6 +123,7 @@ public:
     float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
     {
         keyMap(noteFreq, cutoff);
+        
         resonance = *res;
         inputSample = sampleIn;
         
@@ -161,6 +163,7 @@ public:
     float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
     {
         keyMap(noteFreq, cutoff);
+        
         resonance = *res;
         inputSample = sampleIn;
         
