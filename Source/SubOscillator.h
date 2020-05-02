@@ -63,7 +63,5 @@ private:
     Wavetable sinSub;
     SquareWavetable squareSub;
     SawWavetable sawSub;
-    
-    // Member varibles
-    //int subDenominator = 1; // Octave selector: Make adjustable parameter 1, 2, or 3... (3 = 4)
+
 };

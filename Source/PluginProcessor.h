@@ -104,6 +104,11 @@ private:
     std::atomic<float>* filtEnvAmtCOParameter;
     std::atomic<float>* filtEnvAmtResParameter;
     
+    // Filter LFO Parameters
+    std::atomic<float>* filtLFOFreqParameter;
+    std::atomic<float>* filtLFOAmtParameter;
+    std::atomic<float>* filtLFOShapeParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 16;

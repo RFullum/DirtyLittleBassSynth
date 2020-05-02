@@ -74,14 +74,21 @@ public:
         notchFilter.setSampleRate(sampleRate);
         filtEnv.setSampleRate(sampleRate);
         
+        // LFOs
+        filterLFO.setSampleRate(sampleRate);
+        
         //
         // Populates Wavetables
         //
+        
+        // Oscillators
         wtSine.populateWavetable();
         wtSaw.populateWavetable();
         wtSpike.populateWavetable();
         subOsc.populateWavetable();
         
+        // LFOs
+        filterLFO.populateWavetable();
     }
     
     //
@@ -146,6 +153,13 @@ public:
         filterRelease = release;
         filterADSRCutOffAmount = amtCO;
         filterADSRResAmount = amtRes;
+    }
+    
+    void setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount, std::atomic<float>* shape)
+    {
+        filtLFOFreq = freq;
+        filtLFOAmt = amount;
+        filtLFOShape = shape;
     }
     
     //
@@ -292,6 +306,12 @@ public:
             // Sample and Hold
             sAndH.modFreq(freq, sAndHPitch);
             
+            // Filter LFO
+            filterLFO.setIncrement(*filtLFOFreq, 1.0f);
+            float filtLFOSinLevel = filtLFOShapeControl.sinSubGain(filtLFOShape);
+            float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain(filtLFOShape);
+            float filtLFOSawLevel = filtLFOShapeControl.sawSubGain(filtLFOShape);
+            
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -349,6 +369,9 @@ public:
                 //
                 // Filters
                 //
+                
+                // Filter LFO
+                float filtLFOSample = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel);
                 
                 // Selects filter type
                 if ((int)*filterSelector == 0)
@@ -486,5 +509,14 @@ private:
     std::atomic<float>* filterRelease;
     std::atomic<float>* filterADSRCutOffAmount;
     std::atomic<float>* filterADSRResAmount;
+    
+    // Filter LFO Instance
+    SubOsc filterLFO;
+    
+    // Filter LFO Parameters
+    std::atomic<float>* filtLFOFreq;
+    std::atomic<float>* filtLFOAmt;
+    std::atomic<float>* filtLFOShape;
+    SubOscParamControl filtLFOShapeControl;
 
 };

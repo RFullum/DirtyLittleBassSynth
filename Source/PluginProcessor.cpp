@@ -64,7 +64,12 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("filtEnv_sustain", "Filter Sustain", 0.0f, 1.0f, 0.75f),
     std::make_unique<AudioParameterFloat>("filtEnv_release", "Filter Release", 0.001f, 4.0f, 0.1f),
     std::make_unique<AudioParameterFloat>("filtEnv_COAmt", "Filter Env to Cutoff", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("filtEnv_ResAmt", "Filter Env to Res", 0.0f, 1.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("filtEnv_ResAmt", "Filter Env to Res", 0.0f, 1.0f, 0.0f),
+    
+    // Filter LFO Params
+    std::make_unique<AudioParameterFloat>("filtLFO_freq", "Filter LFO Freq", 0.01f, 20.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("filtLFO_amt", "Filter LFO Amount", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>("filtLFO_shape", "Filter LFO Shape", 0.0f, 2.0f, 0.0f)
 })
 
 // CONSTRUCTOR!
@@ -110,6 +115,11 @@ parameters(*this, nullptr, "ParameterTree", {
     filtEnvAmtCOParameter = parameters.getRawParameterValue("filtEnv_COAmt");
     filtEnvAmtResParameter = parameters.getRawParameterValue("filtEnv_ResAmt");
     
+    // Filter LFO Parameter Construction
+    filtLFOFreqParameter = parameters.getRawParameterValue("filtLFO_freq");
+    filtLFOAmtParameter = parameters.getRawParameterValue("filtLFO_amt");
+    filtLFOShapeParameter = parameters.getRawParameterValue("filtLFO_shape");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -131,6 +141,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
         v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
         v->setFilterADSRParamPointers(filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
+        v->setFilterLFOParamPointers(filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
     }
     
 }
