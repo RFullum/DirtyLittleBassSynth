@@ -3,7 +3,7 @@
 
     FilterSection.h
     Created: 30 Apr 2020 6:33:55pm
-    Author:  Robert Fullum
+    Author:  B150987
 
   ==============================================================================
 */
@@ -35,7 +35,7 @@ public:
      amount, and envelope to resonance amount.
      Returns keytracked low pass sample value
      */
-    virtual float processFilter(float noteFreq, std::atomic<float>* cutoff,
+    virtual float processFilter(float noteFreq, float cutoff,
                                 std::atomic<float>* res, float sampleIn, float envVal,
                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                                 float lfoVal, std::atomic<float>* amtToLFO)
@@ -57,9 +57,9 @@ public:
     
 protected:
     /// Keytracking value mapping
-    void keyMap(float frqncy, std::atomic<float>* CO)
+    void keyMap(float frqncy, float CO)
     {
-        float cutoffPos = *CO;
+        float cutoffPos = CO;
         cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
     }
     
@@ -79,6 +79,10 @@ protected:
         filterLFOControl();
     }
     
+    /**
+     Scales the LFO range, then scales that to the send amount. Modulates filter cutoff,
+     clipped to 20Hz and 18000Hz
+     */
     void filterLFOControl()
     {
         float lfoRange = jmap(lfoValue, -1.0f, 1.0f, -10000.0f, 10000.0f);
@@ -157,7 +161,7 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff,
+    float processFilter(float noteFreq, float cutoff,
                         std::atomic<float>* res, float sampleIn, float envVal,
                         std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                         float lfoVal, std::atomic<float>* amtToLFO) override
@@ -200,7 +204,7 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res,
+    float processFilter(float noteFreq, float cutoff, std::atomic<float>* res,
                         float sampleIn, float envVal, std::atomic<float>* amtToCO,
                         std::atomic<float>* amtToRes, float lfoVal,
                         std::atomic<float>* amtToLFO) override
@@ -242,25 +246,42 @@ public:
     /**
      Processes Non-keytracked notch filter from 20Hz to 17KHz wth resonance
      */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff,
+    float processFilter(float noteFreq, float cutoff,
                         std::atomic<float>* res, float sampleIn, float envVal,
                         std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                         float lfoVal, std::atomic<float>* amtToLFO) override
     {
+        envelopeVal = envVal;
+        cutoffSend = amtToCO;
+        resSend = amtToRes;
+        
+        lfoValue = lfoVal;
+        lfoSend = amtToLFO;
+        
         resonance = *res;
         inputSample = sampleIn;
-        float cutFreq = *cutoff;
+        float cutFreq = cutoff;
         cutoffFreq = jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
         
         return processNotch();
     }
 private:
+    /*
+    void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
+    {
+        float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
+        cutoffScale = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
+        
+        float resHeadroom = (maxResonance - resonance) * *amtToRes;
+        resonanceScale = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
+    }
+    */
     /// Sets notch coeffients and processes inputSample
     float processNotch()
     {
-        //filterEnvControl(envelopeVal, cutoffSend, resSend);
+        filterEnvControl(envelopeVal, cutoffSend, resSend);
         
-        notchFilter.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffFreq, resonance) );
+        notchFilter.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
         
         return notchFilter.processSingleSampleRaw(inputSample);
     }

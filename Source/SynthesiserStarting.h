@@ -116,6 +116,9 @@ public:
         sAndHMixValSmooth.reset(sampleRate, 0.01f);
         sAndHMixValSmooth.setCurrentAndTargetValue(0.0f);
         
+        filterCutoffFreqSmooth.reset(sampleRate, 0.01f);
+        filterCutoffFreqSmooth.setCurrentAndTargetValue(0.0f);
+        
         masterGainControlSmooth.reset(sampleRate, 0.01f);
         masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
         
@@ -325,6 +328,10 @@ public:
     {
         if (playing) // check to see if this voice should be playing
         {
+            //
+            // Block level parameter value controls
+            //
+            
             // Main Oscillator Wavetable Morph Values
             float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
             float spikeLevel = oscParamControl.spikeMorphGain(oscillatorMorph);
@@ -342,26 +349,30 @@ public:
             freqShift.oscMorph(oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
             freqShift.modFreq(freq, freqShiftPitch);
             
-            
             // Filter LFO
             filterLFO.setIncrement(*filtLFOFreq, 1.0f);
             float filtLFOSinLevel = filtLFOShapeControl.sinSubGain(filtLFOShape);
             float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain(filtLFOShape);
             float filtLFOSawLevel = filtLFOShapeControl.sawSubGain(filtLFOShape);
             
-            // Value smoothing
+            //
+            // Value smoothing .setTargetValue
+            //
+            
             foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
             subGainSmooth.setTargetValue(*subGain);
             ringMixSmooth.setTargetValue(*ringMix);
             freqShiftMixValSmooth.setTargetValue(*freqShiftMixVal);
             sAndHMixValSmooth.setTargetValue(*sAndHMixVal);
             masterGainControlSmooth.setTargetValue(*masterGainControl);
+            filterCutoffFreqSmooth.setTargetValue(*filterCutoffFreq);
             
             
             // DSP!
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
             for (int sampleIndex = startSample;   sampleIndex < (startSample+numSamples);   sampleIndex++)
             {
+                // Portamento processing
                 float portaFreq = portamento.getNextValue();
                 
                 // Main Oscillators
@@ -395,7 +406,6 @@ public:
                 // Apply foldback distortion to main oscillator
                 float foldbackDistortionSmoothed = foldbackDistortionSmooth.getNextValue();
                 float oscDistSample = std::sin(oscSample * foldbackDistortionSmoothed);
-        
                 
                 //
                 // Modifier Processing: Currently Series. Make Parallel option?
@@ -411,6 +421,7 @@ public:
                 float freqShiftMixValSmoothed = freqShiftMixValSmooth.getNextValue();
                 float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
                 
+                // Sample and Hold
                 float sAndHSample = sAndH.processSH(oscShiftSample);
                 float sAndHMixValSmoothed = sAndHMixValSmooth.getNextValue();
                 float oscSandHSample = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
@@ -423,7 +434,7 @@ public:
                 float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * subGainSmooth.getNextValue();//*subGain;
                 
                 //
-                // (Main Osc + Foldback + Modifiers) + Sub Osc
+                // (Main Osc + Foldback + Modifiers) + Sub Osc * gain * envelope
                 //
                 
                 // Combine main osc and sub values, scaled and enveloped
@@ -435,35 +446,43 @@ public:
                 
                 // Filter LFO
                 float filtLFOSample = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel) * filtLFOEnvVal;
+                float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
                 
                 // Selects filter type
                 if ((int)*filterSelector == 0)
                 {
-                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 1)
                 {
-                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    filterSample = fourPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 2)
                 {
-                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    filterSample = eightPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 3)
                 {
-                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    filterSample = notchFilter.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 
+                //
+                // Master Gain
+                //
                 float masterSample = filterSample * masterGainControlSmooth.getNextValue();
+                
+                //
+                // Output samples
+                //
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
                 {
-                    // The output sample is scaled by 0.2 so that it is not too loud by default
+                    // The output sample is scaled by 0.5 so that it is not too loud by default
                     outputBuffer.addSample (chan, sampleIndex, masterSample * 0.5f);
                 }
                 
-                
+                // Reset envelopes here to prevent clicks
                 if (ending)
                 {
                     if (envVal < 0.0001f)
@@ -498,19 +517,19 @@ public:
     //--------------------------------------------------------------------------
 private:
     //--------------------------------------------------------------------------
-    // Set up any necessary variables here
-    /// Should the voice be playing?
+    // Are the voices playing:
     bool playing = false;
     bool ending = false;
     
+    // Playback note frequency
     float freq;
     
-    /// ADSR envelope instance
+    /// ADSR envelope instances
     ADSR env;
     ADSR filtEnv;
     ADSR filtLFOClickingEnv;
     
-    // Wavetable Class Instance
+    // Wavetable Class Instances
     Wavetable wtSine;
     SawWavetable wtSaw;
     SpikeWavetable wtSpike;
@@ -580,6 +599,7 @@ private:
     
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
+    SmoothedValue<float> filterCutoffFreqSmooth;
     std::atomic<float>* filterResonance;
     std::atomic<float>* filterSelector;
     float filterSample;
@@ -605,8 +625,6 @@ private:
     float masterGain;
     std::atomic<float>* masterGainControl;
     SmoothedValue<float> masterGainControlSmooth;
-    
-    
     
     // Master Sample Rate
     float sampleRate;

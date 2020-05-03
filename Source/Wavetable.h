@@ -3,7 +3,7 @@
 
     Wavetable.h
     Created: 26 Apr 2020 2:38:54pm
-    Author:  Robert Fullum
+    Author:  B150987
 
  
  Parent Class: Wavetable
@@ -21,10 +21,11 @@
 #pragma once
 #include "Oscillators.h"
 
-// Creates wavetable of a single Sine Wave cycle
+/// Creates wavetable of a single Sine Wave cycle
 class Wavetable
 {
 public:
+    /// Constructor: initializes all samples in wavetable to 0.0f
     Wavetable()
     {
         for (int i=0; i<waveTableSize; i++)
@@ -32,6 +33,7 @@ public:
             waveTable[i] = 0.0;
         }
     }
+    
     /// Destructo!
     virtual ~Wavetable()
     {
@@ -45,7 +47,7 @@ public:
         setFrequency();
     }
     
-    /// Populates wavetables with wave values using their populate functions
+    /// Populates wavetables with wave values using their private populate functions
     virtual void populateWavetable()
     {
         populateWT();
@@ -71,7 +73,7 @@ public:
 
     
 protected:
-    /// finds maximum amplitude in wavetable argument
+    /// Returns maximum amplitude in wavetable argument
     float findMaxAmplitude(float* wt)
     {
         float currentMax = 0.0f;
@@ -87,23 +89,6 @@ protected:
         return currentMax;
     }
     
-    /*      UNUSED???
-    /// Finds minimum amplitude in wavetable argument
-    float findMinAmplitude(float* wt)
-    {
-        float currentMin = 0.0f;
-        
-        for (int i=0; i<waveTableSize; i++)
-        {
-            if (wt[i] < currentMin)
-            {
-                currentMin = wt[i];
-            }
-        }
-        
-        return currentMin;
-    }
-    */
     /// Normalizes wavetable between -1.0f and 1.0f
     void normalizeWaveTable()
     {
@@ -152,7 +137,7 @@ private:
         }
     }
     
-    /// Tom's interpolation method
+    /// Tom's interpolation method: returns interpolated wavetable sample values
     float lagrangeInterpolation()
     {
         float frac = readHeadPos - floor(readHeadPos);  // Position between indexes
@@ -183,8 +168,7 @@ private:
     
     // Playback parameters
     float readHeadPos = 0.0f;
-    float increment;
-
+    float increment;    // Increment controls speed of readHeadPos, controlling playback frequency
     
 };
 
@@ -192,10 +176,12 @@ private:
 //========================================================================
 
 
-// CHILD Class for band limited Sawtooth
+// CHILD Class of Wavetable for band limited Sawtooth
+/// Creates Sawtooth Wavetable using a number of amplitude adjusted sine waves at the harmonics
 class SawWavetable : public Wavetable
 {
 public:
+    /// Populates wavetables with wave values using their private populate functions
     void populateWavetable() override
     {
         populateSawWT();
@@ -227,11 +213,11 @@ private:
         
         for (int i=0; i<numSawHarmonics; i++)
         {
-            if (i == 0)
+            if (i == 0)     // Fundamental 1/1 ratio
             {
                 harmonicFreq = frequency;
             }
-            else
+            else            // partials up the harmonic series ratios
             {
                 harmonicFreq *= ( (i + 1.0f) / i );
             }
@@ -253,7 +239,6 @@ private:
         }
     }
     
-
     /// Populates wavetable with values for band limited saw wave
     void populateSawWT()
     {
@@ -272,10 +257,12 @@ private:
 
 //========================================================================
 
-//Child class for square wave
+//Child class of Wavetable for square wave
+/// Creates Square Wavetable using a number of amplitude adjusted sine waves at the odd harmonics
 class SquareWavetable : public Wavetable
 {
 public:
+    /// Populates wavetables with wave values using their private populate functions
     void populateWavetable() override
     {
         populateSquareWT();
@@ -300,7 +287,10 @@ protected:
         }
     }
     
-    /// Sets frequency for each harmonic in the saw series
+    /** Sets frequency for each harmonicin the Square series by finding all the harmonics from
+     the fundamental to double the number of harmonics, then using the odd harmonics to set the
+     frequency for each sine instance
+     */
     void setSquareFrequencies()
     {
         int twiceOddHarmonics = numSquareHarmonics * 2;
@@ -308,16 +298,16 @@ protected:
         
         for (int i=0; i<twiceOddHarmonics; i++)
         {
-            if (i == 0)
+            if (i == 0)     // Fundamental 1/1
             {
                 harmonicFreq[i] = frequency;
             }
-            else
+            else            // Harmonic series ratios
             {
                 harmonicFreq[i] = harmonicFreq[i-1] * ( (i + 1.0f) / i );
             }
             
-            if (i % 2 == 0)
+            if (i % 2 == 0) // Use the odd harmonics (at the even indexes) to set the frequencies
             {
                 squareHarmonics[i / 2]->setFrequency(harmonicFreq[i]);
             }
@@ -338,6 +328,7 @@ protected:
     }
     
 private:
+    /// Populates wavetable with values for band limited square wave
     virtual void populateSquareWT()
     {
         createHarmonics();
@@ -357,6 +348,8 @@ private:
 
 //========================================================================
 
+// Child class of SquareWavetable for SpikeWave
+/// Creates a Spike wavetable by highpassing a square wavetable
 class SpikeWavetable : public SquareWavetable
 {
 private:
@@ -375,6 +368,7 @@ private:
         
     }
     
+    /// Populates wavetable with Spike derived from band limited square wavetable
     void populateSquareWT() override
     {
         createHarmonics();
@@ -384,6 +378,7 @@ private:
         highPassSpike();
         normalizeWaveTable();
     }
+    
     // Highpass members
     IIRFilter highPass;
     float cutoffFreq;

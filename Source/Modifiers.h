@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    RingModulator.h
+    Modifiers.h
     Created: 29 Apr 2020 10:30:04pm
-    Author:  Robert Fullum
+    Author:  B150987
 
   ==============================================================================
 */
@@ -14,6 +14,11 @@
 #include "DryWet.h"
 #include "OscillatorParameterControls.h"
 
+//
+// Audio Modifiers: Ring Modulator, Frequency Shifter, Sample and Hold Distortion
+//
+
+/// Ring Modulation Class
 class RingMod
 {
 public:
@@ -74,6 +79,7 @@ private:
         wtSquare.setIncrement(modFrequency);
     }
     
+    /// Calculate ring modulation: calls wavetable process functions, morphs their shapes, and returns sample value
     float ringModProcess()
     {
         float sinVal = wtSine.process();
@@ -99,6 +105,7 @@ private:
 
 //============================================================
 
+/// Frequency Shifter Class (child of RingMod class)
 class FrequencyShifter : public RingMod
 {
 public:
@@ -178,6 +185,7 @@ private:
 
 //============================================================
 
+/// Sample and Hold distortion class: Child of RingMod class
 class SampleAndHold : public RingMod
 {
 public:
@@ -218,6 +226,7 @@ private:
         wtSampHold.setIncrement(modFrequency);
     }
     
+    /// Processes S&H distortion and returns wave value
     float sampleHoldProcess()
     {
         float outVal;

@@ -58,7 +58,7 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix", 0.0f, 1.0f, 0.0f),
     
     // Filter Params
-    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 1.0f, 100.0f, 100.0f),
+    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff", 1.1f, 100.0f, 100.0f),
     std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance", 1.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f),
     
@@ -231,6 +231,7 @@ void Wavetable5AudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {
     synth.setCurrentPlaybackSampleRate(sampleRate);
     
+    // Pass sampleRate to each voice's init()
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
@@ -271,9 +272,8 @@ bool Wavetable5AudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 void Wavetable5AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-        
-    
-    
+
+    // Hand off DSP to Synthesiser class
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 

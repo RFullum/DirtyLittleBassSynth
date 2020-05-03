@@ -3,7 +3,7 @@
 
     SubOscillator.h
     Created: 28 Apr 2020 2:17:12pm
-    Author:  Robert Fullum
+    Author:  B150987
 
   ==============================================================================
 */
@@ -12,6 +12,7 @@
 #include "Wavetable.h"
 #include "OscillatorParameterControls.h"
 
+/// Creates a sub oscillator using Sine, Square, and Saw wavetables
 class SubOsc
 {
 public:
@@ -31,13 +32,10 @@ public:
         sawSub.populateWavetable();
     }
     
-    /*
-     subDenominator should be made to a float instead of type casted.
-     do this in a setter function that takes the parameter from the tree
-     with a min of 1 (same octave) and a max of 3 (two octaves below).
-     When the value is 3 it needs to be 4 to get proper denominator
+    /**
+     Sets playback frequency of sub oscillator scaled 0 to 2 octaves below
+     noteFreq is the playback note frequency. denom is the denominator to chose sub octave: 1, 2, or 4
      */
-    /// Sets playback frequency of sub oscillator scaled 0 to 2 octaves below
     void setIncrement(float noteFreq, int denom)
     {
         float subFreq = noteFreq / (float)denom;
@@ -48,6 +46,10 @@ public:
     }
     
     /// Playback function
+    /**
+     Playback function: gain arguments come from SubOscParamControl class member functions to morph between the three
+     wave shapes: sinSubGain( ), squareSubGain( ), and sawSubGain( )
+     */
     float process(float sinGain, float squareGain, float sawGain)
     {
         float sinVal = sinSub.process() * sinGain;
