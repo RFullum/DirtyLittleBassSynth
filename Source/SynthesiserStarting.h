@@ -49,8 +49,11 @@ class MySynthVoice : public SynthesiserVoice
 public:
     MySynthVoice() {}
     
-    void init(float sampleRate)
+    void init(float SR)
     {
+        // Set Master Sample Rate
+        sampleRate = SR;
+        
         //
         // Sets sampleRates here
         //
@@ -73,6 +76,7 @@ public:
         eightPoleLPF.setSampleRate(sampleRate);
         notchFilter.setSampleRate(sampleRate);
         filtEnv.setSampleRate(sampleRate);
+        filtLFOClickingEnv.setSampleRate(sampleRate);
         
         // LFOs
         filterLFO.setSampleRate(sampleRate);
@@ -89,6 +93,11 @@ public:
         
         // LFOs
         filterLFO.populateWavetable();
+        
+        // Value smoothing
+        setPortamentoTime(sampleRate, 0.02f);
+        portamento.setCurrentAndTargetValue(0.0f);
+        
     }
     
     //
@@ -162,6 +171,11 @@ public:
         filtLFOShape = shape;
     }
     
+    void setPortamentoParamPointers(std::atomic<float>* portaTime)
+    {
+        portamentoAmount = portaTime;
+    }
+    
     //
     // ADSR Values
     //
@@ -169,7 +183,7 @@ public:
     // Main Osc ADSR
     void setAmpADSRValues()
     {
-        ADSR::Parameters envParams;
+        //ADSR::Parameters envParams;
         envParams.attack = *ampAttack;      // time (sec)
         envParams.decay = *ampDecay;        // time (sec)
         envParams.sustain = *ampSustain;    // amplitude 0.0f to 1.0f
@@ -189,13 +203,21 @@ public:
         filtEnv.setParameters(filtEnvParams);
     }
     
-    /*
-    void setParameterPointers(std::atomic<float>* detuneIn)
+    void setFiltLFOClickValues()
     {
-        detuneAmount = detuneIn;
+        ADSR::Parameters filtLFOClickParams;
+        filtLFOClickParams.attack = 0.02f;
+        filtLFOClickParams.decay = 0.5f;
+        filtLFOClickParams.sustain = 1.0f;
+        filtLFOClickParams.release = 0.02f;
+        
+        filtLFOClickingEnv.setParameters(filtLFOClickParams);
     }
-    */
     
+    void setPortamentoTime(float SR, float portaTime)
+    {
+        portamento.reset(SR, portaTime);
+    }
     
     
     //--------------------------------------------------------------------------
@@ -212,32 +234,27 @@ public:
         playing = true;
         ending = false;
         
+        setPortamentoTime(sampleRate, *portamentoAmount);
+        
         // Sets Amp ADSR for each note
         setAmpADSRValues();
         setFilterADSRValues();
         
         // Set Sub Octave
-        int incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
+        incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
         
         // Converts incoming MIDI note to frequency
         freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         
-        
-        // Main Oscillators
-        wtSine.setIncrement(freq);
-        wtSaw.setIncrement(freq);
-        wtSpike.setIncrement(freq);
-        subOsc.setIncrement(freq, incrementDenominator);
-        
+        portamento.setTargetValue(freq);
         
         // Envelopes
         // Amp envelope
-        env.reset();    // Resets note
         env.noteOn();   // Start envelope
         
         //Filter Envelope
-        filtEnv.reset();
         filtEnv.noteOn();
+        filtLFOClickingEnv.noteOn();
     
     }
     //--------------------------------------------------------------------------
@@ -255,6 +272,7 @@ public:
             // ends envelope over release time
             env.noteOff();
             filtEnv.noteOff();
+            filtLFOClickingEnv.noteOff();
             ending = true;
         }
         else
@@ -279,11 +297,7 @@ public:
     {
         if (playing) // check to see if this voice should be playing
         {
-            // allows params to adjust detune amount while playing
-            // Doing it up here does it once a block. Inside the DSP! loop
-            // does it every sample. 
-            
-            //detuneOsc.setFrequency(freq - *detuneAmount);
+            //setPortamentoTime(sampleRate, *portamentoAmount);
             
             // Main Oscillator Wavetable Morph Values
             float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
@@ -296,15 +310,12 @@ public:
             float sawSubLevel = subOscParamControl.sawSubGain(subOscMorph);
             
             // Ring Mod
-            ringMod.modFreq(freq, ringModPitch);
             ringMod.setRingToneSlider(ringModTone);
             
             // Frequency Shifter
             freqShift.oscMorph(oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
             freqShift.modFreq(freq, freqShiftPitch);
             
-            // Sample and Hold
-            sAndH.modFreq(freq, sAndHPitch);
             
             // Filter LFO
             filterLFO.setIncrement(*filtLFOFreq, 1.0f);
@@ -317,10 +328,23 @@ public:
             // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
             for (int sampleIndex = startSample;   sampleIndex < (startSample+numSamples);   sampleIndex++)
             {
+                float portaFreq = portamento.getNextValue();
+                
+                // Main Oscillators
+                wtSine.setIncrement(portaFreq);
+                wtSaw.setIncrement(portaFreq);
+                wtSpike.setIncrement(portaFreq);
+                subOsc.setIncrement(portaFreq, incrementDenominator);
+                
+                // Mod Oscs
+                ringMod.modFreq(portaFreq, ringModPitch);
+                freqShift.modFreq(portaFreq, freqShiftPitch);
+                sAndH.modFreq(portaFreq, sAndHPitch);
                 
                 // Gets value of next sample in envelope. Use to scale volume
                 float envVal = env.getNextSample();
                 float filtEnvVal = filtEnv.getNextSample();
+                float filtLFOEnvVal = filtLFOClickingEnv.getNextSample();
                 
                 //
                 // Main Oscillator Wavetable Processing + Foldback Distortion
@@ -371,24 +395,24 @@ public:
                 //
                 
                 // Filter LFO
-                float filtLFOSample = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel);
+                float filtLFOSample = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel) * filtLFOEnvVal;
                 
                 // Selects filter type
                 if ((int)*filterSelector == 0)
                 {
-                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                    filterSample = twoPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 1)
                 {
-                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                    filterSample = fourPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 2)
                 {
-                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                    filterSample = eightPoleLPF.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 else if ((int)*filterSelector == 3)
                 {
-                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount);
+                    filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 
                 
@@ -404,7 +428,10 @@ public:
                 {
                     if (envVal < 0.0001f)
                     {
-                        // clearCurrentNote();
+                        // reset envelopes and flip playing bool
+                        env.reset();
+                        filtEnv.reset();
+                        filtLFOClickingEnv.reset();
                         playing = false;
                     }
                 }
@@ -441,8 +468,9 @@ private:
     /// ADSR envelope instance
     ADSR env;
     ADSR filtEnv;
+    ADSR filtLFOClickingEnv;
     
-    // Wavetable Class Instance and dependencies
+    // Wavetable Class Instance
     Wavetable wtSine;
     SawWavetable wtSaw;
     SpikeWavetable wtSpike;
@@ -454,6 +482,7 @@ private:
     std::atomic<float>* subGain;
     std::atomic<float>* subOctave;
     std::atomic<float>* foldbackDistortion;
+    int incrementDenominator;
     
     // Oscillator Parameter Controls
     OscParamControl oscParamControl;
@@ -464,6 +493,7 @@ private:
     std::atomic<float>* ampDecay;
     std::atomic<float>* ampSustain;
     std::atomic<float>* ampRelease;
+    ADSR::Parameters envParams;
     
     // Ring Mod Instances
     RingMod ringMod;
@@ -518,5 +548,12 @@ private:
     std::atomic<float>* filtLFOAmt;
     std::atomic<float>* filtLFOShape;
     SubOscParamControl filtLFOShapeControl;
+    
+    // Value Smoothing
+    SmoothedValue<float> portamento;
+    std::atomic<float>* portamentoAmount;
+    
+    // Master Sample Rate
+    float sampleRate;
 
 };

@@ -109,9 +109,13 @@ private:
     std::atomic<float>* filtLFOAmtParameter;
     std::atomic<float>* filtLFOShapeParameter;
     
+    // Portamento Parameters
+    std::atomic<float>* portaTimeParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
-    int voiceCount = 16;
+    int voiceCount = 1;
+    std::atomic<float>* voiceCountParameter;
     
     
     //==============================================================================

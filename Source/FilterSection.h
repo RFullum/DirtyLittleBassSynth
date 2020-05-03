@@ -10,6 +10,7 @@
 
 #pragma once
 
+
 /// Creates a -12dB/octave Low Pass Filter by cascading two IIRFilter Low Pass Filters
 class TwoPoleLPF
 {
@@ -34,13 +35,19 @@ public:
      amount, and envelope to resonance amount.
      Returns keytracked low pass sample value
      */
-    virtual float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
+    virtual float processFilter(float noteFreq, std::atomic<float>* cutoff,
+                                std::atomic<float>* res, float sampleIn, float envVal,
+                                std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
+                                float lfoVal, std::atomic<float>* amtToLFO)
     {
         keyMap(noteFreq, cutoff);
         
         envelopeVal = envVal;
         cutoffSend = amtToCO;
         resSend = amtToRes;
+        
+        lfoValue = lfoVal;
+        lfoSend = amtToLFO;
         
         resonance = *res;
         inputSample = sampleIn;
@@ -68,6 +75,24 @@ protected:
         
         float resHeadroom = (maxResonance - resonance) * *amtToRes;
         resonanceScale = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
+        
+        filterLFOControl();
+    }
+    
+    void filterLFOControl()
+    {
+        float lfoRange = jmap(lfoValue, -1.0f, 1.0f, -10000.0f, 10000.0f);
+        float lfoScale = lfoRange * *lfoSend;
+        
+        float cutoffLFOUnlimited = cutoffScale + lfoScale;
+        
+        if (cutoffLFOUnlimited < 20.0f)
+            cutoffLFOUnlimited = 20.0f;
+        
+        if (cutoffLFOUnlimited > 18000.0f)
+            cutoffLFOUnlimited = 18000.0f;
+        
+        cutoffLFO = cutoffLFOUnlimited;
     }
     
     // Member Variables
@@ -83,9 +108,12 @@ protected:
     float resonanceScale;
     
     float envelopeVal;
+    float lfoValue;
+    float cutoffLFO;
     
     std::atomic<float>* cutoffSend;
     std::atomic<float>* resSend;
+    std::atomic<float>* lfoSend;
     
 private:
     /// Cascades two IIRFilter lowpasses and returns the output sample value
@@ -93,8 +121,8 @@ private:
     {
         filterEnvControl(envelopeVal, cutoffSend, resSend);
         
-        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonanceScale) );
-        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffScale, resonanceScale) );
+        lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+        lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
         
         float stage1 = lowPass1.processSingleSampleRaw(inputSample);
         float stage2 = lowPass2.processSingleSampleRaw(stage1);
@@ -129,15 +157,18 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff,
+                        std::atomic<float>* res, float sampleIn, float envVal,
+                        std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
+                        float lfoVal, std::atomic<float>* amtToLFO) override
     {
         keyMap(noteFreq, cutoff);
         
         resonance = *res;
         inputSample = sampleIn;
         
-        float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes);
-        float stage2 = twoPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes);
+        float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+        float stage2 = twoPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
         
         return stage2;
     }
@@ -169,15 +200,18 @@ public:
     takes current note frequency, cutoff frequency, resonance, and input sample value.
     Returns keytracked low pass sample value
     */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res,
+                        float sampleIn, float envVal, std::atomic<float>* amtToCO,
+                        std::atomic<float>* amtToRes, float lfoVal,
+                        std::atomic<float>* amtToLFO) override
     {
         keyMap(noteFreq, cutoff);
         
         resonance = *res;
         inputSample = sampleIn;
         
-        float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes);
-        float stage2 = fourPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes);
+        float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+        float stage2 = fourPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
         
         return stage2;
     }
@@ -208,7 +242,10 @@ public:
     /**
      Processes Non-keytracked notch filter from 20Hz to 17KHz wth resonance
      */
-    float processFilter(float noteFreq, std::atomic<float>* cutoff, std::atomic<float>* res, float sampleIn, float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
+    float processFilter(float noteFreq, std::atomic<float>* cutoff,
+                        std::atomic<float>* res, float sampleIn, float envVal,
+                        std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
+                        float lfoVal, std::atomic<float>* amtToLFO) override
     {
         resonance = *res;
         inputSample = sampleIn;

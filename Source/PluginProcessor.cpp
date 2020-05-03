@@ -30,12 +30,16 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("voice_count", "Voices", 1.0f, 32.0f, 16.0f),
     
     // Amp ADSR Params
     std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.001f, 4.0f, 0.1f),
     std::make_unique<AudioParameterFloat>("amp_decay", "Amp Decay", 0.001f, 4.0f, 1.0f),
     std::make_unique<AudioParameterFloat>("amp_sustain", "Amp Sustain", 0.0f, 1.0f, 0.75f),
     std::make_unique<AudioParameterFloat>("amp_release", "Amp Release", 0.001f, 4.0f, 0.1f),
+    
+    // Portament Params
+    std::make_unique<AudioParameterFloat>("porta_time", "Portamento Time", 0.01, 1.0f, 0.02f),
     
     // Foldback Distortion Params
     std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion", 1.0f, 200.0f, 1.0f),
@@ -79,6 +83,8 @@ parameters(*this, nullptr, "ParameterTree", {
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
+    voiceCountParameter = parameters.getRawParameterValue("voice_count");
+    portaTimeParameter = parameters.getRawParameterValue("porta_time");
     
     // Amp ADSR Parameter Construction
     ampAttackParameter = parameters.getRawParameterValue("amp_attack");
@@ -135,6 +141,7 @@ parameters(*this, nullptr, "ParameterTree", {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
         v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->setAmpADSRParamPointers(ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
+        v->setPortamentoParamPointers(portaTimeParameter);
         v->setDistParamPointers(foldbackDistParameter);
         v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
         v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
