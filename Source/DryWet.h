@@ -13,11 +13,11 @@
 class DryWet
 {
 public:
-    float dryWetMix(float dryIn, float wetIn, std::atomic<float>* mixVal)
+    float dryWetMix(float dryIn, float wetIn, float mixVal)
     {
         drySample = dryIn;
         wetSample = wetIn;
-        mixFactor = *mixVal;
+        mixFactor = mixVal;
 
         return dryWetCalculation();
     }

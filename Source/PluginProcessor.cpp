@@ -33,10 +33,10 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("voice_count", "Voices", 1.0f, 32.0f, 16.0f),
     
     // Amp ADSR Params
-    std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.001f, 4.0f, 0.1f),
-    std::make_unique<AudioParameterFloat>("amp_decay", "Amp Decay", 0.001f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.01f, 4.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>("amp_decay", "Amp Decay", 0.01f, 4.0f, 1.0f),
     std::make_unique<AudioParameterFloat>("amp_sustain", "Amp Sustain", 0.0f, 1.0f, 0.75f),
-    std::make_unique<AudioParameterFloat>("amp_release", "Amp Release", 0.001f, 4.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>("amp_release", "Amp Release", 0.01f, 4.0f, 0.1f),
     
     // Portament Params
     std::make_unique<AudioParameterFloat>("porta_time", "Portamento Time", 0.01, 1.0f, 0.02f),
@@ -63,17 +63,20 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("filter_type", "-12LPF:0, -24LPF:1, -48LPF:2, Notch:3", 0.0f, 3.0f, 0.0f),
     
     // Filter Env Params
-    std::make_unique<AudioParameterFloat>("filtEnv_attack", "Filter Attack", 0.001f, 4.0f, 0.01f),
-    std::make_unique<AudioParameterFloat>("filtEnv_decay", "Filter Decay", 0.001f, 4.0f, 1.0f),
+    std::make_unique<AudioParameterFloat>("filtEnv_attack", "Filter Attack", 0.01f, 4.0f, 0.01f),
+    std::make_unique<AudioParameterFloat>("filtEnv_decay", "Filter Decay", 0.01f, 4.0f, 1.0f),
     std::make_unique<AudioParameterFloat>("filtEnv_sustain", "Filter Sustain", 0.0f, 1.0f, 0.75f),
-    std::make_unique<AudioParameterFloat>("filtEnv_release", "Filter Release", 0.001f, 4.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>("filtEnv_release", "Filter Release", 0.01f, 4.0f, 0.1f),
     std::make_unique<AudioParameterFloat>("filtEnv_COAmt", "Filter Env to Cutoff", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("filtEnv_ResAmt", "Filter Env to Res", 0.0f, 1.0f, 0.0f),
     
     // Filter LFO Params
     std::make_unique<AudioParameterFloat>("filtLFO_freq", "Filter LFO Freq", 0.01f, 20.0f, 1.0f),
     std::make_unique<AudioParameterFloat>("filtLFO_amt", "Filter LFO Amount", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("filtLFO_shape", "Filter LFO Shape", 0.0f, 2.0f, 0.0f)
+    std::make_unique<AudioParameterFloat>("filtLFO_shape", "Filter LFO Shape", 0.0f, 2.0f, 0.0f),
+    
+    // Master Gain
+    std::make_unique<AudioParameterFloat>("master_gain", "Master Gain", 0.0f, 2.0f, 1.0f)
 })
 
 // CONSTRUCTOR!
@@ -126,6 +129,9 @@ parameters(*this, nullptr, "ParameterTree", {
     filtLFOAmtParameter = parameters.getRawParameterValue("filtLFO_amt");
     filtLFOShapeParameter = parameters.getRawParameterValue("filtLFO_shape");
     
+    // Master Gain Parameter Construction
+    masterGainParameter = parameters.getRawParameterValue("master_gain");
+    
     // Create Voices for each voice count
     for (int i=0; i<voiceCount; i++)
     {
@@ -149,6 +155,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
         v->setFilterADSRParamPointers(filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
         v->setFilterLFOParamPointers(filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->setMasterGainParamPointers(masterGainParameter);
     }
     
 }
@@ -265,6 +272,8 @@ void Wavetable5AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 {
     ScopedNoDenormals noDenormals;
         
+    
+    
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 

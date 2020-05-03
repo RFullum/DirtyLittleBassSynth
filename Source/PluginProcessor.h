@@ -112,6 +112,9 @@ private:
     // Portamento Parameters
     std::atomic<float>* portaTimeParameter;
     
+    // Master Gain
+    std::atomic<float>* masterGainParameter;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 1;

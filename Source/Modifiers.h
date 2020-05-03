@@ -40,7 +40,7 @@ public:
     // Setter for ringToneSlider value
     void setRingToneSlider(std::atomic<float>* toneSlider)
     {
-        ringToneSlider = toneSlider;
+        ringToneSlider = *toneSlider;
     }
     
     /// Process wavetable: toneSlider controls amount of Sin/Square wave
@@ -91,7 +91,8 @@ private:
     DryWet toneControl;
     
     // Member Variables
-    std::atomic<float>* ringToneSlider;
+    //std::atomic<float>* ringToneSlider;
+    float ringToneSlider;
 };
 
 

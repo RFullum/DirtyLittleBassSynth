@@ -94,9 +94,30 @@ public:
         // LFOs
         filterLFO.populateWavetable();
         
+        //
         // Value smoothing
+        //
+        
         setPortamentoTime(sampleRate, 0.02f);
         portamento.setCurrentAndTargetValue(0.0f);
+        
+        subGainSmooth.reset(sampleRate, 0.01f);
+        subGainSmooth.setCurrentAndTargetValue(0.0f);
+        
+        foldbackDistortionSmooth.reset(sampleRate, 0.01f);
+        foldbackDistortionSmooth.setCurrentAndTargetValue(0.0f);
+        
+        ringMixSmooth.reset(sampleRate, 0.01f);
+        ringMixSmooth.setCurrentAndTargetValue(0.0f);
+        
+        freqShiftMixValSmooth.reset(sampleRate, 0.01f);
+        freqShiftMixValSmooth.setCurrentAndTargetValue(0.0f);
+        
+        sAndHMixValSmooth.reset(sampleRate, 0.01f);
+        sAndHMixValSmooth.setCurrentAndTargetValue(0.0f);
+        
+        masterGainControlSmooth.reset(sampleRate, 0.01f);
+        masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
         
     }
     
@@ -176,6 +197,11 @@ public:
         portamentoAmount = portaTime;
     }
     
+    void setMasterGainParamPointers(std::atomic<float>* gainAmt)
+    {
+        masterGainControl = gainAmt;
+    }
+    
     //
     // ADSR Values
     //
@@ -218,6 +244,8 @@ public:
     {
         portamento.reset(SR, portaTime);
     }
+    
+    
     
     
     //--------------------------------------------------------------------------
@@ -297,8 +325,6 @@ public:
     {
         if (playing) // check to see if this voice should be playing
         {
-            //setPortamentoTime(sampleRate, *portamentoAmount);
-            
             // Main Oscillator Wavetable Morph Values
             float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
             float spikeLevel = oscParamControl.spikeMorphGain(oscillatorMorph);
@@ -322,6 +348,14 @@ public:
             float filtLFOSinLevel = filtLFOShapeControl.sinSubGain(filtLFOShape);
             float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain(filtLFOShape);
             float filtLFOSawLevel = filtLFOShapeControl.sawSubGain(filtLFOShape);
+            
+            // Value smoothing
+            foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
+            subGainSmooth.setTargetValue(*subGain);
+            ringMixSmooth.setTargetValue(*ringMix);
+            freqShiftMixValSmooth.setTargetValue(*freqShiftMixVal);
+            sAndHMixValSmooth.setTargetValue(*sAndHMixVal);
+            masterGainControlSmooth.setTargetValue(*masterGainControl);
             
             
             // DSP!
@@ -359,7 +393,9 @@ public:
                 float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
                 
                 // Apply foldback distortion to main oscillator
-                float oscDistSample = std::sin(oscSample * *foldbackDistortion);
+                float foldbackDistortionSmoothed = foldbackDistortionSmooth.getNextValue();
+                float oscDistSample = std::sin(oscSample * foldbackDistortionSmoothed);
+        
                 
                 //
                 // Modifier Processing: Currently Series. Make Parallel option?
@@ -367,21 +403,24 @@ public:
                 
                 // Ring Modulation
                 float ringModSample = oscDistSample * ringMod.process();
-                float oscRingSample = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMix);
+                float ringMixValSmoothed = ringMixSmooth.getNextValue();
+                float oscRingSample = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMixValSmoothed);
                 
                 // Frequency Shifter
-                float freqShiftSample = freqShift.process();   //  + oscRingSample; ???
-                float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixVal);
+                float freqShiftSample = freqShift.process();
+                float freqShiftMixValSmoothed = freqShiftMixValSmooth.getNextValue();
+                float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
                 
                 float sAndHSample = sAndH.processSH(oscShiftSample);
-                float oscSandHSample = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixVal);
+                float sAndHMixValSmoothed = sAndHMixValSmooth.getNextValue();
+                float oscSandHSample = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
                 
                 //
                 // Sub Osc
                 //
                 
                 // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
-                float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * *subGain;
+                float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * subGainSmooth.getNextValue();//*subGain;
                 
                 //
                 // (Main Osc + Foldback + Modifiers) + Sub Osc
@@ -415,12 +454,13 @@ public:
                     filterSample = notchFilter.processFilter(freq, filterCutoffFreq, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
                 }
                 
+                float masterSample = filterSample * masterGainControlSmooth.getNextValue();
                 
                 // for each channel, write the currentSample float to the output
                 for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
                 {
                     // The output sample is scaled by 0.2 so that it is not too loud by default
-                    outputBuffer.addSample (chan, sampleIndex, filterSample * 0.5f);
+                    outputBuffer.addSample (chan, sampleIndex, masterSample * 0.5f);
                 }
                 
                 
@@ -480,6 +520,7 @@ private:
     std::atomic<float>* oscillatorMorph;
     std::atomic<float>* subOscMorph;
     std::atomic<float>* subGain;
+    SmoothedValue<float> subGainSmooth;
     std::atomic<float>* subOctave;
     std::atomic<float>* foldbackDistortion;
     int incrementDenominator;
@@ -495,6 +536,13 @@ private:
     std::atomic<float>* ampRelease;
     ADSR::Parameters envParams;
     
+    // Portamento
+    SmoothedValue<float> portamento;
+    std::atomic<float>* portamentoAmount;
+    
+    // Foldback Distortion
+    SmoothedValue<float> foldbackDistortionSmooth;
+    
     // Ring Mod Instances
     RingMod ringMod;
     DryWet ringModMix;
@@ -503,6 +551,7 @@ private:
     std::atomic<float>* ringModPitch;
     std::atomic<float>* ringModTone;
     std::atomic<float>* ringMix;
+    SmoothedValue<float> ringMixSmooth;
     
     // Frequency Shifter Instances
     FrequencyShifter freqShift;
@@ -511,6 +560,7 @@ private:
     // Frequency Shifter Parameters
     std::atomic<float>* freqShiftPitch;
     std::atomic<float>* freqShiftMixVal;
+    SmoothedValue<float> freqShiftMixValSmooth;
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
@@ -519,6 +569,8 @@ private:
     // Sample and Hold Parameters
     std::atomic<float>* sAndHPitch;
     std::atomic<float>* sAndHMixVal;
+    SmoothedValue<float> sAndHMixValSmooth;
+    
     
     // Filter Instances
     TwoPoleLPF twoPoleLPF;
@@ -549,9 +601,12 @@ private:
     std::atomic<float>* filtLFOShape;
     SubOscParamControl filtLFOShapeControl;
     
-    // Value Smoothing
-    SmoothedValue<float> portamento;
-    std::atomic<float>* portamentoAmount;
+    // Master Gain
+    float masterGain;
+    std::atomic<float>* masterGainControl;
+    SmoothedValue<float> masterGainControlSmooth;
+    
+    
     
     // Master Sample Rate
     float sampleRate;
