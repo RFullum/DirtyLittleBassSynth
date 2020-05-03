@@ -118,7 +118,6 @@ private:
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 1;
-    std::atomic<float>* voiceCountParameter;
     
     
     //==============================================================================
