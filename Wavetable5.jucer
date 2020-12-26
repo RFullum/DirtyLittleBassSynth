@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="YrQPUQ" name="Wavetable5" projectType="audioplug" jucerVersion="5.4.7"
-              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
+<JUCERPROJECT id="YrQPUQ" name="Wavetable5" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="bK7WUZ" name="Wavetable5">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
-      <FILE id="K7LVCr" name="FilterSection.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/FilterSection.h"/>
       <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="UTZX9W" name="PluginProcessor.h" compile="0" resource="0"
@@ -12,15 +11,17 @@
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="Wxd9mu" name="Oscillators.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/Oscillators.h"/>
-      <FILE id="x5Acfg" name="SynthesiserStarting.h" compile="0" resource="0"
-            file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SynthesiserStarting.h"/>
-      <FILE id="nR7Dzb" name="Wavetable.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/Wavetable.h"/>
-      <FILE id="SDO0Fv" name="SubOscillator.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/SubOscillator.h"/>
-      <FILE id="OliiBS" name="OscillatorParameterControls.h" compile="0"
-            resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/OscillatorParameterControls.h"/>
-      <FILE id="ROV2bu" name="DryWet.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/DryWet.h"/>
-      <FILE id="EioEOM" name="Modifiers.h" compile="0" resource="0" file="/Users/Prophetnoise/JUCE/Projects/Wavetable5/Source/Modifiers.h"/>
+      <FILE id="bRJ8MC" name="DryWet.cpp" compile="1" resource="0" file="Source/DryWet.cpp"/>
+      <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DryWet.h"/>
+      <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0" file="Source/FilterSection.h"/>
+      <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/Modifiers.h"/>
+      <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
+            resource="0" file="Source/OscillatorParameterControls.h"/>
+      <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0" file="Source/Oscillators.h"/>
+      <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0" file="Source/SubOscillator.h"/>
+      <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
+            file="Source/SynthesiserStarting.h"/>
+      <FILE id="GN3qnd" name="Wavetable.h" compile="0" resource="0" file="Source/Wavetable.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
