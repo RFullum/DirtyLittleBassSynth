@@ -18,6 +18,8 @@
       <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0" file="Source/FilterSection.h"/>
       <FILE id="LRcUpf" name="Modifiers.cpp" compile="1" resource="0" file="Source/Modifiers.cpp"/>
       <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/Modifiers.h"/>
+      <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
+            resource="0" file="Source/OscillatorParameterControls.cpp"/>
       <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
             resource="0" file="Source/OscillatorParameterControls.h"/>
       <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0" file="Source/Oscillators.h"/>

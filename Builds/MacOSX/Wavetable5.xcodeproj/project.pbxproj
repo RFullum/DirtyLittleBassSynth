@@ -101,6 +101,10 @@
 			isa = PBXBuildFile;
 			fileRef = 3B3863A43FA91F3F9AD711A3;
 		};
+		31053ACD61523F66601198F9 = {
+			isa = PBXBuildFile;
+			fileRef = 6349FC79F2EF0E963AEC6540;
+		};
 		E731076CFA7A742132434472 = {
 			isa = PBXBuildFile;
 			fileRef = 133908D7BCD9165C19009F88;
@@ -328,6 +332,13 @@
 			path = "../../JuceLibraryCode/include_juce_opengl.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		471750BF62AD662498BFEB33 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SynthesiserStarting.h;
+			path = ../../Source/SynthesiserStarting.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		4E019B5DA2D9A94FCEDB7995 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -368,13 +379,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = SubOscillator.h;
 			path = ../../Source/SubOscillator.h;
-			sourceTree = "SOURCE_ROOT";
-		};
-		471750BF62AD662498BFEB33 = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SynthesiserStarting.h;
-			path = ../../Source/SynthesiserStarting.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		489FAF54E03CD747AFAD5353 = {
@@ -445,6 +449,13 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = DryWet.h;
 			path = ../../Source/DryWet.h;
+			sourceTree = "SOURCE_ROOT";
+		};
+		6349FC79F2EF0E963AEC6540 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = OscillatorParameterControls.cpp;
+			path = ../../Source/OscillatorParameterControls.cpp;
 			sourceTree = "SOURCE_ROOT";
 		};
 		6BE2FED0D3CACE4B8CB9D833 = {
@@ -712,6 +723,7 @@
 				93522D4AF8EAB611B7F9EA84,
 				3B3863A43FA91F3F9AD711A3,
 				283C1E9CF249C138AD809623,
+				6349FC79F2EF0E963AEC6540,
 				D4AC306EFBB4D8734C8726A1,
 				00DE785E34DD88C0836EF9C0,
 				46BA4B4849442D06CEAFD784,
@@ -1670,6 +1682,7 @@
 				90676949676021B926CFFED3,
 				9398D6006F5B3DC3F999E2EA,
 				7A6F18911656CA66C28F0855,
+				31053ACD61523F66601198F9,
 				E731076CFA7A742132434472,
 				CEEBD709A0AF359CE655A1E8,
 				3BC5F398093EA54A715DD7C7,
