@@ -97,6 +97,10 @@
 			isa = PBXBuildFile;
 			fileRef = B9E78CF438AD9C88AAA14283;
 		};
+		7A6F18911656CA66C28F0855 = {
+			isa = PBXBuildFile;
+			fileRef = 3B3863A43FA91F3F9AD711A3;
+		};
 		E731076CFA7A742132434472 = {
 			isa = PBXBuildFile;
 			fileRef = 133908D7BCD9165C19009F88;
@@ -303,6 +307,13 @@
 			path = "~/JUCE/modules/juce_gui_basics";
 			sourceTree = "<absolute>";
 		};
+		3B3863A43FA91F3F9AD711A3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Modifiers.cpp;
+			path = ../../Source/Modifiers.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		3F214979A36613DAA820605E = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -315,13 +326,6 @@
 			lastKnownFileType = sourcecode.cpp.objcpp;
 			name = "include_juce_opengl.mm";
 			path = "../../JuceLibraryCode/include_juce_opengl.mm";
-			sourceTree = "SOURCE_ROOT";
-		};
-		46BA4B4849442D06CEAFD784 = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SubOscillator.h;
-			path = ../../Source/SubOscillator.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		4E019B5DA2D9A94FCEDB7995 = {
@@ -358,6 +362,13 @@
 			name = Carbon.framework;
 			path = System/Library/Frameworks/Carbon.framework;
 			sourceTree = SDKROOT;
+		};
+		46BA4B4849442D06CEAFD784 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SubOscillator.h;
+			path = ../../Source/SubOscillator.h;
+			sourceTree = "SOURCE_ROOT";
 		};
 		471750BF62AD662498BFEB33 = {
 			isa = PBXFileReference;
@@ -699,6 +710,7 @@
 				5FE7CD9ACA594D72E308BEDC,
 				B9E78CF438AD9C88AAA14283,
 				93522D4AF8EAB611B7F9EA84,
+				3B3863A43FA91F3F9AD711A3,
 				283C1E9CF249C138AD809623,
 				D4AC306EFBB4D8734C8726A1,
 				00DE785E34DD88C0836EF9C0,
@@ -1657,6 +1669,7 @@
 				2647DD4ABD7C28CDE1727139,
 				90676949676021B926CFFED3,
 				9398D6006F5B3DC3F999E2EA,
+				7A6F18911656CA66C28F0855,
 				E731076CFA7A742132434472,
 				CEEBD709A0AF359CE655A1E8,
 				3BC5F398093EA54A715DD7C7,

@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <JuceHeader.h>
 #include "Wavetable.h"
 #include "DryWet.h"
 #include "OscillatorParameterControls.h"
@@ -23,36 +24,19 @@ class RingMod
 {
 public:
     // Destructo!
-    virtual ~RingMod()
-    {
-        
-    }
+    virtual ~RingMod();
     
     /// Sets sampleRates and set up wavetables
-    virtual void setSampleRate(float SR)
-    {
-        sampleRate = SR;
-        setUpWavetables();
-    }
+    virtual void setSampleRate(float SR);
     
     /// Takes the note frequency to set wavetable increment
-    virtual void modFreq(float fqncy, std::atomic<float>* offset)
-    {
-        modFrequency = fqncy * *offset;
-        setRingIncrement();
-    }
+    virtual void modFreq(float fqncy, std::atomic<float>* offset);
     
     // Setter for ringToneSlider value
-    void setRingToneSlider(std::atomic<float>* toneSlider)
-    {
-        ringToneSlider = *toneSlider;
-    }
+    void setRingToneSlider(std::atomic<float>* toneSlider);
     
     /// Process wavetable: toneSlider controls amount of Sin/Square wave
-    virtual float process()
-    {
-        return ringModProcess();
-    }
+    virtual float process();
     
 protected:
     // Member variables
@@ -61,33 +45,13 @@ protected:
     
 private:
     /// sets sampleRate for member wavetables and calls populate function
-    void setUpWavetables()
-    {
-        // Sets wavetable samplerate
-        wtSine.setSampleRate(sampleRate);
-        wtSquare.setSampleRate(sampleRate);
-        
-        // Populates wavetables
-        wtSine.populateWavetable();
-        wtSquare.populateWavetable();
-    }
+    void setUpWavetables();
     
     /// Sets the playback frequency for wavetables
-    void setRingIncrement()
-    {
-        wtSine.setIncrement(modFrequency);
-        wtSquare.setIncrement(modFrequency);
-    }
+    void setRingIncrement();
     
     /// Calculate ring modulation: calls wavetable process functions, morphs their shapes, and returns sample value
-    float ringModProcess()
-    {
-        float sinVal = wtSine.process();
-        float sqVal = wtSquare.process();
-        float outVal = toneControl.dryWetMix(sinVal, sqVal, ringToneSlider);
-        
-        return outVal;
-    }
+    float ringModProcess();
     
     // Wavetables for Mod Oscs
     Wavetable wtSine;
@@ -110,63 +74,26 @@ class FrequencyShifter : public RingMod
 {
 public:
     /// Sets sampleRate for frequency shifter wavetables and populates wavetables
-    void setSampleRate(float SR) override
-    {
-        sampleRate = SR;
-        setUpFreqShiftWavetables();
-    }
+    void setSampleRate(float SR) override;
     
     /// Takes the note frequency to set wavetable increment
-    void modFreq(float fqncy, std::atomic<float>* offset) override
-    {
-        modFrequency = fqncy * *offset;
-        setFreqShiftIncrement();
-    }
+    void modFreq(float fqncy, std::atomic<float>* offset) override;
     
     /// Follows main oscillator morph to morph between Sine/Spike/Saw wavetables
-    void oscMorph(std::atomic<float>* morph)
-    {
-        sineLevel = oscParamControl.sinMorphGain(morph);
-        spikeLevel = oscParamControl.spikeMorphGain(morph);
-        sawLevel = oscParamControl.sawMorphGain(morph);
-    }
+    void oscMorph(std::atomic<float>* morph);
     
     /// Does the frequency shifting and returns the sample value
-    float process() override
-    {
-        return freqShiftProcess();
-    }
+    float process() override;
     
 private:
     /// Sets sampleRate for member wavetables and populates them
-    void setUpFreqShiftWavetables()
-    {
-        wtSine.setSampleRate(sampleRate);
-        wtSaw.setSampleRate(sampleRate);
-        wtSpike.setSampleRate(sampleRate);
-        
-        wtSine.populateWavetable();
-        wtSaw.populateWavetable();
-        wtSpike.populateWavetable();
-    }
+    void setUpFreqShiftWavetables();
     
     /// sets playback frequency
-    void setFreqShiftIncrement()
-    {
-        wtSine.setIncrement(modFrequency);
-        wtSaw.setIncrement(modFrequency);
-        wtSpike.setIncrement(modFrequency);
-    }
+    void setFreqShiftIncrement();
     
     /// Does the frequency shifting and returns the sample value
-    float freqShiftProcess()
-    {
-        float sinVal = wtSine.process() * sineLevel;
-        float spikeVal = wtSpike.process() * spikeLevel;
-        float sawVal = wtSaw.process() * sawLevel;
-        
-        return ( sinVal + spikeVal + sawVal ) * 0.5f;
-    }
+    float freqShiftProcess();
     
     // Wavetable instances
     Wavetable wtSine;
@@ -189,66 +116,34 @@ private:
 class SampleAndHold : public RingMod
 {
 public:
+    /// Constructor
+    SampleAndHold();
+    
     /// Sets sampleRate for member wavetables and populates them
-    void setSampleRate(float SR) override
-    {
-        sampleRate = SR;
-        setSampHoldWavetables();
-    }
+    void setSampleRate(float SR) override;
     
     /// sets playback frequency
-    void modFreq(float fqncy, std::atomic<float>* offset) override
-    {
-        modFrequency = fqncy * *offset;
-        setSampHoldIncrement();
-    }
+    void modFreq(float fqncy, std::atomic<float>* offset) override;
     
     /**
      Takes in current oscillator sample value and processes through S&H
      */
-    float processSH(float oscSampleValIn)
-    {
-        oscSampleVal = oscSampleValIn;
-        return sampleHoldProcess();
-    }
+    float processSH(float oscSampleValIn);
     
 private:
     /// Sets sampleRate for member wavetables and populates them
-    void setSampHoldWavetables()
-    {
-        wtSampHold.setSampleRate(sampleRate);
-        wtSampHold.populateWavetable();
-    }
+    void setSampHoldWavetables();
     
     /// sets playback frequency
-    void setSampHoldIncrement()
-    {
-        wtSampHold.setIncrement(modFrequency);
-    }
+    void setSampHoldIncrement();
     
     /// Processes S&H distortion and returns wave value
-    float sampleHoldProcess()
-    {
-        float outVal;
-        float sampHoldVal = wtSampHold.process();
-        
-        if (sampHoldVal >= 0.0f)
-        {
-            outVal = oscSampleVal;
-            holdSampleVal = outVal;
-        }
-        else
-        {
-            outVal = holdSampleVal;
-        }
-            
-        return outVal;
-    }
+    float sampleHoldProcess();
     
     // Wavetable instances
     SquareWavetable wtSampHold;
     
     // Member Variables
     float oscSampleVal;
-    float holdSampleVal= 0.0f;
+    float holdSampleVal;
 };
