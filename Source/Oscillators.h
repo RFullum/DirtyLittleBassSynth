@@ -10,9 +10,13 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <JuceHeader.h>
 
 
-// PARENT phasor class
+//
+//=== Phasor Class ===================================================
+//
+
 class Phasor
 {
 public:
@@ -21,156 +25,139 @@ public:
     // -- handles phase
     // -- handles setters and getters for frequency and samplerate
     
+    /// Constructor
+    Phasor();
+    
     /// virtual desctructor
-    virtual ~Phasor() {};
+    virtual ~Phasor();
     
     /// update the phase and output the next sample from the oscillator
-    float process()
-    {
-        phase += phaseDelta;
-        
-        if (phase > 1.0f)
-            phase -= 1.0f;
-        
-        return output(phase);
-    }
+    float process();
     
     /// Phase
-    virtual float output(float p)
-    {
-        return p;
-    }
+    virtual float output(float p);
     
     /// Sets sampleRate
-    void setSampleRate(float SR)
-    {
-        sampleRate = SR;
-    }
+    void setSampleRate(float SR);
     
     /// Sets oscillator frequency
-    void setFrequency(float freq)
-    {
-        frequency = freq;
-        phaseDelta = frequency / sampleRate;
-    }
+    void setFrequency(float freq);
     
     // TESTING
+    /// Returns frequency
+    float getFreq();
     
-    float getFreq()
-    {
-        return frequency;
-    }
-    
-    float getSR()
-    {
-        return sampleRate;
-    }
+    /// Returns sampleRate
+    float getSR();
     
     
 private:
     float frequency;
     float sampleRate;
-    float phase = 0.0f;
+    float phase;
     float phaseDelta;
 };
-//==========================================
 
 
-// CHILD Class
+//
+//=== TriOsc Class ===================================================
+//
+
 class TriOsc : public Phasor
 {
-    float output(float p) override
-    {
-        return fabsf(p - 0.5f) - 0.5f;
-    }
+    float output(float p) override;
 };
 
 
-// CHILD Class
+//
+//=== SinOsc Class ===================================================
+//
+
 class SinOsc : public Phasor
 {
-    float output(float p) override
-    {
-        return std::sin(p * TWOPI);
-    }
+public:
+    /// Constructor
+    SinOsc();
+    
+    float output(float p) override;
     
 private:
-    float TWOPI = 2.0f * M_PI;
+    float TWOPI;
 };
 
-// CHILD Class
+
+//
+//=== SquareOsc Class ===================================================
+//
+
 class SquareOsc : public Phasor
 {
 public:
-    float output(float p) override
-    {
-        float outVal = 0.5;
-        if (p > pulseWidth)
-            outVal = -0.5;
-        return outVal;
-    }
-    void setPulseWidth(float pw)
-    {
-        pulseWidth = pw;
-    }
+    /// Constructor
+    SquareOsc();
+    
+    float output(float p) override;
+    
+    /// Sets pulswidth
+    void setPulseWidth(float pw);
+    
 private:
-    float pulseWidth = 0.5f;
+    float pulseWidth;
 };
 
-// Child Class
+
+//
+//=== SawtoothOsc Class ===================================================
+//
 class SawtoothOsc : public Phasor
 {
-    float output(float p) override
-    {
-        return p -= 0.5f;
-    }
+    float output(float p) override;
+    
 };
 
 
-// Child Class
+//
+//=== SparseLFO Class ===================================================
+//
+
 /// Sine wave, silent after the pulseWidth
 class SparseLFO : public Phasor
 {
 public:
-    float output(float p) override
-    {
-        float outVal = sin(p * 0.5f * TWOPI / pulseWidth);
-        if (p > pulseWidth)
-            outVal = 0.0f;
-        return outVal*outVal;
-    }
+    /// Constructor
+    SparseLFO();
+    
+    float output(float p) override;
     
     /// Sets pulseWidth: float between 0.0 and 1.0
-    void setPulseWidth(float pw)
-    {
-        pulseWidth = pw;
-    }
+    void setPulseWidth(float pw);
+
         
 private:
-    float pulseWidth = 0.5f;
-    float TWOPI = 2.0f * M_PI;
+    float pulseWidth;
+    float TWOPI;
 };
 
-// CHILD Class
+
+//
+//=== SquareIOLFO Class ===================================================
+//
+
 /// Outputs 1.0f for pulseWidth, then outputs 0.0f
 class SquareIOLFO : public Phasor
 {
 public:
-    float output(float p) override
-    {
-        float outVal = 1.0f;
-        if (p > pulseWidth)
-            outVal = 0.0f;
-        return outVal;
-    }
+    /// Constructor
+    SquareIOLFO();
+    
+    float output(float p) override;
     
     /// sets pulseWidth between 0.0f and 1.0f
-    void setPulseWidth(float pw)
-    {
-        pulseWidth = pw;
-    }
+    void setPulseWidth(float pw);
+    
+    
 private:
-    float pulseWidth = 0.5f;
+    float pulseWidth;
 };
 
 
