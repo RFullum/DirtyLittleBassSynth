@@ -13,6 +13,8 @@
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="bRJ8MC" name="DryWet.cpp" compile="1" resource="0" file="Source/DryWet.cpp"/>
       <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DryWet.h"/>
+      <FILE id="kst25K" name="FilterSection.cpp" compile="1" resource="0"
+            file="Source/FilterSection.cpp"/>
       <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0" file="Source/FilterSection.h"/>
       <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/Modifiers.h"/>
       <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"

@@ -8,11 +8,11 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.B150987_Assignmen3_BassSynth_Poly</string>
+    <string>com.yourcompany.Wavetable5</string>
     <key>CFBundleName</key>
-    <string>B150987_Assignmen3_BassSynth_Poly</string>
+    <string>Wavetable5</string>
     <key>CFBundleDisplayName</key>
-    <string>B150987_Assignmen3_BassSynth_Poly</string>
+    <string>Wavetable5</string>
     <key>CFBundlePackageType</key>
     <string>BNDL</string>
     <key>CFBundleSignature</key>
@@ -29,11 +29,11 @@
     <array>
       <dict>
         <key>name</key>
-        <string>yourcompany: B150987_Assignmen3_BassSynth_Poly</string>
+        <string>yourcompany: Wavetable5</string>
         <key>description</key>
-        <string>B150987_Assignmen3_BassSynth_Poly</string>
+        <string>Wavetable5</string>
         <key>factoryFunction</key>
-        <string>B150987_Assignmen3_BassSynth_PolyAUFactory</string>
+        <string>Wavetable5AUFactory</string>
         <key>manufacturer</key>
         <string>Manu</string>
         <key>type</key>

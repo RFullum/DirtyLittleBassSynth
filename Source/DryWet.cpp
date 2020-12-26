@@ -10,6 +10,9 @@
 
 #include "DryWet.h"
 
+/**
+Takes the dry sample value, wet sample value, and mix value. Returns their mix sample value
+*/
 float DryWet::dryWetMix(float dryIn, float wetIn, float mixVal)
 {
     drySample = dryIn;
@@ -19,6 +22,7 @@ float DryWet::dryWetMix(float dryIn, float wetIn, float mixVal)
     return dryWetCalculation();
 }
 
+/// Calculates gain of dry and wet samples. Returns mix sample
 float DryWet::dryWetCalculation()
 {
     float wetScaled = wetSample * mixFactor;
