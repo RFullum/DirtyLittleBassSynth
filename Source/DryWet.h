@@ -10,6 +10,7 @@
 
 #pragma once
 
+
 /// Dry/Wet Control
 class DryWet
 {
@@ -24,6 +25,7 @@ private:
     /// Calculates gain of dry and wet samples. Returns mix sample
     float dryWetCalculation();
     
+
     // member variables
     float drySample;
     float wetSample;
