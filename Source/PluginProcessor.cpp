@@ -30,7 +30,6 @@ parameters(*this, nullptr, "ParameterTree", {
     std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
-    std::make_unique<AudioParameterFloat>("voice_count", "Voices", 1.0f, 32.0f, 16.0f),
     
     // Amp ADSR Params
     std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.01f, 4.0f, 0.1f),
@@ -86,7 +85,6 @@ parameters(*this, nullptr, "ParameterTree", {
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
     subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
-    voiceCountParameter = parameters.getRawParameterValue("voice_count");
     portaTimeParameter = parameters.getRawParameterValue("porta_time");
     
     // Amp ADSR Parameter Construction
