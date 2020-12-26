@@ -8,6 +8,8 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="UTZX9W" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
+            file="Source/SynthesiserStarting.h"/>
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -27,8 +29,7 @@
       <FILE id="CLzMZP" name="SubOscillator.cpp" compile="1" resource="0"
             file="Source/SubOscillator.cpp"/>
       <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0" file="Source/SubOscillator.h"/>
-      <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
-            file="Source/SynthesiserStarting.h"/>
+      <FILE id="qkHWvk" name="Wavetable.cpp" compile="1" resource="0" file="Source/Wavetable.cpp"/>
       <FILE id="GN3qnd" name="Wavetable.h" compile="0" resource="0" file="Source/Wavetable.h"/>
     </GROUP>
   </MAINGROUP>
