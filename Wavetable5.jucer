@@ -24,6 +24,8 @@
             resource="0" file="Source/OscillatorParameterControls.h"/>
       <FILE id="W0mg5d" name="Oscillators.cpp" compile="1" resource="0" file="Source/Oscillators.cpp"/>
       <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0" file="Source/Oscillators.h"/>
+      <FILE id="CLzMZP" name="SubOscillator.cpp" compile="1" resource="0"
+            file="Source/SubOscillator.cpp"/>
       <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0" file="Source/SubOscillator.h"/>
       <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
             file="Source/SynthesiserStarting.h"/>
