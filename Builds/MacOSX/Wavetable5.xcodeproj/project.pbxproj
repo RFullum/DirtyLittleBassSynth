@@ -85,6 +85,10 @@
 			isa = PBXBuildFile;
 			fileRef = 9068D459E313E8458798DBC1;
 		};
+		B256541B9BE975A7202F77BD = {
+			isa = PBXBuildFile;
+			fileRef = BEB79ECC375412F3FC3EDFD4;
+		};
 		2647DD4ABD7C28CDE1727139 = {
 			isa = PBXBuildFile;
 			fileRef = F003A326260B6ADD8F1BC891;
@@ -638,6 +642,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_devices.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		BEB79ECC375412F3FC3EDFD4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = SynthesiserStarting.cpp;
+			path = ../../Source/SynthesiserStarting.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		D056DE06493E1707112D72D8 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -748,6 +759,7 @@
 			children = (
 				9068D459E313E8458798DBC1,
 				56812DCB847CEB08E639D827,
+				BEB79ECC375412F3FC3EDFD4,
 				471750BF62AD662498BFEB33,
 				F003A326260B6ADD8F1BC891,
 				3F214979A36613DAA820605E,
@@ -1714,6 +1726,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2C2469D6976441920B13588,
+				B256541B9BE975A7202F77BD,
 				2647DD4ABD7C28CDE1727139,
 				90676949676021B926CFFED3,
 				9398D6006F5B3DC3F999E2EA,

@@ -8,6 +8,8 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="UTZX9W" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="ibUAx0" name="SynthesiserStarting.cpp" compile="1" resource="0"
+            file="Source/SynthesiserStarting.cpp"/>
       <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
             file="Source/SynthesiserStarting.h"/>
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
