@@ -301,7 +301,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         //
         
         foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
-        subGainSmooth.setTargetValue(*subGain);
+        subGainSmooth.setTargetValue( pow(*subGain, 0.3f) );
         ringMixSmooth.setTargetValue(*ringMix);
         freqShiftMixValSmooth.setTargetValue(*freqShiftMixVal);
         sAndHMixValSmooth.setTargetValue(*sAndHMixVal);

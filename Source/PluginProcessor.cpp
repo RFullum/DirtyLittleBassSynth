@@ -23,13 +23,24 @@ Wavetable5AudioProcessor::Wavetable5AudioProcessor()
                      #endif
                        ),
 #endif
+
+//
+// ParameterFloats:
+// id, description, min, max, default
+// ~OR~
+// id, description, normalisableRange(min, max, increment, skew, symmetric),
+//                 default, param label, param category, string from value, string to value
+//
+// ParameterChoices:
+// id, descript, choices (StringArray), default index of StringArray
+//
+
 parameters(*this, nullptr, "ParameterTree", {
-    // id, description, min, max, default
-    // Main Osc Params
     std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph", 0.0f, 2.0f, 0.0f),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
+    //std::make_unique<AudioParameterFloat>("sub_osc_octave", "Sub Octave", 1.0f, 3.0f, 1.0f),
+    std::make_unique<AudioParameterChoice>("sub_osc_octave", "Sub Octave", StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
     
     // Amp ADSR Params
     std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack", 0.01f, 4.0f, 0.1f),

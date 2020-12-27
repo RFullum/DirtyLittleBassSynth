@@ -11,6 +11,14 @@
 #include "OscillatorParameterControls.h"
 
 /**
+ Constructor:
+ blendCurve 1.0 is linear
+ blendCurve > 1.0 reduces area under curve (less than linear: less blend overlap)
+ 0.1 < blendCurve < 1.0 increases area under curve (greater than linear: more blend overlap)
+ */
+OscParamControl::OscParamControl() : blendCurve(0.2f) {}
+
+/**
 Takes the oscillatorMorph value and converts to sinWT gain level:
 value 0 = amplitude 1; val 1 = amp 0; val 2 = amp 0
 */
@@ -22,6 +30,8 @@ float OscParamControl::sinMorphGain(std::atomic<float>* oscMorphVal)
     if (outVal < 0.0f)
         outVal = 0.0f;
     
+    outVal = pow(outVal, blendCurve);
+
     return outVal;
 }
 
@@ -33,6 +43,11 @@ float OscParamControl::spikeMorphGain(std::atomic<float>* oscMorphVal)
 {
     float controlVal = 1.0f;
     float outVal = levelFormula(oscMorphVal, controlVal);
+    
+    if (outVal < 0.0f)
+        outVal = 0.0f;
+    
+    outVal = pow(outVal, blendCurve);
     
     return outVal;
 }
@@ -48,6 +63,8 @@ float OscParamControl::sawMorphGain(std::atomic<float>* oscMorphVal)
     
     if (outVal < 0.0f)
         outVal = 0.0f;
+    
+    outVal = pow(outVal, blendCurve);
     
     return outVal;
 }
@@ -100,10 +117,16 @@ Converts parameter to denominator for octave frequency: 1, 2, or 4
 */
 int SubOscParamControl::subOctaveSelector(std::atomic<float>* subOctVal)
 {
-    int octave = (int)*subOctVal;
+    int octave = 0;
     
-    if (octave == 3)
+    if (*subOctVal == 0.0f)
+        octave = 1;
+    else if (*subOctVal == 1.0f)
+        octave = 2;
+    else if (*subOctVal == 2.0f)
         octave = 4;
+    else
+        octave = 1;
     
     return octave;
 }

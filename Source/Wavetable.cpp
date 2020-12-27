@@ -308,10 +308,10 @@ void SquareWavetable::populateSquareWT()
 /// Highpasses wavetable
 void SpikeWavetable::highPassSpike()
 {
-    cutoffFreq = frequency * 15.0f;
+    cutoffFreq = frequency * 10.0f;
     
     highPass.reset();
-    highPass.setCoefficients( IIRCoefficients::makeHighPass(sampleRate, cutoffFreq) );
+    highPass.setCoefficients( IIRCoefficients::makeHighPass(sampleRate, cutoffFreq, 2.0f) );
     
     for (int i=0; i<waveTableSize; i++)
     {

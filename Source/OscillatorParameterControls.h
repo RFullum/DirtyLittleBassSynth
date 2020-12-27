@@ -17,6 +17,9 @@
 class OscParamControl
 {
 public:
+    /// Constructor
+    OscParamControl();
+    
     /**
      Takes the oscillatorMorph value and converts to sinWT gain level:
      value 0 = amplitude 1; val 1 = amp 0; val 2 = amp 0
@@ -36,12 +39,17 @@ public:
      */
     float sawMorphGain(std::atomic<float>* oscMorphVal);
     
+protected:
+    // Member Variables
+    float blendCurve;
+    
 private:
     /**
      Maps parameter value to gain value based on controlVal
      Values 0 to 2 :: amplitudes 0 to 1
      */
     float levelFormula(std::atomic<float>* MV, float CV);
+    
 
 };
 
