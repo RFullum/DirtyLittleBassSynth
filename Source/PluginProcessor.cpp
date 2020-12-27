@@ -329,15 +329,23 @@ AudioProcessorEditor* Wavetable5AudioProcessor::createEditor()
 //==============================================================================
 void Wavetable5AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // getStateInformation
+    auto state = parameters.copyState();
+    std::unique_ptr<XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void Wavetable5AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // setStateInformation
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+    {
+        if (xmlState->hasTagName (parameters.state.getType()))
+        {
+            parameters.replaceState (ValueTree::fromXml (*xmlState));
+        }
+    }
 }
 
 //==============================================================================
