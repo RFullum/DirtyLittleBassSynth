@@ -36,6 +36,9 @@ private:
     /// Sets up Label: Takes label reference, and the text
     void sliderLabelSetup(Label& labelInstance, String labelText);
     
+    /// ComboBox setup
+    void comboBoxSetup(ComboBox& boxInstance, StringArray boxItems);
+    
     //Slider testSlider1;
     //Slider testSlider2;
     //Slider testSlider3;

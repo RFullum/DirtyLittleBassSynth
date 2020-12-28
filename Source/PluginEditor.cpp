@@ -52,7 +52,7 @@ Wavetable5AudioProcessorEditor::Wavetable5AudioProcessorEditor (Wavetable5AudioP
     sliderLabelSetup( subMorphLabel, "Morph" );
     sliderLabelSetup( subGainLabel, "Sub\nGain" );
     
-    addAndMakeVisible(subOctave);
+    comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
     // Osc ADSR Section
     sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
@@ -92,7 +92,7 @@ Wavetable5AudioProcessorEditor::Wavetable5AudioProcessorEditor (Wavetable5AudioP
     sliderLabelSetup( cutoffLabel, "Cutoff" );
     sliderLabelSetup( resLabel, "Resonance" );
     
-    addAndMakeVisible(filterType);
+    comboBoxSetup(filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
     // Filter ADSR Section
     sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
@@ -408,4 +408,12 @@ void Wavetable5AudioProcessorEditor::sliderLabelSetup(Label& labelInstance, Stri
     labelInstance.setText(labelText, dontSendNotification);
     labelInstance.setJustificationType(Justification::centred);
     addAndMakeVisible(labelInstance);
+}
+
+void Wavetable5AudioProcessorEditor::comboBoxSetup(ComboBox& boxInstance, StringArray boxItems)
+{
+    boxInstance.addItemList(boxItems, 1);
+    boxInstance.setJustificationType(Justification::centred);
+    boxInstance.setSelectedItemIndex(0);
+    addAndMakeVisible(boxInstance);
 }
