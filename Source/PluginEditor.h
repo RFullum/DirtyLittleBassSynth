@@ -36,9 +36,9 @@ private:
     /// Sets up Label: Takes label reference, and the text
     void sliderLabelSetup(Label& labelInstance, String labelText);
     
-    Slider testSlider1;
-    Slider testSlider2;
-    Slider testSlider3;
+    //Slider testSlider1;
+    //Slider testSlider2;
+    //Slider testSlider3;
     
     // Osc Section
     Slider oscMorphSlider;

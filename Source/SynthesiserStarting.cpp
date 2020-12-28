@@ -24,27 +24,27 @@ void MySynthVoice::init(float SR)
     //
     
     // Main and Sub Osc
-    wtSine.setSampleRate(sampleRate);
-    wtSaw.setSampleRate(sampleRate);
-    wtSpike.setSampleRate(sampleRate);
-    subOsc.setSampleRate(sampleRate);
-    env.setSampleRate(sampleRate);
+    wtSine.setSampleRate  (sampleRate);
+    wtSaw.setSampleRate   (sampleRate);
+    wtSpike.setSampleRate (sampleRate);
+    subOsc.setSampleRate  (sampleRate);
+    env.setSampleRate     (sampleRate);
     
     // Modifiers
-    ringMod.setSampleRate(sampleRate);
-    freqShift.setSampleRate(sampleRate);
-    sAndH.setSampleRate(sampleRate);
+    ringMod.setSampleRate   (sampleRate);
+    freqShift.setSampleRate (sampleRate);
+    sAndH.setSampleRate     (sampleRate);
     
     // Filters
-    twoPoleLPF.setSampleRate(sampleRate);
-    fourPoleLPF.setSampleRate(sampleRate);
-    eightPoleLPF.setSampleRate(sampleRate);
-    notchFilter.setSampleRate(sampleRate);
-    filtEnv.setSampleRate(sampleRate);
-    filtLFOClickingEnv.setSampleRate(sampleRate);
+    twoPoleLPF.setSampleRate         (sampleRate);
+    fourPoleLPF.setSampleRate        (sampleRate);
+    eightPoleLPF.setSampleRate       (sampleRate);
+    notchFilter.setSampleRate        (sampleRate);
+    filtEnv.setSampleRate            (sampleRate);
+    filtLFOClickingEnv.setSampleRate (sampleRate);
     
     // LFOs
-    filterLFO.setSampleRate(sampleRate);
+    filterLFO.setSampleRate (sampleRate);
     
     //
     // Populates Wavetables
@@ -94,18 +94,20 @@ void MySynthVoice::init(float SR)
 //
 
 // Main Oscs
-void MySynthVoice::setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn, std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn)
+void MySynthVoice::setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn,
+                                       std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn)
 {
     oscillatorMorph = oscMorphIn;
-    subOscMorph = subOscMorphIn;
-    subGain = subOscGainIn;
-    subOctave = subOctaveIn;
+    subOscMorph     = subOscMorphIn;
+    subGain         = subOscGainIn;
+    subOctave       = subOctaveIn;
 }
 
-void MySynthVoice::setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+void MySynthVoice::setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
+                                           std::atomic<float>* sustain, std::atomic<float>* release)
 {
-    ampAttack = attack;
-    ampDecay = decay;
+    ampAttack  = attack;
+    ampDecay   = decay;
     ampSustain = sustain;
     ampRelease = release;
 }
@@ -116,22 +118,23 @@ void MySynthVoice::setDistParamPointers(std::atomic<float>* foldDistIn)
 }
 
 // Modifiers
-void MySynthVoice::setRingModParamPointers(std::atomic<float>* ringPitch, std::atomic<float>* ringTone, std::atomic<float>* mix)
+void MySynthVoice::setRingModParamPointers(std::atomic<float>* ringPitch, std::atomic<float>* ringTone,
+                                           std::atomic<float>* mix)
 {
     ringModPitch = ringPitch;
-    ringModTone = ringTone;
-    ringMix = mix;
+    ringModTone  = ringTone;
+    ringMix      = mix;
 }
 
 void MySynthVoice::setFreqShiftParamPointers(std::atomic<float>* shiftPitch, std::atomic<float>* mix)
 {
-    freqShiftPitch = shiftPitch;
+    freqShiftPitch  = shiftPitch;
     freqShiftMixVal = mix;
 }
 
 void MySynthVoice::setSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
 {
-    sAndHPitch = pitch;
+    sAndHPitch  = pitch;
     sAndHMixVal = mix;
 }
 
@@ -139,24 +142,25 @@ void MySynthVoice::setSampleAndHoldParamPointers(std::atomic<float>* pitch, std:
 void MySynthVoice::setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type)
 {
     filterCutoffFreq = cutoff;
-    filterResonance = res;
-    filterSelector = type;
+    filterResonance  = res;
+    filterSelector   = type;
 }
 
-void MySynthVoice::setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release, std::atomic<float>* amtCO, std::atomic<float>* amtRes )
+void MySynthVoice::setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain,
+                                              std::atomic<float>* release, std::atomic<float>* amtCO, std::atomic<float>* amtRes )
 {
-    filterAttack = attack;
-    filterDecay = decay;
-    filterSustain = sustain;
-    filterRelease = release;
+    filterAttack           = attack;
+    filterDecay            = decay;
+    filterSustain          = sustain;
+    filterRelease          = release;
     filterADSRCutOffAmount = amtCO;
-    filterADSRResAmount = amtRes;
+    filterADSRResAmount    = amtRes;
 }
 
 void MySynthVoice::setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount, std::atomic<float>* shape)
 {
-    filtLFOFreq = freq;
-    filtLFOAmt = amount;
+    filtLFOFreq  = freq;
+    filtLFOAmt   = amount;
     filtLFOShape = shape;
 }
 
@@ -178,8 +182,8 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
 void MySynthVoice::setAmpADSRValues()
 {
     //ADSR::Parameters envParams;
-    envParams.attack = *ampAttack;      // time (sec)
-    envParams.decay = *ampDecay;        // time (sec)
+    envParams.attack  = *ampAttack;     // time (sec)
+    envParams.decay   = *ampDecay;      // time (sec)
     envParams.sustain = *ampSustain;    // amplitude 0.0f to 1.0f
     envParams.release = *ampRelease;    // time (sec)
     
@@ -189,8 +193,8 @@ void MySynthVoice::setAmpADSRValues()
 void MySynthVoice::setFilterADSRValues()
 {
     ADSR::Parameters filtEnvParams;
-    filtEnvParams.attack = *filterAttack;
-    filtEnvParams.decay = *filterDecay;
+    filtEnvParams.attack  = *filterAttack;
+    filtEnvParams.decay   = *filterDecay;
     filtEnvParams.sustain = *filterSustain;
     filtEnvParams.release = *filterRelease;
     
@@ -200,8 +204,8 @@ void MySynthVoice::setFilterADSRValues()
 void MySynthVoice::setFiltLFOClickValues()
 {
     ADSR::Parameters filtLFOClickParams;
-    filtLFOClickParams.attack = 0.02f;
-    filtLFOClickParams.decay = 0.5f;
+    filtLFOClickParams.attack  = 0.02f;
+    filtLFOClickParams.decay   = 0.5f;
     filtLFOClickParams.sustain = 1.0f;
     filtLFOClickParams.release = 0.02f;
     
@@ -252,11 +256,13 @@ void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
         env.noteOff();
         filtEnv.noteOff();
         filtLFOClickingEnv.noteOff();
+        
         ending = true;
     }
     else
     {
         clearCurrentNote();
+        
         playing = false;
     }
     
@@ -274,39 +280,40 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         //
         
         // Main Oscillator Wavetable Morph Values
-        float sineLevel = oscParamControl.sinMorphGain(oscillatorMorph);
-        float spikeLevel = oscParamControl.spikeMorphGain(oscillatorMorph);
-        float sawLevel = oscParamControl.sawMorphGain(oscillatorMorph);
+        float sineLevel  = oscParamControl.sinMorphGain   (oscillatorMorph);
+        float spikeLevel = oscParamControl.spikeMorphGain (oscillatorMorph);
+        float sawLevel   = oscParamControl.sawMorphGain   (oscillatorMorph);
         
         // Sub Oscillator Wavetable Morph Values
-        float sinSubLevel = subOscParamControl.sinSubGain(subOscMorph);
-        float squareSubLevel = subOscParamControl.squareSubGain(subOscMorph);
-        float sawSubLevel = subOscParamControl.sawSubGain(subOscMorph);
+        float sinSubLevel = subOscParamControl.sinSubGain       (subOscMorph);
+        float squareSubLevel = subOscParamControl.squareSubGain (subOscMorph);
+        float sawSubLevel = subOscParamControl.sawSubGain       (subOscMorph);
         
         // Ring Mod
-        ringMod.setRingToneSlider(ringModTone);
+        ringMod.setRingToneSlider (ringModTone);
         
         // Frequency Shifter
-        freqShift.oscMorph(oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
-        freqShift.modFreq(freq, freqShiftPitch);
+        freqShift.oscMorph (oscillatorMorph);        // oscillatorMorph same as main oscillator wavetables
+        freqShift.modFreq  (freq, freqShiftPitch);
         
         // Filter LFO
-        filterLFO.setIncrement(*filtLFOFreq, 1.0f);
-        float filtLFOSinLevel = filtLFOShapeControl.sinSubGain(filtLFOShape);
-        float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain(filtLFOShape);
-        float filtLFOSawLevel = filtLFOShapeControl.sawSubGain(filtLFOShape);
+        filterLFO.setIncrement (*filtLFOFreq, 1.0f);
+        
+        float filtLFOSinLevel    = filtLFOShapeControl.sinSubGain    (filtLFOShape);
+        float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain (filtLFOShape);
+        float filtLFOSawLevel    = filtLFOShapeControl.sawSubGain    (filtLFOShape);
         
         //
         // Value smoothing .setTargetValue
         //
         
-        foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
-        subGainSmooth.setTargetValue(*subGain);
-        ringMixSmooth.setTargetValue(*ringMix);
-        freqShiftMixValSmooth.setTargetValue(*freqShiftMixVal);
-        sAndHMixValSmooth.setTargetValue(*sAndHMixVal);
-        masterGainControlSmooth.setTargetValue(*masterGainControl);
-        filterCutoffFreqSmooth.setTargetValue(*filterCutoffFreq);
+        foldbackDistortionSmooth.setTargetValue (*foldbackDistortion);
+        subGainSmooth.setTargetValue            (*subGain);
+        ringMixSmooth.setTargetValue            (*ringMix);
+        freqShiftMixValSmooth.setTargetValue    (*freqShiftMixVal);
+        sAndHMixValSmooth.setTargetValue        (*sAndHMixVal);
+        masterGainControlSmooth.setTargetValue  (*masterGainControl);
+        filterCutoffFreqSmooth.setTargetValue   (*filterCutoffFreq);
         
         
         // DSP!
@@ -317,19 +324,19 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             float portaFreq = portamento.getNextValue();
             
             // Main Oscillators
-            wtSine.setIncrement(portaFreq);
-            wtSaw.setIncrement(portaFreq);
-            wtSpike.setIncrement(portaFreq);
-            subOsc.setIncrement(portaFreq, incrementDenominator);
+            wtSine.setIncrement  (portaFreq);
+            wtSaw.setIncrement   (portaFreq);
+            wtSpike.setIncrement (portaFreq);
+            subOsc.setIncrement  (portaFreq, incrementDenominator);
             
             // Mod Oscs
-            ringMod.modFreq(portaFreq, ringModPitch);
-            freqShift.modFreq(portaFreq, freqShiftPitch);
-            sAndH.modFreq(portaFreq, sAndHPitch);
+            ringMod.modFreq   (portaFreq, ringModPitch);
+            freqShift.modFreq (portaFreq, freqShiftPitch);
+            sAndH.modFreq     (portaFreq, sAndHPitch);
             
             // Gets value of next sample in envelope. Use to scale volume
-            float envVal = env.getNextSample();
-            float filtEnvVal = filtEnv.getNextSample();
+            float envVal        = env.getNextSample();
+            float filtEnvVal    = filtEnv.getNextSample();
             float filtLFOEnvVal = filtLFOClickingEnv.getNextSample();
             
             //
@@ -337,35 +344,35 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             
             // osc wavetable values scaled by oscillatorMorph parameter
-            float sinOscSample = wtSine.process() * sineLevel;
+            float sinOscSample   = wtSine.process()  * sineLevel;
             float spikeOscSample = wtSpike.process() * spikeLevel;
-            float sawOscSample = wtSaw.process() * sawLevel;
+            float sawOscSample   = wtSaw.process()   * sawLevel;
             
             // Combine wavetables and scale by half (only two play at once) scaled by envelope
             float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
             
             // Apply foldback distortion to main oscillator
             float foldbackDistortionSmoothed = foldbackDistortionSmooth.getNextValue();
-            float oscDistSample = std::sin(oscSample * foldbackDistortionSmoothed);
+            float oscDistSample              = std::sin(oscSample * foldbackDistortionSmoothed);
             
             //
             // Modifier Processing: Currently Series. Make Parallel option?
             //
             
             // Ring Modulation
-            float ringModSample = oscDistSample * ringMod.process();
+            float ringModSample      = oscDistSample * ringMod.process();
             float ringMixValSmoothed = ringMixSmooth.getNextValue();
-            float oscRingSample = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMixValSmoothed);
+            float oscRingSample      = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMixValSmoothed);
             
             // Frequency Shifter
-            float freqShiftSample = freqShift.process();
+            float freqShiftSample         = freqShift.process();
             float freqShiftMixValSmoothed = freqShiftMixValSmooth.getNextValue();
-            float oscShiftSample = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
+            float oscShiftSample          = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
             
             // Sample and Hold
-            float sAndHSample = sAndH.processSH(oscShiftSample);
+            float sAndHSample         = sAndH.processSH(oscShiftSample);
             float sAndHMixValSmoothed = sAndHMixValSmooth.getNextValue();
-            float oscSandHSample = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
+            float oscSandHSample      = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
             
             //
             // Sub Osc
@@ -386,25 +393,33 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             
             // Filter LFO
-            float filtLFOSample = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel) * filtLFOEnvVal;
+            float filtLFOSample      = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel) * filtLFOEnvVal;
             float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
             
             // Selects filter type
             if ((int)*filterSelector == 0)
             {
-                filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                        currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                        filterADSRResAmount, filtLFOSample, filtLFOAmt);
             }
             else if ((int)*filterSelector == 1)
             {
-                filterSample = fourPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                filterSample = fourPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
             }
             else if ((int)*filterSelector == 2)
             {
-                filterSample = eightPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                filterSample = eightPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                          currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                          filterADSRResAmount, filtLFOSample, filtLFOAmt);
             }
             else if ((int)*filterSelector == 3)
             {
-                filterSample = notchFilter.processFilter(freq, filtCutoffSmoothed, filterResonance, currentSample, filtEnvVal, filterADSRCutOffAmount, filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                filterSample = notchFilter.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
             }
             
             //

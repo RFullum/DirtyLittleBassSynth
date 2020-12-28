@@ -39,82 +39,82 @@ Wavetable5AudioProcessorEditor::Wavetable5AudioProcessorEditor (Wavetable5AudioP
     */
     
     // Master Out
-    sliderSetup(masterGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
+    sliderSetup( masterGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
     
-    sliderLabelSetup(masterGainLabel, "Out Gain");
+    sliderLabelSetup( masterGainLabel, "Out Gain" );
     
     // Osc Section
-    sliderSetup(oscMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue);
-    sliderSetup(subMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue);
-    sliderSetup(subGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
+    sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
+    sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
+    sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
     
-    sliderLabelSetup(oscMorphLabel, "Morph");
-    sliderLabelSetup(subMorphLabel, "Morph");
-    sliderLabelSetup(subGainLabel, "Sub\nGain");
+    sliderLabelSetup( oscMorphLabel, "Morph" );
+    sliderLabelSetup( subMorphLabel, "Morph" );
+    sliderLabelSetup( subGainLabel, "Sub\nGain" );
     
     addAndMakeVisible(subOctave);
     
     // Osc ADSR Section
-    sliderSetup(oscAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(oscDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(oscSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(oscReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
+    sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( oscDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
     
-    sliderLabelSetup(oscAttackLabel, "A");
-    sliderLabelSetup(oscDecayLabel, "D");
-    sliderLabelSetup(oscSustainLabel, "S");
-    sliderLabelSetup(oscReleaseLabel, "R");
-    sliderLabelSetup(portaLabel, "Portamento");
-    sliderLabelSetup(foldbackLabel, "Foldback\nDistortion");
+    sliderLabelSetup( oscAttackLabel, "A" );
+    sliderLabelSetup( oscDecayLabel, "D" );
+    sliderLabelSetup( oscSustainLabel, "S" );
+    sliderLabelSetup( oscReleaseLabel, "R" );
+    sliderLabelSetup( portaLabel, "Portamento" );
+    sliderLabelSetup( foldbackLabel, "Foldback\nDistortion" );
     
     // Modifiers Section
-    sliderSetup(ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
+    sliderSetup( ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
     
-    sliderLabelSetup(ringLabel, "Ring Mod");
-    sliderLabelSetup(frqShftLabel, "Freq Shift");
-    sliderLabelSetup(sHLabel, "Sample & Hold");
-    sliderLabelSetup(toneLabel, "Tone");
-    sliderLabelSetup(pitchLabel, "Pitch");
-    sliderLabelSetup(dryWetLabel, "Dry/Wet");
+    sliderLabelSetup( ringLabel, "Ring Mod" );
+    sliderLabelSetup( frqShftLabel, "Freq Shift" );
+    sliderLabelSetup( sHLabel, "Sample & Hold" );
+    sliderLabelSetup( toneLabel, "Tone" );
+    sliderLabelSetup( pitchLabel, "Pitch" );
+    sliderLabelSetup( dryWetLabel, "Dry/Wet" );
     
     // Filter Section
-    sliderSetup(cutoffSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue);
-    sliderSetup(resSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
+    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
+    sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
     
-    sliderLabelSetup(cutoffLabel, "Cutoff");
-    sliderLabelSetup(resLabel, "Resonance");
+    sliderLabelSetup( cutoffLabel, "Cutoff" );
+    sliderLabelSetup( resLabel, "Resonance" );
     
     // Filter ADSR Section
-    sliderSetup(fltAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(fltDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(fltSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(fltReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
-    sliderSetup(adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue);
+    sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( fltDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( fltSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
     
-    sliderLabelSetup(fltAttackLabel, "A");
-    sliderLabelSetup(fltDecayLabel, "D");
-    sliderLabelSetup(fltSustainLabel, "S");
-    sliderLabelSetup(fltReleaseLabel, "R");
-    sliderLabelSetup(adsrToCutoffLabel, "To Cutoff");
-    sliderLabelSetup(adsrToResLabel, "To Resonance");
+    sliderLabelSetup( fltAttackLabel, "A" );
+    sliderLabelSetup( fltDecayLabel, "D" );
+    sliderLabelSetup( fltSustainLabel, "S" );
+    sliderLabelSetup( fltReleaseLabel, "R" );
+    sliderLabelSetup( adsrToCutoffLabel, "To Cutoff" );
+    sliderLabelSetup( adsrToResLabel, "To Resonance" );
     
     // Filter LFO Section
-    sliderSetup(lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue);
-    sliderSetup(lfoFreqSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
-    sliderSetup(lfoAmountSlider, Slider::SliderStyle::LinearVertical, Colours::blue);
+    sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
+    sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
     
-    sliderLabelSetup(lfoShapeLabel, "LFO Shape");
-    sliderLabelSetup(lfoFreqLabel, "Frequency");
-    sliderLabelSetup(lfoAmountLabel, "To Cutoff");
+    sliderLabelSetup( lfoShapeLabel, "LFO Shape" );
+    sliderLabelSetup( lfoFreqLabel, "Frequency" );
+    sliderLabelSetup( lfoAmountLabel, "To Cutoff" );
 }
 
 Wavetable5AudioProcessorEditor::~Wavetable5AudioProcessorEditor()
@@ -136,58 +136,61 @@ void Wavetable5AudioProcessorEditor::resized()
     // Output area
     int mainOutWidth = 100;
     int mainLabelHeight = 30;
-    Rectangle<int> mainOutArea = totalArea.removeFromRight( mainOutWidth );
+    
+    Rectangle<int> mainOutArea      = totalArea.removeFromRight( mainOutWidth );
     Rectangle<int> mainOutLabelArea = mainOutArea.removeFromTop( mainLabelHeight );
+    
     masterGainSlider.setBounds( mainOutArea );
     
     // Top Row of sections area
     int topRowHeight = (int)(getHeight() * 0.66f);
+    
     Rectangle<int> topSectionArea = totalArea.removeFromTop( topRowHeight );
     
     // Oscillator Section area (Top Row subarea)
     int oscSectionWidth = topSectionArea.getWidth() * 0.33f;
-    int oscGainWidth = 55;
+    int oscGainWidth    = 55;
     int subOctaveHeight = 30;
     int morphLabelWidth = 50;
     int gainLabelHeight = 30;
     
     // Main Osc Section Area (Oscillator subarea)
-    Rectangle<int> oscSection = topSectionArea.removeFromLeft( oscSectionWidth );
-    Rectangle<int> mainOscSection = oscSection.removeFromTop( oscSection.getHeight() * 0.5f );
-    Rectangle<int> oscGainSpace = mainOscSection.removeFromRight( oscGainWidth );
+    Rectangle<int> oscSection      = topSectionArea.removeFromLeft( oscSectionWidth );
+    Rectangle<int> mainOscSection  = oscSection.removeFromTop( oscSection.getHeight() * 0.5f );
+    Rectangle<int> oscGainSpace    = mainOscSection.removeFromRight( oscGainWidth );
     Rectangle<int> morphLabelSpace = mainOscSection.removeFromLeft( morphLabelWidth );
     
     oscMorphLabel.setBounds( morphLabelSpace );
     oscMorphSlider.setBounds( mainOscSection );
     
     // Sub Osc Section Area (Oscillator subarea)
-    Rectangle<int> subGainSpace = oscSection.removeFromRight( oscGainWidth );
-    Rectangle<int> subOctaveSpace = subGainSpace.removeFromBottom( subOctaveHeight );
-    Rectangle<int> subGainLabelSpace = subGainSpace.removeFromTop( gainLabelHeight );
+    Rectangle<int> subGainSpace       = oscSection.removeFromRight( oscGainWidth );
+    Rectangle<int> subOctaveSpace     = subGainSpace.removeFromBottom( subOctaveHeight );
+    Rectangle<int> subGainLabelSpace  = subGainSpace.removeFromTop( gainLabelHeight );
     Rectangle<int> subMorphLableSpace = oscSection.removeFromLeft( morphLabelWidth );
     
-    subGainLabel.setBounds( subGainLabelSpace );
-    subMorphLabel.setBounds( subMorphLableSpace );
-    subOctave.setBounds( subOctaveSpace );
-    subGainSlider.setBounds( subGainSpace );
-    subMorphSlider.setBounds( oscSection );
+    subGainLabel.setBounds   ( subGainLabelSpace );
+    subMorphLabel.setBounds  ( subMorphLableSpace );
+    subOctave.setBounds      ( subOctaveSpace );
+    subGainSlider.setBounds  ( subGainSpace );
+    subMorphSlider.setBounds ( oscSection );
     
     // Osc ADSR Section Area
     Rectangle<int> oscADSRSpace = topSectionArea.removeFromLeft( topSectionArea.getWidth() * 0.33f );
     
     int rotaryLabelHeight = 60;
     
-    Rectangle<int> rotarySpace = oscADSRSpace.removeFromBottom( oscADSRSpace.getHeight() * 0.5f );
-    Rectangle<int> portaSpace = rotarySpace.removeFromLeft( rotarySpace.getWidth() * 0.5f );
-    Rectangle<int> portaLabelSpace = portaSpace.removeFromTop( rotaryLabelHeight );
+    Rectangle<int> rotarySpace     = oscADSRSpace.removeFromBottom ( oscADSRSpace.getHeight() * 0.5f );
+    Rectangle<int> portaSpace      = rotarySpace.removeFromLeft    ( rotarySpace.getWidth() * 0.5f );
+    Rectangle<int> portaLabelSpace = portaSpace.removeFromTop      ( rotaryLabelHeight );
     
     portaSlider.setBounds( portaSpace );
     portaLabel.setBounds( portaLabelSpace );
     
     Rectangle<int> foldbackLabelSpace = rotarySpace.removeFromTop( rotaryLabelHeight );
     
-    foldbackSlider.setBounds( rotarySpace );
-    foldbackLabel.setBounds( foldbackLabelSpace );
+    foldbackSlider.setBounds ( rotarySpace );
+    foldbackLabel.setBounds  ( foldbackLabelSpace );
     
     // ADSR Slider Area (Osc ADSR subsection)
     int oscADSRSliderWidth = oscADSRSpace.getWidth() * 0.25f;
@@ -205,55 +208,55 @@ void Wavetable5AudioProcessorEditor::resized()
     Rectangle<int> oscSLabelSpace = oscSSpace.removeFromTop( oscADSRLableHeight );
     Rectangle<int> oscRLabelSpace = oscRSpace.removeFromTop( oscADSRLableHeight );
     
-    oscAttackSlider.setBounds( oscASpace );
-    oscDecaySlider.setBounds( oscDSpace );
-    oscSustainSlider.setBounds( oscSSpace );
-    oscReleaseSlider.setBounds( oscRSpace );
+    oscAttackSlider.setBounds  ( oscASpace );
+    oscDecaySlider.setBounds   ( oscDSpace );
+    oscSustainSlider.setBounds ( oscSSpace );
+    oscReleaseSlider.setBounds ( oscRSpace );
     
-    oscAttackLabel.setBounds( oscALabelSpace );
-    oscDecayLabel.setBounds( oscDLabelSpace );
-    oscSustainLabel.setBounds( oscSLabelSpace );
-    oscReleaseLabel.setBounds( oscRLabelSpace );
+    oscAttackLabel.setBounds  ( oscALabelSpace );
+    oscDecayLabel.setBounds   ( oscDLabelSpace );
+    oscSustainLabel.setBounds ( oscSLabelSpace );
+    oscReleaseLabel.setBounds ( oscRLabelSpace );
     
     // Modifiers Area
-    int modHeadingHeight = 30;
+    int modHeadingHeight    = 30;
     int modSectionGridWidth = (int)(topSectionArea.getWidth() * 0.25f);
     
-    Rectangle<int> modHeadingsSpace = topSectionArea.removeFromTop( modHeadingHeight );
+    Rectangle<int> modHeadingsSpace   = topSectionArea.removeFromTop( modHeadingHeight );
     Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> toneHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> pitchHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> toneHeadingSpace   = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> pitchHeadingSpace  = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
     
-    toneLabel.setBounds( toneHeadingSpace );
-    pitchLabel.setBounds( pitchHeadingSpace );
-    dryWetLabel.setBounds( modHeadingsSpace );
+    toneLabel.setBounds   ( toneHeadingSpace );
+    pitchLabel.setBounds  ( pitchHeadingSpace );
+    dryWetLabel.setBounds ( modHeadingsSpace );
     
     int modKnobHeight = (int)( topSectionArea.getHeight() * 0.33f );
     
-    Rectangle<int> modTypeSection = topSectionArea.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> ringLabelArea = modTypeSection.removeFromTop( modKnobHeight );
-    Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop( modKnobHeight );
+    Rectangle<int> modTypeSection   = topSectionArea.removeFromLeft ( modSectionGridWidth );
+    Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop  ( modKnobHeight );
+    Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop  ( modKnobHeight );
     
     ringLabel.setBounds( ringLabelArea );
     frqShftLabel.setBounds( frqShftLabelArea );
     sHLabel.setBounds( modTypeSection );
     
-    Rectangle<int> ringKnobArea = topSectionArea.removeFromTop( modKnobHeight );
-    Rectangle<int> ringToneKnobArea = ringKnobArea.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> ringKnobArea      = topSectionArea.removeFromTop ( modKnobHeight );
+    Rectangle<int> ringToneKnobArea  = ringKnobArea.removeFromLeft  ( modSectionGridWidth );
+    Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft  ( modSectionGridWidth );
     
     ringToneSlider.setBounds( ringToneKnobArea );
     ringPitchSlider.setBounds( ringPitchKnobArea );
     ringDryWetSlider.setBounds( ringKnobArea );
     
     Rectangle<int> frqShKnobArea = topSectionArea.removeFromTop( modKnobHeight );
-    Rectangle<int> frqShSpacer = frqShKnobArea.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft( modSectionGridWidth );
     Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft( modSectionGridWidth );
     
     frqShftPitchSlider.setBounds( frqShPtchArea );
     frqShftDryWetSlider.setBounds( frqShKnobArea );
     
-    Rectangle<int> sHSpacer = topSectionArea.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> sHSpacer    = topSectionArea.removeFromLeft( modSectionGridWidth );
     Rectangle<int> sHPitchArea = topSectionArea.removeFromLeft( modSectionGridWidth );
     
     sHPitchSlider.setBounds( sHPitchArea );
@@ -262,7 +265,7 @@ void Wavetable5AudioProcessorEditor::resized()
     // Bottom Section
     auto bottomSectionArea = totalArea;
     
-    int lowerGridWidth = (int)(bottomSectionArea.getWidth() * 0.33f);
+    int lowerGridWidth  = (int)(bottomSectionArea.getWidth() * 0.33f);
     int filtLabelheight = 30;
     
     // Filter Area
@@ -270,9 +273,9 @@ void Wavetable5AudioProcessorEditor::resized()
     
     int resWidth = (int)(filterArea.getWidth() * 0.25f);
     
-    Rectangle<int> resArea = filterArea.removeFromRight( resWidth );
-    Rectangle<int> resLableArea = resArea.removeFromTop( filtLabelheight );
-    Rectangle<int> cOLabelArea = filterArea.removeFromBottom( filtLabelheight );
+    Rectangle<int> resArea      = filterArea.removeFromRight  ( resWidth );
+    Rectangle<int> resLableArea = resArea.removeFromTop       ( filtLabelheight );
+    Rectangle<int> cOLabelArea  = filterArea.removeFromBottom ( filtLabelheight );
     
     resLabel.setBounds( resLableArea );
     resSlider.setBounds( resArea );
@@ -280,11 +283,11 @@ void Wavetable5AudioProcessorEditor::resized()
     cutoffSlider.setBounds( filterArea );
     
     // Filter ADSR Area
-    Rectangle<int> fltADSRArea = bottomSectionArea.removeFromLeft( lowerGridWidth );
-    Rectangle<int> fltADSRRotaryArea = fltADSRArea.removeFromRight( (int)(fltADSRArea.getWidth() * 0.33f) );
-    Rectangle<int> fltADSRToResArea = fltADSRRotaryArea.removeFromBottom( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
-    Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop( filtLabelheight );
-    Rectangle<int> fltADSRToCOLabelArea = fltADSRRotaryArea.removeFromTop( filtLabelheight );
+    Rectangle<int> fltADSRArea           = bottomSectionArea.removeFromLeft   ( lowerGridWidth );
+    Rectangle<int> fltADSRRotaryArea     = fltADSRArea.removeFromRight        ( (int)(fltADSRArea.getWidth() * 0.33f) );
+    Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
+    Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight );
+    Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight );
     
     adsrToResLabel.setBounds( fltADSRToResLabelArea );
     adsrToResSlider.setBounds( fltADSRToResArea );
@@ -293,10 +296,10 @@ void Wavetable5AudioProcessorEditor::resized()
     
     int fltADSRWidth = (int)(fltADSRArea.getWidth() * 0.25f);
     
-    Rectangle<int> fltADSRHeader = fltADSRArea.removeFromTop( filtLabelheight );
-    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft( fltADSRWidth );
-    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft( fltADSRWidth );
-    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft( fltADSRWidth );
+    Rectangle<int> fltADSRHeader = fltADSRArea.removeFromTop    ( filtLabelheight );
+    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
+    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
+    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
     
     fltAttackLabel.setBounds( fltALabelArea );
     fltDecayLabel.setBounds( fltDLabelArea );
@@ -314,9 +317,9 @@ void Wavetable5AudioProcessorEditor::resized()
     
     auto lfoArea = bottomSectionArea;
     
-    Rectangle<int> lfoVertSliderArea = lfoArea.removeFromRight( (int)(lfoArea.getWidth() * 0.33f) );
-    Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop( filtLabelheight );
-    Rectangle<int> lfoFrqLabelArea = lfoVertLabelFootArea.removeFromLeft( (int)(lfoVertLabelFootArea.getWidth() * 0.5f) );
+    Rectangle<int> lfoVertSliderArea    = lfoArea.removeFromRight             ( (int)(lfoArea.getWidth() * 0.33f) );
+    Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop     ( filtLabelheight );
+    Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)(lfoVertLabelFootArea.getWidth() * 0.5f) );
     
     lfoFreqLabel.setBounds( lfoFrqLabelArea );
     lfoAmountLabel.setBounds( lfoVertLabelFootArea );

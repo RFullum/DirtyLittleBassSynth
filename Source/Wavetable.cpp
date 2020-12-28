@@ -116,13 +116,15 @@ void Wavetable::populateWT()
 float Wavetable::lagrangeInterpolation()
 {
     float frac = readHeadPos - floor(readHeadPos);  // Position between indexes
-    float sum = 0.0f;       // initialize sum
+    float sum  = 0.0f;                              // initialize sum
     
     for (int i=-2; i<2; i++)
     {
         int index = floor(readHeadPos + (i + 1));   // index after readHeadPos in time
+        
         index %= waveTableSize;                     // wrap index
-        float outVal = waveTable[index];            // value at wt[index] to outVal
+        
+        float outVal      = waveTable[index];            // value at wt[index] to outVal
         float denominator = 1.0f;                   // initialize denominator
         
         // interpolate algorithm
@@ -182,11 +184,11 @@ void SawWavetable::setSawFrequencies()
     
     for (int i=0; i<numSawHarmonics; i++)
     {
-        if (i == 0)     // Fundamental 1/1 ratio
+        if (i == 0)                                 // Fundamental 1/1 ratio
         {
             harmonicFreq = frequency;
         }
-        else            // partials up the harmonic series ratios
+        else                                        // partials up the harmonic series ratios
         {
             harmonicFreq *= ( (i + 1.0f) / i );
         }

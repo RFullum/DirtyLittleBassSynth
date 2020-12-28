@@ -25,7 +25,7 @@ value 0 = amplitude 1; val 1 = amp 0; val 2 = amp 0
 float OscParamControl::sinMorphGain(std::atomic<float>* oscMorphVal)
 {
     float controlVal = 0.0f;
-    float outVal = levelFormula(oscMorphVal, controlVal);
+    float outVal     = levelFormula(oscMorphVal, controlVal);
     
     if (outVal < 0.0f)
         outVal = 0.0f;
@@ -42,7 +42,7 @@ val 0 = amp 0; val 1 = amp 1; val 2 = amp 0
 float OscParamControl::spikeMorphGain(std::atomic<float>* oscMorphVal)
 {
     float controlVal = 1.0f;
-    float outVal = levelFormula(oscMorphVal, controlVal);
+    float outVal     = levelFormula(oscMorphVal, controlVal);
     
     if (outVal < 0.0f)
         outVal = 0.0f;
@@ -59,7 +59,7 @@ val 0 = amp 0; val 1 = amp 0; val 2 = amp 1
 float OscParamControl::sawMorphGain(std::atomic<float>* oscMorphVal)
 {
     float controlVal = 2.0f;
-    float outVal = levelFormula(oscMorphVal, controlVal);
+    float outVal     = levelFormula(oscMorphVal, controlVal);
     
     if (outVal < 0.0f)
         outVal = 0.0f;

@@ -56,9 +56,11 @@ public:
     //
     
     // Main Oscs
-    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn, std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn);
+    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn,
+                             std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn);
     
-    void setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release);
+    void setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
+                                 std::atomic<float>* sustain, std::atomic<float>* release);
     
     void setDistParamPointers(std::atomic<float>* foldDistIn);
     
@@ -72,7 +74,9 @@ public:
     // Filters
     void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type);
     
-    void setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release, std::atomic<float>* amtCO, std::atomic<float>* amtRes );
+    void setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
+                                    std::atomic<float>* sustain, std::atomic<float>* release,
+                                    std::atomic<float>* amtCO, std::atomic<float>* amtRes );
     
     void setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount, std::atomic<float>* shape);
     

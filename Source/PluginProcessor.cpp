@@ -121,15 +121,15 @@ parameters(*this, nullptr, "ParameterTree", {
 // CONSTRUCTOR!
 {
     // Osc Parameter Construction
-    oscMorphParameter = parameters.getRawParameterValue("osc_morph");
+    oscMorphParameter    = parameters.getRawParameterValue("osc_morph");
     subOscMorphParameter = parameters.getRawParameterValue("sub_osc_morph");
-    subGainParameter = parameters.getRawParameterValue("sub_osc_gain");
-    subOctaveParameter = parameters.getRawParameterValue("sub_osc_octave");
-    portaTimeParameter = parameters.getRawParameterValue("porta_time");
+    subGainParameter     = parameters.getRawParameterValue("sub_osc_gain");
+    subOctaveParameter   = parameters.getRawParameterValue("sub_osc_octave");
+    portaTimeParameter   = parameters.getRawParameterValue("porta_time");
     
     // Amp ADSR Parameter Construction
-    ampAttackParameter = parameters.getRawParameterValue("amp_attack");
-    ampDecayParameter = parameters.getRawParameterValue("amp_decay");
+    ampAttackParameter  = parameters.getRawParameterValue("amp_attack");
+    ampDecayParameter   = parameters.getRawParameterValue("amp_decay");
     ampSustainParameter = parameters.getRawParameterValue("amp_sustain");
     ampReleaseParameter = parameters.getRawParameterValue("amp_release");
     
@@ -138,33 +138,33 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // RingMod Parameter Construction
     ringModPitchParameter = parameters.getRawParameterValue("ring_mod_pitch");
-    ringToneParameter = parameters.getRawParameterValue("ring_tone");
-    ringModMixParameter = parameters.getRawParameterValue("ring_mod_mix");
+    ringToneParameter     = parameters.getRawParameterValue("ring_tone");
+    ringModMixParameter   = parameters.getRawParameterValue("ring_mod_mix");
     
     // Frequency Shift Parameter Construction
     freqShiftPitchParameter = parameters.getRawParameterValue("freq_shift_pitch");
-    freqShiftMixParameter = parameters.getRawParameterValue("freq_shift_mix");
+    freqShiftMixParameter   = parameters.getRawParameterValue("freq_shift_mix");
     
     // S&H Parameter Construction
     sAndHPitchParameter = parameters.getRawParameterValue("sandh_pitch");
-    sAndHMixParameter = parameters.getRawParameterValue("sandh_mix");
+    sAndHMixParameter   = parameters.getRawParameterValue("sandh_mix");
     
     // Filter Parameter Construction
-    filterCutoffParameter = parameters.getRawParameterValue("filter_cutoff");
+    filterCutoffParameter    = parameters.getRawParameterValue("filter_cutoff");
     filterResonanceParameter = parameters.getRawParameterValue("filter_res");
-    filterSelectorParameter = parameters.getRawParameterValue("filter_type");
+    filterSelectorParameter  = parameters.getRawParameterValue("filter_type");
     
     // Filter ADSR Parameter Construction
-    filtEnvAttackParameter = parameters.getRawParameterValue("filtEnv_attack");
-    filtEnvDecayParameter = parameters.getRawParameterValue("filtEnv_decay");
+    filtEnvAttackParameter  = parameters.getRawParameterValue("filtEnv_attack");
+    filtEnvDecayParameter   = parameters.getRawParameterValue("filtEnv_decay");
     filtEnvSustainParameter = parameters.getRawParameterValue("filtEnv_sustain");
     filtEnvReleaseParameter = parameters.getRawParameterValue("filtEnv_release");
-    filtEnvAmtCOParameter = parameters.getRawParameterValue("filtEnv_COAmt");
-    filtEnvAmtResParameter = parameters.getRawParameterValue("filtEnv_ResAmt");
+    filtEnvAmtCOParameter   = parameters.getRawParameterValue("filtEnv_COAmt");
+    filtEnvAmtResParameter  = parameters.getRawParameterValue("filtEnv_ResAmt");
     
     // Filter LFO Parameter Construction
-    filtLFOFreqParameter = parameters.getRawParameterValue("filtLFO_freq");
-    filtLFOAmtParameter = parameters.getRawParameterValue("filtLFO_amt");
+    filtLFOFreqParameter  = parameters.getRawParameterValue("filtLFO_freq");
+    filtLFOAmtParameter   = parameters.getRawParameterValue("filtLFO_amt");
     filtLFOShapeParameter = parameters.getRawParameterValue("filtLFO_shape");
     
     // Master Gain Parameter Construction
@@ -183,17 +183,18 @@ parameters(*this, nullptr, "ParameterTree", {
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        v->setOscParamPointers(oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
-        v->setAmpADSRParamPointers(ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
-        v->setPortamentoParamPointers(portaTimeParameter);
-        v->setDistParamPointers(foldbackDistParameter);
-        v->setRingModParamPointers(ringModPitchParameter, ringToneParameter, ringModMixParameter);
-        v->setFreqShiftParamPointers(freqShiftPitchParameter, freqShiftMixParameter);
-        v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
-        v->setFilterParamPointers(filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
-        v->setFilterADSRParamPointers(filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
-        v->setFilterLFOParamPointers(filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
-        v->setMasterGainParamPointers(masterGainParameter);
+        
+        v->setOscParamPointers           (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
+        v->setAmpADSRParamPointers       (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
+        v->setPortamentoParamPointers    (portaTimeParameter);
+        v->setDistParamPointers          (foldbackDistParameter);
+        v->setRingModParamPointers       (ringModPitchParameter, ringToneParameter, ringModMixParameter);
+        v->setFreqShiftParamPointers     (freqShiftPitchParameter, freqShiftMixParameter);
+        v->setSampleAndHoldParamPointers (sAndHPitchParameter, sAndHMixParameter);
+        v->setFilterParamPointers        (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
+        v->setFilterADSRParamPointers    (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
+        v->setFilterLFOParamPointers     (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->setMasterGainParamPointers    (masterGainParameter);
     }
     
 }

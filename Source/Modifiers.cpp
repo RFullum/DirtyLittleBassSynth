@@ -53,8 +53,8 @@ float RingMod::process()
 void RingMod::setUpWavetables()
 {
     // Sets wavetable samplerate
-    wtSine.setSampleRate(sampleRate);
-    wtSquare.setSampleRate(sampleRate);
+    wtSine.setSampleRate   (sampleRate);
+    wtSquare.setSampleRate (sampleRate);
     
     // Populates wavetables
     wtSine.populateWavetable();
@@ -64,15 +64,15 @@ void RingMod::setUpWavetables()
 /// Sets the playback frequency for wavetables
 void RingMod::setRingIncrement()
 {
-    wtSine.setIncrement(modFrequency);
-    wtSquare.setIncrement(modFrequency);
+    wtSine.setIncrement   (modFrequency);
+    wtSquare.setIncrement (modFrequency);
 }
 
 /// Calculate ring modulation: calls wavetable process functions, morphs their shapes, and returns sample value
 float RingMod::ringModProcess()
 {
     float sinVal = wtSine.process();
-    float sqVal = wtSquare.process();
+    float sqVal  = wtSquare.process();
     float outVal = toneControl.dryWetMix(sinVal, sqVal, ringToneSlider);
     
     return outVal;
@@ -103,9 +103,9 @@ void FrequencyShifter::modFreq(float fqncy, std::atomic<float>* offset)
 /// Follows main oscillator morph to morph between Sine/Spike/Saw wavetables
 void FrequencyShifter::oscMorph(std::atomic<float>* morph)
 {
-    sineLevel = oscParamControl.sinMorphGain(morph);
+    sineLevel  = oscParamControl.sinMorphGain(morph);
     spikeLevel = oscParamControl.spikeMorphGain(morph);
-    sawLevel = oscParamControl.sawMorphGain(morph);
+    sawLevel   = oscParamControl.sawMorphGain(morph);
 }
 
 /// Does the frequency shifting and returns the sample value
@@ -117,9 +117,9 @@ float FrequencyShifter::process()
 /// Sets sampleRate for member wavetables and populates them
 void FrequencyShifter::setUpFreqShiftWavetables()
 {
-    wtSine.setSampleRate(sampleRate);
-    wtSaw.setSampleRate(sampleRate);
-    wtSpike.setSampleRate(sampleRate);
+    wtSine.setSampleRate  (sampleRate);
+    wtSaw.setSampleRate   (sampleRate);
+    wtSpike.setSampleRate (sampleRate);
     
     wtSine.populateWavetable();
     wtSaw.populateWavetable();
@@ -129,17 +129,17 @@ void FrequencyShifter::setUpFreqShiftWavetables()
 /// sets playback frequency
 void FrequencyShifter::setFreqShiftIncrement()
 {
-    wtSine.setIncrement(modFrequency);
-    wtSaw.setIncrement(modFrequency);
-    wtSpike.setIncrement(modFrequency);
+    wtSine.setIncrement  (modFrequency);
+    wtSaw.setIncrement   (modFrequency);
+    wtSpike.setIncrement (modFrequency);
 }
 
 /// Does the frequency shifting and returns the sample value
 float FrequencyShifter::freqShiftProcess()
 {
-    float sinVal = wtSine.process() * sineLevel;
+    float sinVal   = wtSine.process()  * sineLevel;
     float spikeVal = wtSpike.process() * spikeLevel;
-    float sawVal = wtSaw.process() * sawLevel;
+    float sawVal   = wtSaw.process()   * sawLevel;
     
     return ( sinVal + spikeVal + sawVal ) * 0.5f;
 }
@@ -202,7 +202,7 @@ float SampleAndHold::sampleHoldProcess()
     
     if (sampHoldVal >= 0.0f)
     {
-        outVal = oscSampleVal;
+        outVal        = oscSampleVal;
         holdSampleVal = outVal;
     }
     else

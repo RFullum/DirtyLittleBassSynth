@@ -45,9 +45,9 @@ wave shapes: sinSubGain( ), squareSubGain( ), and sawSubGain( )
 */
 float SubOsc::process(float sinGain, float squareGain, float sawGain)
 {
-    float sinVal = sinSub.process() * sinGain;
+    float sinVal    = sinSub.process() * sinGain;
     float squareVal = squareSub.process() * squareGain;
-    float sawVal = sawSub.process() * sawGain;
+    float sawVal    = sawSub.process() * sawGain;
     
     float outVal = (sinVal + squareVal + sawVal) * 0.5f;
     

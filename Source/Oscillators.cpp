@@ -47,7 +47,7 @@ void Phasor::setSampleRate(float SR)
 /// Sets oscillator frequency
 void Phasor::setFrequency(float freq)
 {
-    frequency = freq;
+    frequency  = freq;
     phaseDelta = frequency / sampleRate;
 }
 
@@ -97,8 +97,10 @@ SquareOsc::SquareOsc() : pulseWidth(0.5f) {}
 float SquareOsc::output(float p)
 {
     float outVal = 0.5;
+    
     if (p > pulseWidth)
         outVal = -0.5;
+    
     return outVal;
 }
 
@@ -129,8 +131,10 @@ SparseLFO::SparseLFO() : pulseWidth(0.5f), TWOPI(2.0f * M_PI) {}
 float SparseLFO::output(float p)
 {
     float outVal = sin(p * 0.5f * TWOPI / pulseWidth);
+    
     if (p > pulseWidth)
         outVal = 0.0f;
+    
     return outVal*outVal;
 }
 
@@ -151,8 +155,10 @@ SquareIOLFO::SquareIOLFO() : pulseWidth(0.5f) {}
 float SquareIOLFO::output(float p)
 {
     float outVal = 1.0f;
+    
     if (p > pulseWidth)
         outVal = 0.0f;
+    
     return outVal;
 }
 

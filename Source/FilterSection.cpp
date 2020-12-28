@@ -48,13 +48,13 @@ float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
     keyMap(noteFreq, cutoff);
     
     envelopeVal = envVal;
-    cutoffSend = amtToCO;
-    resSend = amtToRes;
+    cutoffSend  = amtToCO;
+    resSend     = amtToRes;
     
     lfoValue = lfoVal;
-    lfoSend = amtToLFO;
+    lfoSend  = amtToLFO;
     
-    resonance = *res;
+    resonance   = *res;
     inputSample = sampleIn;
     
     return process();
@@ -64,7 +64,7 @@ float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
 void TwoPoleLPF::keyMap(float frqncy, float CO)
 {
     float cutoffPos = CO;
-    cutoffFreq = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
+    cutoffFreq      = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
 }
 
 /**
@@ -75,10 +75,10 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
 {
     // Cutoff envelope scaling
     float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
-    cutoffScale = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
+    cutoffScale          = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
-    resonanceScale = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
+    resonanceScale    = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
     
     filterLFOControl();
 }
@@ -145,7 +145,7 @@ float FourPoleLPF::processFilter(float noteFreq, float cutoff,
 {
     keyMap(noteFreq, cutoff);
     
-    resonance = *res;
+    resonance   = *res;
     inputSample = sampleIn;
     
     float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
@@ -181,7 +181,7 @@ float EightPoleLPF::processFilter(float noteFreq, float cutoff, std::atomic<floa
 {
     keyMap(noteFreq, cutoff);
     
-    resonance = *res;
+    resonance   = *res;
     inputSample = sampleIn;
     
     float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
@@ -214,16 +214,16 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
                                  float lfoVal, std::atomic<float>* amtToLFO)
 {
     envelopeVal = envVal;
-    cutoffSend = amtToCO;
-    resSend = amtToRes;
+    cutoffSend  = amtToCO;
+    resSend     = amtToRes;
     
     lfoValue = lfoVal;
-    lfoSend = amtToLFO;
+    lfoSend  = amtToLFO;
     
-    resonance = *res;
-    inputSample = sampleIn;
+    resonance     = *res;
+    inputSample   = sampleIn;
     float cutFreq = cutoff;
-    cutoffFreq = jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
+    cutoffFreq    = jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
     
     return processNotch();
 }

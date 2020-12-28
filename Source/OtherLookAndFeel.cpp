@@ -22,11 +22,11 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
 {
     // Local Variables
     float diameter = jmin(width, height);   // Lesser of two creates squre & circle from rect & ellipse
-    float radius = diameter * 0.5f;
-    float centerX = x + (width / 2.0f);     // Finds center offset by x value to actually center it
-    float centerY = y + (height / 2.0f);    // Ditto for centerY
-    float radiusX = centerX - radius;
-    float radiusY = centerY - radius;
+    float radius   = diameter * 0.5f;
+    float centerX  = x + (width / 2.0f);     // Finds center offset by x value to actually center it
+    float centerY  = y + (height / 2.0f);    // Ditto for centerY
+    float radiusX  = centerX - radius;
+    float radiusY  = centerY - radius;
     /*
      - The difference between rotaryEndAngle and rotaryStartAngle is the total distance travelable in radians.
      - Multiplying that by slider position says what percentage of the way around that distance you are.
