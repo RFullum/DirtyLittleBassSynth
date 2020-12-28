@@ -30,6 +30,12 @@ public:
 private:
     OtherLookAndFeel otherLookAndFeel;
     
+    /// Sets up slider: Takes reference to a slider, the style of the slider, and the color of the fill
+    void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor);
+    
+    /// Sets up Label: Takes label reference, and the text
+    void sliderLabelSetup(Label& labelInstance, String labelText);
+    
     Slider testSlider1;
     Slider testSlider2;
     Slider testSlider3;
@@ -40,24 +46,77 @@ private:
     Slider subGainSlider;
     ComboBox subOctave;
     
+    Label oscMorphLabel;
+    Label subMorphLabel;
+    Label subGainLabel;
+    
     // Osc ADSR Section
-    Rectangle<float> oscADSRArea;
+    Slider oscAttackSlider;
+    Slider oscDecaySlider;
+    Slider oscSustainSlider;
+    Slider oscReleaseSlider;
+    Slider portaSlider;
+    Slider foldbackSlider;
+    
+    Label oscAttackLabel;
+    Label oscDecayLabel;
+    Label oscSustainLabel;
+    Label oscReleaseLabel;
+    Label portaLabel;
+    Label foldbackLabel;
     
     // Modifiers Section
-    Rectangle<float> modsArea;
+    Slider ringToneSlider;
+    Slider ringPitchSlider;
+    Slider ringDryWetSlider;
+    Slider frqShftPitchSlider;
+    Slider frqShftDryWetSlider;
+    Slider sHPitchSlider;
+    Slider sHDryWetSlider;
+    
+    Label ringLabel;
+    Label frqShftLabel;
+    Label sHLabel;
+    Label toneLabel;
+    Label pitchLabel;
+    Label dryWetLabel;
     
     // Filter Section
-    Rectangle<float> filterArea;
+    Slider cutoffSlider;
+    Slider resSlider;
+    
+    Label cutoffLabel;
+    Label resLabel;
     
     // Filter ADSR Section
-    Rectangle<float> filterADSRArea;
+    Slider fltAttackSlider;
+    Slider fltDecaySlider;
+    Slider fltSustainSlider;
+    Slider fltReleaseSlider;
+    Slider adsrToCutoffSlider;
+    Slider adsrToResSlider;
+    
+    Label fltAttackLabel;
+    Label fltDecayLabel;
+    Label fltSustainLabel;
+    Label fltReleaseLabel;
+    Label adsrToCutoffLabel;
+    Label adsrToResLabel;
+    
     
     // Filter LFO Section
-    Rectangle<float> filterLFOArea;
+    Slider lfoShapeSlider;
+    Slider lfoFreqSlider;
+    Slider lfoAmountSlider;
+    
+    Label lfoShapeLabel;
+    Label lfoFreqLabel;
+    Label lfoAmountLabel;
     
     // Main Out Section
-    //Rectangle<float> mainOutArea;
     Slider masterGainSlider;
+    
+    Label masterGainLabel;
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
