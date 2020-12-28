@@ -17,11 +17,11 @@
 //==============================================================================
 /**
 */
-class Wavetable5AudioProcessorEditor  : public AudioProcessorEditor
+class DirtyLittleBassSynthAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    Wavetable5AudioProcessorEditor (Wavetable5AudioProcessor&);
-    ~Wavetable5AudioProcessorEditor();
+    DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor&);
+    ~DirtyLittleBassSynthAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
@@ -163,7 +163,7 @@ private:
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    Wavetable5AudioProcessor& processor;
+    DirtyLittleBassSynthAudioProcessor& processor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Wavetable5AudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessorEditor)
 };

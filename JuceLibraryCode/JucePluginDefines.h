@@ -38,13 +38,13 @@
  #define JucePlugin_Enable_IAA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "Wavetable5"
+ #define JucePlugin_Name                   "DirtyLittleBassSynth"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "Wavetable5"
+ #define JucePlugin_Desc                   "DirtyLittleBassSynth"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "yourcompany"
+ #define JucePlugin_Manufacturer           "FullumMusic"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
@@ -98,16 +98,16 @@
  #define JucePlugin_AUSubType              JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AUExportPrefix
- #define JucePlugin_AUExportPrefix         Wavetable5AU
+ #define JucePlugin_AUExportPrefix         DirtyLittleBassSynthAU
 #endif
 #ifndef  JucePlugin_AUExportPrefixQuoted
- #define JucePlugin_AUExportPrefixQuoted   "Wavetable5AU"
+ #define JucePlugin_AUExportPrefixQuoted   "DirtyLittleBassSynthAU"
 #endif
 #ifndef  JucePlugin_AUManufacturerCode
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.yourcompany.Wavetable5
+ #define JucePlugin_CFBundleIdentifier     com.yourcompany.DirtyLittleBassSynth
 #endif
 #ifndef  JucePlugin_RTASCategory
  #define JucePlugin_RTASCategory           2048
@@ -125,7 +125,7 @@
  #define JucePlugin_RTASDisableMultiMono   0
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.yourcompany.Wavetable5
+ #define JucePlugin_AAXIdentifier          com.yourcompany.DirtyLittleBassSynth
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -149,7 +149,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "yourcompany: Wavetable5"
+ #define JucePlugin_IAAName                "FullumMusic: DirtyLittleBassSynth"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16

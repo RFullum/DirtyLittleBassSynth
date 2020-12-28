@@ -8,11 +8,11 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.Wavetable5</string>
+    <string>com.yourcompany.DirtyLittleBassSynth</string>
     <key>CFBundleName</key>
-    <string>Wavetable5</string>
+    <string>DirtyLittleBassSynth</string>
     <key>CFBundleDisplayName</key>
-    <string>Wavetable5</string>
+    <string>DirtyLittleBassSynth</string>
     <key>CFBundlePackageType</key>
     <string>BNDL</string>
     <key>CFBundleSignature</key>

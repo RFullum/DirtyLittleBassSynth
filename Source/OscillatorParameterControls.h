@@ -3,7 +3,7 @@
 
     OscillatorParameterControls.h
     Created: 28 Apr 2020 4:17:05pm
-    Author:  B150987
+    Author:  Robert Fullum
 
   ==============================================================================
 */

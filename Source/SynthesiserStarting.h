@@ -262,5 +262,10 @@ private:
     
     // Master Sample Rate
     float sampleRate;
+    
+    // Waveshape Drawing
+    AudioBuffer<float> mainOscShape;
+    AudioFormatManager audioFormatManager;
+    AudioFormatReader* mainOscShapeReader{ nullptr };
 
 };

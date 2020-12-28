@@ -86,6 +86,12 @@ void MySynthVoice::init(float SR)
     
     masterGainControlSmooth.reset(sampleRate, 0.01f);
     masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
+    
+    // WaveShape Drawing
+    mainOscShape.setSize(2, 1024);
+    
+    //audioFormatManager.
+    //mainOscShapeReader = audioFormatManager.createReaderFor(mainOscShape);
 }
 
 
@@ -273,16 +279,30 @@ void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 // The Main DSP Block
 void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples)
 {
+    // Main Oscillator Wavetable Morph Values
+    float sineLevel  = oscParamControl.sinMorphGain   (oscillatorMorph);
+    float spikeLevel = oscParamControl.spikeMorphGain (oscillatorMorph);
+    float sawLevel   = oscParamControl.sawMorphGain   (oscillatorMorph);
+    
+    mainOscShape.clear();
+    // Populates the mainOscShape AudioBuffer with the current proportional morphed values
+    for (int i=0; i<mainOscShape.getNumSamples(); i++)
+    {
+        float sampleVal = (sineLevel * wtSine.getWavetableSampleValue(i))
+                           + (spikeLevel * wtSpike.getWavetableSampleValue(i))
+                           + (sawLevel * wtSaw.getWavetableSampleValue(i));
+        mainOscShape.addSample(0, i, sampleVal);
+    }
+    
+    
+    // Puts the AudioBuffer into the AudioFormatReader
+    //mainOscShapeReader->read(&mainOscShape, 0, 1024, 0, true, false);
+    
     if (playing) // check to see if this voice should be playing
     {
         //
         // Block level parameter value controls
         //
-        
-        // Main Oscillator Wavetable Morph Values
-        float sineLevel  = oscParamControl.sinMorphGain   (oscillatorMorph);
-        float spikeLevel = oscParamControl.spikeMorphGain (oscillatorMorph);
-        float sawLevel   = oscParamControl.sawMorphGain   (oscillatorMorph);
         
         // Sub Oscillator Wavetable Morph Values
         float sinSubLevel = subOscParamControl.sinSubGain       (subOscMorph);

@@ -61,6 +61,12 @@ void Wavetable::setIncrement(float noteFreq)
     increment = ( noteFreq * waveTableSize ) / sampleRate;
 }
 
+/// Returns the sample value at the index given in the argument
+float Wavetable::getWavetableSampleValue(int index)
+{
+    return waveTable[index];
+}
+
 /// Returns maximum amplitude in wavetable argument
 float Wavetable::findMaxAmplitude(float* wt)
 {

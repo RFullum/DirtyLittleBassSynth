@@ -2,7 +2,7 @@
 //  Oscillators.h
 //  ClassClass
 //
-//  Created by B150987
+//  Created by Robert Fullum
 //  Copyright © 2020 
 //
 

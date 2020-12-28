@@ -3,7 +3,7 @@
 
     Wavetable.h
     Created: 26 Apr 2020 2:38:54pm
-    Author:  B150987
+    Author:  Robert Fullum
 
  
  Parent Class: Wavetable
@@ -48,6 +48,9 @@ public:
     
     /// Sets wavetable step increment based on note frequency
     void setIncrement(float noteFreq);
+    
+    /// Returns the sample value at the index given in the argument
+    float getWavetableSampleValue(int index);
 
     
 protected:

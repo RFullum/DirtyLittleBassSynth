@@ -3,7 +3,7 @@
 
     FilterSection.h
     Created: 30 Apr 2020 6:33:55pm
-    Author:  B150987
+    Author:  Robert Fullum
 
   ==============================================================================
 */

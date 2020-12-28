@@ -3,7 +3,7 @@
 
     SubOscillator.h
     Created: 28 Apr 2020 2:17:12pm
-    Author:  B150987
+    Author:  Robert Fullum
 
   ==============================================================================
 */

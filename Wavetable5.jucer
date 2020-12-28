@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="YrQPUQ" name="Wavetable5" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              displaySplashScreen="1" jucerFormatVersion="1">
-  <MAINGROUP id="bK7WUZ" name="Wavetable5">
+<JUCERPROJECT id="YrQPUQ" name="DirtyLittleBassSynth" projectType="audioplug"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic">
+  <MAINGROUP id="bK7WUZ" name="DirtyLittleBassSynth">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

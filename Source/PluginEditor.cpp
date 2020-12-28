@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Wavetable5AudioProcessorEditor::Wavetable5AudioProcessorEditor (Wavetable5AudioProcessor& p)
+DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
     setSize (1200, 600);
@@ -159,19 +159,19 @@ Wavetable5AudioProcessorEditor::Wavetable5AudioProcessorEditor (Wavetable5AudioP
     
 }
 
-Wavetable5AudioProcessorEditor::~Wavetable5AudioProcessorEditor()
+DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void Wavetable5AudioProcessorEditor::paint (Graphics& g)
+void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
 }
 
-void Wavetable5AudioProcessorEditor::resized()
+void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {
     auto totalArea = getLocalBounds();
     
@@ -381,7 +381,7 @@ void Wavetable5AudioProcessorEditor::resized()
     
 }
 
-void Wavetable5AudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor)
+void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor)
 {
     sliderInstance.setSliderStyle(style);
     sliderInstance.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 25);
@@ -403,14 +403,14 @@ void Wavetable5AudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider:
 }
 
 
-void Wavetable5AudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText)
+void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText)
 {
     labelInstance.setText(labelText, dontSendNotification);
     labelInstance.setJustificationType(Justification::centred);
     addAndMakeVisible(labelInstance);
 }
 
-void Wavetable5AudioProcessorEditor::comboBoxSetup(ComboBox& boxInstance, StringArray boxItems)
+void DirtyLittleBassSynthAudioProcessorEditor::comboBoxSetup(ComboBox& boxInstance, StringArray boxItems)
 {
     boxInstance.addItemList(boxItems, 1);
     boxInstance.setJustificationType(Justification::centred);

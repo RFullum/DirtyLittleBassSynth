@@ -16,12 +16,12 @@
 //==============================================================================
 /**
 */
-class Wavetable5AudioProcessor  : public AudioProcessor
+class DirtyLittleBassSynthAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    Wavetable5AudioProcessor();
-    ~Wavetable5AudioProcessor();
+    DirtyLittleBassSynthAudioProcessor();
+    ~DirtyLittleBassSynthAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -123,5 +123,5 @@ private:
     
     
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Wavetable5AudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessor)
 };

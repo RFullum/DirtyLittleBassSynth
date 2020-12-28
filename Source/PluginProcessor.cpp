@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Wavetable5AudioProcessor::Wavetable5AudioProcessor()
+DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -199,17 +199,17 @@ parameters(*this, nullptr, "ParameterTree", {
     
 }
 
-Wavetable5AudioProcessor::~Wavetable5AudioProcessor()
+DirtyLittleBassSynthAudioProcessor::~DirtyLittleBassSynthAudioProcessor()
 {
 }
 
 //==============================================================================
-const String Wavetable5AudioProcessor::getName() const
+const String DirtyLittleBassSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool Wavetable5AudioProcessor::acceptsMidi() const
+bool DirtyLittleBassSynthAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -218,7 +218,7 @@ bool Wavetable5AudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool Wavetable5AudioProcessor::producesMidi() const
+bool DirtyLittleBassSynthAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -227,7 +227,7 @@ bool Wavetable5AudioProcessor::producesMidi() const
    #endif
 }
 
-bool Wavetable5AudioProcessor::isMidiEffect() const
+bool DirtyLittleBassSynthAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -236,37 +236,37 @@ bool Wavetable5AudioProcessor::isMidiEffect() const
    #endif
 }
 
-double Wavetable5AudioProcessor::getTailLengthSeconds() const
+double DirtyLittleBassSynthAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int Wavetable5AudioProcessor::getNumPrograms()
+int DirtyLittleBassSynthAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int Wavetable5AudioProcessor::getCurrentProgram()
+int DirtyLittleBassSynthAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void Wavetable5AudioProcessor::setCurrentProgram (int index)
+void DirtyLittleBassSynthAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String Wavetable5AudioProcessor::getProgramName (int index)
+const String DirtyLittleBassSynthAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void Wavetable5AudioProcessor::changeProgramName (int index, const String& newName)
+void DirtyLittleBassSynthAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void Wavetable5AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     synth.setCurrentPlaybackSampleRate(sampleRate);
     
@@ -278,14 +278,14 @@ void Wavetable5AudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     }
 }
 
-void Wavetable5AudioProcessor::releaseResources()
+void DirtyLittleBassSynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool Wavetable5AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -308,7 +308,7 @@ bool Wavetable5AudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void Wavetable5AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
 
@@ -317,19 +317,19 @@ void Wavetable5AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 }
 
 //==============================================================================
-bool Wavetable5AudioProcessor::hasEditor() const
+bool DirtyLittleBassSynthAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* Wavetable5AudioProcessor::createEditor()
+AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
 {
     //return new GenericAudioProcessorEditor (*this);
-    return new Wavetable5AudioProcessorEditor(*this);
+    return new DirtyLittleBassSynthAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void Wavetable5AudioProcessor::getStateInformation (MemoryBlock& destData)
+void DirtyLittleBassSynthAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // getStateInformation
     auto state = parameters.copyState();
@@ -337,7 +337,7 @@ void Wavetable5AudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary (*xml, destData);
 }
 
-void Wavetable5AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void DirtyLittleBassSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // setStateInformation
     std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
@@ -354,5 +354,5 @@ void Wavetable5AudioProcessor::setStateInformation (const void* data, int sizeIn
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Wavetable5AudioProcessor();
+    return new DirtyLittleBassSynthAudioProcessor();
 }
