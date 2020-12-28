@@ -55,10 +55,12 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    // Parameter members
+    AudioProcessorValueTreeState parameters;
 
 private:
     // Parameter members
-    AudioProcessorValueTreeState parameters;
     
     // Oscillator parameter members
     std::atomic<float>* oscMorphParameter;

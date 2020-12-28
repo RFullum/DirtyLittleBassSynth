@@ -46,6 +46,12 @@ private:
     Slider subGainSlider;
     ComboBox subOctave;
     
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscMorphSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> subMorphSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> subGainSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> subOctaveAttachment;
+    // WHY ISN'T THE COMBO BOX SHOWING ITS MEMBERS?
+    
     Label oscMorphLabel;
     Label subMorphLabel;
     Label subGainLabel;
@@ -57,6 +63,13 @@ private:
     Slider oscReleaseSlider;
     Slider portaSlider;
     Slider foldbackSlider;
+    
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscAttackSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscDecaySliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscSustainSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscReleaseSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> portaSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> foldbackSliderAttachment;
     
     Label oscAttackLabel;
     Label oscDecayLabel;
@@ -74,6 +87,14 @@ private:
     Slider sHPitchSlider;
     Slider sHDryWetSlider;
     
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> ringToneSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> ringPitchSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> ringDryWetSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> frqShftPitchSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> frqShftDryWetSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> sHPitchSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> sHDryWetSliderAttachment;
+    
     Label ringLabel;
     Label frqShftLabel;
     Label sHLabel;
@@ -84,6 +105,11 @@ private:
     // Filter Section
     Slider cutoffSlider;
     Slider resSlider;
+    ComboBox filterType;
+    
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> resSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeAttachment;
     
     Label cutoffLabel;
     Label resLabel;
@@ -95,6 +121,13 @@ private:
     Slider fltReleaseSlider;
     Slider adsrToCutoffSlider;
     Slider adsrToResSlider;
+    
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> fltAttackSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> fltDecaySliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> fltSustainSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> fltReleaseSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> adsrToCutoffSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> adsrToResSliderAttachment;
     
     Label fltAttackLabel;
     Label fltDecayLabel;
@@ -109,6 +142,10 @@ private:
     Slider lfoFreqSlider;
     Slider lfoAmountSlider;
     
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> lfoShapeSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> lfoFreqSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> lfoAmountSliderAttachment;
+    
     Label lfoShapeLabel;
     Label lfoFreqLabel;
     Label lfoAmountLabel;
@@ -116,7 +153,10 @@ private:
     // Main Out Section
     Slider masterGainSlider;
     
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> masterGainSliderAttachment;
+    
     Label masterGainLabel;
+    
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
