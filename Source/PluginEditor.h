@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "OtherLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -27,6 +28,37 @@ public:
     void resized() override;
 
 private:
+    OtherLookAndFeel otherLookAndFeel;
+    
+    Slider testSlider1;
+    Slider testSlider2;
+    Slider testSlider3;
+    
+    // Osc Section
+    Slider oscMorphSlider;
+    Slider subMorphSlider;
+    Slider subGainSlider;
+    ComboBox subOctave;
+    
+    // Osc ADSR Section
+    Rectangle<float> oscADSRArea;
+    
+    // Modifiers Section
+    Rectangle<float> modsArea;
+    
+    // Filter Section
+    Rectangle<float> filterArea;
+    
+    // Filter ADSR Section
+    Rectangle<float> filterADSRArea;
+    
+    // Filter LFO Section
+    Rectangle<float> filterLFOArea;
+    
+    // Main Out Section
+    //Rectangle<float> mainOutArea;
+    Slider masterGainSlider;
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     Wavetable5AudioProcessor& processor;

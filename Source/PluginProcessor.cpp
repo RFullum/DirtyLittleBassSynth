@@ -323,7 +323,8 @@ bool Wavetable5AudioProcessor::hasEditor() const
 
 AudioProcessorEditor* Wavetable5AudioProcessor::createEditor()
 {
-    return new GenericAudioProcessorEditor (*this);
+    //return new GenericAudioProcessorEditor (*this);
+    return new Wavetable5AudioProcessorEditor(*this);
 }
 
 //==============================================================================

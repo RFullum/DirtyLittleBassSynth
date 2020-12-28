@@ -12,9 +12,6 @@
             file="Source/SynthesiserStarting.cpp"/>
       <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
             file="Source/SynthesiserStarting.h"/>
-      <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="bRJ8MC" name="DryWet.cpp" compile="1" resource="0" file="Source/DryWet.cpp"/>
       <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DryWet.h"/>
       <FILE id="kst25K" name="FilterSection.cpp" compile="1" resource="0"
@@ -33,6 +30,13 @@
       <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0" file="Source/SubOscillator.h"/>
       <FILE id="qkHWvk" name="Wavetable.cpp" compile="1" resource="0" file="Source/Wavetable.cpp"/>
       <FILE id="GN3qnd" name="Wavetable.h" compile="0" resource="0" file="Source/Wavetable.h"/>
+      <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/OtherLookAndFeel.cpp"/>
+      <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
+            file="Source/OtherLookAndFeel.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
