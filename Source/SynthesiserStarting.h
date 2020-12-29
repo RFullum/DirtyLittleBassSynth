@@ -151,6 +151,7 @@ public:
     
     AudioBuffer<float> oscVisualBuffer();
     AudioBuffer<float> subVisualBuffer();
+    AudioBuffer<float> lfoVisualBuffer();
     
 
 private:
@@ -273,5 +274,6 @@ private:
     // Waveshape Drawing
     AudioBuffer<float> mainOscShape;
     AudioBuffer<float> subOscShape;
+    AudioBuffer<float> lfoOscShape;
 
 };

@@ -62,6 +62,7 @@ public:
     // WaveDrawing
     AudioBuffer<float> mainOscVisualBuffer;
     AudioBuffer<float> subOscVisualBuffer;
+    AudioBuffer<float> lfoOscVisualBuffer;
 
 private:
     // Parameter members

@@ -319,7 +319,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
         
         mainOscVisualBuffer = v->oscVisualBuffer();
-        subOscVisualBuffer = v->subVisualBuffer();
+        subOscVisualBuffer  = v->subVisualBuffer();
+        lfoOscVisualBuffer  = v->lfoVisualBuffer();
         
     }
 }

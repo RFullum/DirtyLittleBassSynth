@@ -90,7 +90,7 @@ void MySynthVoice::init(float SR)
     // WaveShape Drawing
     mainOscShape.setSize(1, 1024);
     subOscShape.setSize(1, 1024);
-    
+    lfoOscShape.setSize(1, 1024);
 }
 
 
@@ -284,20 +284,23 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     float sawLevel   = oscParamControl.sawMorphGain   (oscillatorMorph);
     
     // Sub Oscillator Wavetable Morph Values
-    float sinSubLevel = subOscParamControl.sinSubGain       (subOscMorph);
+    float sinSubLevel    = subOscParamControl.sinSubGain    (subOscMorph);
     float squareSubLevel = subOscParamControl.squareSubGain (subOscMorph);
-    float sawSubLevel = subOscParamControl.sawSubGain       (subOscMorph);
+    float sawSubLevel    = subOscParamControl.sawSubGain    (subOscMorph);
+    
+    // LFO Oscillator Wavetable Morph Values (isSubOsc = true)
+    float filtLFOSinLevel    = filtLFOShapeControl.sinSubGain    (filtLFOShape);
+    float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain (filtLFOShape);
+    float filtLFOSawLevel    = filtLFOShapeControl.sawSubGain    (filtLFOShape);
     
     mainOscShape.clear();
     subOscShape.clear();
+    lfoOscShape.clear();
     
     // Populates AudioBuffer with the current proportional morphed values
     populateShape(mainOscShape, sineLevel, spikeLevel, sawLevel, false);
     populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
-    
-    // Populates the mainOscShape AudioBuffer with the current proportional morphed values
-    
-    
+    populateShape(lfoOscShape, filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel, true);
     
     if (playing) // check to see if this voice should be playing
     {
@@ -316,9 +319,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         // Filter LFO
         filterLFO.setIncrement (*filtLFOFreq, 1.0f);
         
-        float filtLFOSinLevel    = filtLFOShapeControl.sinSubGain    (filtLFOShape);
-        float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain (filtLFOShape);
-        float filtLFOSawLevel    = filtLFOShapeControl.sawSubGain    (filtLFOShape);
         
         //
         // Value smoothing .setTargetValue
@@ -489,6 +489,13 @@ AudioBuffer<float> MySynthVoice::subVisualBuffer()
 {
     return subOscShape;
 }
+
+AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
+{
+    return lfoOscShape;
+}
+
+
 
 /// Populates shape buffer with morphed wave values
 void MySynthVoice::populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc)

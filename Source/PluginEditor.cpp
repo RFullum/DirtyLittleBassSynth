@@ -160,6 +160,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     // Wave Visual
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);
+    addAndMakeVisible(lfoVisual);
     
     // Timer
     Timer::startTimerHz(60);
@@ -182,6 +183,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
     oscVisual.setOscShapeLine(processor.mainOscVisualBuffer);
     subOscVisual.setOscShapeLine(processor.subOscVisualBuffer);
+    lfoVisual.setOscShapeLine(processor.lfoOscVisualBuffer);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
@@ -393,9 +395,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     lfoAmountSlider.setBounds( lfoVertSliderArea );
     
     Rectangle<int> lfoShapeArea = lfoArea.removeFromBottom( filtLabelheight );
+    Rectangle<int> lfoShapeSliderArea = lfoArea.removeFromBottom( filtLabelheight );
     
     lfoShapeLabel.setBounds( lfoShapeArea );
-    lfoShapeSlider.setBounds( lfoArea );
+    lfoShapeSlider.setBounds( lfoShapeSliderArea );
+    lfoVisual.setBounds( lfoArea );
     
     
 }

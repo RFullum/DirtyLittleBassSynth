@@ -44,6 +44,7 @@ private:
     // Wavetable Drawing
     OscVisual oscVisual;
     OscVisual subOscVisual;
+    OscVisual lfoVisual;
     
     Rectangle<int> oscVisualSpace;
     
