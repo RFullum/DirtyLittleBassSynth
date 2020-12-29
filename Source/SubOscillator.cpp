@@ -39,6 +39,11 @@ void SubOsc::setIncrement(float noteFreq, int denom)
     sawSub.setIncrement(subFreq);
 }
 
+float SubOsc::getSquareWavetableValue(int index)
+{
+    return squareSub.getWavetableSampleValue(index);
+}
+
 /**
 Playback function: gain arguments come from SubOscParamControl class member functions to morph between the three
 wave shapes: sinSubGain( ), squareSubGain( ), and sawSubGain( )

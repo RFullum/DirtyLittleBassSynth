@@ -148,8 +148,15 @@ public:
     bool canPlaySound (SynthesiserSound* sound) override;
     
     //--------------------------------------------------------------------------
+    
+    AudioBuffer<float> oscVisualBuffer();
+    AudioBuffer<float> subVisualBuffer();
+    
 
 private:
+    /// Populates the waveshape buffers
+    void populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc);
+    
     //--------------------------------------------------------------------------
     // Are the voices playing:
     bool playing;
@@ -265,7 +272,6 @@ private:
     
     // Waveshape Drawing
     AudioBuffer<float> mainOscShape;
-    AudioFormatManager audioFormatManager;
-    AudioFormatReader* mainOscShapeReader{ nullptr };
+    AudioBuffer<float> subOscShape;
 
 };

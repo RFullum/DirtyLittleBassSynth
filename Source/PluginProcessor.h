@@ -58,6 +58,10 @@ public:
     
     // Parameter members
     AudioProcessorValueTreeState parameters;
+    
+    // WaveDrawing
+    AudioBuffer<float> mainOscVisualBuffer;
+    AudioBuffer<float> subOscVisualBuffer;
 
 private:
     // Parameter members

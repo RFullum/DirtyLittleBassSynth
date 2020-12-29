@@ -48,8 +48,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
     sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
     
-    sliderLabelSetup( oscMorphLabel, "Morph" );
-    sliderLabelSetup( subMorphLabel, "Morph" );
+    sliderLabelSetup( oscMorphLabel, "Osc\nMorph" );
+    sliderLabelSetup( subMorphLabel, "Sub\nMorph" );
     sliderLabelSetup( subGainLabel, "Sub\nGain" );
     
     comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
@@ -157,10 +157,17 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     masterGainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "master_gain", masterGainSlider);
     
+    // Wave Visual
+    addAndMakeVisible(oscVisual);
+    addAndMakeVisible(subOscVisual);
+    
+    // Timer
+    Timer::startTimerHz(60);
 }
 
 DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEditor()
 {
+    Timer::stopTimer();
 }
 
 //==============================================================================
@@ -169,6 +176,12 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
+}
+
+void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
+{
+    oscVisual.setOscShapeLine(processor.mainOscVisualBuffer);
+    subOscVisual.setOscShapeLine(processor.subOscVisualBuffer);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
@@ -182,6 +195,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> mainOutArea      = totalArea.removeFromRight( mainOutWidth );
     Rectangle<int> mainOutLabelArea = mainOutArea.removeFromTop( mainLabelHeight );
     
+    masterGainLabel.setBounds( mainOutLabelArea );
     masterGainSlider.setBounds( mainOutArea );
     
     // Top Row of sections area
@@ -201,21 +215,26 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> mainOscSection  = oscSection.removeFromTop( oscSection.getHeight() * 0.5f );
     Rectangle<int> oscGainSpace    = mainOscSection.removeFromRight( oscGainWidth );
     Rectangle<int> morphLabelSpace = mainOscSection.removeFromLeft( morphLabelWidth );
+    Rectangle<int> morphSliderSpace = mainOscSection.removeFromBottom( gainLabelHeight );
+    oscVisualSpace = mainOscSection;
     
     oscMorphLabel.setBounds( morphLabelSpace );
-    oscMorphSlider.setBounds( mainOscSection );
+    oscMorphSlider.setBounds( morphSliderSpace );
+    oscVisual.setBounds( mainOscSection );
     
     // Sub Osc Section Area (Oscillator subarea)
     Rectangle<int> subGainSpace       = oscSection.removeFromRight( oscGainWidth );
     Rectangle<int> subOctaveSpace     = subGainSpace.removeFromBottom( subOctaveHeight );
     Rectangle<int> subGainLabelSpace  = subGainSpace.removeFromTop( gainLabelHeight );
-    Rectangle<int> subMorphLableSpace = oscSection.removeFromLeft( morphLabelWidth );
+    Rectangle<int> subMorphLabelSpace = oscSection.removeFromLeft( morphLabelWidth );
+    Rectangle<int> subMorphSliderSpace = oscSection.removeFromBottom( gainLabelHeight );
     
     subGainLabel.setBounds   ( subGainLabelSpace );
-    subMorphLabel.setBounds  ( subMorphLableSpace );
+    subMorphLabel.setBounds  ( subMorphLabelSpace );
     subOctave.setBounds      ( subOctaveSpace );
     subGainSlider.setBounds  ( subGainSpace );
-    subMorphSlider.setBounds ( oscSection );
+    subMorphSlider.setBounds ( subMorphSliderSpace );
+    subOscVisual.setBounds( oscSection );
     
     // Osc ADSR Section Area
     Rectangle<int> oscADSRSpace = topSectionArea.removeFromLeft( topSectionArea.getWidth() * 0.33f );

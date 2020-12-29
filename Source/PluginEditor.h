@@ -13,11 +13,12 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "OtherLookAndFeel.h"
+#include "OscVisual.h"
 
 //==============================================================================
 /**
 */
-class DirtyLittleBassSynthAudioProcessorEditor  : public AudioProcessorEditor
+class DirtyLittleBassSynthAudioProcessorEditor  : public AudioProcessorEditor, public Timer
 {
 public:
     DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor&);
@@ -26,6 +27,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    void timerCallback() override;
 
 private:
     OtherLookAndFeel otherLookAndFeel;
@@ -38,6 +40,12 @@ private:
     
     /// ComboBox setup
     void comboBoxSetup(ComboBox& boxInstance, StringArray boxItems);
+    
+    // Wavetable Drawing
+    OscVisual oscVisual;
+    OscVisual subOscVisual;
+    
+    Rectangle<int> oscVisualSpace;
     
     //Slider testSlider1;
     //Slider testSlider2;

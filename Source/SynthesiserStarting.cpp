@@ -88,10 +88,9 @@ void MySynthVoice::init(float SR)
     masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
     
     // WaveShape Drawing
-    mainOscShape.setSize(2, 1024);
+    mainOscShape.setSize(1, 1024);
+    subOscShape.setSize(1, 1024);
     
-    //audioFormatManager.
-    //mainOscShapeReader = audioFormatManager.createReaderFor(mainOscShape);
 }
 
 
@@ -284,19 +283,21 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     float spikeLevel = oscParamControl.spikeMorphGain (oscillatorMorph);
     float sawLevel   = oscParamControl.sawMorphGain   (oscillatorMorph);
     
+    // Sub Oscillator Wavetable Morph Values
+    float sinSubLevel = subOscParamControl.sinSubGain       (subOscMorph);
+    float squareSubLevel = subOscParamControl.squareSubGain (subOscMorph);
+    float sawSubLevel = subOscParamControl.sawSubGain       (subOscMorph);
+    
     mainOscShape.clear();
+    subOscShape.clear();
+    
+    // Populates AudioBuffer with the current proportional morphed values
+    populateShape(mainOscShape, sineLevel, spikeLevel, sawLevel, false);
+    populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
+    
     // Populates the mainOscShape AudioBuffer with the current proportional morphed values
-    for (int i=0; i<mainOscShape.getNumSamples(); i++)
-    {
-        float sampleVal = (sineLevel * wtSine.getWavetableSampleValue(i))
-                           + (spikeLevel * wtSpike.getWavetableSampleValue(i))
-                           + (sawLevel * wtSaw.getWavetableSampleValue(i));
-        mainOscShape.addSample(0, i, sampleVal);
-    }
     
     
-    // Puts the AudioBuffer into the AudioFormatReader
-    //mainOscShapeReader->read(&mainOscShape, 0, 1024, 0, true, false);
     
     if (playing) // check to see if this voice should be playing
     {
@@ -304,10 +305,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         // Block level parameter value controls
         //
         
-        // Sub Oscillator Wavetable Morph Values
-        float sinSubLevel = subOscParamControl.sinSubGain       (subOscMorph);
-        float squareSubLevel = subOscParamControl.squareSubGain (subOscMorph);
-        float sawSubLevel = subOscParamControl.sawSubGain       (subOscMorph);
         
         // Ring Mod
         ringMod.setRingToneSlider (ringModTone);
@@ -479,4 +476,33 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
 bool MySynthVoice::canPlaySound (SynthesiserSound* sound)
 {
     return dynamic_cast<MySynthSound*> (sound) != nullptr;
+}
+
+/// Returns the buffer of the main oscillator shape
+AudioBuffer<float> MySynthVoice::oscVisualBuffer()
+{
+    return mainOscShape;
+}
+
+/// Returns the buffer of the sub oscillator shape
+AudioBuffer<float> MySynthVoice::subVisualBuffer()
+{
+    return subOscShape;
+}
+
+/// Populates shape buffer with morphed wave values
+void MySynthVoice::populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc)
+{
+    for (int i=0; i<buf.getNumSamples(); i++)
+    {
+        float sinVal = sin * wtSine.getWavetableSampleValue(i);
+        float sawVal = saw * wtSaw.getWavetableSampleValue(i);
+        float centerWaveVal;
+        
+        isSubOsc == true ? centerWaveVal = spikeSqr * subOsc.getSquareWavetableValue(i) : centerWaveVal = spikeSqr * wtSpike.getWavetableSampleValue(i);
+        
+        float sampleVal = sinVal + centerWaveVal + sawVal;
+        
+        buf.addSample(0, i, sampleVal);
+    }
 }

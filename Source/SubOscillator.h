@@ -35,6 +35,9 @@ public:
      */
     float process(float sinGain, float squareGain, float sawGain);
     
+    float getSquareWavetableValue(int index);
+    
+    
 private:
     // Wavetable instances
     Wavetable sinSub;

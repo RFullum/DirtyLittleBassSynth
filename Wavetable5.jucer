@@ -34,6 +34,8 @@
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/OscVisual.cpp"/>
+      <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/OscVisual.h"/>
       <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
             file="Source/OtherLookAndFeel.cpp"/>
       <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"

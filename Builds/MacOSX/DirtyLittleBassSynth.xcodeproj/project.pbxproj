@@ -121,6 +121,10 @@
 			isa = PBXBuildFile;
 			fileRef = F003A326260B6ADD8F1BC891;
 		};
+		3F9637E0EFD78F107310E4FA = {
+			isa = PBXBuildFile;
+			fileRef = BF9A1A26FFBDD7F183F80D80;
+		};
 		4158E930240F2A1D817F7EE2 = {
 			isa = PBXBuildFile;
 			fileRef = 220AB4F2A54CB8FD41F67E0B;
@@ -667,6 +671,13 @@
 			path = ../../Source/SynthesiserStarting.cpp;
 			sourceTree = "SOURCE_ROOT";
 		};
+		BF9A1A26FFBDD7F183F80D80 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = OscVisual.cpp;
+			path = ../../Source/OscVisual.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		D056DE06493E1707112D72D8 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -751,6 +762,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_utils.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		E94356D804D2E04238DB6E85 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = OscVisual.h;
+			path = ../../Source/OscVisual.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		EE2BDAE5A6F19A62771CC1DF = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -795,6 +813,8 @@
 				9813EE10F0150175C6CDE2D0,
 				F003A326260B6ADD8F1BC891,
 				3F214979A36613DAA820605E,
+				BF9A1A26FFBDD7F183F80D80,
+				E94356D804D2E04238DB6E85,
 				220AB4F2A54CB8FD41F67E0B,
 				08BFCF477447E63B1DA4539A,
 			);
@@ -1755,6 +1775,7 @@
 				82B4B897153D387AFEE626DE,
 				2B68A30DFF2CBDEB7FEF365E,
 				2647DD4ABD7C28CDE1727139,
+				3F9637E0EFD78F107310E4FA,
 				4158E930240F2A1D817F7EE2,
 				E731076CFA7A742132434472,
 				CEEBD709A0AF359CE655A1E8,
