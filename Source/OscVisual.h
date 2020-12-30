@@ -29,6 +29,8 @@ public:
 private:
     float segmentThickness;
     
+    Rectangle<float> visualBox;
+    
     Path oscShape;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscVisual)

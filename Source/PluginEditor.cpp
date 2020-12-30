@@ -43,14 +43,14 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     */
     
     // Master Out
-    sliderSetup( masterGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( masterGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
     
     sliderLabelSetup( masterGainLabel, "Out Gain" );
     
     // Osc Section
-    sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
-    sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
-    sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue, false );
+    sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue, false );
+    sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, Colours::blue, false );
     
     sliderLabelSetup( oscMorphLabel, "Osc\nMorph" );
     sliderLabelSetup( subMorphLabel, "Sub\nMorph" );
@@ -59,12 +59,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
     // Osc ADSR Section
-    sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( oscDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( oscDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
     
     sliderLabelSetup( oscAttackLabel, "A" );
     sliderLabelSetup( oscDecayLabel, "D" );
@@ -74,13 +74,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup( foldbackLabel, "Foldback\nDistortion" );
     
     // Modifiers Section
-    sliderSetup( ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
     
     sliderLabelSetup( ringLabel, "Ring Mod" );
     sliderLabelSetup( frqShftLabel, "Freq Shift" );
@@ -90,8 +90,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup( dryWetLabel, "Dry/Wet" );
     
     // Filter Section
-    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
-    sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue, true );
+    sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, Colours::blue, false );
     
     sliderLabelSetup( cutoffLabel, "Cutoff" );
     sliderLabelSetup( resLabel, "Resonance" );
@@ -99,12 +99,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     comboBoxSetup(filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
     // Filter ADSR Section
-    sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( fltDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( fltSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
-    sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue );
+    sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( fltDecaySlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( fltSustainSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, Colours::blue, true );
+    sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
+    sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, Colours::blue, false );
     
     sliderLabelSetup( fltAttackLabel, "A" );
     sliderLabelSetup( fltDecayLabel, "D" );
@@ -114,9 +114,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup( adsrToResLabel, "To Resonance" );
     
     // Filter LFO Section
-    sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue );
-    sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
-    sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, Colours::blue );
+    sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, Colours::blue, false );
+    sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, Colours::blue, false );
+    sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, Colours::blue, false );
     
     sliderLabelSetup( lfoShapeLabel, "LFO Shape" );
     sliderLabelSetup( lfoFreqLabel, "Frequency" );
@@ -257,8 +257,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     
     // Oscillator Section area (Top Row subarea)
-    int oscSectionWidth = topSectionArea.getWidth() * 0.33f;
-    int oscGainWidth    = 55;
+    int oscSectionWidth = topSectionArea.getWidth() * 0.40f;
+    int oscGainWidth    = 75;
     int subOctaveHeight = 30;
     int morphLabelWidth = 50;
     int gainLabelHeight = 30;
@@ -275,11 +275,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> morphLabelSpace  = mainOscSection.removeFromLeft   ( morphLabelWidth );
     Rectangle<int> morphSliderSpace = mainOscSection.removeFromBottom ( gainLabelHeight );
     
-    oscVisualSpace = mainOscSection;
+    oscVisualSpace = mainOscSection.reduced( sectionSpacerSize );
     
     oscMorphLabel.setBounds  ( morphLabelSpace );
     oscMorphSlider.setBounds ( morphSliderSpace );
-    oscVisual.setBounds      ( mainOscSection );
+    oscVisual.setBounds      ( oscVisualSpace ); // mainOscSection
     
     // Sub Osc Section Area (Oscillator subarea)
     Rectangle<int> subGainSpace        = oscSectionReduced.removeFromRight  ( oscGainWidth );
@@ -415,13 +415,15 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> resArea      = filterAreaReduced.removeFromRight  ( resWidth );
     Rectangle<int> resLableArea = resArea.removeFromTop       ( filtLabelheight );
     Rectangle<int> cOLabelArea  = filterAreaReduced.removeFromLeft ( morphLabelWidth );
-    Rectangle<int> fltTypeArea  = filterAreaReduced.removeFromBottom( filtLabelheight ).removeFromRight(50);//cOLabelArea.removeFromRight(50);
+    Rectangle<int> fltTypeArea  = filterAreaReduced.removeFromBottom( filtLabelheight ).removeFromRight(75);
+    Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom( filtLabelheight );
     
     resLabel.setBounds( resLableArea );
     resSlider.setBounds( resArea );
     filterType.setBounds( fltTypeArea );
     cutoffLabel.setBounds( cOLabelArea );
-    cutoffSlider.setBounds( filterAreaReduced );
+    cutoffSlider.setBounds( fltCOSliderArea );
+    // PUT THE CUTOFF VISUALIZER HERE IN .setBounds( filterAreaReduced )
     
     
     // Filter ADSR Area
@@ -492,10 +494,19 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
 }
 
-void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor)
+void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider::SliderStyle style,
+                                                           Colour sliderFillColor, bool showTextBox)
 {
     sliderInstance.setSliderStyle(style);
-    sliderInstance.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 25);
+    
+    if (showTextBox)
+    {
+        sliderInstance.setTextBoxStyle(Slider::TextBoxBelow, false, 40, 20);
+    }
+    else
+    {
+        sliderInstance.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    }
     
     if (sliderInstance.getSliderStyle() == Slider::SliderStyle::LinearHorizontal)
     {

@@ -24,14 +24,21 @@ OscVisual::~OscVisual()
 
 void OscVisual::paint (Graphics& g)
 {
-    g.fillAll (Colours::grey);   // clear the background
+    float cornerRound = 10.0f;
+    //g.fillAll (Colours::grey);   // clear the background
+    g.setColour(Colours::grey);
+    g.fillRoundedRectangle( visualBox, cornerRound );
     g.setColour(Colours::black);
     g.fillPath(oscShape);
 }
 
 void OscVisual::resized()
 {
+    int reducer = 2;
+    auto totalArea = getLocalBounds();
+    Rectangle<int> reducedArea = totalArea.reduced( reducer );
     
+    visualBox.setBounds( reducedArea.getX(), reducedArea.getY(), reducedArea.getWidth(), reducedArea.getHeight() );
 }
 
 

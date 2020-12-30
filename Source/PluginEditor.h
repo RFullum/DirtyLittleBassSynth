@@ -35,7 +35,7 @@ private:
     OtherLookAndFeel otherLookAndFeel;
     
     /// Sets up slider: Takes reference to a slider, the style of the slider, and the color of the fill
-    void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor);
+    void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor, bool showTextBox);
     
     /// Sets up Label: Takes label reference, and the text
     void sliderLabelSetup(Label& labelInstance, String labelText);
