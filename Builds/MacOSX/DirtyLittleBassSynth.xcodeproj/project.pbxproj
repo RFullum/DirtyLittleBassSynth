@@ -125,6 +125,14 @@
 			isa = PBXBuildFile;
 			fileRef = BF9A1A26FFBDD7F183F80D80;
 		};
+		84B5CFFFC1C42D05942393EC = {
+			isa = PBXBuildFile;
+			fileRef = 819A00A81908B9029D0BBAC1;
+		};
+		4AC12365D30DC3B815A2B87C = {
+			isa = PBXBuildFile;
+			fileRef = EA07D3D24B2E81EB00FEACA2;
+		};
 		4158E930240F2A1D817F7EE2 = {
 			isa = PBXBuildFile;
 			fileRef = 220AB4F2A54CB8FD41F67E0B;
@@ -398,6 +406,13 @@
 			path = System/Library/Frameworks/AudioToolbox.framework;
 			sourceTree = SDKROOT;
 		};
+		4FAF6D1835E104B7A8CB8538 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.objcpp;
+			name = "include_juce_audio_formats.mm";
+			path = "../../JuceLibraryCode/include_juce_audio_formats.mm";
+			sourceTree = "SOURCE_ROOT";
+		};
 		50FC7A9479DB1468A4513025 = {
 			isa = PBXFileReference;
 			explicitFileType = wrapper.cfbundle;
@@ -432,13 +447,6 @@
 			name = CoreAudio.framework;
 			path = System/Library/Frameworks/CoreAudio.framework;
 			sourceTree = SDKROOT;
-		};
-		4FAF6D1835E104B7A8CB8538 = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.objcpp;
-			name = "include_juce_audio_formats.mm";
-			path = "../../JuceLibraryCode/include_juce_audio_formats.mm";
-			sourceTree = "SOURCE_ROOT";
 		};
 		50ED4515361EC4C628B3B31F = {
 			isa = PBXFileReference;
@@ -538,6 +546,20 @@
 			path = "Info-VST3.plist";
 			sourceTree = "SOURCE_ROOT";
 		};
+		7DFB920CACE00818D11867ED = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SectionBackgroundFiller.h;
+			path = ../../Source/SectionBackgroundFiller.h;
+			sourceTree = "SOURCE_ROOT";
+		};
+		819A00A81908B9029D0BBAC1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = SubsectionGUI.cpp;
+			path = ../../Source/SubsectionGUI.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		822AE188EF501E58D5BBFB9F = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -614,6 +636,13 @@
 			name = "juce_audio_devices";
 			path = "~/JUCE/modules/juce_audio_devices";
 			sourceTree = "<absolute>";
+		};
+		A3B3476C37668E26919A514A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SubsectionGUI.h;
+			path = ../../Source/SubsectionGUI.h;
+			sourceTree = "SOURCE_ROOT";
 		};
 		A4A999EAD1C49852AC097893 = {
 			isa = PBXFileReference;
@@ -769,6 +798,13 @@
 			path = ../../Source/OscVisual.h;
 			sourceTree = "SOURCE_ROOT";
 		};
+		EA07D3D24B2E81EB00FEACA2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = SectionBackgroundFiller.cpp;
+			path = ../../Source/SectionBackgroundFiller.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		EE2BDAE5A6F19A62771CC1DF = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -815,6 +851,10 @@
 				3F214979A36613DAA820605E,
 				BF9A1A26FFBDD7F183F80D80,
 				E94356D804D2E04238DB6E85,
+				819A00A81908B9029D0BBAC1,
+				A3B3476C37668E26919A514A,
+				EA07D3D24B2E81EB00FEACA2,
+				7DFB920CACE00818D11867ED,
 				220AB4F2A54CB8FD41F67E0B,
 				08BFCF477447E63B1DA4539A,
 			);
@@ -1776,6 +1816,8 @@
 				2B68A30DFF2CBDEB7FEF365E,
 				2647DD4ABD7C28CDE1727139,
 				3F9637E0EFD78F107310E4FA,
+				84B5CFFFC1C42D05942393EC,
+				4AC12365D30DC3B815A2B87C,
 				4158E930240F2A1D817F7EE2,
 				E731076CFA7A742132434472,
 				CEEBD709A0AF359CE655A1E8,

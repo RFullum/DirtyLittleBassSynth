@@ -14,6 +14,8 @@
 #include "PluginProcessor.h"
 #include "OtherLookAndFeel.h"
 #include "OscVisual.h"
+#include "SubsectionGUI.h"
+#include "SectionBackgroundFiller.h"
 
 //==============================================================================
 /**
@@ -169,6 +171,23 @@ private:
     
     Label masterGainLabel;
     
+    
+    // Colors
+    Colour pluginBackground;
+    Colour headerColor;
+    Colour mainOutColour;
+    Colour oscSectionColour;
+    
+    
+    // Subsections
+    Rectangle<float> headerAreaInner;
+    Rectangle<float> mainOutAreaInner;
+    Rectangle<float> oscSectionInner;
+    Rectangle<float> oscADSRSectionInner;
+    Rectangle<float> modSectionInner;
+    Rectangle<float> filterSectionInner;
+    Rectangle<float> fltADSRSectionInner;
+    Rectangle<float> lfoSectionInner;
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

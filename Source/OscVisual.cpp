@@ -48,7 +48,6 @@ void OscVisual::setOscShapeLine(AudioBuffer<float>& buffer)
         float y2 = jmap(buffer.getSample(0, i+1), getHeight() * 0.5f, (float)getHeight() - 40.0f);
         
         oscShape.addLineSegment(Line<float>(x1, y1, x2, y2), segmentThickness);
-        
     }
     
     repaint();
