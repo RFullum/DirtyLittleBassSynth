@@ -57,11 +57,11 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // Portament Params
     std::make_unique<AudioParameterFloat>("porta_time", "Portamento Time",
-                                          NormalisableRange<float>(0.01f, 1.0f, 0.01f, 0.15f, false), 0.02f, "portamento" ),
+                                          NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento" ),
     
     // Foldback Distortion Params
     std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion",
-                                          NormalisableRange<float>(1.0f, 200.0f, 0.01f, 0.15f, false), 1.0f, "foldback" ),
+                                          NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, "foldback" ),
     
     // Ring Modulator Params
     std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch",
