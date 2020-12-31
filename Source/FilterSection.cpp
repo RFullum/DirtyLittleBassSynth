@@ -32,7 +32,7 @@ void TwoPoleLPF::setSampleRate(float SR)
     sampleRate = SR;
     
     lowPass1.reset();
-    lowPass2.reset();
+    //lowPass2.reset();
 }
 
 /**
@@ -106,17 +106,10 @@ void TwoPoleLPF::filterLFOControl()
 /// Cascades two IIRFilter lowpasses and returns the output sample value
 float TwoPoleLPF::process()
 {
-    filterEnvControl(envelopeVal, cutoffSend, resSend);
+    filterEnvControl         (envelopeVal, cutoffSend, resSend);
+    lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
     
-    lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
-    lowPass2.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
-    
-    float stage1 = lowPass1.processSingleSampleRaw(inputSample);
-    float stage2 = lowPass2.processSingleSampleRaw(stage1);
-    
-    //dsp::IIR::Coefficients<float>::getMagnitudeForFrequency(<#double frequency#>, <#double sampleRate#>)
-    
-    return stage2;
+    return lowPass1.processSingleSampleRaw(inputSample);;
 }
 
 
@@ -233,9 +226,8 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
 /// Sets notch coeffients and processes inputSample
 float NotchFilter::processNotch()
 {
-    filterEnvControl(envelopeVal, cutoffSend, resSend);
-    
-    notchFilter.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+    filterEnvControl            (envelopeVal, cutoffSend, resSend);
+    notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
     
     return notchFilter.processSingleSampleRaw(inputSample);
 }

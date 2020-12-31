@@ -81,7 +81,7 @@ private:
     
     // IIRFilter instances
     IIRFilter lowPass1;
-    IIRFilter lowPass2;
+    //IIRFilter lowPass2;
     
 };
 
