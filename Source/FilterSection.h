@@ -37,6 +37,7 @@ public:
                                 float lfoVal, std::atomic<float>* amtToLFO);
     
     
+    
 protected:
     /// Keytracking value mapping
     void keyMap(float frqncy, float CO);

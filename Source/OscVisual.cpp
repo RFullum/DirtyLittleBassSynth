@@ -34,27 +34,35 @@ void OscVisual::paint (Graphics& g)
 
 void OscVisual::resized()
 {
-    int reducer = 2;
+    int reducer    = 2;
     auto totalArea = getLocalBounds();
+    
     Rectangle<int> reducedArea = totalArea.reduced( reducer );
     
     visualBox.setBounds( reducedArea.getX(), reducedArea.getY(), reducedArea.getWidth(), reducedArea.getHeight() );
 }
 
-
+/// Concatenates Path line segments acress visualBox using sample values in buffer
 void OscVisual::setOscShapeLine(AudioBuffer<float>& buffer)
 {
+    float numSamples = (float) buffer.getNumSamples();
+    
     oscShape.clear();
     
-    for (int i=0; i<buffer.getNumSamples()-1; i++)
+    for (int i=0; i<numSamples-1; i++)
     {
-        float x1 = jmap( (float)i, 0.0f, (float)buffer.getNumSamples(), (float)getWidth() - 5.0f, 5.0f );
-        float y1 = jmap(buffer.getSample(0, i), getHeight() * 0.5f, (float)getHeight() - 40.0f);
+        float widthOffset  = 5.0f;
+        float widthReduce  = getWidth() - widthOffset;
+        float heightReduce = getHeight() * 0.77f;
+        float halfHeight   = getHeight() * 0.5f;
         
-        float x2 = jmap( (float)i + 1.0f, 0.0f, (float)buffer.getNumSamples(), (float)getWidth() - 5.0f, 5.0f );
-        float y2 = jmap(buffer.getSample(0, i+1), getHeight() * 0.5f, (float)getHeight() - 40.0f);
+        float x1 = jmap( (float)i, 0.0f, numSamples, widthReduce, widthOffset );
+        float y1 = jmap( buffer.getSample(0, i), halfHeight, heightReduce );
         
-        oscShape.addLineSegment(Line<float>(x1, y1, x2, y2), segmentThickness);
+        float x2 = jmap( (float)i + 1.0f, 0.0f, numSamples, widthReduce, widthOffset );
+        float y2 = jmap( buffer.getSample(0, i+1), halfHeight, heightReduce );
+        
+        oscShape.addLineSegment( Line<float>(x1, y1, x2, y2), segmentThickness) ;
     }
     
     repaint();

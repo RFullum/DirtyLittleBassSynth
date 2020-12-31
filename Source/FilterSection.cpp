@@ -114,6 +114,8 @@ float TwoPoleLPF::process()
     float stage1 = lowPass1.processSingleSampleRaw(inputSample);
     float stage2 = lowPass2.processSingleSampleRaw(stage1);
     
+    //dsp::IIR::Coefficients<float>::getMagnitudeForFrequency(<#double frequency#>, <#double sampleRate#>)
+    
     return stage2;
 }
 

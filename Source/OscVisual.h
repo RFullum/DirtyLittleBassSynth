@@ -24,6 +24,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
+    /// Concatenates Path line segments acress visualBox using sample values in buffer
     void setOscShapeLine(AudioBuffer<float>& buffer);
 
 private:
