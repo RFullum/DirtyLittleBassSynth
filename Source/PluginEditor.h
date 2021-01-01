@@ -174,6 +174,7 @@ private:
     
     // Colors
     Colour pluginBackground;
+    Colour sectionColor;
     Colour headerColor;
     Colour mainOutColour;
     Colour oscSectionColour;

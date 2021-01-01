@@ -25,17 +25,16 @@ public:
     /// Sets sampleRate of filters and resets
     virtual void setSampleRate(float SR);
     
-    
     /**
      takes current note frequency, cutoff frequency, resonance, input sample value, envelope value, envelop to Cutoff
      amount, and envelope to resonance amount.
      Returns keytracked low pass sample value
      */
+    
     virtual float processFilter(float noteFreq, float cutoff,
                                 std::atomic<float>* res, float sampleIn, float envVal,
                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                                 float lfoVal, std::atomic<float>* amtToLFO);
-    
     
     
 protected:
@@ -78,10 +77,8 @@ private:
     /// Cascades two IIRFilter lowpasses and returns the output sample value
     float process();
 
-    
     // IIRFilter instances
     IIRFilter lowPass1;
-    //IIRFilter lowPass2;
     
 };
 
@@ -130,7 +127,7 @@ public:
                         float sampleIn, float envVal, std::atomic<float>* amtToCO,
                         std::atomic<float>* amtToRes, float lfoVal,
                         std::atomic<float>* amtToLFO) override;
-    
+     
     
 private:
     // Instances of FourPoleLPF classes
@@ -157,19 +154,9 @@ public:
                         std::atomic<float>* res, float sampleIn, float envVal,
                         std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                         float lfoVal, std::atomic<float>* amtToLFO) override;
+     
     
 private:
-    /*
-    void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes) override
-    {
-        float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
-        cutoffScale = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
-        
-        float resHeadroom = (maxResonance - resonance) * *amtToRes;
-        resonanceScale = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
-    }
-    */
-    
     /// Sets notch coeffients and processes inputSample
     float processNotch();
     

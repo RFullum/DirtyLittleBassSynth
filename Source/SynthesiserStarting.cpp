@@ -36,12 +36,13 @@ void MySynthVoice::init(float SR)
     sAndH.setSampleRate     (sampleRate);
     
     // Filters
-    twoPoleLPF.setSampleRate         (sampleRate);
-    fourPoleLPF.setSampleRate        (sampleRate);
-    eightPoleLPF.setSampleRate       (sampleRate);
-    notchFilter.setSampleRate        (sampleRate);
+    twoPoleLPF.setSampleRate         (sampleRate);      // OLD, REMOVE
+    fourPoleLPF.setSampleRate        (sampleRate);      // OLD, REMOVE
+    eightPoleLPF.setSampleRate       (sampleRate);      // OLD, REMOVE
+    notchFilter.setSampleRate        (sampleRate);      // OLD, REMOVE
     filtEnv.setSampleRate            (sampleRate);
     filtLFOClickingEnv.setSampleRate (sampleRate);
+    
     
     // LFOs
     filterLFO.setSampleRate (sampleRate);
@@ -186,7 +187,6 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
 // Main Osc ADSR
 void MySynthVoice::setAmpADSRValues()
 {
-    //ADSR::Parameters envParams;
     envParams.attack  = *ampAttack;     // time (sec)
     envParams.decay   = *ampDecay;      // time (sec)
     envParams.sustain = *ampSustain;    // amplitude 0.0f to 1.0f
@@ -195,9 +195,11 @@ void MySynthVoice::setAmpADSRValues()
     env.setParameters(envParams);
 }
 
+/// Sets ADSR values for filter
 void MySynthVoice::setFilterADSRValues()
 {
     ADSR::Parameters filtEnvParams;
+    
     filtEnvParams.attack  = *filterAttack;
     filtEnvParams.decay   = *filterDecay;
     filtEnvParams.sustain = *filterSustain;
@@ -206,9 +208,11 @@ void MySynthVoice::setFilterADSRValues()
     filtEnv.setParameters(filtEnvParams);
 }
 
+/// Applies ADSR to LFO to avoid clicking
 void MySynthVoice::setFiltLFOClickValues()
 {
     ADSR::Parameters filtLFOClickParams;
+    
     filtLFOClickParams.attack  = 0.02f;
     filtLFOClickParams.decay   = 0.5f;
     filtLFOClickParams.sustain = 1.0f;
@@ -217,17 +221,19 @@ void MySynthVoice::setFiltLFOClickValues()
     filtLFOClickingEnv.setParameters(filtLFOClickParams);
 }
 
+/// Sets up the portamentoTime
 void MySynthVoice::setPortamentoTime(float SR, float portaTime)
 {
     portamento.reset(SR, portaTime);
 }
+
 
 //--------------------------------------------------------------------------
 
 void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int /*currentPitchWheelPosition*/)
 {
     playing = true;
-    ending = false;
+    ending  = false;
     
     setPortamentoTime(sampleRate, *portamentoAmount);
     
@@ -301,6 +307,9 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     populateShape(mainOscShape, sineLevel, spikeLevel, sawLevel, false);
     populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
     populateShape(lfoOscShape, filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel, true);
+    
+    // Prepares dsp Filters
+    
     
     if (playing) // check to see if this voice should be playing
     {
@@ -413,6 +422,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             float filtLFOSample      = filterLFO.process(filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel) * filtLFOEnvVal;
             float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
             
+            
             // Selects filter type
             if ((int)*filterSelector == 0)
             {
@@ -438,6 +448,13 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                                                          currentSample, filtEnvVal, filterADSRCutOffAmount,
                                                          filterADSRResAmount, filtLFOSample, filtLFOAmt);
             }
+            else
+            {
+                filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                        currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                        filterADSRResAmount, filtLFOSample, filtLFOAmt);
+            }
+                        
             
             //
             // Master Gain
@@ -469,9 +486,9 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             }
             
             
-        }
-    }
-}
+        }   // END DSP!!
+    }       // END if (playing)
+}           // END ProcessBlock
 
 bool MySynthVoice::canPlaySound (SynthesiserSound* sound)
 {

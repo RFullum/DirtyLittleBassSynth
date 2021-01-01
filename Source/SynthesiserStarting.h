@@ -91,13 +91,14 @@ public:
     // Main Osc ADSR
     void setAmpADSRValues();
     
+    /// Sets ADSR values for filter
     void setFilterADSRValues();
     
+    /// Applies ADSR to LFO to avoid clicking
     void setFiltLFOClickValues();
     
+    /// Sets up the portamentoTime 
     void setPortamentoTime(float SR, float portaTime);
-    
-    
     
     
     //--------------------------------------------------------------------------
@@ -152,6 +153,8 @@ public:
     AudioBuffer<float> oscVisualBuffer();
     AudioBuffer<float> subVisualBuffer();
     AudioBuffer<float> lfoVisualBuffer();
+    
+    
     
 
 private:
@@ -275,5 +278,6 @@ private:
     AudioBuffer<float> mainOscShape;
     AudioBuffer<float> subOscShape;
     AudioBuffer<float> lfoOscShape;
+    
 
 };

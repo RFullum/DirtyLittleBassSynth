@@ -15,9 +15,11 @@
 DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p),
         pluginBackground( Colour( (uint8)255, (uint8)64, (uint8)0 ) ),
+        sectionColor( Colour( (uint8)3, (uint8)56, (uint8)71 ) ),
         headerColor( Colour( (uint8)77, (uint8)125, (uint8)184 ) ),
         mainOutColour( Colour( (uint8)35, (uint8)25, (uint8)204 ) ),
         oscSectionColour( Colour( (uint8)100, (uint8)55, (uint8)109 ) )
+        
 {
     setSize (1200, 666);
     
@@ -183,28 +185,28 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     
     g.fillAll (pluginBackground);
     
-    g.setColour            ( headerColor );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( headerAreaInner, cornerRound );
     
-    g.setColour            ( mainOutColour );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( mainOutAreaInner, cornerRound );
     
-    g.setColour            ( oscSectionColour );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( oscSectionInner, cornerRound );
     
-    g.setColour            ( headerColor );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( oscADSRSectionInner, cornerRound );
     
-    g.setColour            ( mainOutColour );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( modSectionInner, cornerRound );
     
-    g.setColour            ( headerColor );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( filterSectionInner, cornerRound );
     
-    g.setColour            ( oscSectionColour );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( fltADSRSectionInner, cornerRound );
     
-    g.setColour            ( mainOutColour );
+    g.setColour            ( sectionColor );
     g.fillRoundedRectangle ( lfoSectionInner, cornerRound );
 
 }

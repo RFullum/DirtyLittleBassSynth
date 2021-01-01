@@ -30,10 +30,10 @@ TwoPoleLPF::~TwoPoleLPF()
 void TwoPoleLPF::setSampleRate(float SR)
 {
     sampleRate = SR;
-    
+
     lowPass1.reset();
-    //lowPass2.reset();
 }
+
 
 /**
 takes current note frequency, cutoff frequency, resonance, input sample value, envelope value, envelop to Cutoff
@@ -60,6 +60,7 @@ float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
     return process();
 }
 
+
 /// Keytracking value mapping
 void TwoPoleLPF::keyMap(float frqncy, float CO)
 {
@@ -78,7 +79,7 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
     cutoffScale          = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
-    resonanceScale    = jmap(envVal, 0.0f, 1.0f, resonance, resonance + resHeadroom);
+    resonanceScale    = jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
     
     filterLFOControl();
 }
@@ -108,8 +109,8 @@ float TwoPoleLPF::process()
 {
     filterEnvControl         (envelopeVal, cutoffSend, resSend);
     lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
-    
-    return lowPass1.processSingleSampleRaw(inputSample);;
+        
+    return lowPass1.processSingleSampleRaw(inputSample);
 }
 
 
@@ -128,6 +129,7 @@ void FourPoleLPF::setSampleRate(float SR)
     twoPole1.setSampleRate(sampleRate);
     twoPole2.setSampleRate(sampleRate);
 }
+
 
 /**
 takes current note frequency, cutoff frequency, resonance, and input sample value.
@@ -149,6 +151,7 @@ float FourPoleLPF::processFilter(float noteFreq, float cutoff,
     return stage2;
 }
 
+
 //==============================================================================
 //==============================================================================
 
@@ -164,6 +167,7 @@ void EightPoleLPF::setSampleRate(float SR)
     fourPole1.setSampleRate(sampleRate);
     fourPole2.setSampleRate(sampleRate);
 }
+
 
 /**
 takes current note frequency, cutoff frequency, resonance, and input sample value.
@@ -199,6 +203,7 @@ void NotchFilter::setSampleRate(float SR)
     
     notchFilter.reset();
 }
+
 
 /**
 Processes Non-keytracked notch filter from 20Hz to 17KHz wth resonance
