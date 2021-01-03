@@ -36,6 +36,9 @@
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/OscVisual.cpp"/>
       <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/OscVisual.h"/>
+      <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
+            file="Source/FilterVisual.cpp"/>
+      <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/FilterVisual.h"/>
       <FILE id="oAx7ky" name="SubsectionGUI.cpp" compile="1" resource="0"
             file="Source/SubsectionGUI.cpp"/>
       <FILE id="A0Ip3t" name="SubsectionGUI.h" compile="0" resource="0" file="Source/SubsectionGUI.h"/>

@@ -14,6 +14,7 @@
 #include "PluginProcessor.h"
 #include "OtherLookAndFeel.h"
 #include "OscVisual.h"
+#include "FilterVisual.h"
 #include "SubsectionGUI.h"
 #include "SectionBackgroundFiller.h"
 
@@ -35,10 +36,11 @@ private:
     OtherLookAndFeel otherLookAndFeel;
     
     /// Sets up slider: Takes reference to a slider, the style of the slider, and the color of the fill
-    void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour sliderFillColor, bool showTextBox);
+    void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour& sliderFillColor,
+                     Colour& sliderThumbColor, bool showTextBox);
     
     /// Sets up Label: Takes label reference, and the text
-    void sliderLabelSetup(Label& labelInstance, String labelText);
+    void sliderLabelSetup(Label& labelInstance, String labelText, Colour& c);
     
     /// ComboBox setup
     void comboBoxSetup(ComboBox& boxInstance, StringArray boxItems);
@@ -49,6 +51,9 @@ private:
     OscVisual lfoVisual;
     
     Rectangle<int> oscVisualSpace;
+    
+    // Filter Drawing
+    FilterVisual filterVisual;
     
     //Slider testSlider1;
     //Slider testSlider2;
@@ -174,21 +179,30 @@ private:
     
     // Colors
     Colour pluginBackground;
-    Colour sectionColor;
+    Colour sectionColorBlue;
+    Colour subsectionColor;
+    Colour sectionColourMint;
     Colour headerColor;
     Colour mainOutColour;
     Colour oscSectionColour;
     
     
     // Subsections
-    Rectangle<float> headerAreaInner;
-    Rectangle<float> mainOutAreaInner;
-    Rectangle<float> oscSectionInner;
-    Rectangle<float> oscADSRSectionInner;
-    Rectangle<float> modSectionInner;
-    Rectangle<float> filterSectionInner;
-    Rectangle<float> fltADSRSectionInner;
-    Rectangle<float> lfoSectionInner;
+    Rectangle<float> headerAreaInner;       // Header
+    Rectangle<float> mainOutAreaInner;      // Main Out
+    Rectangle<float> oscSectionInner;       // Oscillators
+    Rectangle<float> mainOscSectionInner;
+    Rectangle<float> subOscSectionInner;
+    Rectangle<float> oscADSRSectionInner;   // ADSR
+    Rectangle<float> oscADSRSlidersInner;
+    Rectangle<float> adsrRotaryInner;
+    Rectangle<float> modSectionInner;       // Modifiers
+    Rectangle<float> ringModSectionInner;
+    Rectangle<float> frqShftSectionInner;
+    Rectangle<float> sAndHSectionInner;
+    Rectangle<float> filterSectionInner;    // Filter
+    Rectangle<float> fltADSRSectionInner;   // Filter ADSR
+    Rectangle<float> lfoSectionInner;       // LFO
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
