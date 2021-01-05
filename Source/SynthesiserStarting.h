@@ -17,7 +17,6 @@
 #include "DryWet.h"
 #include "Modifiers.h"
 #include "FilterSection.h"
-#include "FilterSectionDSP.h"
 
 // ===========================
 // ===========================
@@ -244,8 +243,6 @@ private:
     FourPoleLPF fourPoleLPF;
     EightPoleLPF eightPoleLPF;
     NotchFilter notchFilter;
-    
-    TwoPoleLPFdsp twoPoleLPFdsp;
     
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;

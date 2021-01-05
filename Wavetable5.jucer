@@ -18,10 +18,6 @@
       <FILE id="kst25K" name="FilterSection.cpp" compile="1" resource="0"
             file="Source/FilterSection.cpp"/>
       <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0" file="Source/FilterSection.h"/>
-      <FILE id="rrePfL" name="FilterSectionDSP.cpp" compile="1" resource="0"
-            file="Source/FilterSectionDSP.cpp"/>
-      <FILE id="SgevEW" name="FilterSectionDSP.h" compile="0" resource="0"
-            file="Source/FilterSectionDSP.h"/>
       <FILE id="LRcUpf" name="Modifiers.cpp" compile="1" resource="0" file="Source/Modifiers.cpp"/>
       <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/Modifiers.h"/>
       <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"

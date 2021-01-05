@@ -44,9 +44,6 @@ void MySynthVoice::init(float SR, int blockSize)
     filtEnv.setSampleRate            (sampleRate);
     filtLFOClickingEnv.setSampleRate (sampleRate);
     
-    twoPoleLPFdsp.setProcessSpec(sampleRate, samplesPerBlock);
-    
-    
     // LFOs
     filterLFO.setSampleRate (sampleRate);
     
