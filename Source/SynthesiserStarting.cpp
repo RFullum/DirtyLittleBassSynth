@@ -14,10 +14,11 @@
 
 MySynthVoice::MySynthVoice() : playing(false), ending(false) {}
 
-void MySynthVoice::init(float SR)
+void MySynthVoice::init(float SR, int blockSize)
 {
     // Set Master Sample Rate
-    sampleRate = SR;
+    sampleRate      = SR;
+    samplesPerBlock = blockSize;
     
     //
     // Sets sampleRates here
@@ -42,6 +43,8 @@ void MySynthVoice::init(float SR)
     notchFilter.setSampleRate        (sampleRate);      // OLD, REMOVE
     filtEnv.setSampleRate            (sampleRate);
     filtLFOClickingEnv.setSampleRate (sampleRate);
+    
+    twoPoleLPFdsp.setProcessSpec(sampleRate, samplesPerBlock);
     
     
     // LFOs
@@ -180,6 +183,8 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
     masterGainControl = gainAmt;
 }
 
+
+
 //
 // ADSR Values
 //
@@ -311,6 +316,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     // Prepares dsp Filters
     
     
+    
     if (playing) // check to see if this voice should be playing
     {
         //
@@ -429,6 +435,9 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                 filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                
+                //float Q = *filterResonance;
+                //filterSample = twoPoleLPFdsp.processFilter(filtCutoffSmoothed, Q, currentSample);
             }
             else if ((int)*filterSelector == 1)
             {
@@ -460,6 +469,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Master Gain
             //
             float masterSample = filterSample * masterGainControlSmooth.getNextValue();
+            
             
             //
             // Output samples

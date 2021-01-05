@@ -23,7 +23,7 @@ OscVisual::~OscVisual()
 void OscVisual::paint (Graphics& g)
 {
     float cornerRound = 10.0f;
-    //g.fillAll (Colours::grey);   // clear the background
+
     g.setColour(Colours::grey);
     g.fillRoundedRectangle( visualBox, cornerRound );
     g.setColour(Colours::black);

@@ -17,6 +17,7 @@
 #include "DryWet.h"
 #include "Modifiers.h"
 #include "FilterSection.h"
+#include "FilterSectionDSP.h"
 
 // ===========================
 // ===========================
@@ -49,7 +50,7 @@ class MySynthVoice : public SynthesiserVoice
 public:
     MySynthVoice();
     
-    void init(float SR);
+    void init(float SR, int blockSize);
     
     //
     // Parameter Pointers Setup
@@ -83,6 +84,8 @@ public:
     void setPortamentoParamPointers(std::atomic<float>* portaTime);
     
     void setMasterGainParamPointers(std::atomic<float>* gainAmt);
+    
+    void setFilterSpec(float& sampRate, float& sampleSize);
     
     //
     // ADSR Values
@@ -242,6 +245,8 @@ private:
     EightPoleLPF eightPoleLPF;
     NotchFilter notchFilter;
     
+    TwoPoleLPFdsp twoPoleLPFdsp;
+    
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
     SmoothedValue<float> filterCutoffFreqSmooth;
@@ -273,6 +278,7 @@ private:
     
     // Master Sample Rate
     float sampleRate;
+    int samplesPerBlock;
     
     // Waveshape Drawing
     AudioBuffer<float> mainOscShape;

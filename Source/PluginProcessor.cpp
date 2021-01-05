@@ -274,7 +274,7 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int s
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        v->init(sampleRate);
+        v->init(sampleRate, samplesPerBlock);
     }
 }
 
