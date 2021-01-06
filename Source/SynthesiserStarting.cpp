@@ -37,10 +37,10 @@ void MySynthVoice::init(float SR, int blockSize)
     sAndH.setSampleRate     (sampleRate);
     
     // Filters
-    twoPoleLPF.setSampleRate         (sampleRate);      // OLD, REMOVE
-    fourPoleLPF.setSampleRate        (sampleRate);      // OLD, REMOVE
-    eightPoleLPF.setSampleRate       (sampleRate);      // OLD, REMOVE
-    notchFilter.setSampleRate        (sampleRate);      // OLD, REMOVE
+    twoPoleLPF.setSampleRate         (sampleRate);
+    fourPoleLPF.setSampleRate        (sampleRate);
+    eightPoleLPF.setSampleRate       (sampleRate);
+    notchFilter.setSampleRate        (sampleRate);
     filtEnv.setSampleRate            (sampleRate);
     filtLFOClickingEnv.setSampleRate (sampleRate);
     
@@ -89,9 +89,9 @@ void MySynthVoice::init(float SR, int blockSize)
     masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
     
     // WaveShape Drawing
-    mainOscShape.setSize(1, 1024);
-    subOscShape.setSize(1, 1024);
-    lfoOscShape.setSize(1, 1024);
+    mainOscShape.setSize (1, 1024);
+    subOscShape.setSize  (1, 1024);
+    lfoOscShape.setSize  (1, 1024);
 }
 
 
@@ -181,6 +181,49 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
 }
 
 
+// Pitch Wheel methods:
+void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
+{
+    setPitchBend(newPitchWheelValue);
+    shiftHz = calcShiftHz( pitchBendCents() );
+}
+
+/// Pitch wheel position to pitchBend up or down
+void MySynthVoice::setPitchBend(int pitchWheelPos)
+{
+    if (pitchWheelPos > 8192)
+        {
+            // shifting up
+            pitchBend = float(pitchWheelPos - 8192) / (16383 - 8192);
+        }
+        else
+        {
+            // shifting down
+            pitchBend = float(8192 - pitchWheelPos) / -8192;   // negative number
+        }
+}
+
+/// calculates pitch wheel's shift in hz
+float MySynthVoice::calcShiftHz(float centsOffset)
+{
+    return std::powf(2.0f, centsOffset / 1200.0f);
+}
+
+/// maps pitchwheel min/max positions to bend in cents
+float MySynthVoice::pitchBendCents()
+{
+        if (pitchBend >= 0.0f)
+        {
+            // shifting up
+            return pitchBend * pitchBendUpSemitones * 100;
+        }
+        else
+        {
+            // shifting down
+            return pitchBend * pitchBendDownSemitones * 100;
+        }
+    }
+
 
 //
 // ADSR Values
@@ -232,7 +275,7 @@ void MySynthVoice::setPortamentoTime(float SR, float portaTime)
 
 //--------------------------------------------------------------------------
 
-void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int /*currentPitchWheelPosition*/)
+void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int currentPitchWheelPosition)
 {
     playing = true;
     ending  = false;
@@ -246,8 +289,9 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSou
     // Set Sub Octave
     incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
     
-    // Converts incoming MIDI note to frequency
-    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+    // Converts incoming MIDI note and pitch bend to frequency
+    setPitchBend( currentPitchWheelPosition );
+    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber) * calcShiftHz( pitchBendCents() );
     
     portamento.setTargetValue(freq);
     
@@ -261,7 +305,6 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSou
     
     // Velocity
     vel = velocity;
-
 }
 
 void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
@@ -313,9 +356,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
     populateShape(lfoOscShape, filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel, true);
     
-    // Prepares dsp Filters
-    
-    
     
     if (playing) // check to see if this voice should be playing
     {
@@ -346,7 +386,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         sAndHMixValSmooth.setTargetValue        (*sAndHMixVal);
         masterGainControlSmooth.setTargetValue  (*masterGainControl);
         filterCutoffFreqSmooth.setTargetValue   (*filterCutoffFreq);
-        
         
         // DSP!
         // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
@@ -524,6 +563,8 @@ AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
 
 
 
+
+
 /// Populates shape buffer with morphed wave values
 void MySynthVoice::populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc)
 {
@@ -540,3 +581,4 @@ void MySynthVoice::populateShape(AudioBuffer<float>& buf, float& sin, float& spi
         buf.addSample(0, i, sampleVal);
     }
 }
+

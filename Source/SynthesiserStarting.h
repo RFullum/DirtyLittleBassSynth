@@ -86,6 +86,9 @@ public:
     
     void setFilterSpec(float& sampRate, float& sampleSize);
     
+    
+    
+    
     //
     // ADSR Values
     //
@@ -112,7 +115,7 @@ public:
      @param SynthesiserSound unused variable
      @param / unused variable
      */
-    void startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int /*currentPitchWheelPosition*/) override;
+    void startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int currentPitchWheelPosition) override;
     
     //--------------------------------------------------------------------------
     /// Called when a MIDI noteOff message is received
@@ -137,7 +140,13 @@ public:
     void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
     
     //--------------------------------------------------------------------------
-    void pitchWheelMoved(int) override {}
+    void pitchWheelMoved(int newPitchWheelValue) override; //{}
+    
+    void setPitchBend(int pitchWheelPos);
+    
+    float calcShiftHz(float centsOffset);
+    
+    float pitchBendCents();
     //--------------------------------------------------------------------------
     void controllerMoved(int, int) override {}
     //--------------------------------------------------------------------------
@@ -156,8 +165,6 @@ public:
     AudioBuffer<float> subVisualBuffer();
     AudioBuffer<float> lfoVisualBuffer();
     
-    
-    
 
 private:
     /// Populates the waveshape buffers
@@ -171,6 +178,11 @@ private:
     // Playback note
     float freq;
     float vel;      // velocity 0-1
+    float pitchBend;
+    float shiftHz;
+    float pitchWheelVal;
+    float pitchBendUpSemitones = 12.0f;
+    float pitchBendDownSemitones = 12.0f;
     
     /// ADSR envelope instances
     ADSR env;
@@ -282,6 +294,4 @@ private:
     AudioBuffer<float> mainOscShape;
     AudioBuffer<float> subOscShape;
     AudioBuffer<float> lfoOscShape;
-    
-
 };

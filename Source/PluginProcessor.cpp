@@ -321,7 +321,6 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         mainOscVisualBuffer = v->oscVisualBuffer();
         subOscVisualBuffer  = v->subVisualBuffer();
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
-        
     }
 }
 
