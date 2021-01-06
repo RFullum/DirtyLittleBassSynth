@@ -184,7 +184,7 @@ DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEdi
 //==============================================================================
 void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
 {
-    float cornerRound = 10.0f;
+    float cornerRound = 2.0f;
     
     g.fillAll (pluginBackground);
     

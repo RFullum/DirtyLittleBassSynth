@@ -23,7 +23,7 @@ FilterVisual::~FilterVisual()
 
 void FilterVisual::paint (juce::Graphics& g)
 {
-    float cornerRound = 10.0f;
+    float cornerRound = 2.0f;
     
     g.setColour            ( Colours::grey );
     g.fillRoundedRectangle ( visualBox, cornerRound );
@@ -85,30 +85,33 @@ void FilterVisual::drawFilterShape(int type)
     switch (type)
     {
         case 1:
-            rollOffControl = 0.7f;
+            rollOffControl = 66.0f; // 70% of width
             break;
         case 2:
-            rollOffControl = 0.85f;
+            rollOffControl = 33.0f; // 85% of width
             break;
         case 3:
-            rollOffControl = 0.95f;
+            rollOffControl = 11.0f; // 95% of width
             break;
         case 4:
-            rollOffControl = 0.7f;
+            rollOffControl = 33.0f; // 85% of width
+            break;
         default:
-            rollOffControl = 0.7f;
+            rollOffControl = 66.0f; // 70% of width
             break;
     }
     
-    float x1 = 0.0f;                // Top left of path: Left
-    float y1 = getHeight() * 0.5f;  // Top left of path: halfHeight
-    float x2 = jmap( powf( cutoffFreq * 0.01f, 0.25f), 0.32f, 1.0f, 0.0f, (float)getWidth() - curveOffset );    // cutoff freq
-    float y2 = ( halfHeight ) - resMap;     // halfHeight, minus (up) to resonance
+    float x1 = 0.0f;                                            // Top left of path: Left
+    float y1 = getHeight() * 0.5f;                              // Top left of path: halfHeight
+    float x2 = jmap( powf( cutoffFreq * 0.01f, 0.25f),
+                    0.32f, 1.0f,
+                    15.0f, (float)getWidth() - curveOffset );    // cutoff freq
+    float y2 = ( halfHeight ) - resMap;                         // halfHeight, minus (up) to resonance
     
     Point<float> origin    ( x1, y1 );
     Point<float> maxFilter ( x2, getHeight() );
-    Point<float> ctrlPt1   ( x2 * rollOffControl, halfHeight);
-    Point<float> ctrlPt2   ( x2 * rollOffControl, y2);
+    Point<float> ctrlPt1   ( x2 - rollOffControl, halfHeight);
+    Point<float> ctrlPt2   ( x2 - rollOffControl, y2);
     
     filterShape.startNewSubPath ( x1, y1 );
     filterShape.cubicTo         ( ctrlPt1, ctrlPt2, maxFilter );
@@ -118,12 +121,12 @@ void FilterVisual::drawFilterShape(int type)
     {
         float x3 = getWidth();
         float y3 = halfHeight;
-        float x4 = x2 + (x2 - (x2 * rollOffControl) );  // *** THIS IS BEHAVING FUNNY? ***
+        float x4 = x2 + rollOffControl;//(x2 - (x2 * rollOffControl) );  // *** THIS IS BEHAVING FUNNY? ***
         float y4 = y2;
         
         Point<float> maxFreq( x3, y3 );
-        Point<float> ctrlPt3( x4, halfHeight );
-        Point<float> ctrlPt4( x4, y4 );
+        Point<float> ctrlPt3( x4, y4 );
+        Point<float> ctrlPt4( x4, halfHeight );
         
         filterShape.cubicTo(ctrlPt3, ctrlPt4, maxFreq); // *** THIS IS BEHAVING FUNNY? ***
         filterShape.lineTo( getWidth(), getHeight() );
