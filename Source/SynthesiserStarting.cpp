@@ -258,6 +258,9 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSou
     //Filter Envelope
     filtEnv.noteOn();
     filtLFOClickingEnv.noteOn();
+    
+    // Velocity
+    vel = velocity;
 
 }
 
@@ -465,7 +468,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             // Master Gain
             //
-            float masterSample = filterSample * masterGainControlSmooth.getNextValue();
+            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * vel;
             
             
             //

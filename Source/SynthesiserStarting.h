@@ -168,8 +168,9 @@ private:
     bool playing;
     bool ending;
     
-    // Playback note frequency
+    // Playback note
     float freq;
+    float vel;      // velocity 0-1
     
     /// ADSR envelope instances
     ADSR env;
