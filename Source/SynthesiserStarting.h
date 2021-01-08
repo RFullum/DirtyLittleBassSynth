@@ -147,6 +147,10 @@ public:
     float calcShiftHz(float centsOffset);
     
     float pitchBendCents();
+    
+    float lastRecievedPitchWheelValue;
+    
+    
     //--------------------------------------------------------------------------
     void controllerMoved(int, int) override {}
     //--------------------------------------------------------------------------
@@ -179,7 +183,7 @@ private:
     float freq;
     float vel;      // velocity 0-1
     float pitchBend;
-    float shiftHz;
+    float shiftHz = 1.0f;
     float pitchWheelVal;
     float pitchBendUpSemitones = 12.0f;
     float pitchBendDownSemitones = 12.0f;
@@ -294,4 +298,5 @@ private:
     AudioBuffer<float> mainOscShape;
     AudioBuffer<float> subOscShape;
     AudioBuffer<float> lfoOscShape;
+
 };

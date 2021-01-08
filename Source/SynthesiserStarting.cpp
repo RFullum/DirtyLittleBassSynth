@@ -209,7 +209,7 @@ float MySynthVoice::calcShiftHz(float centsOffset)
     return std::powf(2.0f, centsOffset / 1200.0f);
 }
 
-/// maps pitchwheel min/max positions to bend in cents
+/// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
 float MySynthVoice::pitchBendCents()
 {
         if (pitchBend >= 0.0f)
@@ -356,7 +356,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
     populateShape(lfoOscShape, filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel, true);
     
-    
     if (playing) // check to see if this voice should be playing
     {
         //
@@ -393,17 +392,18 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         {
             // Portamento processing
             float portaFreq = portamento.getNextValue();
+            float finalFreq = portaFreq * shiftHz;
             
             // Main Oscillators
-            wtSine.setIncrement  (portaFreq);
-            wtSaw.setIncrement   (portaFreq);
-            wtSpike.setIncrement (portaFreq);
-            subOsc.setIncrement  (portaFreq, incrementDenominator);
+            wtSine.setIncrement  (finalFreq);
+            wtSaw.setIncrement   (finalFreq);
+            wtSpike.setIncrement (finalFreq);
+            subOsc.setIncrement  (finalFreq, incrementDenominator);
             
             // Mod Oscs
-            ringMod.modFreq   (portaFreq, ringModPitch);
-            freqShift.modFreq (portaFreq, freqShiftPitch);
-            sAndH.modFreq     (portaFreq, sAndHPitch);
+            ringMod.modFreq   (finalFreq, ringModPitch);
+            freqShift.modFreq (finalFreq, freqShiftPitch);
+            sAndH.modFreq     (finalFreq, sAndHPitch);
             
             // Gets value of next sample in envelope. Use to scale volume
             float envVal        = env.getNextSample();

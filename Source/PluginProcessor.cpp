@@ -314,6 +314,7 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
 
     // Hand off DSP to Synthesiser class
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+    
     for (int i=0; i<voiceCount; i++)
     {
         MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
@@ -321,6 +322,7 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         mainOscVisualBuffer = v->oscVisualBuffer();
         subOscVisualBuffer  = v->subVisualBuffer();
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
+
     }
 }
 
