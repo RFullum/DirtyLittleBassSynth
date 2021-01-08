@@ -140,15 +140,13 @@ public:
     void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
     
     //--------------------------------------------------------------------------
+    
+    // Public Pitch Bend Methods
+    /// synth class automatically sends newPitchWheelValue from its render block
     void pitchWheelMoved(int newPitchWheelValue) override; //{}
     
-    void setPitchBend(int pitchWheelPos);
-    
-    float calcShiftHz(float centsOffset);
-    
-    float pitchBendCents();
-    
-    float lastRecievedPitchWheelValue;
+    /// Updates the number of semitones the pitchWheel will bend
+    void updatePitchBendRange(float newRange);
     
     
     //--------------------------------------------------------------------------
@@ -174,6 +172,16 @@ private:
     /// Populates the waveshape buffers
     void populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc);
     
+    // Private Pitch Bend methods
+    /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
+    float pitchBendCents();
+    
+    /// calculates pitch wheel's shift in hz
+    float calcShiftHz(float centsOffset);
+    
+    /// Pitch wheel position to pitchBend up or down
+    void setPitchBend(int pitchWheelPos);
+    
     //--------------------------------------------------------------------------
     // Are the voices playing:
     bool playing;
@@ -181,13 +189,14 @@ private:
     
     // Playback note
     float freq;
-    float vel;      // velocity 0-1
+    float vel;                                  // velocity 0-1
     float pitchBend;
-    float shiftHz = 1.0f;
-    float previousPitchWheelValue = 0.0f;
-    float pitchWheelVal;
-    float pitchBendUpSemitones = 12.0f;
-    float pitchBendDownSemitones = 12.0f;
+    float shiftHz                     = 1.0f;
+    float previousPitchWheelValue     = 0.0f;
+    float pitchBendSemitones          = 12.0f;
+    float pitchBendUpSemitones        = 12.0f;
+    float pitchBendDownSemitones      = 12.0f;
+    float lastRecievedPitchWheelValue = 0.0f;
     
     /// ADSR envelope instances
     ADSR env;

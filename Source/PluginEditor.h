@@ -63,17 +63,19 @@ private:
     Slider oscMorphSlider;
     Slider subMorphSlider;
     Slider subGainSlider;
+    Slider pitchBendRangeSlider;
     ComboBox subOctave;
     
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> oscMorphSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> subMorphSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> subGainSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> pitchBendRangeAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> subOctaveAttachment;
-    // WHY ISN'T THE COMBO BOX SHOWING ITS MEMBERS?
     
     Label oscMorphLabel;
     Label subMorphLabel;
     Label subGainLabel;
+    Label pitchBendRangeLabel;
     
     // Osc ADSR Section
     Slider oscAttackSlider;

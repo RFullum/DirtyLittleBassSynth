@@ -55,10 +55,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
     sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
     sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
+    sliderSetup( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
     
     sliderLabelSetup( oscMorphLabel, "Osc\nMorph", sectionColourMint );
     sliderLabelSetup( subMorphLabel, "Sub\nMorph", sectionColourMint );
     sliderLabelSetup( subGainLabel, "Sub\nGain", sectionColourMint );
+    sliderLabelSetup( pitchBendRangeLabel, "Pitch Bend", sectionColourMint );
     
     comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
@@ -131,6 +133,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     oscMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "osc_morph", oscMorphSlider);
     subMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sub_osc_morph", subMorphSlider);
     subGainSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sub_osc_gain", subGainSlider);
+    pitchBendRangeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "pitch_bend_range", pitchBendRangeSlider);
     subOctaveAttachment      = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment>(processor.parameters, "sub_osc_octave", subOctave);
     
     oscAttackSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "amp_attack", oscAttackSlider);
@@ -303,15 +306,18 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     mainOscSectionInner.setBounds( mainOscSectionReduced.getX(), mainOscSectionReduced.getY(),
                                   mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
     
-    Rectangle<int> oscGainSpace     = mainOscSectionReduced.removeFromRight  ( oscGainWidth );
-    Rectangle<int> morphLabelSpace  = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
-    Rectangle<int> morphSliderSpace = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
+    Rectangle<int> oscGainSpace        = mainOscSectionReduced.removeFromRight  ( oscGainWidth );
+    Rectangle<int> morphLabelSpace     = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
+    Rectangle<int> morphSliderSpace    = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
+    Rectangle<int> pitchBendLabelSpace = oscGainSpace.removeFromTop             ( gainLabelHeight );
     
     oscVisualSpace = mainOscSectionReduced.reduced( sectionSpacerSize );
     
-    oscMorphLabel.setBounds  ( morphLabelSpace );
-    oscMorphSlider.setBounds ( morphSliderSpace );
-    oscVisual.setBounds      ( oscVisualSpace );
+    oscMorphLabel.setBounds        ( morphLabelSpace );
+    oscMorphSlider.setBounds       ( morphSliderSpace );
+    oscVisual.setBounds            ( oscVisualSpace );
+    pitchBendRangeSlider.setBounds ( oscGainSpace );
+    pitchBendRangeLabel.setBounds  ( pitchBendLabelSpace );
     
     // Sub Osc Section Area (Oscillator subarea)
     Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f);

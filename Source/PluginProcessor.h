@@ -72,6 +72,7 @@ private:
     std::atomic<float>* subOscMorphParameter;
     std::atomic<float>* subGainParameter;
     std::atomic<float>* subOctaveParameter;
+    std::atomic<float>* pitchBendParameter;
     
     // Amp ADSR parameters
     std::atomic<float>* ampAttackParameter;

@@ -60,6 +60,7 @@ void MySynthVoice::init(float SR, int blockSize)
     // LFOs
     filterLFO.populateWavetable();
     
+    
     //
     // Value smoothing
     //
@@ -180,8 +181,11 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
     masterGainControl = gainAmt;
 }
 
-
+//
 // Pitch Wheel methods:
+//
+
+/// synth class automatically sends newPitchWheelValue from its render block
 void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
     if (previousPitchWheelValue != newPitchWheelValue)
@@ -216,18 +220,32 @@ float MySynthVoice::calcShiftHz(float centsOffset)
 /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
 float MySynthVoice::pitchBendCents()
 {
-        if (pitchBend >= 0.0f)
-        {
-            // shifting up
-            return pitchBend * pitchBendUpSemitones * 100;
-        }
-        else
-        {
-            // shifting down
-            return pitchBend * pitchBendDownSemitones * 100;
-        }
+    if (pitchBend >= 0.0f)
+    {
+        // shifting up
+        return pitchBend * pitchBendUpSemitones * 100;
     }
+    else
+    {
+        // shifting down
+        return pitchBend * pitchBendDownSemitones * 100;
+    }
+}
 
+/// Updates the number of semitones the pitchWheel will bend
+void MySynthVoice::updatePitchBendRange(float newRange)
+{
+    /*
+    if (pitchBendSemitones != newRange)
+    {
+        pitchBendSemitones     = newRange;
+        pitchBendUpSemitones   = pitchBendSemitones;
+        pitchBendDownSemitones = pitchBendSemitones;
+    }
+     */
+    pitchBendUpSemitones = newRange;
+    pitchBendDownSemitones = newRange;
+}
 
 //
 // ADSR Values
@@ -293,9 +311,12 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSou
     // Set Sub Octave
     incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
     
-    // Converts incoming MIDI note and pitch bend to frequency
+    // This just ensures the wheel position is set before the freq is calculated.
+    // The actual pitch bend frequency multiplication happens in the render block.
     setPitchBend( currentPitchWheelPosition );
-    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber) * calcShiftHz( pitchBendCents() );
+    
+    // Converts incoming MIDI note to frequency
+    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     
     portamento.setTargetValue(freq);
     

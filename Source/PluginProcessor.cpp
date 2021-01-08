@@ -43,6 +43,8 @@ parameters(*this, nullptr, "ParameterTree", {
                                           NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
     std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.0f, "gain" ),
+    std::make_unique<AudioParameterFloat>("pitch_bend_range", "Pitch Bend",
+                                          NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, "semitones" ),
     std::make_unique<AudioParameterChoice>("sub_osc_octave", "Sub Octave", StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
     
     // Amp ADSR Params
@@ -126,6 +128,7 @@ parameters(*this, nullptr, "ParameterTree", {
     subGainParameter     = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter   = parameters.getRawParameterValue("sub_osc_octave");
     portaTimeParameter   = parameters.getRawParameterValue("porta_time");
+    pitchBendParameter   = parameters.getRawParameterValue("pitch_bend_range");
     
     // Amp ADSR Parameter Construction
     ampAttackParameter  = parameters.getRawParameterValue("amp_attack");
@@ -195,6 +198,7 @@ parameters(*this, nullptr, "ParameterTree", {
         v->setFilterADSRParamPointers    (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
         v->setFilterLFOParamPointers     (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
         v->setMasterGainParamPointers    (masterGainParameter);
+        v->updatePitchBendRange          (*pitchBendParameter);
     }
     
 }
@@ -322,7 +326,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         mainOscVisualBuffer = v->oscVisualBuffer();
         subOscVisualBuffer  = v->subVisualBuffer();
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
-
+        
+        v->updatePitchBendRange(*pitchBendParameter);
     }
 }
 
