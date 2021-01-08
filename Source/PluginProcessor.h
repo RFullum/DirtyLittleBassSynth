@@ -56,6 +56,10 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    //==============================================================================
+    /// Gets transport/bpm/etc info from host
+    void updateCurrentTimeInfoFromHost();
+    
     // Parameter members
     AudioProcessorValueTreeState parameters;
     
@@ -127,7 +131,14 @@ private:
     Synthesiser synth;
     int voiceCount = 1;
     
+    AudioPlayHead::CurrentPositionInfo playHeadInfo;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessor)
 };
+
+
+
+//==============================================================================
+//==============================================================================
+//==============================================================================

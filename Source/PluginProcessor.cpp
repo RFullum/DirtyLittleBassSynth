@@ -328,7 +328,10 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
         
         v->updatePitchBendRange(*pitchBendParameter);
+        v->setBPM(playHeadInfo.bpm);
     }
+    
+    updateCurrentTimeInfoFromHost();
 }
 
 //==============================================================================
@@ -366,6 +369,29 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation (const void* data, 
 }
 
 //==============================================================================
+
+void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
+{
+    const auto newInfo = [&]
+    {
+        if (auto* ph = getPlayHead())
+        {
+            AudioPlayHead::CurrentPositionInfo result;
+
+            if (ph->getCurrentPosition (result))
+                return result;
+        }
+
+        // If the host fails to provide the current time, we'll just use default values
+        AudioPlayHead::CurrentPositionInfo result;
+        result.resetToDefault();
+        return result;
+    }();
+
+    playHeadInfo.bpm = newInfo.bpm;
+}
+
+
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {

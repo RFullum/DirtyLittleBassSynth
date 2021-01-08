@@ -181,6 +181,14 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
     masterGainControl = gainAmt;
 }
 
+void MySynthVoice::setBPM(double& newBPM)
+{
+    if (hostBPM != (float)newBPM)
+    {
+        hostBPM = (float)newBPM;
+    }
+}
+
 //
 // Pitch Wheel methods:
 //

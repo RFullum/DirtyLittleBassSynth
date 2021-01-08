@@ -36,6 +36,7 @@ public:
                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                                 float lfoVal, std::atomic<float>* amtToLFO);
     
+    void setBPM(float& newBPM);
     
 protected:
     /// Keytracking value mapping
@@ -68,6 +69,7 @@ protected:
     float envelopeVal;
     float lfoValue;
     float cutoffLFO;
+    float hostBPM;
     
     std::atomic<float>* cutoffSend;
     std::atomic<float>* resSend;

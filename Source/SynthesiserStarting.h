@@ -86,6 +86,8 @@ public:
     
     void setFilterSpec(float& sampRate, float& sampleSize);
     
+    void setBPM(double& newBPM);
+    
     
     
     
@@ -197,6 +199,9 @@ private:
     float pitchBendUpSemitones        = 12.0f;
     float pitchBendDownSemitones      = 12.0f;
     float lastRecievedPitchWheelValue = 0.0f;
+    
+    // Host Transport Data
+    float hostBPM = 120.0f;
     
     /// ADSR envelope instances
     ADSR env;

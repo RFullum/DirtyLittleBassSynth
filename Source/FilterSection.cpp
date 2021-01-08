@@ -17,7 +17,7 @@
 // Two Pole LPF Class
 //
 
-TwoPoleLPF::TwoPoleLPF() : maxCutoff(17000.0f), maxResonance(3.0f)
+TwoPoleLPF::TwoPoleLPF() : maxCutoff(17000.0f), maxResonance(3.0f), hostBPM(120.0f)
 {
 }
 
@@ -113,6 +113,14 @@ float TwoPoleLPF::process()
     return lowPass1.processSingleSampleRaw(inputSample);
 }
 
+void TwoPoleLPF::setBPM(float& newBPM)
+{
+    if (hostBPM != newBPM)
+    {
+        hostBPM = newBPM;
+    }
+    // *** THIS NEEDS TO BE TESTED IN HOST WITH DBG ***
+}
 
 //==============================================================================
 //==============================================================================
