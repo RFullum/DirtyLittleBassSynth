@@ -184,8 +184,12 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
 // Pitch Wheel methods:
 void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
-    setPitchBend(newPitchWheelValue);
-    shiftHz = calcShiftHz( pitchBendCents() );
+    if (previousPitchWheelValue != newPitchWheelValue)
+    {
+        previousPitchWheelValue = newPitchWheelValue;
+        setPitchBend(newPitchWheelValue);
+        shiftHz = calcShiftHz( pitchBendCents() );
+    }
 }
 
 /// Pitch wheel position to pitchBend up or down

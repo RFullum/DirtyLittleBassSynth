@@ -184,6 +184,7 @@ private:
     float vel;      // velocity 0-1
     float pitchBend;
     float shiftHz = 1.0f;
+    float previousPitchWheelValue = 0.0f;
     float pitchWheelVal;
     float pitchBendUpSemitones = 12.0f;
     float pitchBendDownSemitones = 12.0f;
