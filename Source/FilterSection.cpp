@@ -109,17 +109,16 @@ float TwoPoleLPF::process()
 {
     filterEnvControl         (envelopeVal, cutoffSend, resSend);
     lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
-        
+    
     return lowPass1.processSingleSampleRaw(inputSample);
 }
 
-void TwoPoleLPF::setBPM(float& newBPM)
+void TwoPoleLPF::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo)
 {
-    if (hostBPM != newBPM)
+    if (hostBPM != (float)playheadInfo.bpm)
     {
-        hostBPM = newBPM;
+        hostBPM = playheadInfo.bpm;
     }
-    // *** THIS NEEDS TO BE TESTED IN HOST WITH DBG ***
 }
 
 //==============================================================================

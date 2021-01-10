@@ -60,6 +60,8 @@ public:
     /// Gets transport/bpm/etc info from host
     void updateCurrentTimeInfoFromHost();
     
+    float getOutLevel();
+    
     // Parameter members
     AudioProcessorValueTreeState parameters;
     
@@ -127,11 +129,17 @@ private:
     // Master Gain
     std::atomic<float>* masterGainParameter;
     
+    // Transport Info
+    AudioPlayHead::CurrentPositionInfo playHeadInfo;
+    
+    // Metering
+    float outLevel;
+    
     // Instance of SynthesiZer class
     Synthesiser synth;
     int voiceCount = 1;
     
-    AudioPlayHead::CurrentPositionInfo playHeadInfo;
+    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessor)

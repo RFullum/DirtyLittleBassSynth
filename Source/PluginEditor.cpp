@@ -47,9 +47,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     */
     
     // Master Out
-    sliderSetup( masterGainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
+    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
+    sliderLabelSetup  ( masterGainLabel, "Out Gain", sectionColourMint );
+    addAndMakeVisible ( outMeter );
     
-    sliderLabelSetup( masterGainLabel, "Out Gain", sectionColourMint );
     
     // Osc Section
     sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
@@ -244,7 +245,12 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     subOscVisual.setOscShapeLine(processor.subOscVisualBuffer);
     lfoVisual.setOscShapeLine(processor.lfoOscVisualBuffer);
     
-    filterVisual.drawFilterShape( filterType.getSelectedId(), (float)processor.getSampleRate(), (float)cutoffSlider.getValue(), (float)resSlider.getValue() );
+    filterVisual.drawFilterShape( filterType.getSelectedId(),
+                                 (float)processor.getSampleRate(),
+                                 (float)cutoffSlider.getValue(),
+                                 (float)resSlider.getValue() );
+    
+    outMeter.outMeterLevel( processor.getOutLevel(), processor.getSampleRate() );
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
@@ -274,10 +280,12 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     //mainOutAreaInner.setSize( mainOutReduced.getWidth(), mainOutReduced.getHeight() );
     mainOutAreaInner.setBounds( mainOutReduced.getX(), mainOutReduced.getY(), mainOutReduced.getWidth(), mainOutReduced.getHeight() );
     
+    Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom( mainOutReduced.getHeight() * 0.5f );
     Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop ( mainLabelHeight );
     
     masterGainLabel.setBounds  ( mainOutLabelArea );
     masterGainSlider.setBounds ( mainOutReduced );
+    outMeter.setBounds( meterOutArea );
     
     
     // Top Row of sections area: Rectangle across top containing
@@ -348,7 +356,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     int rotaryLabelHeight = 60;
     
-    Rectangle<int> rotarySpace     = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.5f ).reduced( sectionSpacerSize * 2.0f);
+    Rectangle<int> rotarySpace     = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f);
     
     adsrRotaryInner.setBounds( rotarySpace.getX(), rotarySpace.getY(), rotarySpace.getWidth(), rotarySpace.getHeight() );
     

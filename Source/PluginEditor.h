@@ -17,6 +17,7 @@
 #include "FilterVisual.h"
 #include "SubsectionGUI.h"
 #include "SectionBackgroundFiller.h"
+#include "OutMeter.h"
 
 //==============================================================================
 /**
@@ -177,6 +178,8 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> masterGainSliderAttachment;
     
     Label masterGainLabel;
+    
+    OutMeter outMeter;
     
     
     // Colors

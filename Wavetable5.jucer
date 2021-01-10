@@ -34,6 +34,8 @@
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/OutMeter.cpp"/>
+      <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/OutMeter.h"/>
       <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/OscVisual.cpp"/>
       <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/OscVisual.h"/>
       <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"

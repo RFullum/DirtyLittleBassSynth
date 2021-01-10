@@ -36,7 +36,7 @@ public:
                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                                 float lfoVal, std::atomic<float>* amtToLFO);
     
-    void setBPM(float& newBPM);
+    void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo);
     
 protected:
     /// Keytracking value mapping

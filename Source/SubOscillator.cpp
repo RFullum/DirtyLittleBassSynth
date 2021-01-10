@@ -34,9 +34,9 @@ void SubOsc::setIncrement(float noteFreq, int denom)
 {
     float subFreq = noteFreq / (float)denom;
     
-    sinSub.setIncrement(subFreq);
-    squareSub.setIncrement(subFreq);
-    sawSub.setIncrement(subFreq);
+    sinSub.setIncrement    (subFreq);
+    squareSub.setIncrement (subFreq);
+    sawSub.setIncrement    (subFreq);
 }
 
 float SubOsc::getSquareWavetableValue(int index)

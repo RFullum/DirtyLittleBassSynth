@@ -181,11 +181,15 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
     masterGainControl = gainAmt;
 }
 
-void MySynthVoice::setBPM(double& newBPM)
+void MySynthVoice::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead)
 {
-    if (hostBPM != (float)newBPM)
+    if (hostBPM != (float)playhead.bpm)
     {
-        hostBPM = (float)newBPM;
+        hostBPM = (float)playhead.bpm;
+        twoPoleLPF.setPlayheadInfo   (playhead);
+        fourPoleLPF.setPlayheadInfo  (playhead);
+        eightPoleLPF.setPlayheadInfo (playhead);
+        notchFilter.setPlayheadInfo  (playhead);
     }
 }
 
@@ -540,7 +544,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             // Master Gain
             //
-            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * vel;
+            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * vel * 2.0f;
             
             
             //

@@ -86,7 +86,7 @@ public:
     
     void setFilterSpec(float& sampRate, float& sampleSize);
     
-    void setBPM(double& newBPM);
+    void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead);
     
     
     
