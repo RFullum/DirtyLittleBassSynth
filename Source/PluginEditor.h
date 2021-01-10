@@ -190,6 +190,7 @@ private:
     Colour headerColor;
     Colour mainOutColour;
     Colour oscSectionColour;
+    Colour clearColour;
     
     
     // Subsections

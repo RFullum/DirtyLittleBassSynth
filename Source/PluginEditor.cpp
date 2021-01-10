@@ -14,13 +14,14 @@
 //==============================================================================
 DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p),
-        pluginBackground( Colour( (uint8)255, (uint8)64, (uint8)0 ) ),
+        pluginBackground( Colour( (uint8)255, (uint8)94, (uint8)0 ) ),
         sectionColorBlue( Colour( (uint8)0, (uint8)21, (uint8)89 ) ),
         subsectionColor( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)50 ) ),
-        sectionColourMint( Colour( (uint8)97, (uint8)255, (uint8)226 )),
+        sectionColourMint( Colour( (uint8)91, (uint8)192, (uint8)235 )),
         headerColor( Colour( (uint8)77, (uint8)125, (uint8)184 ) ),
         mainOutColour( Colour( (uint8)35, (uint8)25, (uint8)204 ) ),
-        oscSectionColour( Colour( (uint8)100, (uint8)55, (uint8)109 ) )
+        oscSectionColour( Colour( (uint8)100, (uint8)55, (uint8)109 ) ),
+        clearColour( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)0 ) )
         
 {
     setSize (1200, 666);
@@ -60,7 +61,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     sliderLabelSetup( oscMorphLabel, "Osc\nMorph", sectionColourMint );
     sliderLabelSetup( subMorphLabel, "Sub\nMorph", sectionColourMint );
-    sliderLabelSetup( subGainLabel, "Sub\nGain", sectionColourMint );
+    sliderLabelSetup( subGainLabel, "Sub Gain", sectionColourMint );
     sliderLabelSetup( pitchBendRangeLabel, "Pitch Bend", sectionColourMint );
     
     comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
@@ -97,7 +98,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup( dryWetLabel, "Dry/Wet", sectionColorBlue );
     
     // Filter Section
-    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, true );
+    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
     sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
     
     sliderLabelSetup( cutoffLabel, "Cutoff", sectionColourMint );
@@ -193,8 +194,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (pluginBackground);
     
     // Header
-    g.setColour            ( sectionColorBlue );
-    g.fillRoundedRectangle ( headerAreaInner, cornerRound );
+    g.setGradientFill( ColourGradient::horizontal( sectionColourMint, sectionColorBlue, headerAreaInner ) );
+    g.fillRoundedRectangle( headerAreaInner, cornerRound );
     
     // Main Out
     g.setColour            ( sectionColorBlue );
