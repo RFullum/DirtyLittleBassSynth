@@ -304,6 +304,7 @@ private:
     float masterGain;
     std::atomic<float>* masterGainControl;
     SmoothedValue<float> masterGainControlSmooth;
+    SmoothedValue<float> velocitySmooth;
     
     // Master Sample Rate
     float sampleRate;

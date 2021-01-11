@@ -89,6 +89,9 @@ void MySynthVoice::init(float SR, int blockSize)
     masterGainControlSmooth.reset(sampleRate, 0.01f);
     masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
     
+    velocitySmooth.reset(sampleRate, 0.01f);
+    velocitySmooth.setCurrentAndTargetValue(1.0f);
+    
     // WaveShape Drawing
     mainOscShape.setSize (1, 1024);
     subOscShape.setSize  (1, 1024);
@@ -421,6 +424,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         freqShiftMixValSmooth.setTargetValue    (*freqShiftMixVal);
         sAndHMixValSmooth.setTargetValue        (*sAndHMixVal);
         masterGainControlSmooth.setTargetValue  (*masterGainControl);
+        velocitySmooth.setTargetValue           (vel);
         filterCutoffFreqSmooth.setTargetValue   (*filterCutoffFreq);
         
         // DSP!
@@ -544,7 +548,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             // Master Gain
             //
-            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * vel * 2.0f;
+            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * velocitySmooth.getNextValue(); // * 2.0f;
             
             
             //

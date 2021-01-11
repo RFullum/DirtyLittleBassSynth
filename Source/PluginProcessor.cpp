@@ -109,7 +109,7 @@ parameters(*this, nullptr, "ParameterTree", {
     
     // Filter LFO Params
     std::make_unique<AudioParameterFloat>("filtLFO_freq", "Filter LFO Freq",
-                                          NormalisableRange<float>(0.01f, 20.0f, 0.01f, 1.0f, false), 1.0f, "lfo freq" ),
+                                          NormalisableRange<float>(0.01f, 15.0f, 0.01f, 1.0f, false), 1.0f, "lfo freq" ),
     std::make_unique<AudioParameterFloat>("filtLFO_amt", "Filter LFO Amount",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "lfo amt" ),
     std::make_unique<AudioParameterFloat>("filtLFO_shape", "Filter LFO Shape",
