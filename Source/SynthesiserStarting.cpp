@@ -548,7 +548,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             // Master Gain
             //
-            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * velocitySmooth.getNextValue(); // * 2.0f;
+            float masterSample = filterSample * masterGainControlSmooth.getNextValue() * velocitySmooth.getNextValue();
             
             
             //
@@ -558,8 +558,8 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // for each channel, write the currentSample float to the output
             for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
             {
-                // The output sample is scaled by 0.5 so that it is not too loud by default
-                outputBuffer.addSample (chan, sampleIndex, masterSample * 0.5f);
+                // The output sample added to the buffer
+                outputBuffer.addSample ( chan, sampleIndex, masterSample );
             }
             
             // Reset envelopes here to prevent clicks
