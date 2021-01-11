@@ -56,7 +56,8 @@ protected:
     
     // Member Variables
     float sampleRate;
-    float maxCutoff; 
+    float maxCutoff;
+    float minCutoff;
     float maxResonance;
     
     float cutoffFreq;

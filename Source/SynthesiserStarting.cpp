@@ -559,7 +559,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             for (int chan = 0; chan<outputBuffer.getNumChannels(); chan++)
             {
                 // The output sample added to the buffer
-                outputBuffer.addSample ( chan, sampleIndex, masterSample );
+                outputBuffer.addSample( chan, sampleIndex, masterSample );
             }
             
             // Reset envelopes here to prevent clicks

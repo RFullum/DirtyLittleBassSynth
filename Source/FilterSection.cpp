@@ -17,7 +17,9 @@
 // Two Pole LPF Class
 //
 
-TwoPoleLPF::TwoPoleLPF() : maxCutoff(17000.0f), maxResonance(3.0f), hostBPM(120.0f)
+TwoPoleLPF::TwoPoleLPF() : maxCutoff(17000.0f), minCutoff(20.0f), maxResonance(3.0f),
+                           cutoffLFO(1000.0f), hostBPM(120.0f)
+                           
 {
 }
 
@@ -77,6 +79,10 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
     // Cutoff envelope scaling
     float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
     cutoffScale          = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
+    if (cutoffScale < 0.0f)
+    {
+        cutoffScale = 0.0f;
+    }
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
     resonanceScale    = jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
@@ -86,28 +92,29 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
 
 /**
 Scales the LFO range, then scales that to the send amount. Modulates filter cutoff,
-clipped to 20Hz and 18000Hz
+scaled to minCutoff (20Hz) and maxCutoff (17000Hz)
 */
 void TwoPoleLPF::filterLFOControl()
 {
-    float lfoRange = jmap(lfoValue, -1.0f, 1.0f, -10000.0f, 10000.0f);
-    float lfoScale = lfoRange * *lfoSend;
     
-    float cutoffLFOUnlimited = cutoffScale + lfoScale;
+    //float lfo       = lfoValue * *lfoSend;
+    float headroom  = (maxCutoff - cutoffScale) * *lfoSend;
+    float floorroom = (cutoffScale - minCutoff) * *lfoSend;
     
-    if (cutoffLFOUnlimited < 20.0f)
-        cutoffLFOUnlimited = 20.0f;
-    
-    if (cutoffLFOUnlimited > 18000.0f)
-        cutoffLFOUnlimited = 18000.0f;
-    
-    cutoffLFO = cutoffLFOUnlimited;
+    if (lfoValue >= 0.0f)
+    {
+        cutoffLFO = cutoffScale + (lfoValue * headroom);
+    }
+    else
+    {
+        cutoffLFO = cutoffScale + (lfoValue * floorroom);
+    }
 }
 
 /// Cascades two IIRFilter lowpasses and returns the output sample value
 float TwoPoleLPF::process()
 {
-    filterEnvControl         (envelopeVal, cutoffSend, resSend);
+    filterEnvControl         ( envelopeVal, cutoffSend, resSend );
     lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
     
     return lowPass1.processSingleSampleRaw(inputSample);
