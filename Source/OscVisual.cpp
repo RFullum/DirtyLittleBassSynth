@@ -23,11 +23,14 @@ OscVisual::~OscVisual()
 void OscVisual::paint (Graphics& g)
 {
     float cornerRound = 2.0f;
-
-    g.setColour(Colours::grey);
-    g.fillRoundedRectangle( visualBox, cornerRound );
-    g.setColour(Colours::black);
-    g.fillPath(oscShape);
+    
+    Colour lineColor   = Colour( (uint8)255, (uint8)94, (uint8)0  );
+    Colour sectionBlue = Colour( (uint8)7,   (uint8)10, (uint8)59 );
+    
+    g.setGradientFill      ( ColourGradient::vertical( Colours::black, sectionBlue, visualBox ) );
+    g.fillRoundedRectangle ( visualBox, cornerRound );
+    g.setColour            ( lineColor );
+    g.fillPath             ( oscShape );
 }
 
 void OscVisual::resized()

@@ -21,7 +21,8 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
                                         float rotaryStartAngle, float rotaryEndAngle, Slider &slider)
 {
     // Local Variables
-    float diameter = jmin(width, height);   // Lesser of two creates squre & circle from rect & ellipse
+    float reducer  = 0.75f;
+    float diameter = jmin(width * reducer, height * reducer);   // Lesser of two creates squre & circle from rect & ellipse
     float radius   = diameter * 0.5f;
     float centerX  = x + (width / 2.0f);     // Finds center offset by x value to actually center it
     float centerY  = y + (height / 2.0f);    // Ditto for centerY

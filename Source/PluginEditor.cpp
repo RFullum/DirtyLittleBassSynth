@@ -74,6 +74,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
     sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
     
+    portaSlider.setLookAndFeel    ( &otherLookAndFeel );
+    foldbackSlider.setLookAndFeel ( &otherLookAndFeel );
+    
     sliderLabelSetup( oscAttackLabel, "A", sectionColourMint );
     sliderLabelSetup( oscDecayLabel, "D", sectionColourMint );
     sliderLabelSetup( oscSustainLabel, "S", sectionColourMint );
@@ -89,6 +92,14 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
     sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
     sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
+    
+    ringToneSlider.setLookAndFeel      ( &otherLookAndFeel );
+    ringPitchSlider.setLookAndFeel     ( &otherLookAndFeel );
+    ringDryWetSlider.setLookAndFeel    ( &otherLookAndFeel );
+    frqShftPitchSlider.setLookAndFeel  ( &otherLookAndFeel );
+    frqShftDryWetSlider.setLookAndFeel ( &otherLookAndFeel );
+    sHPitchSlider.setLookAndFeel       ( &otherLookAndFeel );
+    sHDryWetSlider.setLookAndFeel      ( &otherLookAndFeel );
     
     sliderLabelSetup( ringLabel, "Ring Mod", sectionColourMint );
     sliderLabelSetup( frqShftLabel, "Freq Shift", sectionColourMint );
@@ -113,6 +124,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
     sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
     sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
+    
+    adsrToCutoffSlider.setLookAndFeel ( &otherLookAndFeel );
+    adsrToResSlider.setLookAndFeel    ( &otherLookAndFeel );
     
     sliderLabelSetup( fltAttackLabel, "A", sectionColourMint );
     sliderLabelSetup( fltDecayLabel, "D", sectionColourMint );
@@ -198,7 +212,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.fillRoundedRectangle( headerAreaInner, cornerRound );
     
     // Main Out
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill( ColourGradient::vertical( sectionColorBlue, mainOutAreaInner.getHeight() * 0.59f,
+                                                sectionColourMint, mainOutAreaInner.getHeight() ));
     g.fillRoundedRectangle ( mainOutAreaInner, cornerRound );
     
     // Oscillators
