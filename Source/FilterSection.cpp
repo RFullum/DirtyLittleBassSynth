@@ -79,9 +79,9 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
     // Cutoff envelope scaling
     float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
     cutoffScale          = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
-    if (cutoffScale < 0.0f)
+    if (cutoffScale <= 0.0f)
     {
-        cutoffScale = 0.0f;
+        cutoffScale = 0.01f;
     }
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
