@@ -19,7 +19,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
         sectionColorBlue       ( Colour( (uint8)0,   (uint8)21,  (uint8)89 ) ),
         sectionColorBlueDark   ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) ),
         subsectionColor        ( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)50 ) ),
-        sectionColourLightBlue ( Colour( (uint8)184, (uint8)210, (uint8)222 ) ),
+        sectionColourLightBlue ( Colour( (uint8)143, (uint8)173, (uint8)186 ) ),
         headerColor            ( Colour( (uint8)77,  (uint8)125, (uint8)184 ) ),
         mainOutColour          ( Colour( (uint8)35,  (uint8)25,  (uint8)204 ) ),
         oscSectionColour       ( Colour( (uint8)100, (uint8)55,  (uint8)109 ) ),
@@ -28,31 +28,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize (1200, 666);
     
-    /*
-    addAndMakeVisible(testSlider1);
-    testSlider1.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
-    testSlider1.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 25);
-    
-    testSlider1.setLookAndFeel(&otherLookAndFeel);
-    */
-    
-    /*
-    addAndMakeVisible(testSlider2);
-    testSlider2.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    testSlider2.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 25);
-    
-    testSlider2.setLookAndFeel(&otherLookAndFeel);
-    */
-    
-    /*
-    addAndMakeVisible(testSlider3);
-    testSlider3.setSliderStyle(Slider::SliderStyle::ThreeValueHorizontal);
-    */
     
     // Master Out
     sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
     sliderLabelSetup  ( masterGainLabel, "Out Gain", sectionColourLightBlue );
     addAndMakeVisible ( outMeter );
+    
+    masterGainSlider.setLookAndFeel( &otherLookAndFeel );
     
     
     // Osc Section
@@ -60,6 +42,11 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    
+    oscMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
+    subMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
+    subGainSlider.setLookAndFeel        ( &otherLookAndFeel );
+    pitchBendRangeSlider.setLookAndFeel ( &otherLookAndFeel );
     
     sliderLabelSetup( oscMorphLabel, "Osc\nMorph", sectionColourLightBlue );
     sliderLabelSetup( subMorphLabel, "Sub\nMorph", sectionColourLightBlue );
@@ -76,8 +63,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     
-    portaSlider.setLookAndFeel    ( &otherLookAndFeel );
-    foldbackSlider.setLookAndFeel ( &otherLookAndFeel );
+    oscAttackSlider.setLookAndFeel  ( &otherLookAndFeel );
+    oscDecaySlider.setLookAndFeel   ( &otherLookAndFeel );
+    oscSustainSlider.setLookAndFeel ( &otherLookAndFeel );
+    oscReleaseSlider.setLookAndFeel ( &otherLookAndFeel );
+    portaSlider.setLookAndFeel      ( &otherLookAndFeel );
+    foldbackSlider.setLookAndFeel   ( &otherLookAndFeel );
     
     sliderLabelSetup( oscAttackLabel, "A", sectionColourLightBlue );
     sliderLabelSetup( oscDecayLabel, "D", sectionColourLightBlue );
@@ -114,6 +105,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
     
+    cutoffSlider.setLookAndFeel ( &otherLookAndFeel );
+    resSlider.setLookAndFeel    ( &otherLookAndFeel );
+    
     sliderLabelSetup( cutoffLabel, "Cutoff", sectionColourLightBlue );
     sliderLabelSetup( resLabel, "Resonance", sectionColourLightBlue );
     
@@ -127,6 +121,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     
+    fltAttackSlider.setLookAndFeel    ( &otherLookAndFeel );
+    fltDecaySlider.setLookAndFeel     ( &otherLookAndFeel );
+    fltSustainSlider.setLookAndFeel   ( &otherLookAndFeel );
+    fltReleaseSlider.setLookAndFeel   ( &otherLookAndFeel );
     adsrToCutoffSlider.setLookAndFeel ( &otherLookAndFeel );
     adsrToResSlider.setLookAndFeel    ( &otherLookAndFeel );
     
@@ -141,6 +139,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
     sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
+    
+    lfoShapeSlider.setLookAndFeel  ( &otherLookAndFeel );
+    lfoFreqSlider.setLookAndFeel   ( &otherLookAndFeel );
+    lfoAmountSlider.setLookAndFeel ( &otherLookAndFeel );
     
     sliderLabelSetup( lfoShapeLabel, "LFO Shape", sectionColourLightBlue );
     sliderLabelSetup( lfoFreqLabel, "Frequency", sectionColourLightBlue );
@@ -210,10 +212,29 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (pluginBackground);
     
     // Header
-    //g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, sectionColorBlueDark, headerAreaInner ) );
     g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, headerAreaInner.getX(),
                                                   sectionColorBlueDark, headerAreaInner.getWidth() * 0.75f) );
     g.fillRoundedRectangle( headerAreaInner, cornerRound );
+    /*
+    g.setGradientFill( ColourGradient::horizontal( blazeOrange, headerAreaInner.getX() + (headerAreaInner.getWidth() * 0.7f),
+                                                  blazeOrange, headerAreaInner.getWidth()) );
+     */
+    
+    g.setColour(blazeOrange);
+    //g.setFont( 90.0f );
+    //g.setFont( Font( "akka", 60.0f, 0) );
+    //g.setFont( Font("AppleGothic", 60.0f, 0) );
+    //g.setFont( Font("automat", 60.0f, 0) );
+    g.setFont( Font("technoid", 60.0f, 0) );
+    //g.setFont( Font("grand sport laser", 60.0f, 0) );
+    //g.setFont( Font("grand sport 3d", 60.0f, 0) );
+    //g.setFont( Font("magnetar", 60.0f, 0) );
+    g.drawText("FULLUMMUSIC", headerAreaInner.removeFromBottom( 45.0f ), Justification::right);
+    headerAreaInner.removeFromRight( 3.0f);
+    g.setColour(sectionColourLightBlue);
+    g.setFont( Font("technoid", 30.0f, 0) );
+    g.drawText("DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), Justification::right);
+    
     
     // Main Out
     g.setGradientFill( ColourGradient::vertical( sectionColorBlueDark, mainOutAreaInner.getHeight() * 0.59f,
@@ -632,6 +653,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
 
 void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c)
 {
+    labelInstance.setFont( Font("helvetica", 14.0f, 1));
     labelInstance.setText(labelText, dontSendNotification);
     labelInstance.setJustificationType(Justification::centred);
     labelInstance.setColour(Label::textColourId, c);

@@ -19,9 +19,11 @@ public:
     /// Constructor
     OtherLookAndFeel();
     
+    /// Draws rotary slider as round knob
     void drawRotarySlider(Graphics &g, int x, int y, int width, int height, float sliderPos,
                           float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override;
     
+    /// Draws linear slider with a square thumb, only as wide as the track
     void drawLinearSlider (Graphics& g, int x, int y, int width, int height,
                                            float sliderPos,
                                            float minSliderPos,

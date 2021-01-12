@@ -52,6 +52,7 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
 }
 
 
+/// Draws linear slider with a square thumb, only as wide as the track
 void OtherLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, int height,
                                        float sliderPos,
                                        float minSliderPos,
@@ -107,7 +108,7 @@ void OtherLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, i
             maxPoint = { kx, ky };
         }
 
-        auto thumbWidth = getSliderThumbRadius (slider);
+        //auto thumbWidth = getSliderThumbRadius (slider);
 
         valueTrack.startNewSubPath (minPoint);
         valueTrack.lineTo (isThreeVal ? thumbPoint : maxPoint);
@@ -117,7 +118,8 @@ void OtherLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, i
         if (! isTwoVal)
         {
             g.setColour (slider.findColour (Slider::thumbColourId));
-            g.fillEllipse (Rectangle<float> (static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre (isThreeVal ? thumbPoint : maxPoint));
+            //g.fillEllipse (Rectangle<float> (static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre (isThreeVal ? thumbPoint : maxPoint));
+            g.fillRect( Rectangle<float> (static_cast<float> (trackWidth), 6.0f).withCentre (isThreeVal ? thumbPoint : maxPoint));
         }
 
         if (isTwoVal || isThreeVal)
