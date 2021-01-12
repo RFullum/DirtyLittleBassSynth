@@ -14,14 +14,16 @@
 //==============================================================================
 DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p),
-        pluginBackground( Colour( (uint8)255, (uint8)94, (uint8)0 ) ),
-        sectionColorBlue( Colour( (uint8)0, (uint8)21, (uint8)89 ) ),
-        subsectionColor( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)50 ) ),
-        sectionColourMint( Colour( (uint8)91, (uint8)192, (uint8)235 )),
-        headerColor( Colour( (uint8)77, (uint8)125, (uint8)184 ) ),
-        mainOutColour( Colour( (uint8)35, (uint8)25, (uint8)204 ) ),
-        oscSectionColour( Colour( (uint8)100, (uint8)55, (uint8)109 ) ),
-        clearColour( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)0 ) )
+        pluginBackground       ( Colour( (uint8)125, (uint8)46,  (uint8)0 ) ),
+        blazeOrange            ( Colour( (uint8)255, (uint8)46,  (uint8)0 ) ),
+        sectionColorBlue       ( Colour( (uint8)0,   (uint8)21,  (uint8)89 ) ),
+        sectionColorBlueDark   ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) ),
+        subsectionColor        ( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)50 ) ),
+        sectionColourLightBlue ( Colour( (uint8)184, (uint8)210, (uint8)222 ) ),
+        headerColor            ( Colour( (uint8)77,  (uint8)125, (uint8)184 ) ),
+        mainOutColour          ( Colour( (uint8)35,  (uint8)25,  (uint8)204 ) ),
+        oscSectionColour       ( Colour( (uint8)100, (uint8)55,  (uint8)109 ) ),
+        clearColour            ( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)0 ) )
         
 {
     setSize (1200, 666);
@@ -48,50 +50,50 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     */
     
     // Master Out
-    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderLabelSetup  ( masterGainLabel, "Out Gain", sectionColourMint );
+    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderLabelSetup  ( masterGainLabel, "Out Gain", sectionColourLightBlue );
     addAndMakeVisible ( outMeter );
     
     
     // Osc Section
-    sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
-    sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
-    sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
-    sliderSetup( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
+    sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( subMorphSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( subGainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
     
-    sliderLabelSetup( oscMorphLabel, "Osc\nMorph", sectionColourMint );
-    sliderLabelSetup( subMorphLabel, "Sub\nMorph", sectionColourMint );
-    sliderLabelSetup( subGainLabel, "Sub Gain", sectionColourMint );
-    sliderLabelSetup( pitchBendRangeLabel, "Pitch Bend", sectionColourMint );
+    sliderLabelSetup( oscMorphLabel, "Osc\nMorph", sectionColourLightBlue );
+    sliderLabelSetup( subMorphLabel, "Sub\nMorph", sectionColourLightBlue );
+    sliderLabelSetup( subGainLabel, "Sub Gain", sectionColourLightBlue );
+    sliderLabelSetup( pitchBendRangeLabel, "Pitch Bend", sectionColourLightBlue );
     
     comboBoxSetup(subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
     // Osc ADSR Section
-    sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( oscDecaySlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
+    sliderSetup( oscAttackSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( oscDecaySlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( portaSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( foldbackSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     
     portaSlider.setLookAndFeel    ( &otherLookAndFeel );
     foldbackSlider.setLookAndFeel ( &otherLookAndFeel );
     
-    sliderLabelSetup( oscAttackLabel, "A", sectionColourMint );
-    sliderLabelSetup( oscDecayLabel, "D", sectionColourMint );
-    sliderLabelSetup( oscSustainLabel, "S", sectionColourMint );
-    sliderLabelSetup( oscReleaseLabel, "R", sectionColourMint );
-    sliderLabelSetup( portaLabel, "Portamento", sectionColourMint );
-    sliderLabelSetup( foldbackLabel, "Foldback\nDistortion", sectionColourMint );
+    sliderLabelSetup( oscAttackLabel, "A", sectionColourLightBlue );
+    sliderLabelSetup( oscDecayLabel, "D", sectionColourLightBlue );
+    sliderLabelSetup( oscSustainLabel, "S", sectionColourLightBlue );
+    sliderLabelSetup( oscReleaseLabel, "R", sectionColourLightBlue );
+    sliderLabelSetup( portaLabel, "Portamento", sectionColourLightBlue );
+    sliderLabelSetup( foldbackLabel, "Foldback\nDistortion", sectionColourLightBlue );
     
     // Modifiers Section
-    sliderSetup( ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
+    sliderSetup( ringToneSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( ringPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( ringDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( frqShftPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( sHPitchSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( sHDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     
     ringToneSlider.setLookAndFeel      ( &otherLookAndFeel );
     ringPitchSlider.setLookAndFeel     ( &otherLookAndFeel );
@@ -101,48 +103,48 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sHPitchSlider.setLookAndFeel       ( &otherLookAndFeel );
     sHDryWetSlider.setLookAndFeel      ( &otherLookAndFeel );
     
-    sliderLabelSetup( ringLabel, "Ring Mod", sectionColourMint );
-    sliderLabelSetup( frqShftLabel, "Freq Shift", sectionColourMint );
-    sliderLabelSetup( sHLabel, "Sample & Hold", sectionColourMint );
+    sliderLabelSetup( ringLabel, "Ring Mod", sectionColourLightBlue );
+    sliderLabelSetup( frqShftLabel, "Freq Shift", sectionColourLightBlue );
+    sliderLabelSetup( sHLabel, "Sample & Hold", sectionColourLightBlue );
     sliderLabelSetup( toneLabel, "Tone", sectionColorBlue );
     sliderLabelSetup( pitchLabel, "Pitch", sectionColorBlue );
     sliderLabelSetup( dryWetLabel, "Dry/Wet", sectionColorBlue );
     
     // Filter Section
-    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
-    sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
+    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( resSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
     
-    sliderLabelSetup( cutoffLabel, "Cutoff", sectionColourMint );
-    sliderLabelSetup( resLabel, "Resonance", sectionColourMint );
+    sliderLabelSetup( cutoffLabel, "Cutoff", sectionColourLightBlue );
+    sliderLabelSetup( resLabel, "Resonance", sectionColourLightBlue );
     
     comboBoxSetup(filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
     // Filter ADSR Section
-    sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( fltDecaySlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( fltSustainSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, true );
-    sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
-    sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, pluginBackground, sectionColourMint, false );
+    sliderSetup( fltAttackSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( fltDecaySlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( fltSustainSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( fltReleaseSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, true );
+    sliderSetup( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( adsrToResSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, blazeOrange, sectionColourLightBlue, false );
     
     adsrToCutoffSlider.setLookAndFeel ( &otherLookAndFeel );
     adsrToResSlider.setLookAndFeel    ( &otherLookAndFeel );
     
-    sliderLabelSetup( fltAttackLabel, "A", sectionColourMint );
-    sliderLabelSetup( fltDecayLabel, "D", sectionColourMint );
-    sliderLabelSetup( fltSustainLabel, "S", sectionColourMint );
-    sliderLabelSetup( fltReleaseLabel, "R", sectionColourMint );
-    sliderLabelSetup( adsrToCutoffLabel, "To Cutoff", sectionColourMint );
-    sliderLabelSetup( adsrToResLabel, "To Resonance", sectionColourMint );
+    sliderLabelSetup( fltAttackLabel, "A", sectionColourLightBlue );
+    sliderLabelSetup( fltDecayLabel, "D", sectionColourLightBlue );
+    sliderLabelSetup( fltSustainLabel, "S", sectionColourLightBlue );
+    sliderLabelSetup( fltReleaseLabel, "R", sectionColourLightBlue );
+    sliderLabelSetup( adsrToCutoffLabel, "To Cutoff", sectionColourLightBlue );
+    sliderLabelSetup( adsrToResLabel, "To Resonance", sectionColourLightBlue );
     
     // Filter LFO Section
-    sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, pluginBackground, sectionColourMint, false );
-    sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
-    sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, pluginBackground, sectionColourMint, false );
+    sliderSetup( lfoShapeSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( lfoFreqSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
+    sliderSetup( lfoAmountSlider, Slider::SliderStyle::LinearVertical, blazeOrange, sectionColourLightBlue, false );
     
-    sliderLabelSetup( lfoShapeLabel, "LFO Shape", sectionColourMint );
-    sliderLabelSetup( lfoFreqLabel, "Frequency", sectionColourMint );
-    sliderLabelSetup( lfoAmountLabel, "To Cutoff", sectionColourMint );
+    sliderLabelSetup( lfoShapeLabel, "LFO Shape", sectionColourLightBlue );
+    sliderLabelSetup( lfoFreqLabel, "Frequency", sectionColourLightBlue );
+    sliderLabelSetup( lfoAmountLabel, "To Cutoff", sectionColourLightBlue );
     
     
     // Attachments
@@ -208,49 +210,59 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (pluginBackground);
     
     // Header
-    g.setGradientFill( ColourGradient::horizontal( sectionColourMint, sectionColorBlue, headerAreaInner ) );
+    //g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, sectionColorBlueDark, headerAreaInner ) );
+    g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, headerAreaInner.getX(),
+                                                  sectionColorBlueDark, headerAreaInner.getWidth() * 0.75f) );
     g.fillRoundedRectangle( headerAreaInner, cornerRound );
     
     // Main Out
-    g.setGradientFill( ColourGradient::vertical( sectionColorBlue, mainOutAreaInner.getHeight() * 0.59f,
-                                                sectionColourMint, mainOutAreaInner.getHeight() ));
+    g.setGradientFill( ColourGradient::vertical( sectionColorBlueDark, mainOutAreaInner.getHeight() * 0.59f,
+                                                sectionColourLightBlue, mainOutAreaInner.getHeight() ));
     g.fillRoundedRectangle ( mainOutAreaInner, cornerRound );
     
     // Oscillators
-    g.setColour            ( sectionColourMint );
+    g.setColour            ( sectionColourLightBlue );
     g.fillRoundedRectangle ( oscSectionInner, cornerRound );
     
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, mainOscSectionInner ) );
     g.fillRoundedRectangle ( mainOscSectionInner, cornerRound );
+    
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, subOscSectionInner ) );
     g.fillRoundedRectangle ( subOscSectionInner, cornerRound );
     
     // Osc ADSR
-    g.setColour            ( sectionColourMint );
+    g.setColour            ( sectionColourLightBlue );
     g.fillRoundedRectangle ( oscADSRSectionInner, cornerRound );
     
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, adsrRotaryInner ) );
     g.fillRoundedRectangle ( adsrRotaryInner, cornerRound );
+    
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, oscADSRSlidersInner ) );
     g.fillRoundedRectangle ( oscADSRSlidersInner, cornerRound );
     
     // Modifiers
-    g.setColour            ( sectionColourMint );
+    g.setColour            ( sectionColourLightBlue );
     g.fillRoundedRectangle ( modSectionInner, cornerRound );
     
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, ringModSectionInner ) );
     g.fillRoundedRectangle ( ringModSectionInner, cornerRound );
+    
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, frqShftSectionInner ) );
     g.fillRoundedRectangle ( frqShftSectionInner, cornerRound );
+    
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, sAndHSectionInner ) );
     g.fillRoundedRectangle ( sAndHSectionInner, cornerRound );
     
     // Filter
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, filterSectionInner ) );
     g.fillRoundedRectangle ( filterSectionInner, cornerRound );
     
     // Filter ADSR
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, fltADSRSectionInner ) );
     g.fillRoundedRectangle ( fltADSRSectionInner, cornerRound );
     
     // LFO
-    g.setColour            ( sectionColorBlue );
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, lfoSectionInner ) );
     g.fillRoundedRectangle ( lfoSectionInner, cornerRound );
 
 }
@@ -586,6 +598,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
 {
     sliderInstance.setSliderStyle(style);
     
+    // If slider has a textbox, draw it, otherwise, don't
     if (showTextBox)
     {
         sliderInstance.setTextBoxStyle (Slider::TextBoxBelow, false, 40, 20);
@@ -597,13 +610,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
         sliderInstance.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     }
     
+    // Slider types
     if (sliderInstance.getSliderStyle() == Slider::SliderStyle::LinearHorizontal)
     {
-        sliderInstance.setColour(Slider::trackColourId, sliderFillColor);
+        sliderInstance.setColour( Slider::trackColourId, sliderFillColor );
     }
     else if (sliderInstance.getSliderStyle() == Slider::SliderStyle::LinearVertical)
     {
-        sliderInstance.setColour(Slider::trackColourId, sliderFillColor);
+        sliderInstance.setColour( Slider::trackColourId, sliderFillColor );
     }
     else if (sliderInstance.getSliderStyle() == Slider::SliderStyle::RotaryHorizontalVerticalDrag)
     {

@@ -36,16 +36,18 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
     float tickAngle = rotaryStartAngle + ( sliderPos * (rotaryEndAngle - rotaryStartAngle) );
     float tickWidth = 5.0f;
     
+    Colour pluginBackground       = Colour( (uint8)125, (uint8)46,  (uint8)0   );
+    Colour sectionColourLightBlue = Colour( (uint8)184, (uint8)210, (uint8)222 );
     // Rectangle the slider will go inside
     Rectangle<float> dialArea (radiusX, radiusY, diameter, diameter);
     
-    g.setColour(Colours::red);
+    g.setColour(pluginBackground);
     g.fillEllipse(dialArea);
     
     Path dialTick;      // Drawable path to draw the dial tick
     dialTick.addRectangle(0.0f, -radius, tickWidth, radius * 0.33f);
     
-    g.setColour(Colours::blue);
+    g.setColour(sectionColourLightBlue);
     g.fillPath( dialTick, AffineTransform::rotation(tickAngle).translated(centerX, centerY) );
 }
 

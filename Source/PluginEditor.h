@@ -184,9 +184,11 @@ private:
     
     // Colors
     Colour pluginBackground;
+    Colour blazeOrange;
     Colour sectionColorBlue;
+    Colour sectionColorBlueDark;
     Colour subsectionColor;
-    Colour sectionColourMint;
+    Colour sectionColourLightBlue;
     Colour headerColor;
     Colour mainOutColour;
     Colour oscSectionColour;
