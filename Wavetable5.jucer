@@ -35,6 +35,8 @@
       <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/TitleHeader.cpp"/>
+      <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0" file="Source/TitleHeader.h"/>
       <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/OutMeter.cpp"/>
       <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/OutMeter.h"/>
       <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/OscVisual.cpp"/>
@@ -42,13 +44,6 @@
       <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
             file="Source/FilterVisual.cpp"/>
       <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/FilterVisual.h"/>
-      <FILE id="oAx7ky" name="SubsectionGUI.cpp" compile="1" resource="0"
-            file="Source/SubsectionGUI.cpp"/>
-      <FILE id="A0Ip3t" name="SubsectionGUI.h" compile="0" resource="0" file="Source/SubsectionGUI.h"/>
-      <FILE id="ThF1Ku" name="SectionBackgroundFiller.cpp" compile="1" resource="0"
-            file="Source/SectionBackgroundFiller.cpp"/>
-      <FILE id="smc8Vf" name="SectionBackgroundFiller.h" compile="0" resource="0"
-            file="Source/SectionBackgroundFiller.h"/>
       <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
             file="Source/OtherLookAndFeel.cpp"/>
       <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"

@@ -15,9 +15,8 @@
 #include "OtherLookAndFeel.h"
 #include "OscVisual.h"
 #include "FilterVisual.h"
-#include "SubsectionGUI.h"
-#include "SectionBackgroundFiller.h"
 #include "OutMeter.h"
+#include "TitleHeader.h"
 
 //==============================================================================
 /**
@@ -46,6 +45,9 @@ private:
     /// ComboBox setup
     void comboBoxSetup(ComboBox& boxInstance, StringArray boxItems);
     
+    // Header area
+    TitleHeader titleHeader;
+
     // Wavetable Drawing
     OscVisual oscVisual;
     OscVisual subOscVisual;

@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    SectionBackgroundFiller.h
-    Created: 30 Dec 2020 11:12:31am
+    TitleHeader.h
+    Created: 12 Jan 2021 11:10:12pm
     Author:  Robert Fullum
 
   ==============================================================================
@@ -15,18 +15,15 @@
 //==============================================================================
 /*
 */
-class SectionBackgroundFiller  : public juce::Component
+class TitleHeader  : public juce::Component
 {
 public:
-    SectionBackgroundFiller();
-    ~SectionBackgroundFiller() override;
+    TitleHeader();
+    ~TitleHeader() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
-    
-    void setFillColor(Colour& c);
 
 private:
-    Colour fillColor;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SectionBackgroundFiller)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TitleHeader)
 };

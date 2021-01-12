@@ -36,6 +36,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     masterGainSlider.setLookAndFeel( &otherLookAndFeel );
     
+    // Header
+    addAndMakeVisible( titleHeader );
     
     // Osc Section
     sliderSetup( oscMorphSlider, Slider::SliderStyle::LinearHorizontal, blazeOrange, sectionColourLightBlue, false );
@@ -212,19 +214,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (pluginBackground);
     
     // Header
-    g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, headerAreaInner.getX(),
-                                                  sectionColorBlueDark, headerAreaInner.getWidth() * 0.75f) );
-    g.fillRoundedRectangle( headerAreaInner, cornerRound );
-    
-    g.setColour (blazeOrange);
-    g.setFont   ( Font("technoid", 60.0f, 0) );
-    g.drawText  ("FULLUMMUSIC", headerAreaInner.removeFromBottom( 45.0f ), Justification::right);
-    
-    headerAreaInner.removeFromRight( 3.0f);
-    
-    g.setColour (sectionColourLightBlue);
-    g.setFont   ( Font("technoid", 30.0f, 0) );
-    g.drawText  ("DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), Justification::right);
     
     
     // Main Out
@@ -291,6 +280,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
                                  (float)resSlider.getValue() );
     
     outMeter.outMeterLevel( processor.getOutLevel(), processor.getSampleRate() );
+    
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
@@ -307,7 +297,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> headerReduced = headerArea.reduced( sectionSpacerSize );
     
     //headerAreaInner.setSize( headerReduced.getWidth(), headerReduced.getHeight() );        // Reduced headerArea by sectionSpacerSize
-    headerAreaInner.setBounds( headerReduced.getX(), headerReduced.getY(), headerReduced.getWidth(), headerReduced.getHeight() );
+    headerAreaInner.setBounds( headerReduced.getX(), headerReduced.getY(),
+                              headerReduced.getWidth(), headerReduced.getHeight() );
+    Rectangle<int> titleHeaderArea = Rectangle<int>(headerAreaInner.getX(), headerAreaInner.getY(),
+                                                    headerAreaInner.getWidth(), headerAreaInner.getHeight() );
+    titleHeader.setBounds( titleHeaderArea );
     
     
     // Output area
