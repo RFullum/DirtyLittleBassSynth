@@ -215,25 +215,16 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.setGradientFill( ColourGradient::horizontal( sectionColourLightBlue, headerAreaInner.getX(),
                                                   sectionColorBlueDark, headerAreaInner.getWidth() * 0.75f) );
     g.fillRoundedRectangle( headerAreaInner, cornerRound );
-    /*
-    g.setGradientFill( ColourGradient::horizontal( blazeOrange, headerAreaInner.getX() + (headerAreaInner.getWidth() * 0.7f),
-                                                  blazeOrange, headerAreaInner.getWidth()) );
-     */
     
-    g.setColour(blazeOrange);
-    //g.setFont( 90.0f );
-    //g.setFont( Font( "akka", 60.0f, 0) );
-    //g.setFont( Font("AppleGothic", 60.0f, 0) );
-    //g.setFont( Font("automat", 60.0f, 0) );
-    g.setFont( Font("technoid", 60.0f, 0) );
-    //g.setFont( Font("grand sport laser", 60.0f, 0) );
-    //g.setFont( Font("grand sport 3d", 60.0f, 0) );
-    //g.setFont( Font("magnetar", 60.0f, 0) );
-    g.drawText("FULLUMMUSIC", headerAreaInner.removeFromBottom( 45.0f ), Justification::right);
+    g.setColour (blazeOrange);
+    g.setFont   ( Font("technoid", 60.0f, 0) );
+    g.drawText  ("FULLUMMUSIC", headerAreaInner.removeFromBottom( 45.0f ), Justification::right);
+    
     headerAreaInner.removeFromRight( 3.0f);
-    g.setColour(sectionColourLightBlue);
-    g.setFont( Font("technoid", 30.0f, 0) );
-    g.drawText("DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), Justification::right);
+    
+    g.setColour (sectionColourLightBlue);
+    g.setFont   ( Font("technoid", 30.0f, 0) );
+    g.drawText  ("DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), Justification::right);
     
     
     // Main Out
@@ -653,18 +644,18 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
 
 void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c)
 {
-    labelInstance.setFont( Font("helvetica", 14.0f, 1));
-    labelInstance.setText(labelText, dontSendNotification);
-    labelInstance.setJustificationType(Justification::centred);
-    labelInstance.setColour(Label::textColourId, c);
+    labelInstance.setFont              ( Font("helvetica", 14.0f, 1) );
+    labelInstance.setText              ( labelText, dontSendNotification );
+    labelInstance.setJustificationType ( Justification::centred );
+    labelInstance.setColour            ( Label::textColourId, c );
     
     addAndMakeVisible(labelInstance);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::comboBoxSetup(ComboBox& boxInstance, StringArray boxItems)
 {
-    boxInstance.addItemList(boxItems, 1);
-    boxInstance.setJustificationType(Justification::centred);
-    boxInstance.setSelectedItemIndex(0);
-    addAndMakeVisible(boxInstance);
+    boxInstance.addItemList          ( boxItems, 1 );
+    boxInstance.setJustificationType ( Justification::centred );
+    boxInstance.setSelectedItemIndex ( 0 );
+    addAndMakeVisible                ( boxInstance );
 }
