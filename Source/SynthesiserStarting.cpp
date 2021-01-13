@@ -206,7 +206,9 @@ void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
     if (previousPitchWheelValue != newPitchWheelValue)
     {
         previousPitchWheelValue = newPitchWheelValue;
+        
         setPitchBend(newPitchWheelValue);
+        
         shiftHz = calcShiftHz( pitchBendCents() );
     }
 }
@@ -258,7 +260,7 @@ void MySynthVoice::updatePitchBendRange(float newRange)
         pitchBendDownSemitones = pitchBendSemitones;
     }
      */
-    pitchBendUpSemitones = newRange;
+    pitchBendUpSemitones   = newRange;
     pitchBendDownSemitones = newRange;
 }
 
@@ -515,9 +517,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                 filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
-                
-                //float Q = *filterResonance;
-                //filterSample = twoPoleLPFdsp.processFilter(filtCutoffSmoothed, Q, currentSample);
             }
             else if ((int)*filterSelector == 1)
             {

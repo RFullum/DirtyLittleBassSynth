@@ -245,7 +245,7 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
 /// Sets notch coeffients and processes inputSample
 float NotchFilter::processNotch()
 {
-    filterEnvControl            (envelopeVal, cutoffSend, resSend);
+    filterEnvControl            ( envelopeVal, cutoffSend, resSend );
     notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
     
     return notchFilter.processSingleSampleRaw(inputSample);
