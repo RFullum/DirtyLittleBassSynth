@@ -635,7 +635,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
 
 void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c)
 {
-    labelInstance.setFont              ( Font("helvetica", 14.0f, 1) );
+    labelInstance.setFont              ( Font("helvetica", 12.0f, 1) );
     labelInstance.setText              ( labelText, dontSendNotification );
     labelInstance.setJustificationType ( Justification::centred );
     labelInstance.setColour            ( Label::textColourId, c );
