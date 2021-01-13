@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="YrQPUQ" name="DirtyLittleBassSynth" projectType="audioplug"
+<JUCERPROJECT id="YrQPUQ" name="Dirty Little Bass Synth" projectType="audioplug"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic"
-              companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/">
-  <MAINGROUP id="bK7WUZ" name="DirtyLittleBassSynth">
+              companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
+              version="1.0.0" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
+              pluginManufacturerCode="FulM">
+  <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

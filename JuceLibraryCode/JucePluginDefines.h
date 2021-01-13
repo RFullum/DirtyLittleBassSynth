@@ -38,10 +38,10 @@
  #define JucePlugin_Enable_IAA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "DirtyLittleBassSynth"
+ #define JucePlugin_Name                   "Dirty Little Bass Synth"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "DirtyLittleBassSynth"
+ #define JucePlugin_Desc                   "Dirty Little Bass Synth"
 #endif
 #ifndef  JucePlugin_Manufacturer
  #define JucePlugin_Manufacturer           "FullumMusic"
@@ -53,7 +53,7 @@
  #define JucePlugin_ManufacturerEmail      ""
 #endif
 #ifndef  JucePlugin_ManufacturerCode
- #define JucePlugin_ManufacturerCode       0x4d616e75
+ #define JucePlugin_ManufacturerCode       0x46756c4d
 #endif
 #ifndef  JucePlugin_PluginCode
  #define JucePlugin_PluginCode             0x59727170
@@ -149,7 +149,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "FullumMusic: DirtyLittleBassSynth"
+ #define JucePlugin_IAAName                "FullumMusic: Dirty Little Bass Synth"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
