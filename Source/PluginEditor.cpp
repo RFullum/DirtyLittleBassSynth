@@ -17,13 +17,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
         pluginBackground       ( Colour( (uint8)125, (uint8)46,  (uint8)0 ) ),
         blazeOrange            ( Colour( (uint8)255, (uint8)46,  (uint8)0 ) ),
         sectionColorBlue       ( Colour( (uint8)0,   (uint8)21,  (uint8)89 ) ),
-        sectionColorBlueDark   ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) ),
-        subsectionColor        ( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)50 ) ),
-        sectionColourLightBlue ( Colour( (uint8)143, (uint8)173, (uint8)186 ) ),
-        headerColor            ( Colour( (uint8)77,  (uint8)125, (uint8)184 ) ),
-        mainOutColour          ( Colour( (uint8)35,  (uint8)25,  (uint8)204 ) ),
-        oscSectionColour       ( Colour( (uint8)100, (uint8)55,  (uint8)109 ) ),
-        clearColour            ( Colour( (uint8)255, (uint8)255, (uint8)255, (uint8)0 ) )
+        sectionColorBlueDark   ( Colour( (uint8)7,   (uint8)10,  (uint8)59 ) ),
+        sectionColourLightBlue ( Colour( (uint8)143, (uint8)173, (uint8)186 ) )
         
 {
     setSize (1200, 666);
@@ -213,12 +208,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     
     g.fillAll (pluginBackground);
     
-    // Header
-    
-    
     // Main Out
-    g.setGradientFill( ColourGradient::vertical( sectionColorBlueDark, mainOutAreaInner.getHeight() * 0.59f,
-                                                sectionColourLightBlue, mainOutAreaInner.getHeight() ));
+    g.setGradientFill      ( ColourGradient::vertical( sectionColorBlueDark, mainOutAreaInner.getHeight() * 0.59f,
+                                                      sectionColourLightBlue, mainOutAreaInner.getHeight() ));
     g.fillRoundedRectangle ( mainOutAreaInner, cornerRound );
     
     // Oscillators
@@ -270,11 +262,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
-    oscVisual.setOscShapeLine(processor.mainOscVisualBuffer);
-    subOscVisual.setOscShapeLine(processor.subOscVisualBuffer);
-    lfoVisual.setOscShapeLine(processor.lfoOscVisualBuffer);
+    oscVisual.setOscShapeLine    (processor.mainOscVisualBuffer);
+    subOscVisual.setOscShapeLine (processor.subOscVisualBuffer);
+    lfoVisual.setOscShapeLine    (processor.lfoOscVisualBuffer);
     
-    filterVisual.drawFilterShape( filterType.getSelectedId(),
+    filterVisual.drawFilterShape ( filterType.getSelectedId(),
                                  (float)processor.getSampleRate(),
                                  (float)cutoffSlider.getValue(),
                                  (float)resSlider.getValue() );
@@ -294,13 +286,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     int headerHeight = 66;
     
     Rectangle<int> headerArea    = totalArea.removeFromTop ( headerHeight );
-    Rectangle<int> headerReduced = headerArea.reduced( sectionSpacerSize );
+    Rectangle<int> headerReduced = headerArea.reduced      ( sectionSpacerSize );
     
-    //headerAreaInner.setSize( headerReduced.getWidth(), headerReduced.getHeight() );        // Reduced headerArea by sectionSpacerSize
     headerAreaInner.setBounds( headerReduced.getX(), headerReduced.getY(),
-                              headerReduced.getWidth(), headerReduced.getHeight() );
+                               headerReduced.getWidth(), headerReduced.getHeight() );
+    
     Rectangle<int> titleHeaderArea = Rectangle<int>(headerAreaInner.getX(), headerAreaInner.getY(),
                                                     headerAreaInner.getWidth(), headerAreaInner.getHeight() );
+    
     titleHeader.setBounds( titleHeaderArea );
     
     
@@ -308,11 +301,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     int mainOutWidth = 100;
     int mainLabelHeight = 30;
     
-    Rectangle<int> mainOutArea    = totalArea.removeFromRight    ( mainOutWidth );
-    Rectangle<int> mainOutReduced = mainOutArea.reduced( sectionSpacerSize );
+    Rectangle<int> mainOutArea    = totalArea.removeFromRight ( mainOutWidth );
+    Rectangle<int> mainOutReduced = mainOutArea.reduced       ( sectionSpacerSize );
     
-    //mainOutAreaInner.setSize( mainOutReduced.getWidth(), mainOutReduced.getHeight() );
-    mainOutAreaInner.setBounds( mainOutReduced.getX(), mainOutReduced.getY(), mainOutReduced.getWidth(), mainOutReduced.getHeight() );
+    mainOutAreaInner.setBounds( mainOutReduced.getX(), mainOutReduced.getY(),
+                                mainOutReduced.getWidth(), mainOutReduced.getHeight() );
     
     Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom( mainOutReduced.getHeight() * 0.5f );
     Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop ( mainLabelHeight );
@@ -340,13 +333,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> oscSection        = topSectionArea.removeFromLeft ( oscSectionWidth );
     Rectangle<int> oscSectionReduced = oscSection.reduced            ( sectionSpacerSize );
     
-    oscSectionInner.setBounds( oscSectionReduced.getX(), oscSectionReduced.getY(), oscSectionReduced.getWidth(), oscSectionReduced.getHeight() );
+    oscSectionInner.setBounds ( oscSectionReduced.getX(), oscSectionReduced.getY(),
+                                oscSectionReduced.getWidth(), oscSectionReduced.getHeight() );
     
     Rectangle<int> mainOscSection        = oscSectionReduced.removeFromTop ( oscSectionReduced.getHeight() * 0.5f );
     Rectangle<int> mainOscSectionReduced = mainOscSection.reduced( sectionSpacerSize * 2.0f );
     
     mainOscSectionInner.setBounds( mainOscSectionReduced.getX(), mainOscSectionReduced.getY(),
-                                  mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
+                                   mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
     
     Rectangle<int> oscGainSpace        = mainOscSectionReduced.removeFromRight  ( oscGainWidth );
     Rectangle<int> morphLabelSpace     = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
@@ -364,8 +358,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // Sub Osc Section Area (Oscillator subarea)
     Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f);
     
-    subOscSectionInner.setBounds( oscSectionReduced2.getX(), oscSectionReduced2.getY(),
-                                 oscSectionReduced2.getWidth(), oscSectionReduced2.getHeight() );
+    subOscSectionInner.setBounds ( oscSectionReduced2.getX(), oscSectionReduced2.getY(),
+                                   oscSectionReduced2.getWidth(), oscSectionReduced2.getHeight() );
     
     Rectangle<int> subGainSpace        = oscSectionReduced2.removeFromRight  ( oscGainWidth );
     Rectangle<int> subOctaveSpace      = subGainSpace.removeFromBottom      ( subOctaveHeight );
@@ -382,23 +376,24 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     
     // Osc ADSR Section Area
-    Rectangle<int> oscADSRSpace        = topSectionArea.removeFromLeft( topSectionArea.getWidth() * 0.33f );
-    Rectangle<int> oscADSRSpaceReduced = oscADSRSpace.reduced( sectionSpacerSize );
+    Rectangle<int> oscADSRSpace        = topSectionArea.removeFromLeft ( topSectionArea.getWidth() * 0.33f );
+    Rectangle<int> oscADSRSpaceReduced = oscADSRSpace.reduced          ( sectionSpacerSize );
     
-    //oscADSRSectionInner.setSize( oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
-    oscADSRSectionInner.setBounds( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(), oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
+    oscADSRSectionInner.setBounds ( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(),
+                                    oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
     
     int rotaryLabelHeight = 60;
     
-    Rectangle<int> rotarySpace     = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f);
+    Rectangle<int> rotarySpace = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f);
     
-    adsrRotaryInner.setBounds( rotarySpace.getX(), rotarySpace.getY(), rotarySpace.getWidth(), rotarySpace.getHeight() );
+    adsrRotaryInner.setBounds ( rotarySpace.getX(), rotarySpace.getY(),
+                                rotarySpace.getWidth(), rotarySpace.getHeight() );
     
     Rectangle<int> portaSpace      = rotarySpace.removeFromLeft    ( rotarySpace.getWidth() * 0.5f );
     Rectangle<int> portaLabelSpace = portaSpace.removeFromTop      ( rotaryLabelHeight );
     
-    portaSlider.setBounds( portaSpace );
-    portaLabel.setBounds( portaLabelSpace );
+    portaSlider.setBounds ( portaSpace );
+    portaLabel.setBounds  ( portaLabelSpace );
     
     Rectangle<int> foldbackLabelSpace = rotarySpace.removeFromTop( rotaryLabelHeight );
     
@@ -408,8 +403,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // ADSR Slider Area (Osc ADSR subsection)
     oscADSRSpaceReduced = oscADSRSpaceReduced.reduced( sectionSpacerSize * 2.0f );
     
-    oscADSRSlidersInner.setBounds( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(),
-                                  oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
+    oscADSRSlidersInner.setBounds ( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(),
+                                    oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
     
     int oscADSRSliderWidth = oscADSRSpaceReduced.getWidth() * 0.25f;
     
@@ -444,8 +439,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> modSectionSpace   = topSectionArea;
     Rectangle<int> modSectionReduced = modSectionSpace.reduced ( sectionSpacerSize );
     
-    //modSectionInner.setSize( modSectionReduced.getWidth(), modSectionReduced.getHeight() );
-    modSectionInner.setBounds( modSectionReduced.getX(), modSectionReduced.getY(), modSectionReduced.getWidth(), modSectionReduced.getHeight() );
+    modSectionInner.setBounds( modSectionReduced.getX(), modSectionReduced.getY(),
+                               modSectionReduced.getWidth(), modSectionReduced.getHeight() );
     
     Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop( modHeadingHeight );
     Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
@@ -463,9 +458,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> frqShftRowArea = modSubsections.removeFromTop( modKnobHeight ).reduced( sectionSpacerSize );
     Rectangle<int> sAndHRowArea   = modSubsections.reduced( sectionSpacerSize );
     
-    ringModSectionInner.setBounds ( ringRowArea.getX(), ringRowArea.getY(), ringRowArea.getWidth(), ringRowArea.getHeight() );
-    frqShftSectionInner.setBounds ( frqShftRowArea.getX(), frqShftRowArea.getY(), frqShftRowArea.getWidth(), frqShftRowArea.getHeight() );
-    sAndHSectionInner.setBounds   ( sAndHRowArea.getX(), sAndHRowArea.getY(), sAndHRowArea.getWidth(), sAndHRowArea.getHeight() );
+    ringModSectionInner.setBounds ( ringRowArea.getX(), ringRowArea.getY(),
+                                    ringRowArea.getWidth(), ringRowArea.getHeight() );
+    
+    frqShftSectionInner.setBounds ( frqShftRowArea.getX(), frqShftRowArea.getY(),
+                                    frqShftRowArea.getWidth(), frqShftRowArea.getHeight() );
+    
+    sAndHSectionInner.setBounds   ( sAndHRowArea.getX(), sAndHRowArea.getY(),
+                                    sAndHRowArea.getWidth(), sAndHRowArea.getHeight() );
     
     Rectangle<int> modTypeSection   = modSectionReduced.removeFromLeft ( modSectionGridWidth );
     Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop     ( modKnobHeight );
@@ -483,18 +483,18 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     ringPitchSlider.setBounds( ringPitchKnobArea );
     ringDryWetSlider.setBounds( ringKnobArea );
     
-    Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop( modKnobHeight );
-    Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft( modSectionGridWidth );
+    Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop ( modKnobHeight );
+    Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
+    Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
     
-    frqShftPitchSlider.setBounds( frqShPtchArea );
-    frqShftDryWetSlider.setBounds( frqShKnobArea );
+    frqShftPitchSlider.setBounds  ( frqShPtchArea );
+    frqShftDryWetSlider.setBounds ( frqShKnobArea );
     
     Rectangle<int> sHSpacer    = modSectionReduced.removeFromLeft( modSectionGridWidth );
     Rectangle<int> sHPitchArea = modSectionReduced.removeFromLeft( modSectionGridWidth );
     
-    sHPitchSlider.setBounds( sHPitchArea );
-    sHDryWetSlider.setBounds( modSectionReduced );
+    sHPitchSlider.setBounds  ( sHPitchArea );
+    sHDryWetSlider.setBounds ( modSectionReduced );
     
     
     // Bottom Section: Rectangle across bottom containing Filter Section,
@@ -506,67 +506,64 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     
     // Filter Area
-    Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft( lowerGridWidth );
-    Rectangle<int> filterAreaReduced = filterArea.reduced( sectionSpacerSize );
+    Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft ( lowerGridWidth );
+    Rectangle<int> filterAreaReduced = filterArea.reduced               ( sectionSpacerSize );
     
-    //filterSectionInner.setSize( filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
-    filterSectionInner.setBounds( filterAreaReduced.getX(), filterAreaReduced.getY(), filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
+    filterSectionInner.setBounds ( filterAreaReduced.getX(), filterAreaReduced.getY(),
+                                  filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
     
     int resWidth = (int)(filterAreaReduced.getWidth() * 0.25f);
     
-    Rectangle<int> resArea      = filterAreaReduced.removeFromRight  ( resWidth );
-    Rectangle<int> resLableArea = resArea.removeFromTop       ( filtLabelheight );
-    Rectangle<int> cOLabelArea  = filterAreaReduced.removeFromLeft ( morphLabelWidth );
-    Rectangle<int> fltTypeArea  = filterAreaReduced.removeFromBottom( filtLabelheight ).removeFromRight(75);
-    Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom( filtLabelheight );
+    Rectangle<int> resArea        = filterAreaReduced.removeFromRight   ( resWidth );
+    Rectangle<int> resLableArea   = resArea.removeFromTop               ( filtLabelheight );
+    Rectangle<int> cOLabelArea    = filterAreaReduced.removeFromLeft    ( morphLabelWidth );
+    Rectangle<int> fltTypeArea     = filterAreaReduced.removeFromBottom ( filtLabelheight ).removeFromRight( 75 );
+    Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom ( filtLabelheight );
     
-    resLabel.setBounds( resLableArea );
-    resSlider.setBounds( resArea );
-    filterType.setBounds( fltTypeArea );
-    cutoffLabel.setBounds( cOLabelArea );
-    cutoffSlider.setBounds( fltCOSliderArea );
-    filterVisual.setBounds( filterAreaReduced );
-    // PUT THE CUTOFF VISUALIZER HERE IN .setBounds( filterAreaReduced )
-    
-    
+    resLabel.setBounds     ( resLableArea );
+    resSlider.setBounds    ( resArea );
+    filterType.setBounds   ( fltTypeArea );
+    cutoffLabel.setBounds  ( cOLabelArea );
+    cutoffSlider.setBounds ( fltCOSliderArea );
+    filterVisual.setBounds ( filterAreaReduced );
     
     // Filter ADSR Area
     Rectangle<int> fltADSRArea           = bottomSectionArea.removeFromLeft ( lowerGridWidth );
     Rectangle<int> fltADSRAreaReduced    = fltADSRArea.reduced              ( sectionSpacerSize );
     
-    //fltADSRSectionInner.setSize( fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
-    fltADSRSectionInner.setBounds( fltADSRAreaReduced.getX(), fltADSRAreaReduced.getY(), fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
+    fltADSRSectionInner.setBounds ( fltADSRAreaReduced.getX(), fltADSRAreaReduced.getY(),
+                                   fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
     
-    Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight        ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
+    Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
     Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
     Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight );
     Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight );
     
-    adsrToResLabel.setBounds( fltADSRToResLabelArea );
-    adsrToResSlider.setBounds( fltADSRToResArea );
-    adsrToCutoffLabel.setBounds( fltADSRToCOLabelArea );
-    adsrToCutoffSlider.setBounds( fltADSRRotaryArea );
+    adsrToResLabel.setBounds     ( fltADSRToResLabelArea );
+    adsrToResSlider.setBounds    ( fltADSRToResArea );
+    adsrToCutoffLabel.setBounds  ( fltADSRToCOLabelArea );
+    adsrToCutoffSlider.setBounds ( fltADSRRotaryArea );
     
     int fltADSRWidth = (int)(fltADSRAreaReduced.getWidth() * 0.25f);
     
-    Rectangle<int> fltADSRHeader = fltADSRAreaReduced.removeFromTop    ( filtLabelheight );
-    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
-    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
-    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft ( fltADSRWidth );
+    Rectangle<int> fltADSRHeader = fltADSRAreaReduced.removeFromTop ( filtLabelheight );
+    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
+    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
+    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
     
-    fltAttackLabel.setBounds( fltALabelArea );
-    fltDecayLabel.setBounds( fltDLabelArea );
-    fltSustainLabel.setBounds( fltSLabelArea );
-    fltReleaseLabel.setBounds( fltADSRHeader );
+    fltAttackLabel.setBounds  ( fltALabelArea );
+    fltDecayLabel.setBounds   ( fltDLabelArea );
+    fltSustainLabel.setBounds ( fltSLabelArea );
+    fltReleaseLabel.setBounds ( fltADSRHeader );
     
     Rectangle<int> fltASliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     Rectangle<int> fltDSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     Rectangle<int> fltSSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     
-    fltAttackSlider.setBounds( fltASliderArea );
-    fltDecaySlider.setBounds( fltDSliderArea );
-    fltSustainSlider.setBounds( fltSSliderArea );
-    fltReleaseSlider.setBounds( fltADSRAreaReduced );
+    fltAttackSlider.setBounds  ( fltASliderArea );
+    fltDecaySlider.setBounds   ( fltDSliderArea );
+    fltSustainSlider.setBounds ( fltSSliderArea );
+    fltReleaseSlider.setBounds ( fltADSRAreaReduced );
     
     // LFO Area
     auto lfoArea = bottomSectionArea;
@@ -576,24 +573,24 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     //lfoSectionInner.setSize( lfoAreaReduced.getWidth(), lfoAreaReduced.getHeight() );
     lfoSectionInner.setBounds( lfoAreaReduced.getX(), lfoAreaReduced.getY(), lfoAreaReduced.getWidth(), lfoAreaReduced.getHeight() );
     
-    Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight             ( (int)(lfoAreaReduced.getWidth() * 0.33f) );
+    Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight      ( (int)(lfoAreaReduced.getWidth() * 0.33f) );
     Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop     ( filtLabelheight );
     Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)(lfoVertLabelFootArea.getWidth() * 0.5f) );
     
-    lfoFreqLabel.setBounds( lfoFrqLabelArea );
-    lfoAmountLabel.setBounds( lfoVertLabelFootArea );
+    lfoFreqLabel.setBounds   ( lfoFrqLabelArea );
+    lfoAmountLabel.setBounds ( lfoVertLabelFootArea );
     
     Rectangle<int> lfoFreqSliderArea = lfoVertSliderArea.removeFromLeft( (int)(lfoVertSliderArea.getWidth() * 0.5f) );
     
-    lfoFreqSlider.setBounds( lfoFreqSliderArea );
-    lfoAmountSlider.setBounds( lfoVertSliderArea );
+    lfoFreqSlider.setBounds   ( lfoFreqSliderArea );
+    lfoAmountSlider.setBounds ( lfoVertSliderArea );
     
-    Rectangle<int> lfoShapeArea = lfoAreaReduced.removeFromBottom( filtLabelheight );
+    Rectangle<int> lfoShapeArea       = lfoAreaReduced.removeFromBottom( filtLabelheight );
     Rectangle<int> lfoShapeSliderArea = lfoAreaReduced.removeFromBottom( filtLabelheight );
     
-    lfoShapeLabel.setBounds( lfoShapeArea );
-    lfoShapeSlider.setBounds( lfoShapeSliderArea );
-    lfoVisual.setBounds( lfoAreaReduced );
+    lfoShapeLabel.setBounds  ( lfoShapeArea );
+    lfoShapeSlider.setBounds ( lfoShapeSliderArea );
+    lfoVisual.setBounds      ( lfoAreaReduced );
     
     
 }
@@ -607,13 +604,13 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
     // If slider has a textbox, draw it, otherwise, don't
     if (showTextBox)
     {
-        sliderInstance.setTextBoxStyle (Slider::TextBoxBelow, false, 40, 20);
-        sliderInstance.setColour       (Slider::textBoxOutlineColourId, Colour( (uint8)0, (uint8)0, (uint8)0, (uint8)0 ) );
-        sliderInstance.setColour       (Slider::textBoxTextColourId, sliderThumbColor );
+        sliderInstance.setTextBoxStyle ( Slider::TextBoxBelow, false, 40, 20 );
+        sliderInstance.setColour       ( Slider::textBoxOutlineColourId, Colour( (uint8)0, (uint8)0, (uint8)0, (uint8)0 ) );
+        sliderInstance.setColour       ( Slider::textBoxTextColourId, sliderThumbColor );
     }
     else
     {
-        sliderInstance.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+        sliderInstance.setTextBoxStyle( Slider::NoTextBox, false, 0, 0 );
     }
     
     // Slider types
@@ -627,10 +624,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
     }
     else if (sliderInstance.getSliderStyle() == Slider::SliderStyle::RotaryHorizontalVerticalDrag)
     {
-        sliderInstance.setColour(Slider::rotarySliderFillColourId, sliderFillColor);
+        sliderInstance.setColour( Slider::rotarySliderFillColourId, sliderFillColor );
     }
     
-    sliderInstance.setColour(Slider::thumbColourId, sliderThumbColor);
+    sliderInstance.setColour( Slider::thumbColourId, sliderThumbColor );
     
     addAndMakeVisible(sliderInstance);
 }

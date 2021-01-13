@@ -35,6 +35,7 @@ public:
      */
     float process(float sinGain, float squareGain, float sawGain);
     
+    /// Returns the sample value of the wavetable at the index
     float getSquareWavetableValue(int index);
     
     

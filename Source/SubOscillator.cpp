@@ -13,10 +13,11 @@
 /// Sets sampleRate of sub oscillators
 void SubOsc::setSampleRate(float SR)
 {
-    sinSub.setSampleRate(SR);
-    squareSub.setSampleRate(SR);
-    sawSub.setSampleRate(SR);
+    sinSub.setSampleRate    (SR);
+    squareSub.setSampleRate (SR);
+    sawSub.setSampleRate    (SR);
 }
+
 
 /// Populates values to the sub oscillator wavetables
 void SubOsc::populateWavetable()
@@ -25,6 +26,7 @@ void SubOsc::populateWavetable()
     squareSub.populateWavetable();
     sawSub.populateWavetable();
 }
+
 
 /**
 Sets playback frequency of sub oscillator scaled 0 to 2 octaves below
@@ -39,6 +41,8 @@ void SubOsc::setIncrement(float noteFreq, int denom)
     sawSub.setIncrement    (subFreq);
 }
 
+
+/// Returns the sample value of the wavetable at the index
 float SubOsc::getSquareWavetableValue(int index)
 {
     return squareSub.getWavetableSampleValue(index);

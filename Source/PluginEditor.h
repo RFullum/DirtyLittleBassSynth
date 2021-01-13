@@ -189,12 +189,7 @@ private:
     Colour blazeOrange;
     Colour sectionColorBlue;
     Colour sectionColorBlueDark;
-    Colour subsectionColor;
     Colour sectionColourLightBlue;
-    Colour headerColor;
-    Colour mainOutColour;
-    Colour oscSectionColour;
-    Colour clearColour;
     
     
     // Subsections
