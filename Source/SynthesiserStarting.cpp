@@ -184,6 +184,7 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
     masterGainControl = gainAmt;
 }
 
+/*
 void MySynthVoice::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead)
 {
     if (hostBPM != (float)playhead.bpm)
@@ -195,6 +196,8 @@ void MySynthVoice::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead)
         notchFilter.setPlayheadInfo  (playhead);
     }
 }
+*/
+
 
 //
 // Pitch Wheel methods:

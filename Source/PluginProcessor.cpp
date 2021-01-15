@@ -328,11 +328,11 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
         
         v->updatePitchBendRange(*pitchBendParameter);
-        v->setPlayheadInfo(playHeadInfo);
+        //v->setPlayheadInfo(playHeadInfo);
     }
     
     // Transport info
-    updateCurrentTimeInfoFromHost();
+    //updateCurrentTimeInfoFromHost();
     
     // Level Metering
     outLevel = (buffer.getMagnitude( 0, buffer.getNumSamples() ) < 0.0001f ) ? 0.0f : buffer.getMagnitude( 0, buffer.getNumSamples() );
@@ -373,13 +373,15 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation (const void* data, 
 }
 
 //==============================================================================
-
+/*
 void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
 {
     const auto newInfo = [&]
     {
         if (auto* ph = getPlayHead())
         {
+            
+            
             AudioPlayHead::CurrentPositionInfo result;
 
             if (ph->getCurrentPosition (result))
@@ -394,7 +396,7 @@ void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
 
     playHeadInfo.bpm = newInfo.bpm;
 }
-
+*/
 
 float DirtyLittleBassSynthAudioProcessor::getOutLevel()
 {

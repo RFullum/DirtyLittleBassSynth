@@ -86,7 +86,7 @@ public:
     
     void setFilterSpec(float& sampRate, float& sampleSize);
     
-    void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead);
+    //void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead);
     
     
     

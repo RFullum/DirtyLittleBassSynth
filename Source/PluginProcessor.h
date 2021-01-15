@@ -58,7 +58,7 @@ public:
     
     //==============================================================================
     /// Gets transport/bpm/etc info from host
-    void updateCurrentTimeInfoFromHost();
+    //void updateCurrentTimeInfoFromHost();
     
     float getOutLevel();
     
