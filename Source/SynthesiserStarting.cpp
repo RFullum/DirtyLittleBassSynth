@@ -149,15 +149,17 @@ void MySynthVoice::setSampleAndHoldParamPointers(std::atomic<float>* pitch, std:
 }
 
 // Filters
-void MySynthVoice::setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type)
+void MySynthVoice::setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res,
+                                          std::atomic<float>* type)
 {
     filterCutoffFreq = cutoff;
     filterResonance  = res;
     filterSelector   = type;
 }
 
-void MySynthVoice::setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain,
-                                              std::atomic<float>* release, std::atomic<float>* amtCO, std::atomic<float>* amtRes )
+void MySynthVoice::setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
+                                              std::atomic<float>* sustain, std::atomic<float>* release,
+                                              std::atomic<float>* amtCO, std::atomic<float>* amtRes )
 {
     filterAttack           = attack;
     filterDecay            = decay;
@@ -167,7 +169,8 @@ void MySynthVoice::setFilterADSRParamPointers(std::atomic<float>* attack, std::a
     filterADSRResAmount    = amtRes;
 }
 
-void MySynthVoice::setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount, std::atomic<float>* shape)
+void MySynthVoice::setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount,
+                                             std::atomic<float>* shape)
 {
     filtLFOFreq  = freq;
     filtLFOAmt   = amount;
@@ -508,37 +511,36 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             
             
             // Selects filter type
-            if ((int)*filterSelector == 0)
+            switch ((int)*filterSelector)
             {
-                filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
-                                                        currentSample, filtEnvVal, filterADSRCutOffAmount,
-                                                        filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                case 0:
+                    filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                            currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                            filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    break;
+                case 1:
+                    filterSample = fourPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                             currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                             filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    break;
+                case 2:
+                    filterSample = eightPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                              currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                              filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    break;
+                case 3:
+                    filterSample = notchFilter.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                             currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                             filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    break;
+                default:
+                    filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
+                                                            currentSample, filtEnvVal, filterADSRCutOffAmount,
+                                                            filterADSRResAmount, filtLFOSample, filtLFOAmt);
+                    break;
             }
-            else if ((int)*filterSelector == 1)
-            {
-                filterSample = fourPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
-                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
-                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
-            }
-            else if ((int)*filterSelector == 2)
-            {
-                filterSample = eightPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
-                                                          currentSample, filtEnvVal, filterADSRCutOffAmount,
-                                                          filterADSRResAmount, filtLFOSample, filtLFOAmt);
-            }
-            else if ((int)*filterSelector == 3)
-            {
-                filterSample = notchFilter.processFilter(freq, filtCutoffSmoothed, filterResonance,
-                                                         currentSample, filtEnvVal, filterADSRCutOffAmount,
-                                                         filterADSRResAmount, filtLFOSample, filtLFOAmt);
-            }
-            else
-            {
-                filterSample = twoPoleLPF.processFilter(freq, filtCutoffSmoothed, filterResonance,
-                                                        currentSample, filtEnvVal, filterADSRCutOffAmount,
-                                                        filterADSRResAmount, filtLFOSample, filtLFOAmt);
-            }
-                        
+            
+            
             
             //
             // Master Gain
