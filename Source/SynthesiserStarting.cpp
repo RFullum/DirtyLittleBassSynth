@@ -255,14 +255,6 @@ float MySynthVoice::pitchBendCents()
 /// Updates the number of semitones the pitchWheel will bend
 void MySynthVoice::updatePitchBendRange(float newRange)
 {
-    /*
-    if (pitchBendSemitones != newRange)
-    {
-        pitchBendSemitones     = newRange;
-        pitchBendUpSemitones   = pitchBendSemitones;
-        pitchBendDownSemitones = pitchBendSemitones;
-    }
-     */
     pitchBendUpSemitones   = newRange;
     pitchBendDownSemitones = newRange;
 }
