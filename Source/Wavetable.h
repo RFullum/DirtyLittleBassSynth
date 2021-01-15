@@ -101,6 +101,7 @@ class SawWavetable : public Wavetable
 public:
     /// Creates Sawtooth Wavetable using a number of amplitude adjusted sine waves at the harmonics
     SawWavetable();
+    ~SawWavetable();
     
     /// Populates wavetables with wave values using their private populate functions
     void populateWavetable() override;
@@ -134,8 +135,9 @@ private:
 class SquareWavetable : public Wavetable
 {
 public:
-    /// Constructor
+    /// Constructor & Destructor
     SquareWavetable();
+    ~SquareWavetable();
     
     /// Populates wavetables with wave values using their private populate functions
     void populateWavetable() override;
@@ -144,7 +146,7 @@ protected:
     /// Adds instances of SinOsc into squareHarmonics OwnedArray
     void createHarmonics();
     
-    /// Sets sample rate for each SineOsc in saw harmonics
+    /// Sets sample rate for each SineOsc in square harmonics
     void setSquareSampleRates();
     
     /** Sets frequency for each harmonicin the Square series by finding all the harmonics from

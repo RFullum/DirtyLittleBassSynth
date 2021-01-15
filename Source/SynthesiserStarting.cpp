@@ -392,11 +392,12 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
     float filtLFOSquareLevel = filtLFOShapeControl.squareSubGain (filtLFOShape);
     float filtLFOSawLevel    = filtLFOShapeControl.sawSubGain    (filtLFOShape);
     
+    // Clear AudioBuffers for drawing GUI representation of waves
     mainOscShape.clear();
     subOscShape.clear();
     lfoOscShape.clear();
     
-    // Populates AudioBuffer with the current proportional morphed values
+    // Populates AudioBuffer with the current proportional morphed values for GUI
     populateShape(mainOscShape, sineLevel, spikeLevel, sawLevel, false);
     populateShape(subOscShape, sinSubLevel, squareSubLevel, sawSubLevel, true);
     populateShape(lfoOscShape, filtLFOSinLevel, filtLFOSquareLevel, filtLFOSawLevel, true);

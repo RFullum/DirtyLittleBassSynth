@@ -173,6 +173,13 @@ float Wavetable::lagrangeInterpolation()
 /// Creates Sawtooth Wavetable using a number of amplitude adjusted sine waves at the harmonics
 SawWavetable::SawWavetable() : numSawHarmonics(57) {} // Fundamental + 56 partials  -- Adjust this number to mod saw timbre
 
+SawWavetable::~SawWavetable()
+{
+    for (int i=0; i<numSawHarmonics; i++)
+    {
+        sawHarmonics.remove(i);
+    }
+}
 
 /// Populates wavetables with wave values using their private populate functions
 void SawWavetable::populateWavetable()
@@ -257,6 +264,13 @@ void SawWavetable::populateSawWT()
 /// Creates Square Wavetable using a number of amplitude adjusted sine waves at the odd harmonics
 SquareWavetable::SquareWavetable() : numSquareHarmonics(57) {}  // Fundamental + 56 partials -- Adjust this number to mod square timbre
 
+SquareWavetable::~SquareWavetable()
+{
+    for (int i=0; i<numSquareHarmonics; i++)
+    {
+        squareHarmonics.remove(i);
+    }
+}
 
 /// Populates wavetables with wave values using their private populate functions
 void SquareWavetable::populateWavetable()
@@ -310,6 +324,8 @@ void SquareWavetable::setSquareFrequencies()
             squareHarmonics[i / 2]->setFrequency(harmonicFreq[i]);
         }
     }
+    
+    delete[] harmonicFreq;
 }
 
 
