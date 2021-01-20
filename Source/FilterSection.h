@@ -36,7 +36,8 @@ public:
                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
                                 float lfoVal, std::atomic<float>* amtToLFO);
     
-    void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo);
+    
+    //void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo);
     
 protected:
     /// Keytracking value mapping
@@ -66,11 +67,13 @@ protected:
     
     float cutoffScale;
     float resonanceScale;
+    float resonanceScalePrev;
     
     float envelopeVal;
     float lfoValue;
     float cutoffLFO;
-    float hostBPM;
+    float cutoffLFOPrev;
+    //float hostBPM;
     
     std::atomic<float>* cutoffSend;
     std::atomic<float>* resSend;

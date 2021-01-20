@@ -335,7 +335,7 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
     //updateCurrentTimeInfoFromHost();
     
     // Level Metering
-    outLevel = (buffer.getMagnitude( 0, buffer.getNumSamples() ) < 0.0001f ) ? 0.0f : buffer.getMagnitude( 0, buffer.getNumSamples() );
+    outLevel = (buffer.getMagnitude( 0, buffer.getNumSamples() ) < 0.001f ) ? 0.0f : buffer.getMagnitude( 0, buffer.getNumSamples() );
 }
 
 //==============================================================================

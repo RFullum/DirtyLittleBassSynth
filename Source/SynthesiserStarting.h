@@ -3,7 +3,7 @@
 
     MySynthesiser.h
     Created: 7 Mar 2020 4:27:57pm
-    Author:  Tom Mudd
+    Author:  Tom Mudd, modified by Robert Fullum
 
   ==============================================================================
 */
@@ -258,7 +258,7 @@ private:
     // Frequency Shifter Parameters
     std::atomic<float>* freqShiftPitch;
     std::atomic<float>* freqShiftMixVal;
-    SmoothedValue<float> freqShiftMixValSmooth;
+    SmoothedValue<float, ValueSmoothingTypes::Linear> freqShiftMixValSmooth;
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
@@ -267,7 +267,7 @@ private:
     // Sample and Hold Parameters
     std::atomic<float>* sAndHPitch;
     std::atomic<float>* sAndHMixVal;
-    SmoothedValue<float> sAndHMixValSmooth;
+    SmoothedValue<float, ValueSmoothingTypes::Linear> sAndHMixValSmooth;
     
     
     // Filter Instances
@@ -276,9 +276,10 @@ private:
     EightPoleLPF eightPoleLPF;
     NotchFilter notchFilter;
     
+    
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
-    SmoothedValue<float> filterCutoffFreqSmooth;
+    SmoothedValue<float, ValueSmoothingTypes::Linear> filterCutoffFreqSmooth;
     std::atomic<float>* filterResonance;
     std::atomic<float>* filterSelector;
     float filterSample;
@@ -303,8 +304,8 @@ private:
     // Master Gain
     float masterGain;
     std::atomic<float>* masterGainControl;
-    SmoothedValue<float> masterGainControlSmooth;
-    SmoothedValue<float> velocitySmooth;
+    SmoothedValue<float, ValueSmoothingTypes::Linear> masterGainControlSmooth;
+    SmoothedValue<float, ValueSmoothingTypes::Linear> velocitySmooth;
     
     // Master Sample Rate
     float sampleRate;

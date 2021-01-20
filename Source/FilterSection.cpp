@@ -17,10 +17,14 @@
 // Two Pole LPF Class
 //
 
-TwoPoleLPF::TwoPoleLPF() : maxCutoff(17000.0f), minCutoff(20.0f), maxResonance(3.0f),
-                           cutoffLFO(1000.0f), hostBPM(120.0f)
+TwoPoleLPF::TwoPoleLPF() : sampleRate(44100.0f), maxCutoff(17000.0f), minCutoff(20.0f),
+                           maxResonance(3.0f), cutoffFreq(1000.0f), resonance(1.0f),
+                           inputSample(0.0f), cutoffScale(0.0f), resonanceScale(0.1f),
+                           resonanceScalePrev(0.1f), envelopeVal(0.0f), lfoValue(0.0f),
+                           cutoffLFO(1000.0f), cutoffLFOPrev(1000.0f)
                            
 {
+    lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
 }
 
 /// Destructo
@@ -85,7 +89,14 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
     }
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
-    resonanceScale    = jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
+    float newResScale = jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
+    
+    if (resonanceScale != newResScale)
+    {
+        resonanceScale = newResScale;
+        lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+    }
+    
     
     filterLFOControl();
 }
@@ -115,11 +126,20 @@ void TwoPoleLPF::filterLFOControl()
 float TwoPoleLPF::process()
 {
     filterEnvControl         ( envelopeVal, cutoffSend, resSend );
-    lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+    
+    if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
+    {
+        lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+        
+        cutoffLFOPrev      = cutoffLFO;
+        resonanceScalePrev = resonanceScale;
+    }
+    
     
     return lowPass1.processSingleSampleRaw(inputSample);
 }
 
+/*
 void TwoPoleLPF::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo)
 {
     if (hostBPM != (float)playheadInfo.bpm)
@@ -127,6 +147,7 @@ void TwoPoleLPF::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInf
         hostBPM = playheadInfo.bpm;
     }
 }
+*/
 
 //==============================================================================
 //==============================================================================
@@ -242,11 +263,20 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
     return processNotch();
 }
 
+
 /// Sets notch coeffients and processes inputSample
 float NotchFilter::processNotch()
 {
     filterEnvControl            ( envelopeVal, cutoffSend, resSend );
-    notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
+    
+    if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
+    {
+        notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
+        
+        cutoffLFOPrev      = cutoffLFO;
+        resonanceScalePrev = resonanceScale;
+    }
+    //notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
     
     return notchFilter.processSingleSampleRaw(inputSample);
 }
