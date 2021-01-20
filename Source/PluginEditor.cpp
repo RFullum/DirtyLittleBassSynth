@@ -267,7 +267,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     lfoVisual.setOscShapeLine    (processor.lfoOscVisualBuffer);
     
     filterVisual.drawFilterShape ( filterType.getSelectedId(),
-                                 (float)processor.getSampleRate(),
                                  (float)cutoffSlider.getValue(),
                                  (float)resSlider.getValue() );
     

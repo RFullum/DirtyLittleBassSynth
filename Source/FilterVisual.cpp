@@ -12,8 +12,7 @@
 #include "FilterVisual.h"
 
 //==============================================================================
-FilterVisual::FilterVisual() : sampleRate(44100.0f), cutoffFreq(100.0f),
-                               resonance(0.1f), segmentThickness(1.0f)
+FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThickness(1.0f)
 {
 }
 
@@ -48,9 +47,8 @@ void FilterVisual::resized()
 }
 
 
-void FilterVisual::drawFilterShape(int filtType, float SR, float cutoff, float res)
+void FilterVisual::drawFilterShape(int filtType, float cutoff, float res)
 {
-    sampleRate = SR;
     cutoffFreq = cutoff;
     resonance  = res;
     

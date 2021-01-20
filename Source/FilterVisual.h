@@ -26,9 +26,9 @@ public:
     
     /**
      Draws the shape of the selected filter. Use filterType.getSelectedID()
-     to find the filtType: 1 = -12dB LPF, 4 = Notch. Pass sampleRate from processor
+     to find the filtType: 1 = -12dB LPF, 4 = Notch. 
      */
-    void drawFilterShape(int filtType, float SR, float cutoff, float res);
+    void drawFilterShape(int filtType, float cutoff, float res);
     
 
 private:
@@ -38,7 +38,6 @@ private:
     
     Path filterShape;
     
-    float sampleRate;
     float cutoffFreq;
     float resonance;
     float segmentThickness;
