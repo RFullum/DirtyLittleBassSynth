@@ -257,11 +257,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     // LFO
     g.setGradientFill      ( ColourGradient::vertical( sectionColorBlue, Colours::black, lfoSectionInner ) );
     g.fillRoundedRectangle ( lfoSectionInner, cornerRound );
+    
 
 }
 
+
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
+    
     oscVisual.setOscShapeLine    (processor.mainOscVisualBuffer);
     subOscVisual.setOscShapeLine (processor.subOscVisualBuffer);
     lfoVisual.setOscShapeLine    (processor.lfoOscVisualBuffer);
@@ -270,9 +273,16 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
                                  (float)cutoffSlider.getValue(),
                                  (float)resSlider.getValue() );
     
-    outMeter.outMeterLevel( processor.getOutLevel(), processor.getSampleRate() );
+    
+    float outLevel = ( processor.outputLevelBuffer.getMagnitude( 0, processor.outputLevelBuffer.getNumSamples() ) < 0.001f ) ? 0.0f :
+                      processor.outputLevelBuffer.getMagnitude(0, processor.outputLevelBuffer.getNumSamples() );
+    
+    outMeter.outMeterLevel( outLevel, processor.getSampleRate() );
+    
+    //outMeter.outMeterLevel( processor.getOutLevel(), processor.getSampleRate() );
     
 }
+
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {

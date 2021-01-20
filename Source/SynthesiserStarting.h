@@ -190,9 +190,9 @@ private:
     bool ending;
     
     // Playback note
-    float freq;
-    float vel;                                  // velocity 0-1
-    float pitchBend;
+    float freq                        = 0.0f;
+    float vel                         = 0.0f;                                  // velocity 0-1
+    float pitchBend                   = 0.0f;
     float shiftHz                     = 1.0f;
     float previousPitchWheelValue     = 0.0f;
     float pitchBendSemitones          = 12.0f;
@@ -258,7 +258,7 @@ private:
     // Frequency Shifter Parameters
     std::atomic<float>* freqShiftPitch;
     std::atomic<float>* freqShiftMixVal;
-    SmoothedValue<float, ValueSmoothingTypes::Linear> freqShiftMixValSmooth;
+    SmoothedValue<float> freqShiftMixValSmooth;
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
@@ -267,7 +267,7 @@ private:
     // Sample and Hold Parameters
     std::atomic<float>* sAndHPitch;
     std::atomic<float>* sAndHMixVal;
-    SmoothedValue<float, ValueSmoothingTypes::Linear> sAndHMixValSmooth;
+    SmoothedValue<float> sAndHMixValSmooth;
     
     
     // Filter Instances
@@ -279,7 +279,7 @@ private:
     
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
-    SmoothedValue<float, ValueSmoothingTypes::Linear> filterCutoffFreqSmooth;
+    SmoothedValue<float> filterCutoffFreqSmooth;
     std::atomic<float>* filterResonance;
     std::atomic<float>* filterSelector;
     float filterSample;
@@ -304,8 +304,8 @@ private:
     // Master Gain
     float masterGain;
     std::atomic<float>* masterGainControl;
-    SmoothedValue<float, ValueSmoothingTypes::Linear> masterGainControlSmooth;
-    SmoothedValue<float, ValueSmoothingTypes::Linear> velocitySmooth;
+    SmoothedValue<float> masterGainControlSmooth;
+    SmoothedValue<float> velocitySmooth;
     
     // Master Sample Rate
     float sampleRate;

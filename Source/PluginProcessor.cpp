@@ -335,7 +335,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffe
     //updateCurrentTimeInfoFromHost();
     
     // Level Metering
-    outLevel = (buffer.getMagnitude( 0, buffer.getNumSamples() ) < 0.001f ) ? 0.0f : buffer.getMagnitude( 0, buffer.getNumSamples() );
+    outputLevelBuffer.clear();
+    outputLevelBuffer = buffer;
 }
 
 //==============================================================================
@@ -397,11 +398,6 @@ void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
     playHeadInfo.bpm = newInfo.bpm;
 }
 */
-
-float DirtyLittleBassSynthAudioProcessor::getOutLevel()
-{
-    return outLevel;
-}
 
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()

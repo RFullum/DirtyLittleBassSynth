@@ -69,6 +69,9 @@ public:
     AudioBuffer<float> mainOscVisualBuffer;
     AudioBuffer<float> subOscVisualBuffer;
     AudioBuffer<float> lfoOscVisualBuffer;
+    
+    // Metering
+    AudioBuffer<float> outputLevelBuffer;
 
 private:
     // Parameter members
@@ -131,9 +134,6 @@ private:
     
     // Transport Info
     AudioPlayHead::CurrentPositionInfo playHeadInfo;
-    
-    // Metering
-    float outLevel;
     
     // Instance of SynthesiZer class
     Synthesiser synth;
