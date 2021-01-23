@@ -444,7 +444,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Portamento processing
             float portaFreq = portamento.getNextValue();
             float finalFreq = portaFreq * shiftHz;
-            //float finalFreq = freq * shiftHz;
             
             // Main Oscillators
             wtSine.setIncrement  (finalFreq);
@@ -477,7 +476,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Apply foldback distortion to main oscillator
             float foldbackDistortionSmoothed = foldbackDistortionSmooth.getNextValue();
             float oscDistSample              = std::sin(oscSample * foldbackDistortionSmoothed);
-            //float oscDistSample = oscSample;
+
             
             //
             // Modifier Processing: Currently Series. Make Parallel option?
@@ -487,19 +486,19 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             float ringModSample      = oscDistSample * ringMod.process();
             float ringMixValSmoothed = ringMixSmooth.getNextValue();
             float oscRingSample      = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMixValSmoothed);
-            //float oscRingSample = oscDistSample;
+
             
             // Frequency Shifter
             float freqShiftSample         = freqShift.process();
             float freqShiftMixValSmoothed = freqShiftMixValSmooth.getNextValue();
             float oscShiftSample          = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
-            //float oscShiftSample = oscRingSample;
+
             
             // Sample and Hold
             float sAndHSample         = sAndH.processSH(oscShiftSample);
             float sAndHMixValSmoothed = sAndHMixValSmooth.getNextValue();
             float oscSandHSample      = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
-            //float oscSandHSample = oscShiftSample;
+
             
             //
             // Sub Osc
@@ -560,7 +559,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Master Gain
             //
             float masterSample = filterSample * masterGainControlSmooth.getNextValue() * velocitySmooth.getNextValue();
-            //float masterSample = currentSample;// * masterGainControlSmooth.getNextValue();// * velocitySmooth.getNextValue();
+
             
             
             //
@@ -577,8 +576,6 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Reset envelopes here to prevent clicks
             if (ending)
             {
-                //playing = false;
-                
                 if (envVal < 0.001f)
                 {
                     // reset envelopes and flip playing bool
@@ -586,8 +583,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                     filtEnv.reset();
                     filtLFOClickingEnv.reset();
                     playing = false;
-                }
-                
+                }   
             }
             
             

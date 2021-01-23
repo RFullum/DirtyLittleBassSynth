@@ -128,6 +128,7 @@ void Wavetable::populateWT()
     {
         waveTable[i] = sinOsc.process();
     }
+    
 }
 
 
