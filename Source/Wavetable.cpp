@@ -54,7 +54,7 @@ float Wavetable::process()
     
     readHeadPos += increment;
     
-    if (readHeadPos > waveTableSize)
+    if (readHeadPos >= waveTableSize)
         readHeadPos -= waveTableSize;
     
     return wtOut;
@@ -138,7 +138,7 @@ float Wavetable::lagrangeInterpolation()
     float frac = readHeadPos - floor(readHeadPos);  // Position between indexes
     float sum  = 0.0f;                              // initialize sum
     
-    for (int i=-2; i<2; i++)
+    for (int i = -2; i < 2; i++)
     {
         int index = floor(readHeadPos + (i + 1));   // index after readHeadPos in time
         
@@ -148,9 +148,9 @@ float Wavetable::lagrangeInterpolation()
         float denominator = 1.0f;                   // initialize denominator
         
         // interpolate algorithm
-        for (int j=-2; j<2; j++)
+        for (int j = -2; j < 2; j++)
         {
-            if (j != i)
+            if (j != i)                             // denominator can't be 0
             {
                 outVal      *= (frac - j);
                 denominator *= (i - j);

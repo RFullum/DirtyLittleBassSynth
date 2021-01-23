@@ -437,6 +437,14 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
         velocitySmooth.setTargetValue           (vel);
         filterCutoffFreqSmooth.setTargetValue   (*filterCutoffFreq);
         
+        // Condition Test variables
+        float previousFinalFreq  = 0.0f;
+        float prevRingModPitch   = 0.0f;
+        float prevFreqShiftPitch = 0.0f;
+        float prevSAndHPitch     = 0.0f;
+        
+        int previousIncrementDenom = 1;
+        
         // DSP!
         // iterate through the necessary number of samples (from startSample up to startSample + numSamples)
         for (int sampleIndex = startSample;   sampleIndex < (startSample+numSamples);   sampleIndex++)
@@ -445,16 +453,47 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             float portaFreq = portamento.getNextValue();
             float finalFreq = portaFreq * shiftHz;
             
+            
+            
             // Main Oscillators
-            wtSine.setIncrement  (finalFreq);
-            wtSaw.setIncrement   (finalFreq);
-            wtSpike.setIncrement (finalFreq);
-            subOsc.setIncrement  (finalFreq, incrementDenominator);
+            
+            // Set up the wavetable increment based on finalFreq
+            if (previousFinalFreq != finalFreq)
+            {
+                wtSine.setIncrement  (finalFreq);
+                wtSaw.setIncrement   (finalFreq);
+                wtSpike.setIncrement (finalFreq);
+                subOsc.setIncrement  (finalFreq, incrementDenominator);
+                
+                previousFinalFreq = finalFreq;
+            }
+            
+            if (previousIncrementDenom != incrementDenominator)
+            {
+                subOsc.setIncrement  (finalFreq, incrementDenominator);
+                previousIncrementDenom = incrementDenominator;
+            }
+            
             
             // Mod Oscs
-            ringMod.modFreq   (finalFreq, ringModPitch);
-            freqShift.modFreq (finalFreq, freqShiftPitch);
-            sAndH.modFreq     (finalFreq, sAndHPitch);
+            if (previousFinalFreq != finalFreq || prevRingModPitch != *ringModPitch)
+            {
+                ringMod.modFreq( finalFreq, ringModPitch );
+                prevRingModPitch = *ringModPitch;
+            }
+            
+            if (previousFinalFreq != finalFreq || prevFreqShiftPitch != *freqShiftPitch)
+            {
+                freqShift.modFreq( finalFreq, freqShiftPitch );
+                prevFreqShiftPitch = *freqShiftPitch;
+            }
+            
+            if (previousFinalFreq != finalFreq || prevFreqShiftPitch != *sAndHPitch)
+            {
+                sAndH.modFreq( finalFreq, sAndHPitch );
+                prevFreqShiftPitch = *sAndHPitch;
+            }
+            
             
             // Gets value of next sample in envelope. Use to scale volume
             float envVal        = env.getNextSample();
@@ -466,9 +505,9 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             
             // osc wavetable values scaled by oscillatorMorph parameter
-            float sinOscSample   = wtSine.process()  * sineLevel;
-            float spikeOscSample = wtSpike.process() * spikeLevel;
-            float sawOscSample   = wtSaw.process()   * sawLevel;
+            float sinOscSample   = wtSine.process()  * sineLevel  * envVal;
+            float spikeOscSample = wtSpike.process() * spikeLevel * envVal;
+            float sawOscSample   = wtSaw.process()   * sawLevel   * envVal;
             
             // Combine wavetables and scale by half (only two play at once) scaled by envelope
             float oscSample = (sinOscSample + spikeOscSample + sawOscSample) * 0.5f;
@@ -483,19 +522,19 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             
             // Ring Modulation
-            float ringModSample      = oscDistSample * ringMod.process();
+            float ringModSample      = oscDistSample * ringMod.process() * envVal;
             float ringMixValSmoothed = ringMixSmooth.getNextValue();
             float oscRingSample      = ringModMix.dryWetMix(oscDistSample, ringModSample, ringMixValSmoothed);
 
             
             // Frequency Shifter
-            float freqShiftSample         = freqShift.process();
+            float freqShiftSample         = freqShift.process() * envVal;
             float freqShiftMixValSmoothed = freqShiftMixValSmooth.getNextValue();
             float oscShiftSample          = freqShiftMix.dryWetMix(oscRingSample, freqShiftSample, freqShiftMixValSmoothed);
 
             
             // Sample and Hold
-            float sAndHSample         = sAndH.processSH(oscShiftSample);
+            float sAndHSample         = sAndH.processSH(oscShiftSample) * envVal;
             float sAndHMixValSmoothed = sAndHMixValSmooth.getNextValue();
             float oscSandHSample      = sAndHMix.dryWetMix(oscShiftSample, sAndHSample, sAndHMixValSmoothed);
 
@@ -505,14 +544,15 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             //
             
             // sub wavetable values morphed by subOscillatorMorph, scaled by subGain
-            float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * subGainSmooth.getNextValue();//*subGain;
+            float subSample = subOsc.process(sinSubLevel, squareSubLevel, sawSubLevel) * subGainSmooth.getNextValue() * envVal;//*subGain;
             
             //
             // (Main Osc + Foldback + Modifiers) + Sub Osc * gain * envelope
             //
             
             // Combine main osc and sub values, scaled and enveloped
-            float currentSample = (oscSandHSample + subSample) * envVal * 0.75f; //* 0.5f;// * envVal;
+            //float currentSample = (oscSandHSample + subSample) * envVal * 0.75f; //* 0.5f;// * envVal;
+            float currentSample = (oscSandHSample + subSample) * 0.75f;
             
             //
             // Filters
@@ -583,7 +623,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                     filtEnv.reset();
                     filtLFOClickingEnv.reset();
                     playing = false;
-                }   
+                }
             }
             
             
