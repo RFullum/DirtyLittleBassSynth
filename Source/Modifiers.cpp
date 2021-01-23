@@ -20,6 +20,9 @@
 // Ring Mod
 //
 
+/// Constructor
+RingMod::RingMod() : sampleRate(44100.0f), modFrequency(0.0f), ringToneSlider(0.0f) {}
+
 // Destructo!
 RingMod::~RingMod(){}
 
@@ -87,6 +90,10 @@ float RingMod::ringModProcess()
 // Frequency Shifter
 //
 
+/// Constructor
+FrequencyShifter::FrequencyShifter() : sineLevel(1.0f), spikeLevel(0.0f), sawLevel(0.0f) {}
+
+/// Sets sampleRate for frequency shifter wavetables and populates wavetables
 void FrequencyShifter::setSampleRate(float SR)
 {
     sampleRate = SR;
@@ -155,8 +162,7 @@ float FrequencyShifter::freqShiftProcess()
 //
 
 /// Constructor
-SampleAndHold::SampleAndHold() : holdSampleVal(0.0f)
-{}
+SampleAndHold::SampleAndHold() : oscSampleVal(0.0f), holdSampleVal(0.0f) {}
 
 /// Sets sampleRate for member wavetables and populates them
 void SampleAndHold::setSampleRate(float SR)

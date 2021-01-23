@@ -16,7 +16,7 @@
 //
 
 /// Constructor
-Phasor::Phasor() : phase(0.0f) {}
+Phasor::Phasor() : frequency(0.0f), sampleRate(44100.0f), phase(0.0f), phaseDelta(0.0f) {}
 
 /// virtual desctructor
 Phasor::~Phasor() {}

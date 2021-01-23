@@ -16,7 +16,8 @@
 //
 
 /// Constructor: initializes all samples in wavetable to 0.0f
-Wavetable::Wavetable() : waveTableSize(1024), readHeadPos(0.0f)
+Wavetable::Wavetable() : waveTableSize(1024), sampleRate(44100.0f),
+                         frequency(0.0f), readHeadPos(0.0f), increment(1.0f)
 {
     for (int i=0; i<waveTableSize; i++)
     {

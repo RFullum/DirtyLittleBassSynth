@@ -196,15 +196,15 @@ private:
     Rectangle<float> headerAreaInner;       // Header
     Rectangle<float> mainOutAreaInner;      // Main Out
     Rectangle<float> oscSectionInner;       // Oscillators
-    Rectangle<float> mainOscSectionInner;
-    Rectangle<float> subOscSectionInner;
+    Rectangle<float> mainOscSectionInner;   // Main Oscillator
+    Rectangle<float> subOscSectionInner;    // Sub Oscillator
     Rectangle<float> oscADSRSectionInner;   // ADSR
-    Rectangle<float> oscADSRSlidersInner;
-    Rectangle<float> adsrRotaryInner;
+    Rectangle<float> oscADSRSlidersInner;   // ADSR
+    Rectangle<float> adsrRotaryInner;       // Porta/Foldback
     Rectangle<float> modSectionInner;       // Modifiers
-    Rectangle<float> ringModSectionInner;
-    Rectangle<float> frqShftSectionInner;
-    Rectangle<float> sAndHSectionInner;
+    Rectangle<float> ringModSectionInner;   // Ring Mod
+    Rectangle<float> frqShftSectionInner;   // Freq Shift
+    Rectangle<float> sAndHSectionInner;     // S&H
     Rectangle<float> filterSectionInner;    // Filter
     Rectangle<float> fltADSRSectionInner;   // Filter ADSR
     Rectangle<float> lfoSectionInner;       // LFO

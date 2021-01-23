@@ -15,6 +15,7 @@
 class DryWet
 {
 public:
+    DryWet();
     /**
      Takes the dry sample value, wet sample value, and mix value. Returns their mix sample value
      */

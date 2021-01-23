@@ -10,6 +10,10 @@
 
 #include "DryWet.h"
 
+DryWet::DryWet() : drySample(0.0f), wetSample(0.0f), mixFactor(0.0f)
+{
+}
+
 /**
 Takes the dry sample value, wet sample value, and mix value. Returns their mix sample value
 */

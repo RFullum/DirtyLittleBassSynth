@@ -190,18 +190,18 @@ private:
     bool ending;
     
     // Playback note
-    float freq                        = 0.0f;
-    float vel                         = 0.0f;                                  // velocity 0-1
-    float pitchBend                   = 0.0f;
-    float shiftHz                     = 1.0f;
-    float previousPitchWheelValue     = 0.0f;
-    float pitchBendSemitones          = 12.0f;
-    float pitchBendUpSemitones        = 12.0f;
-    float pitchBendDownSemitones      = 12.0f;
-    float lastRecievedPitchWheelValue = 0.0f;
+    float freq;
+    float vel;                        // velocity 0-1
+    float pitchBend;
+    float shiftHz;
+    float previousPitchWheelValue;
+    float pitchBendSemitones;
+    float pitchBendUpSemitones;
+    float pitchBendDownSemitones;
+    float lastRecievedPitchWheelValue;
     
     // Host Transport Data
-    float hostBPM = 120.0f;
+    //float hostBPM = 120.0f;
     
     /// ADSR envelope instances
     ADSR env;

@@ -23,6 +23,9 @@
 class RingMod
 {
 public:
+    /// Constructor
+    RingMod();
+    
     // Destructo!
     virtual ~RingMod();
     
@@ -73,6 +76,9 @@ private:
 class FrequencyShifter : public RingMod
 {
 public:
+    /// Constructor
+    FrequencyShifter();
+    
     /// Sets sampleRate for frequency shifter wavetables and populates wavetables
     void setSampleRate(float SR) override;
     

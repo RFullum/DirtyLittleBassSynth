@@ -13,12 +13,13 @@
 
 //==============================================================================
 DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p),
+    : AudioProcessorEditor (&p),
         pluginBackground       ( Colour( (uint8)125, (uint8)46,  (uint8)0 ) ),
         blazeOrange            ( Colour( (uint8)255, (uint8)46,  (uint8)0 ) ),
         sectionColorBlue       ( Colour( (uint8)0,   (uint8)21,  (uint8)89 ) ),
         sectionColorBlueDark   ( Colour( (uint8)7,   (uint8)10,  (uint8)59 ) ),
-        sectionColourLightBlue ( Colour( (uint8)143, (uint8)173, (uint8)186 ) )
+        sectionColourLightBlue ( Colour( (uint8)143, (uint8)173, (uint8)186 ) ),
+        processor (p)
         
 {
     setSize (1200, 666);

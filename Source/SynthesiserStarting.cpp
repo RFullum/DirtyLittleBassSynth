@@ -12,7 +12,13 @@
 
 
 
-MySynthVoice::MySynthVoice() : playing(false), ending(false) {}
+MySynthVoice::MySynthVoice() : playing(false), ending(false),
+                               freq(0.0f), vel(0.0f), pitchBend(0.0f),
+                               shiftHz(1.0f), previousPitchWheelValue(0.0f),
+                               pitchBendSemitones(12.0f), pitchBendUpSemitones(12.0f),
+                               pitchBendDownSemitones(12.0f), lastRecievedPitchWheelValue(0.0f),
+                               filterSample(0.0f), masterGain(0.0f), sampleRate(44100.0f),
+                               samplesPerBlock(0) {}
 
 void MySynthVoice::init(float SR, int blockSize)
 {

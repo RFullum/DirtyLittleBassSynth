@@ -133,7 +133,7 @@ private:
     std::atomic<float>* masterGainParameter;
     
     // Transport Info
-    AudioPlayHead::CurrentPositionInfo playHeadInfo;
+    //AudioPlayHead::CurrentPositionInfo playHeadInfo;
     
     // Instance of SynthesiZer class
     Synthesiser synth;
