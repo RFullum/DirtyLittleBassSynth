@@ -488,7 +488,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
                 prevFreqShiftPitch = *freqShiftPitch;
             }
             
-            if (previousFinalFreq != finalFreq || prevFreqShiftPitch != *sAndHPitch)
+            if (previousFinalFreq != finalFreq || prevSAndHPitch != *sAndHPitch)
             {
                 sAndH.modFreq( finalFreq, sAndHPitch );
                 prevFreqShiftPitch = *sAndHPitch;
@@ -515,6 +515,7 @@ void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSam
             // Apply foldback distortion to main oscillator
             float foldbackDistortionSmoothed = foldbackDistortionSmooth.getNextValue();
             float oscDistSample              = std::sin(oscSample * foldbackDistortionSmoothed);
+
 
             
             //

@@ -144,6 +144,11 @@ float Wavetable::lagrangeInterpolation()
         
         index %= waveTableSize;                     // wrap index
         
+        if (index < 0.0f)
+        {
+            index += waveTableSize;
+        }
+        
         float outVal      = waveTable[index];       // value at wt[index] to outVal
         float denominator = 1.0f;                   // initialize denominator
         
