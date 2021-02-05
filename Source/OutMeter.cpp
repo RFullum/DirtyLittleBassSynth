@@ -83,6 +83,7 @@ void OutMeter::outMeterLevel(float level, float sampleRate)
 {
     float multiplier = (level < 1.0f) ? level : 1.0f;
     
+    // *** THIS NEEDS TO CHANGE THE DECAY FACTORS TOO ***
     SR = (SR != sampleRate) ? sampleRate : SR;
     
     heightMultiplier(multiplier);
