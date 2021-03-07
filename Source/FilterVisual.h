@@ -30,6 +30,7 @@ public:
      */
     void drawFilterShape(int filtType, float cutoff, float res);
     
+    void setColors(Colour& line1, Colour& line2, Colour& background);
 
 private:
     void drawFilterShape(int type);
@@ -42,6 +43,10 @@ private:
     float resonance;
     float segmentThickness;
     float order;
+    
+    Colour lineColor1;
+    Colour lineColor2;
+    Colour bgColor;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterVisual)

@@ -26,9 +26,15 @@ public:
     
     /// Concatenates Path line segments acress visualBox using sample values in buffer
     void setOscShapeLine(AudioBuffer<float>& buffer);
+    
+    /// Sets the colors of the wave line and background area
+    void setColors(Colour& line, Colour& background);
 
 private:
     float segmentThickness;
+    
+    Colour lineColor;
+    Colour bgColor;
     
     Rectangle<float> visualBox;
     

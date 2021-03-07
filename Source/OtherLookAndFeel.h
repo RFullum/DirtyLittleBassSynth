@@ -19,6 +19,9 @@ public:
     /// Constructor
     OtherLookAndFeel();
     
+    /// Sets the dial and tick colors
+    void setColors(Colour& dial, Colour& tick);
+    
     /// Draws rotary slider as round knob
     void drawRotarySlider(Graphics &g, int x, int y, int width, int height, float sliderPos,
                           float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override;
@@ -30,4 +33,7 @@ public:
                                            float maxSliderPos,
                                            const Slider::SliderStyle style, Slider& slider) override;
     
+private:
+    Colour dialColor;
+    Colour tickColor;
 };

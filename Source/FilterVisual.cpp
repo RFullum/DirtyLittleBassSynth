@@ -12,26 +12,35 @@
 #include "FilterVisual.h"
 
 //==============================================================================
-FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThickness(1.0f)
+FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThickness(1.0f),
+                               lineColor1 ( Colour( (uint8)255, (uint8)94, (uint8)0  ) ),
+                               lineColor2 ( Colour( (uint8)100, (uint8)36, (uint8)0  ) ),
+                               bgColor    ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) )
+{}
+
+FilterVisual::~FilterVisual() {}
+
+
+void FilterVisual::setColors(Colour& line1, Colour& line2, Colour& background)
 {
+    lineColor1 = line1;
+    lineColor2 = line2;
+    bgColor    = background;
 }
 
-FilterVisual::~FilterVisual()
-{
-}
 
 void FilterVisual::paint (juce::Graphics& g)
 {
     float cornerRound = 2.0f;
     
-    Colour lineColor   = Colour( (uint8)255, (uint8)94, (uint8)0  );
-    Colour lineColor2  = Colour( (uint8)100, (uint8)36, (uint8)0  );
-    Colour sectionBlue = Colour( (uint8)7,   (uint8)10, (uint8)59 );
+    //Colour lineColor   = Colour( (uint8)255, (uint8)94, (uint8)0  );
+    //Colour lineColor2  = Colour( (uint8)100, (uint8)36, (uint8)0  );
+    //Colour sectionBlue = Colour( (uint8)7,   (uint8)10, (uint8)59 );
     
-    g.setGradientFill      ( ColourGradient::vertical( Colours::black, sectionBlue, visualBox ) );
+    g.setGradientFill      ( ColourGradient::vertical( Colours::black, bgColor, visualBox ) );
     g.fillRoundedRectangle ( visualBox, cornerRound );
-    g.setColour            ( lineColor );
-    g.setFillType          ( ColourGradient::vertical( lineColor, lineColor2, visualBox ) );
+    g.setColour            ( lineColor1 );
+    g.setFillType          ( ColourGradient::vertical( lineColor1, lineColor2, visualBox ) );
     g.fillPath             ( filterShape );
 }
 

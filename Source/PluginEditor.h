@@ -185,11 +185,11 @@ private:
     
     
     // Colors
-    Colour pluginBackground;
-    Colour blazeOrange;
-    Colour sectionColorBlue;
-    Colour sectionColorBlueDark;
-    Colour sectionColourLightBlue;
+    Colour onyx;
+    Colour lightSlateGray;
+    Colour magicMint;
+    Colour fieryRose;
+    Colour orangePeel;
     
     
     // Subsections
@@ -205,6 +205,7 @@ private:
     Rectangle<float> ringModSectionInner;   // Ring Mod
     Rectangle<float> frqShftSectionInner;   // Freq Shift
     Rectangle<float> sAndHSectionInner;     // S&H
+    Rectangle<float> bottomSectionInner;    // Entire Bottom
     Rectangle<float> filterSectionInner;    // Filter
     Rectangle<float> fltADSRSectionInner;   // Filter ADSR
     Rectangle<float> lfoSectionInner;       // LFO

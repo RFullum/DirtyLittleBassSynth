@@ -28,7 +28,6 @@ public:
 
 private:
     void heightMultiplier(float mult);
-    //AudioDeviceManager::LevelMeter *levelMeter;
     
     Rectangle<int> leftChannelBack;
     Rectangle<int> leftChannelClipBack;
@@ -43,8 +42,8 @@ private:
     
     float heightMult;
     float SR;
-    float decayRateRise; // = 0.0005f;
-    float decayRateFall; // = 0.001f; // in ms... in Seconds?
+    float decayRateRise;        // = 0.0005f;
+    float decayRateFall;        // = 0.001f; // in ms... in Seconds?
     float decayFactorRise;
     float decayFactorFall;      // for N in value *= (1 - 1/N), in samples
     

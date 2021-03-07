@@ -12,7 +12,16 @@
 
 
 /// Constructor
-OtherLookAndFeel::OtherLookAndFeel() {}
+OtherLookAndFeel::OtherLookAndFeel() : dialColor( Colour( (uint8)125, (uint8)46,  (uint8)0   ) ),
+                                       tickColor( Colour( (uint8)184, (uint8)210, (uint8)222 ) )
+{}
+
+/// Sets the dial and tick colors
+void OtherLookAndFeel::setColors(Colour& dial, Colour& tick)
+{
+    dialColor = dial;
+    tickColor = tick;
+}
 
 /**
  Customizing the drawRotarySlider() method from LookAndFeel_V4
@@ -36,19 +45,19 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
     float tickAngle = rotaryStartAngle + ( sliderPos * (rotaryEndAngle - rotaryStartAngle) );
     float tickWidth = 5.0f;
     
-    Colour pluginBackground       = Colour( (uint8)125, (uint8)46,  (uint8)0   );
-    Colour sectionColourLightBlue = Colour( (uint8)184, (uint8)210, (uint8)222 );
+    //Colour pluginBackground       = Colour( (uint8)125, (uint8)46,  (uint8)0   );
+    //Colour sectionColourLightBlue = Colour( (uint8)184, (uint8)210, (uint8)222 );
     
     // Rectangle the slider will go inside
     Rectangle<float> dialArea( radiusX, radiusY, diameter, diameter );
     
-    g.setColour   ( pluginBackground );
+    g.setColour   ( dialColor );
     g.fillEllipse ( dialArea );
     
     Path dialTick;      // Drawable path to draw the dial tick
     dialTick.addRectangle( 0.0f, -radius, tickWidth, radius * 0.33f );
     
-    g.setColour ( sectionColourLightBlue );
+    g.setColour ( tickColor );
     g.fillPath  ( dialTick, AffineTransform::rotation( tickAngle ).translated( centerX, centerY ) );
 }
 
