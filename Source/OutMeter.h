@@ -25,6 +25,10 @@ public:
     void resized() override;
     
     void outMeterLevel(float level, float sampleRate);
+    
+    
+    /// Sets the colors of the level and clipping meter
+    void setColors(Colour& levelColor, Colour& clipColor);
 
 private:
     void heightMultiplier(float mult);
@@ -46,6 +50,13 @@ private:
     float decayRateFall;        // = 0.001f; // in ms... in Seconds?
     float decayFactorRise;
     float decayFactorFall;      // for N in value *= (1 - 1/N), in samples
+    
+    
+    // Colors
+    Colour clipBackRed;
+    Colour clippingRed;
+    Colour levelBackGreen;
+    Colour levelGreen;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutMeter)
 };

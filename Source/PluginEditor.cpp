@@ -27,9 +27,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     otherLookAndFeel.setColors ( fieryRose, magicMint );
     
     // Master Out
-    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, fieryRose, magicMint, true );
-    sliderLabelSetup  ( masterGainLabel, "Out Gain", fieryRose );
-    addAndMakeVisible ( outMeter );
+    sliderSetup        ( masterGainSlider, Slider::SliderStyle::LinearVertical, fieryRose, magicMint, true );
+    sliderLabelSetup   ( masterGainLabel, "Out Gain", fieryRose );
+    outMeter.setColors ( magicMint, fieryRose );
+    addAndMakeVisible  ( outMeter );
     
     masterGainSlider.setLookAndFeel ( &otherLookAndFeel );
     
