@@ -47,6 +47,7 @@ private:
     
     // Header area
     TitleHeader titleHeader;
+    TitleFooter titleFooter;
 
     // Wavetable Drawing
     OscVisual oscVisual;

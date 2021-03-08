@@ -27,9 +27,29 @@ public:
     /// Set the colors for the title header
     void setColors(Colour& light, Colour& dark, Colour& text);
 
-private:
+protected:
     Colour lightColor;
     Colour darkColor;
     Colour textColor;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TitleHeader)
 };
+
+
+//==============================================================================
+//==============================================================================
+//==============================================================================
+
+
+class TitleFooter : public TitleHeader
+{
+public:
+    void paint(juce::Graphics&) override;
+    void resized() override;
+    
+private:
+    Rectangle<int> versionArea;
+    Rectangle<int> urlArea;
+};
+
+

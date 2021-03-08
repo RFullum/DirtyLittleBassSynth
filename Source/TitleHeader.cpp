@@ -52,3 +52,29 @@ void TitleHeader::paint (juce::Graphics& g)
 
 void TitleHeader::resized() {}
 
+
+
+//==============================================================================
+//==============================================================================
+//==============================================================================
+
+
+
+void TitleFooter::paint(juce::Graphics& g)
+{
+    g.fillAll   ( darkColor );
+    g.setColour ( textColor );
+    
+    g.setFont  ( Font("Helvetica", 14, 0) );
+    g.drawText ( "Version 1.1", versionArea.reduced( 2, 6 ), Justification::left );
+    g.drawText ( "www.FullumMusic.com", urlArea.reduced( 2, 6 ), Justification::right );
+}
+
+
+void TitleFooter::resized()
+{
+    auto totalArea = getLocalBounds();
+    
+    versionArea = totalArea.removeFromLeft( totalArea.getWidth() * 0.5f );
+    urlArea     = totalArea;
+}

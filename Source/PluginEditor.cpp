@@ -22,7 +22,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
         processor (p)
         
 {
-    setSize (1200, 666);
+    setSize (1200, 681);
     
     otherLookAndFeel.setColors ( fieryRose, magicMint );
     
@@ -35,7 +35,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     // Header
     titleHeader.setColors ( magicMint, onyx, orangePeel );
-    addAndMakeVisible     ( titleHeader );
+    titleFooter.setColors ( magicMint, onyx, orangePeel );
+    
+    addAndMakeVisible ( titleHeader );
+    addAndMakeVisible ( titleFooter );
     
     // Osc Section
     sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
@@ -313,6 +316,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
                                                     headerAreaInner.getWidth(), headerAreaInner.getHeight() );
     
     titleHeader.setBounds ( titleHeaderArea );
+    
+    Rectangle<int> footerArea = totalArea.removeFromBottom( 15 );
+    
+    titleFooter.setBounds( footerArea );
     
     
     // Output area
