@@ -34,8 +34,9 @@ void TitleHeader::paint (juce::Graphics& g)
     Rectangle<float> headerAreaInner = Rectangle<float>( getLocalBounds().getX(), getLocalBounds().getY(),
                                                          getLocalBounds().getWidth(), getLocalBounds().getHeight() );
     
-    g.setGradientFill( ColourGradient::horizontal( lightColor, headerAreaInner.getX(), darkColor, headerAreaInner.getWidth() * 0.38f) );
-    g.fillRoundedRectangle( headerAreaInner, cornerRound );
+    g.setGradientFill      ( ColourGradient::horizontal( lightColor, headerAreaInner.getX(),
+                                                         darkColor, headerAreaInner.getWidth() * 0.38f ) );
+    g.fillRoundedRectangle ( headerAreaInner, cornerRound );
     
     g.setColour ( textColor);
     g.setFont   ( Font("technoid", 60.0f, 0) );

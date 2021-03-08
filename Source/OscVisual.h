@@ -28,15 +28,17 @@ public:
     void setOscShapeLine(AudioBuffer<float>& buffer);
     
     /// Sets the colors of the wave line and background area
-    void setColors(Colour& line, Colour& background);
+    void setColors(Colour& line, Colour& background, Colour& fade);
 
 private:
     float segmentThickness;
     
     Colour lineColor;
     Colour bgColor;
+    Colour fadeColor;
     
     Rectangle<float> visualBox;
+    Rectangle<float> visualBoxReduced;
     
     Path oscShape;
 

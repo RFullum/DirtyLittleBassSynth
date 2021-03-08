@@ -24,24 +24,24 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize (1200, 666);
     
-    otherLookAndFeel.setColors ( orangePeel, magicMint );
+    otherLookAndFeel.setColors ( fieryRose, magicMint );
     
     // Master Out
-    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, orangePeel, magicMint, true );
+    sliderSetup       ( masterGainSlider, Slider::SliderStyle::LinearVertical, fieryRose, magicMint, true );
     sliderLabelSetup  ( masterGainLabel, "Out Gain", fieryRose );
     addAndMakeVisible ( outMeter );
     
-    masterGainSlider.setLookAndFeel( &otherLookAndFeel );
+    masterGainSlider.setLookAndFeel ( &otherLookAndFeel );
     
     // Header
     titleHeader.setColors ( magicMint, onyx, orangePeel );
     addAndMakeVisible     ( titleHeader );
     
     // Osc Section
-    sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, orangePeel, magicMint, false );
-    sliderSetup ( subMorphSlider,       Slider::SliderStyle::LinearHorizontal, orangePeel, magicMint, false );
-    sliderSetup ( subGainSlider,        Slider::SliderStyle::LinearVertical,   orangePeel, magicMint, false );
-    sliderSetup ( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical,   orangePeel, magicMint, true  );
+    sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
+    sliderSetup ( subMorphSlider,       Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
+    sliderSetup ( subGainSlider,        Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
+    sliderSetup ( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, true  );
     
     oscMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
     subMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
@@ -56,12 +56,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     comboBoxSetup ( subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
     // Osc ADSR Section
-    sliderSetup( oscAttackSlider,  Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup( oscDecaySlider,   Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup( portaSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup( foldbackSlider,   Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
+    sliderSetup( oscAttackSlider,  Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup( oscDecaySlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup( portaSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup( foldbackSlider,   Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
     
     oscAttackSlider.setLookAndFeel  ( &otherLookAndFeel );
     oscDecaySlider.setLookAndFeel   ( &otherLookAndFeel );
@@ -78,13 +78,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( foldbackLabel,   "Foldback\nDistortion", fieryRose );
     
     // Modifiers Section
-    sliderSetup ( ringToneSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( ringPitchSlider,     Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( ringDryWetSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( frqShftPitchSlider,  Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( sHPitchSlider,       Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( sHDryWetSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
+    sliderSetup ( ringToneSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( ringPitchSlider,     Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( ringDryWetSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( frqShftPitchSlider,  Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( sHPitchSlider,       Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( sHDryWetSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
     
     ringToneSlider.setLookAndFeel      ( &otherLookAndFeel );
     ringPitchSlider.setLookAndFeel     ( &otherLookAndFeel );
@@ -102,8 +102,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( dryWetLabel,  "Dry/Wet",       onyx );
     
     // Filter Section
-    sliderSetup( cutoffSlider, Slider::SliderStyle::LinearHorizontal, orangePeel, magicMint, false );
-    sliderSetup( resSlider,    Slider::SliderStyle::LinearVertical,   orangePeel, magicMint, false );
+    sliderSetup ( cutoffSlider, Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
+    sliderSetup ( resSlider,    Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
     
     cutoffSlider.setLookAndFeel ( &otherLookAndFeel );
     resSlider.setLookAndFeel    ( &otherLookAndFeel );
@@ -114,12 +114,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     comboBoxSetup ( filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
     // Filter ADSR Section
-    sliderSetup ( fltAttackSlider,    Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup ( fltDecaySlider,     Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup ( fltSustainSlider,   Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup ( fltReleaseSlider,   Slider::SliderStyle::LinearVertical,               orangePeel, magicMint, true  );
-    sliderSetup ( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
-    sliderSetup ( adsrToResSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, orangePeel, magicMint, false );
+    sliderSetup ( fltAttackSlider,    Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup ( fltDecaySlider,     Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup ( fltSustainSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup ( fltReleaseSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
+    sliderSetup ( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( adsrToResSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
     
     fltAttackSlider.setLookAndFeel    ( &otherLookAndFeel );
     fltDecaySlider.setLookAndFeel     ( &otherLookAndFeel );
@@ -136,9 +136,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( adsrToResLabel,    "To Resonance", fieryRose );
     
     // Filter LFO Section
-    sliderSetup ( lfoShapeSlider,  Slider::SliderStyle::LinearHorizontal, orangePeel, magicMint, false );
-    sliderSetup ( lfoFreqSlider,   Slider::SliderStyle::LinearVertical,   orangePeel, magicMint, false );
-    sliderSetup ( lfoAmountSlider, Slider::SliderStyle::LinearVertical,   orangePeel, magicMint, false );
+    sliderSetup ( lfoShapeSlider,  Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
+    sliderSetup ( lfoFreqSlider,   Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
+    sliderSetup ( lfoAmountSlider, Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
     
     lfoShapeSlider.setLookAndFeel  ( &otherLookAndFeel );
     lfoFreqSlider.setLookAndFeel   ( &otherLookAndFeel );
@@ -150,50 +150,50 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     
     // Attachments
-    oscMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "osc_morph", oscMorphSlider);
-    subMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sub_osc_morph", subMorphSlider);
-    subGainSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sub_osc_gain", subGainSlider);
-    pitchBendRangeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "pitch_bend_range", pitchBendRangeSlider);
-    subOctaveAttachment      = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment>(processor.parameters, "sub_osc_octave", subOctave);
+    oscMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "osc_morph",        oscMorphSlider       );
+    subMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_morph",    subMorphSlider       );
+    subGainSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_gain",     subGainSlider        );
+    pitchBendRangeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "pitch_bend_range", pitchBendRangeSlider );
+    subOctaveAttachment      = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "sub_osc_octave",   subOctave            );
     
-    oscAttackSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "amp_attack", oscAttackSlider);
-    oscDecaySliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "amp_decay", oscDecaySlider);
-    oscSustainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "amp_sustain", oscSustainSlider);
-    oscReleaseSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "amp_release", oscReleaseSlider);
-    portaSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "porta_time", portaSlider);
-    foldbackSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "foldback_dist", foldbackSlider);
+    oscAttackSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_attack",    oscAttackSlider  );
+    oscDecaySliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_decay",     oscDecaySlider   );
+    oscSustainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_sustain",   oscSustainSlider );
+    oscReleaseSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_release",   oscReleaseSlider );
+    portaSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "porta_time",    portaSlider      );
+    foldbackSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "foldback_dist", foldbackSlider   );
     
-    ringToneSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "ring_tone", ringToneSlider);
-    ringPitchSliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "ring_mod_pitch", ringPitchSlider);
-    ringDryWetSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "ring_mod_mix", ringDryWetSlider);
-    frqShftPitchSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "freq_shift_pitch", frqShftPitchSlider);
-    frqShftDryWetSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "freq_shift_mix", frqShftDryWetSlider);
-    sHPitchSliderAttachment       = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sandh_pitch", sHPitchSlider);
-    sHDryWetSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "sandh_mix", sHDryWetSlider);
+    ringToneSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_tone",        ringToneSlider      );
+    ringPitchSliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_pitch",   ringPitchSlider     );
+    ringDryWetSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_mix",     ringDryWetSlider    );
+    frqShftPitchSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_pitch", frqShftPitchSlider  );
+    frqShftDryWetSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_mix",   frqShftDryWetSlider );
+    sHPitchSliderAttachment       = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_pitch",      sHPitchSlider       );
+    sHDryWetSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_mix",        sHDryWetSlider      );
     
-    cutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filter_cutoff", cutoffSlider);
-    resSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filter_res", resSlider);
-    filterTypeAttachment   = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment>(processor.parameters, "filter_type", filterType);
+    cutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_cutoff", cutoffSlider );
+    resSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_res",    resSlider    );
+    filterTypeAttachment   = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "filter_type",   filterType   );
     
-    fltAttackSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_attack", fltAttackSlider);
-    fltDecaySliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_decay", fltDecaySlider);
-    fltSustainSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_sustain", fltSustainSlider);
-    fltReleaseSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_release", fltReleaseSlider);
-    adsrToCutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_COAmt", adsrToCutoffSlider);
-    adsrToResSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtEnv_ResAmt", adsrToResSlider);
+    fltAttackSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_attack",  fltAttackSlider    );
+    fltDecaySliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_decay",   fltDecaySlider     );
+    fltSustainSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_sustain", fltSustainSlider   );
+    fltReleaseSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_release", fltReleaseSlider   );
+    adsrToCutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_COAmt",   adsrToCutoffSlider );
+    adsrToResSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_ResAmt",  adsrToResSlider    );
     
-    lfoShapeSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtLFO_shape", lfoShapeSlider);
-    lfoFreqSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtLFO_freq", lfoFreqSlider);
-    lfoAmountSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "filtLFO_amt", lfoAmountSlider);
+    lfoShapeSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_shape", lfoShapeSlider  );
+    lfoFreqSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_freq",  lfoFreqSlider   );
+    lfoAmountSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_amt",   lfoAmountSlider );
     
-    masterGainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.parameters, "master_gain", masterGainSlider);
+    masterGainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "master_gain", masterGainSlider );
     
     // Wave Visual
-    oscVisual.setColors    ( orangePeel, lightSlateGray );
-    subOscVisual.setColors ( orangePeel, lightSlateGray );
-    lfoVisual.setColors    ( orangePeel, lightSlateGray );
+    oscVisual.setColors    ( magicMint, onyx, fieryRose );
+    subOscVisual.setColors ( magicMint, onyx, fieryRose );
+    lfoVisual.setColors    ( magicMint, onyx, fieryRose );
     
-    filterVisual.setColors ( orangePeel, onyx, lightSlateGray );
+    filterVisual.setColors ( magicMint, onyx, onyx, fieryRose );
     
     addAndMakeVisible ( oscVisual    );
     addAndMakeVisible ( subOscVisual );
@@ -277,7 +277,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
-    
     oscVisual.setOscShapeLine    ( processor.mainOscVisualBuffer );
     subOscVisual.setOscShapeLine ( processor.subOscVisualBuffer  );
     lfoVisual.setOscShapeLine    ( processor.lfoOscVisualBuffer  );
@@ -288,12 +287,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     
     
     float outLevel = ( processor.outputLevelBuffer.getMagnitude( 0, processor.outputLevelBuffer.getNumSamples() ) < 0.001f ) ? 0.0f :
-                      processor.outputLevelBuffer.getMagnitude(0, processor.outputLevelBuffer.getNumSamples() );
+                       processor.outputLevelBuffer.getMagnitude(0, processor.outputLevelBuffer.getNumSamples() );
     
     outMeter.outMeterLevel( outLevel, processor.getSampleRate() );
-    
-    //outMeter.outMeterLevel( processor.getOutLevel(), processor.getSampleRate() );
-    
 }
 
 
@@ -307,7 +303,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // Header space at top for logo & name, etc
     int headerHeight = 66;
     
-    Rectangle<int> headerArea    = totalArea.removeFromTop ( headerHeight );
+    Rectangle<int> headerArea    = totalArea.removeFromTop ( headerHeight      );
     Rectangle<int> headerReduced = headerArea.reduced      ( sectionSpacerSize );
     
     headerAreaInner.setBounds( headerReduced.getX(), headerReduced.getY(),
@@ -316,30 +312,30 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> titleHeaderArea = Rectangle<int>(headerAreaInner.getX(), headerAreaInner.getY(),
                                                     headerAreaInner.getWidth(), headerAreaInner.getHeight() );
     
-    titleHeader.setBounds( titleHeaderArea );
+    titleHeader.setBounds ( titleHeaderArea );
     
     
     // Output area
-    int mainOutWidth = 100;
+    int mainOutWidth    = 100;
     int mainLabelHeight = 30;
     
-    Rectangle<int> mainOutArea    = totalArea.removeFromRight ( mainOutWidth );
+    Rectangle<int> mainOutArea    = totalArea.removeFromRight ( mainOutWidth      );
     Rectangle<int> mainOutReduced = mainOutArea.reduced       ( sectionSpacerSize );
     
     mainOutAreaInner.setBounds( mainOutReduced.getX(), mainOutReduced.getY(),
                                 mainOutReduced.getWidth(), mainOutReduced.getHeight() );
     
-    Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom( mainOutReduced.getHeight() * 0.5f );
-    Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop ( mainLabelHeight );
+    Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom ( mainOutReduced.getHeight() * 0.5f );
+    Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop    ( mainLabelHeight );
     
     masterGainLabel.setBounds  ( mainOutLabelArea );
-    masterGainSlider.setBounds ( mainOutReduced );
-    outMeter.setBounds( meterOutArea );
+    masterGainSlider.setBounds ( mainOutReduced   );
+    outMeter.setBounds         ( meterOutArea     );
     
     
     // Top Row of sections area: Rectangle across top containing
     // Osc Section, ADSR Section, and Modifiers Section
-    int topRowHeight = (int)(getHeight() * 0.66f);
+    int topRowHeight = (int)( getHeight() * 0.66f );
     
     Rectangle<int> topSectionArea = totalArea.removeFromTop( topRowHeight );
     
@@ -359,40 +355,40 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
                                 oscSectionReduced.getWidth(), oscSectionReduced.getHeight() );
     
     Rectangle<int> mainOscSection        = oscSectionReduced.removeFromTop ( oscSectionReduced.getHeight() * 0.5f );
-    Rectangle<int> mainOscSectionReduced = mainOscSection.reduced( sectionSpacerSize * 2.0f );
+    Rectangle<int> mainOscSectionReduced = mainOscSection.reduced          ( sectionSpacerSize * 2.0f );
     
     mainOscSectionInner.setBounds( mainOscSectionReduced.getX(), mainOscSectionReduced.getY(),
                                    mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
     
-    Rectangle<int> oscGainSpace        = mainOscSectionReduced.removeFromRight  ( oscGainWidth );
+    Rectangle<int> oscGainSpace        = mainOscSectionReduced.removeFromRight  ( oscGainWidth    );
     Rectangle<int> morphLabelSpace     = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
     Rectangle<int> morphSliderSpace    = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
     Rectangle<int> pitchBendLabelSpace = oscGainSpace.removeFromTop             ( gainLabelHeight );
     
     oscVisualSpace = mainOscSectionReduced.reduced( sectionSpacerSize );
     
-    oscMorphLabel.setBounds        ( morphLabelSpace );
-    oscMorphSlider.setBounds       ( morphSliderSpace );
-    oscVisual.setBounds            ( oscVisualSpace );
-    pitchBendRangeSlider.setBounds ( oscGainSpace );
+    oscMorphLabel.setBounds        ( morphLabelSpace     );
+    oscMorphSlider.setBounds       ( morphSliderSpace    );
+    oscVisual.setBounds            ( oscVisualSpace      );
+    pitchBendRangeSlider.setBounds ( oscGainSpace        );
     pitchBendRangeLabel.setBounds  ( pitchBendLabelSpace );
     
     // Sub Osc Section Area (Oscillator subarea)
-    Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f);
+    Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f );
     
     subOscSectionInner.setBounds ( oscSectionReduced2.getX(), oscSectionReduced2.getY(),
                                    oscSectionReduced2.getWidth(), oscSectionReduced2.getHeight() );
     
-    Rectangle<int> subGainSpace        = oscSectionReduced2.removeFromRight  ( oscGainWidth );
-    Rectangle<int> subOctaveSpace      = subGainSpace.removeFromBottom      ( subOctaveHeight );
-    Rectangle<int> subGainLabelSpace   = subGainSpace.removeFromTop         ( gainLabelHeight );
+    Rectangle<int> subGainSpace        = oscSectionReduced2.removeFromRight  ( oscGainWidth    );
+    Rectangle<int> subOctaveSpace      = subGainSpace.removeFromBottom       ( subOctaveHeight );
+    Rectangle<int> subGainLabelSpace   = subGainSpace.removeFromTop          ( gainLabelHeight );
     Rectangle<int> subMorphLabelSpace  = oscSectionReduced2.removeFromLeft   ( morphLabelWidth );
     Rectangle<int> subMorphSliderSpace = oscSectionReduced2.removeFromBottom ( gainLabelHeight );
     
-    subGainLabel.setBounds   ( subGainLabelSpace );
-    subMorphLabel.setBounds  ( subMorphLabelSpace );
-    subOctave.setBounds      ( subOctaveSpace );
-    subGainSlider.setBounds  ( subGainSpace );
+    subGainLabel.setBounds   ( subGainLabelSpace   );
+    subMorphLabel.setBounds  ( subMorphLabelSpace  );
+    subOctave.setBounds      ( subOctaveSpace      );
+    subGainSlider.setBounds  ( subGainSpace        );
     subMorphSlider.setBounds ( subMorphSliderSpace );
     subOscVisual.setBounds   ( oscSectionReduced2.reduced( sectionSpacerSize ) );
     
@@ -406,7 +402,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     int rotaryLabelHeight = 60;
     
-    Rectangle<int> rotarySpace = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f);
+    Rectangle<int> rotarySpace = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f );
     
     adsrRotaryInner.setBounds ( rotarySpace.getX(), rotarySpace.getY(),
                                 rotarySpace.getWidth(), rotarySpace.getHeight() );
@@ -464,14 +460,14 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     modSectionInner.setBounds( modSectionReduced.getX(), modSectionReduced.getY(),
                                modSectionReduced.getWidth(), modSectionReduced.getHeight() );
     
-    Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop( modHeadingHeight );
+    Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop( modHeadingHeight    );
     Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
     Rectangle<int> toneHeadingSpace   = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
     Rectangle<int> pitchHeadingSpace  = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
     
-    toneLabel.setBounds   ( toneHeadingSpace );
+    toneLabel.setBounds   ( toneHeadingSpace  );
     pitchLabel.setBounds  ( pitchHeadingSpace );
-    dryWetLabel.setBounds ( modHeadingsSpace );
+    dryWetLabel.setBounds ( modHeadingsSpace  );
     
     int modKnobHeight = (int)( modSectionReduced.getHeight() * 0.33f );
     
@@ -490,20 +486,20 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
                                     sAndHRowArea.getWidth(), sAndHRowArea.getHeight() );
     
     Rectangle<int> modTypeSection   = modSectionReduced.removeFromLeft ( modSectionGridWidth );
-    Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop     ( modKnobHeight );
-    Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop     ( modKnobHeight );
+    Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop     ( modKnobHeight       );
+    Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop     ( modKnobHeight       );
     
-    ringLabel.setBounds    ( ringLabelArea );
+    ringLabel.setBounds    ( ringLabelArea    );
     frqShftLabel.setBounds ( frqShftLabelArea );
-    sHLabel.setBounds      ( modTypeSection );
+    sHLabel.setBounds      ( modTypeSection   );
     
-    Rectangle<int> ringKnobArea      = modSectionReduced.removeFromTop ( modKnobHeight );
-    Rectangle<int> ringToneKnobArea  = ringKnobArea.removeFromLeft  ( modSectionGridWidth );
-    Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft  ( modSectionGridWidth );
+    Rectangle<int> ringKnobArea      = modSectionReduced.removeFromTop ( modKnobHeight       );
+    Rectangle<int> ringToneKnobArea  = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
+    Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
     
-    ringToneSlider.setBounds( ringToneKnobArea );
-    ringPitchSlider.setBounds( ringPitchKnobArea );
-    ringDryWetSlider.setBounds( ringKnobArea );
+    ringToneSlider.setBounds   ( ringToneKnobArea  );
+    ringPitchSlider.setBounds  ( ringPitchKnobArea );
+    ringDryWetSlider.setBounds ( ringKnobArea      );
     
     Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop ( modKnobHeight );
     Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
@@ -515,7 +511,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> sHSpacer    = modSectionReduced.removeFromLeft( modSectionGridWidth );
     Rectangle<int> sHPitchArea = modSectionReduced.removeFromLeft( modSectionGridWidth );
     
-    sHPitchSlider.setBounds  ( sHPitchArea );
+    sHPitchSlider.setBounds  ( sHPitchArea       );
     sHDryWetSlider.setBounds ( modSectionReduced );
     
     
@@ -526,30 +522,30 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     bottomSectionInner.setBounds( bottomSectionArea.getX(), bottomSectionArea.getY(),
                                   bottomSectionArea.getWidth(), bottomSectionArea.getHeight() );
     
-    int lowerGridWidth  = (int)(bottomSectionArea.getWidth() * 0.33f);
+    int lowerGridWidth  = (int)( bottomSectionArea.getWidth() * 0.33f );
     int filtLabelheight = 30;
     
     
     // Filter Area
-    Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft ( lowerGridWidth );
+    Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft ( lowerGridWidth    );
     Rectangle<int> filterAreaReduced = filterArea.reduced               ( sectionSpacerSize );
     
     filterSectionInner.setBounds ( filterAreaReduced.getX(), filterAreaReduced.getY(),
-                                  filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
+                                   filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
     
     int resWidth = (int)(filterAreaReduced.getWidth() * 0.25f);
     
-    Rectangle<int> resArea        = filterAreaReduced.removeFromRight   ( resWidth );
-    Rectangle<int> resLableArea   = resArea.removeFromTop               ( filtLabelheight );
-    Rectangle<int> cOLabelArea    = filterAreaReduced.removeFromLeft    ( morphLabelWidth );
+    Rectangle<int> resArea         = filterAreaReduced.removeFromRight  ( resWidth        );
+    Rectangle<int> resLableArea    = resArea.removeFromTop              ( filtLabelheight );
+    Rectangle<int> cOLabelArea     = filterAreaReduced.removeFromLeft   ( morphLabelWidth );
     Rectangle<int> fltTypeArea     = filterAreaReduced.removeFromBottom ( filtLabelheight ).removeFromRight( 75 );
     Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom ( filtLabelheight );
     
-    resLabel.setBounds     ( resLableArea );
-    resSlider.setBounds    ( resArea );
-    filterType.setBounds   ( fltTypeArea );
-    cutoffLabel.setBounds  ( cOLabelArea );
-    cutoffSlider.setBounds ( fltCOSliderArea );
+    resLabel.setBounds     ( resLableArea      );
+    resSlider.setBounds    ( resArea           );
+    filterType.setBounds   ( fltTypeArea       );
+    cutoffLabel.setBounds  ( cOLabelArea       );
+    cutoffSlider.setBounds ( fltCOSliderArea   );
     filterVisual.setBounds ( filterAreaReduced );
     
     // Filter ADSR Area
@@ -557,7 +553,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> fltADSRAreaReduced    = fltADSRArea.reduced              ( sectionSpacerSize );
     
     fltADSRSectionInner.setBounds ( fltADSRAreaReduced.getX(), fltADSRAreaReduced.getY(),
-                                   fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
+                                    fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
     
     Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
     Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
@@ -565,16 +561,16 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight );
     
     adsrToResLabel.setBounds     ( fltADSRToResLabelArea );
-    adsrToResSlider.setBounds    ( fltADSRToResArea );
-    adsrToCutoffLabel.setBounds  ( fltADSRToCOLabelArea );
-    adsrToCutoffSlider.setBounds ( fltADSRRotaryArea );
+    adsrToResSlider.setBounds    ( fltADSRToResArea      );
+    adsrToCutoffLabel.setBounds  ( fltADSRToCOLabelArea  );
+    adsrToCutoffSlider.setBounds ( fltADSRRotaryArea     );
     
     int fltADSRWidth = (int)(fltADSRAreaReduced.getWidth() * 0.25f);
     
     Rectangle<int> fltADSRHeader = fltADSRAreaReduced.removeFromTop ( filtLabelheight );
-    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
-    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
-    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth );
+    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
+    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
+    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
     
     fltAttackLabel.setBounds  ( fltALabelArea );
     fltDecayLabel.setBounds   ( fltDLabelArea );
@@ -585,9 +581,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> fltDSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     Rectangle<int> fltSSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     
-    fltAttackSlider.setBounds  ( fltASliderArea );
-    fltDecaySlider.setBounds   ( fltDSliderArea );
-    fltSustainSlider.setBounds ( fltSSliderArea );
+    fltAttackSlider.setBounds  ( fltASliderArea     );
+    fltDecaySlider.setBounds   ( fltDSliderArea     );
+    fltSustainSlider.setBounds ( fltSSliderArea     );
     fltReleaseSlider.setBounds ( fltADSRAreaReduced );
     
     // LFO Area
@@ -595,17 +591,16 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     Rectangle<int> lfoAreaReduced = lfoArea.reduced( sectionSpacerSize );
     
-    //lfoSectionInner.setSize( lfoAreaReduced.getWidth(), lfoAreaReduced.getHeight() );
     lfoSectionInner.setBounds( lfoAreaReduced.getX(), lfoAreaReduced.getY(), lfoAreaReduced.getWidth(), lfoAreaReduced.getHeight() );
     
-    Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight      ( (int)(lfoAreaReduced.getWidth() * 0.33f) );
+    Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight      ( (int)( lfoAreaReduced.getWidth() * 0.33f ) );
     Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop     ( filtLabelheight );
-    Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)(lfoVertLabelFootArea.getWidth() * 0.5f) );
+    Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)( lfoVertLabelFootArea.getWidth() * 0.5f ) );
     
-    lfoFreqLabel.setBounds   ( lfoFrqLabelArea );
+    lfoFreqLabel.setBounds   ( lfoFrqLabelArea      );
     lfoAmountLabel.setBounds ( lfoVertLabelFootArea );
     
-    Rectangle<int> lfoFreqSliderArea = lfoVertSliderArea.removeFromLeft( (int)(lfoVertSliderArea.getWidth() * 0.5f) );
+    Rectangle<int> lfoFreqSliderArea = lfoVertSliderArea.removeFromLeft( (int)( lfoVertSliderArea.getWidth() * 0.5f ) );
     
     lfoFreqSlider.setBounds   ( lfoFreqSliderArea );
     lfoAmountSlider.setBounds ( lfoVertSliderArea );
@@ -613,9 +608,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     Rectangle<int> lfoShapeArea       = lfoAreaReduced.removeFromBottom( filtLabelheight );
     Rectangle<int> lfoShapeSliderArea = lfoAreaReduced.removeFromBottom( filtLabelheight );
     
-    lfoShapeLabel.setBounds  ( lfoShapeArea );
+    lfoShapeLabel.setBounds  ( lfoShapeArea       );
     lfoShapeSlider.setBounds ( lfoShapeSliderArea );
-    lfoVisual.setBounds      ( lfoAreaReduced );
+    lfoVisual.setBounds      ( lfoAreaReduced     );
     
     
 }
@@ -631,7 +626,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
     {
         sliderInstance.setTextBoxStyle ( Slider::TextBoxBelow, false, 40, 20 );
         sliderInstance.setColour       ( Slider::textBoxOutlineColourId, Colour( (uint8)0, (uint8)0, (uint8)0, (uint8)0 ) );
-        sliderInstance.setColour       ( Slider::textBoxTextColourId, sliderThumbColor );
+        sliderInstance.setColour       ( Slider::textBoxTextColourId, orangePeel );
     }
     else
     {

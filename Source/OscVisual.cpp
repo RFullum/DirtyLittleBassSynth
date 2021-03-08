@@ -12,29 +12,27 @@
 #include "OscVisual.h"
 
 //==============================================================================
-OscVisual::OscVisual() : segmentThickness(1.0f),
-                         lineColor ( Colour( (uint8)255, (uint8)94, (uint8)0  ) ),
-                         bgColor   ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) )
+OscVisual::OscVisual() : segmentThickness(1.5f),
+                         lineColor    ( Colour( (uint8)255, (uint8)94, (uint8)0  ) ),
+                         bgColor      ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) ),
+                         fadeColor    ( Colour( (uint8)255, (uint8)94, (uint8)0  ) )
 {}
 
 OscVisual::~OscVisual() {}
 
 /// Sets the colors of the wave line and background area
-void OscVisual::setColors(Colour& line, Colour& background)
+void OscVisual::setColors(Colour& line, Colour& background, Colour& fade)
 {
     lineColor = line;
     bgColor   = background;
+    fadeColor = fade;
 }
 
 void OscVisual::paint (Graphics& g)
 {
     float cornerRound = 2.0f;
     
-    //Colour lineColor   = Colour( (uint8)255, (uint8)94, (uint8)0  );
-    //Colour sectionBlue = Colour( (uint8)7,   (uint8)10, (uint8)59 );
-    
-    //g.setGradientFill      ( ColourGradient::vertical( Colours::black, sectionBlue, visualBox ) );
-    g.setColour            ( bgColor );
+    g.setGradientFill      ( ColourGradient::vertical( bgColor, fadeColor, visualBox ) );
     g.fillRoundedRectangle ( visualBox, cornerRound );
     
     g.setColour            ( lineColor );
