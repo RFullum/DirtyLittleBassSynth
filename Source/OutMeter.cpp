@@ -14,7 +14,8 @@
 //==============================================================================
 OutMeter::OutMeter() : outLevel(0.0f), levelClipping(false), heightMult(0.0f),
                        SR(44100), decayRateRise(0.0005f), decayRateFall(0.001f),
-                       decayFactorRise(decayRateRise * SR), decayFactorFall(decayRateFall * SR)
+                       decayFactorRise(decayRateRise * SR), decayFactorFall(decayRateFall * SR),
+                       clippingRed(Colour( (uint8)255, (uint8)10, (uint8)27, (uint8)255 ) )
 {}
 
 OutMeter::~OutMeter() {}
@@ -23,10 +24,10 @@ OutMeter::~OutMeter() {}
 /// Sets the colors of the level and clipping meter
 void OutMeter::setColors(Colour &levelColor, Colour &clipColor)
 {
-    clipBackRed    = clipColor.darker();
+    clipBackRed    = clipColor.darker().darker();
     clippingRed    = clipColor;
-    levelBackGreen = levelColor.darker();
-    levelGreen     = levelColor;
+    levelBackGreen = levelColor.darker().darker();
+    levelGreen     = levelColor.brighter().brighter();
 }
 
 void OutMeter::paint (Graphics& g)

@@ -12,15 +12,18 @@
 
 
 /// Constructor
-OtherLookAndFeel::OtherLookAndFeel() : dialColor( Colour( (uint8)125, (uint8)46,  (uint8)0   ) ),
-                                       tickColor( Colour( (uint8)184, (uint8)210, (uint8)222 ) )
+OtherLookAndFeel::OtherLookAndFeel() :
+    dialColor( Colour( (uint8)125, (uint8)46,  (uint8)0   ) ),
+    tickColor( Colour( (uint8)184, (uint8)210, (uint8)222 ) ),
+    backColor( Colour( (uint8)255, (uint8)255, (uint8)255 ) )
 {}
 
 /// Sets the dial and tick colors
-void OtherLookAndFeel::setColors(Colour& dial, Colour& tick)
+void OtherLookAndFeel::setColors(Colour& dial, Colour& tick, Colour& back)
 {
     dialColor = dial;
     tickColor = tick;
+    backColor = back;
 }
 
 /**
@@ -43,19 +46,37 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
      - Plus the initial rotaryStartAngle to account for the space between 0 and the rotaryStartAngle.
      */
     float tickAngle = rotaryStartAngle + ( sliderPos * (rotaryEndAngle - rotaryStartAngle) );
-    float tickWidth = 5.0f;
+    float tickWidth = diameter * 0.15f;     // Ticks proportional to dial size 
     
-    //Colour pluginBackground       = Colour( (uint8)125, (uint8)46,  (uint8)0   );
-    //Colour sectionColourLightBlue = Colour( (uint8)184, (uint8)210, (uint8)222 );
+    // Dial Mid Ring (Offsets the radius so it centers over Outer Ring)
+    float diameter2 = diameter * 0.9f;
+    float radiusX2  = radiusX + ( (diameter - diameter2) * 0.5f );
+    float radiusY2  = radiusY + ( (diameter - diameter2) * 0.5f );
+    
+    // Dial Inner (Offsets the radius so it centers over Outer Ring)
+    float diameter3 = diameter2 * 0.9f;
+    float radiusX3  = radiusX + ( (diameter - diameter3) * 0.5f );
+    float radiusY3  = radiusY + ( (diameter - diameter3) * 0.5f );
     
     // Rectangle the slider will go inside
     Rectangle<float> dialArea( radiusX, radiusY, diameter, diameter );
+    Rectangle<float> dialArea2 ( radiusX2, radiusY2, diameter2, diameter2 );
+    Rectangle<float> dialArea3 ( radiusX3, radiusY3, diameter3, diameter3 );
+    
+    g.setColour   ( backColor );
+    g.fillEllipse ( dialArea  );
+    
+    g.setColour   ( tickColor );
+    g.fillEllipse ( dialArea2 );
     
     g.setColour   ( dialColor );
-    g.fillEllipse ( dialArea );
+    g.fillEllipse ( dialArea3 );
+    
+    // The radius of the inner dial area to put the tick directly on its edge
+    float radius3 = diameter3 * 0.5f;
     
     Path dialTick;      // Drawable path to draw the dial tick
-    dialTick.addRectangle( 0.0f, -radius, tickWidth, radius * 0.33f );
+    dialTick.addEllipse ( 0.0f, -radius3 + 5.0f, tickWidth, tickWidth );
     
     g.setColour ( tickColor );
     g.fillPath  ( dialTick, AffineTransform::rotation( tickAngle ).translated( centerX, centerY ) );

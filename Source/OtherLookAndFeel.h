@@ -20,7 +20,7 @@ public:
     OtherLookAndFeel();
     
     /// Sets the dial and tick colors
-    void setColors(Colour& dial, Colour& tick);
+    void setColors(Colour& dial, Colour& tick, Colour& back);
     
     /// Draws rotary slider as round knob
     void drawRotarySlider(Graphics &g, int x, int y, int width, int height, float sliderPos,
@@ -36,4 +36,5 @@ public:
 private:
     Colour dialColor;
     Colour tickColor;
+    Colour backColor;
 };

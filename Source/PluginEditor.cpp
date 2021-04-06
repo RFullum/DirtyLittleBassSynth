@@ -19,20 +19,22 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
         magicMint              ( Colour( (uint8)174, (uint8)255, (uint8)216 ) ),
         fieryRose              ( Colour( (uint8)255, (uint8)104, (uint8)114 ) ),
         orangePeel             ( Colour( (uint8)252, (uint8)152, (uint8)0   ) ),
+        textColor              ( Colour( (uint8)255, (uint8)255, (uint8)255 ) ),
         processor (p)
         
 {
-    setSize (1200, 681);
+    setSize (1300, 700);
     
-    otherLookAndFeel.setColors ( fieryRose, magicMint );
+    dialLookAndFeel.setColors   ( fieryRose, onyx, magicMint  );
+    dryWetLookAndFeel.setColors ( orangePeel, onyx, magicMint );
     
     // Master Out
-    sliderSetup        ( masterGainSlider, Slider::SliderStyle::LinearVertical, fieryRose, magicMint, true );
-    sliderLabelSetup   ( masterGainLabel, "Out Gain", fieryRose );
+    sliderSetup        ( masterGainSlider, Slider::SliderStyle::LinearVertical, orangePeel, orangePeel, true );
+    sliderLabelSetup   ( masterGainLabel, "Out Gain", textColor, 16.0f );
     outMeter.setColors ( magicMint, fieryRose );
     addAndMakeVisible  ( outMeter );
     
-    masterGainSlider.setLookAndFeel ( &otherLookAndFeel );
+    masterGainSlider.setLookAndFeel ( &dialLookAndFeel );
     
     // Header
     titleHeader.setColors ( magicMint, onyx, orangePeel );
@@ -42,115 +44,117 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     addAndMakeVisible ( titleFooter );
     
     // Osc Section
-    sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
-    sliderSetup ( subMorphSlider,       Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
-    sliderSetup ( subGainSlider,        Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
-    sliderSetup ( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, true  );
+    sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
+    sliderSetup ( subMorphSlider,       Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
+    sliderSetup ( subGainSlider,        Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
+    sliderSetup ( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, true  );
     
-    oscMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
-    subMorphSlider.setLookAndFeel       ( &otherLookAndFeel );
-    subGainSlider.setLookAndFeel        ( &otherLookAndFeel );
-    pitchBendRangeSlider.setLookAndFeel ( &otherLookAndFeel );
+    oscMorphSlider.setLookAndFeel       ( &dialLookAndFeel );
+    subMorphSlider.setLookAndFeel       ( &dialLookAndFeel );
+    subGainSlider.setLookAndFeel        ( &dialLookAndFeel );
+    pitchBendRangeSlider.setLookAndFeel ( &dialLookAndFeel );
     
-    sliderLabelSetup ( oscMorphLabel,       "Osc\nMorph", fieryRose );
-    sliderLabelSetup ( subMorphLabel,       "Sub\nMorph", fieryRose );
-    sliderLabelSetup ( subGainLabel,        "Sub Gain",   fieryRose );
-    sliderLabelSetup ( pitchBendRangeLabel, "Pitch Bend", fieryRose );
+    sliderLabelSetup ( oscMorphLabel,       "OSC",         textColor, 18.0f );
+    sliderLabelSetup ( oscMorphLabel2,      "MORPH",       textColor, 15.0f );
+    sliderLabelSetup ( subMorphLabel,       "SUB",         textColor, 18.0f );
+    sliderLabelSetup ( subMorphLabel2,      "MORPH",       textColor, 15.0f );
+    sliderLabelSetup ( subGainLabel,        "Sub Gain",    textColor, 13.0f );
+    sliderLabelSetup ( pitchBendRangeLabel, "Bend\nRange", textColor, 13.0f );
     
     comboBoxSetup ( subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
     // Osc ADSR Section
-    sliderSetup( oscAttackSlider,  Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup( oscDecaySlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup( portaSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup( foldbackSlider,   Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup( oscAttackSlider,  Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscDecaySlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( portaSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup( foldbackSlider,   Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
-    oscAttackSlider.setLookAndFeel  ( &otherLookAndFeel );
-    oscDecaySlider.setLookAndFeel   ( &otherLookAndFeel );
-    oscSustainSlider.setLookAndFeel ( &otherLookAndFeel );
-    oscReleaseSlider.setLookAndFeel ( &otherLookAndFeel );
-    portaSlider.setLookAndFeel      ( &otherLookAndFeel );
-    foldbackSlider.setLookAndFeel   ( &otherLookAndFeel );
+    oscAttackSlider.setLookAndFeel  ( &dialLookAndFeel );
+    oscDecaySlider.setLookAndFeel   ( &dialLookAndFeel );
+    oscSustainSlider.setLookAndFeel ( &dialLookAndFeel );
+    oscReleaseSlider.setLookAndFeel ( &dialLookAndFeel );
+    portaSlider.setLookAndFeel      ( &dialLookAndFeel );
+    foldbackSlider.setLookAndFeel   ( &dialLookAndFeel );
     
-    sliderLabelSetup ( oscAttackLabel,  "A",                    fieryRose );
-    sliderLabelSetup ( oscDecayLabel,   "D",                    fieryRose );
-    sliderLabelSetup ( oscSustainLabel, "S",                    fieryRose );
-    sliderLabelSetup ( oscReleaseLabel, "R",                    fieryRose );
-    sliderLabelSetup ( portaLabel,      "Portamento",           fieryRose );
-    sliderLabelSetup ( foldbackLabel,   "Foldback\nDistortion", fieryRose );
+    sliderLabelSetup ( oscAttackLabel,  "A",                    textColor, 18.0f );
+    sliderLabelSetup ( oscDecayLabel,   "D",                    textColor, 18.0f );
+    sliderLabelSetup ( oscSustainLabel, "S",                    textColor, 18.0f );
+    sliderLabelSetup ( oscReleaseLabel, "R",                    textColor, 18.0f );
+    sliderLabelSetup ( portaLabel,      "Portamento",           textColor, 17.0f );
+    sliderLabelSetup ( foldbackLabel,   "Foldback\nDistortion", textColor, 17.0f );
     
     // Modifiers Section
-    sliderSetup ( ringToneSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( ringPitchSlider,     Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( ringDryWetSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( frqShftPitchSlider,  Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( sHPitchSlider,       Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( sHDryWetSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( ringToneSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( ringPitchSlider,     Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( ringDryWetSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( frqShftPitchSlider,  Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( sHPitchSlider,       Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( sHDryWetSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
-    ringToneSlider.setLookAndFeel      ( &otherLookAndFeel );
-    ringPitchSlider.setLookAndFeel     ( &otherLookAndFeel );
-    ringDryWetSlider.setLookAndFeel    ( &otherLookAndFeel );
-    frqShftPitchSlider.setLookAndFeel  ( &otherLookAndFeel );
-    frqShftDryWetSlider.setLookAndFeel ( &otherLookAndFeel );
-    sHPitchSlider.setLookAndFeel       ( &otherLookAndFeel );
-    sHDryWetSlider.setLookAndFeel      ( &otherLookAndFeel );
+    ringToneSlider.setLookAndFeel      ( &dialLookAndFeel   );
+    ringPitchSlider.setLookAndFeel     ( &dialLookAndFeel   );
+    ringDryWetSlider.setLookAndFeel    ( &dryWetLookAndFeel );
+    frqShftPitchSlider.setLookAndFeel  ( &dialLookAndFeel   );
+    frqShftDryWetSlider.setLookAndFeel ( &dryWetLookAndFeel );
+    sHPitchSlider.setLookAndFeel       ( &dialLookAndFeel   );
+    sHDryWetSlider.setLookAndFeel      ( &dryWetLookAndFeel );
     
-    sliderLabelSetup ( ringLabel,    "Ring Mod",      fieryRose );
-    sliderLabelSetup ( frqShftLabel, "Freq Shift",    fieryRose );
-    sliderLabelSetup ( sHLabel,      "Sample & Hold", fieryRose );
-    sliderLabelSetup ( toneLabel,    "Tone",          onyx );
-    sliderLabelSetup ( pitchLabel,   "Pitch",         onyx );
-    sliderLabelSetup ( dryWetLabel,  "Dry/Wet",       onyx );
+    sliderLabelSetup ( ringLabel,    "Ring Mod",      textColor, 14.0f );
+    sliderLabelSetup ( frqShftLabel, "Freq Shift",    textColor, 14.0f );
+    sliderLabelSetup ( sHLabel,      "Sample & Hold", textColor, 14.0f );
+    sliderLabelSetup ( toneLabel,    "Tone",          onyx, 16.0f );
+    sliderLabelSetup ( pitchLabel,   "Pitch",         onyx, 16.0f );
+    sliderLabelSetup ( dryWetLabel,  "Dry/Wet",       onyx, 16.0f );
     
     // Filter Section
-    sliderSetup ( cutoffSlider, Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
-    sliderSetup ( resSlider,    Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
+    sliderSetup ( cutoffSlider, Slider::SliderStyle::LinearHorizontal, magicMint, magicMint, false );
+    sliderSetup ( resSlider,    Slider::SliderStyle::LinearVertical,   magicMint, magicMint, false );
     
-    cutoffSlider.setLookAndFeel ( &otherLookAndFeel );
-    resSlider.setLookAndFeel    ( &otherLookAndFeel );
+    cutoffSlider.setLookAndFeel ( &dialLookAndFeel );
+    resSlider.setLookAndFeel    ( &dialLookAndFeel );
     
-    sliderLabelSetup ( cutoffLabel, "Cutoff", fieryRose );
-    sliderLabelSetup ( resLabel, "Resonance", fieryRose );
+    sliderLabelSetup ( cutoffLabel, "Cutoff", textColor, 15.0f );
+    sliderLabelSetup ( resLabel,    "Rez",    textColor, 15.0f );
     
     comboBoxSetup ( filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
     // Filter ADSR Section
-    sliderSetup ( fltAttackSlider,    Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup ( fltDecaySlider,     Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup ( fltSustainSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup ( fltReleaseSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, magicMint, true  );
-    sliderSetup ( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
-    sliderSetup ( adsrToResSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, magicMint, false );
+    sliderSetup ( fltAttackSlider,    Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltDecaySlider,     Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltSustainSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltReleaseSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( adsrToResSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
-    fltAttackSlider.setLookAndFeel    ( &otherLookAndFeel );
-    fltDecaySlider.setLookAndFeel     ( &otherLookAndFeel );
-    fltSustainSlider.setLookAndFeel   ( &otherLookAndFeel );
-    fltReleaseSlider.setLookAndFeel   ( &otherLookAndFeel );
-    adsrToCutoffSlider.setLookAndFeel ( &otherLookAndFeel );
-    adsrToResSlider.setLookAndFeel    ( &otherLookAndFeel );
+    fltAttackSlider.setLookAndFeel    ( &dialLookAndFeel   );
+    fltDecaySlider.setLookAndFeel     ( &dialLookAndFeel   );
+    fltSustainSlider.setLookAndFeel   ( &dialLookAndFeel   );
+    fltReleaseSlider.setLookAndFeel   ( &dialLookAndFeel   );
+    adsrToCutoffSlider.setLookAndFeel ( &dryWetLookAndFeel );
+    adsrToResSlider.setLookAndFeel    ( &dryWetLookAndFeel );
     
-    sliderLabelSetup ( fltAttackLabel,    "A",            fieryRose );
-    sliderLabelSetup ( fltDecayLabel,     "D",            fieryRose );
-    sliderLabelSetup ( fltSustainLabel,   "S",            fieryRose );
-    sliderLabelSetup ( fltReleaseLabel,   "R",            fieryRose );
-    sliderLabelSetup ( adsrToCutoffLabel, "To Cutoff",    fieryRose );
-    sliderLabelSetup ( adsrToResLabel,    "To Resonance", fieryRose );
+    sliderLabelSetup ( fltAttackLabel,    "A",            textColor, 17.0f );
+    sliderLabelSetup ( fltDecayLabel,     "D",            textColor, 17.0f );
+    sliderLabelSetup ( fltSustainLabel,   "S",            textColor, 17.0f );
+    sliderLabelSetup ( fltReleaseLabel,   "R",            textColor, 17.0f );
+    sliderLabelSetup ( adsrToCutoffLabel, "To Cutoff",    textColor, 15.0f );
+    sliderLabelSetup ( adsrToResLabel,    "To Rez",       textColor, 15.0f );
     
     // Filter LFO Section
-    sliderSetup ( lfoShapeSlider,  Slider::SliderStyle::LinearHorizontal, fieryRose, magicMint, false );
-    sliderSetup ( lfoFreqSlider,   Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
-    sliderSetup ( lfoAmountSlider, Slider::SliderStyle::LinearVertical,   fieryRose, magicMint, false );
+    sliderSetup ( lfoShapeSlider,  Slider::SliderStyle::LinearHorizontal, magicMint,  magicMint, false  );
+    sliderSetup ( lfoFreqSlider,   Slider::SliderStyle::LinearVertical,   fieryRose,  fieryRose, false  );
+    sliderSetup ( lfoAmountSlider, Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
     
-    lfoShapeSlider.setLookAndFeel  ( &otherLookAndFeel );
-    lfoFreqSlider.setLookAndFeel   ( &otherLookAndFeel );
-    lfoAmountSlider.setLookAndFeel ( &otherLookAndFeel );
+    lfoShapeSlider.setLookAndFeel  ( &dialLookAndFeel );
+    lfoFreqSlider.setLookAndFeel   ( &dialLookAndFeel );
+    lfoAmountSlider.setLookAndFeel ( &dialLookAndFeel );
     
-    sliderLabelSetup ( lfoShapeLabel,  "LFO Shape", fieryRose );
-    sliderLabelSetup ( lfoFreqLabel,   "Frequency", fieryRose );
-    sliderLabelSetup ( lfoAmountLabel, "To Cutoff", fieryRose );
+    sliderLabelSetup ( lfoShapeLabel,  "LFO Shape", textColor, 17.0f );
+    sliderLabelSetup ( lfoFreqLabel,   "Freq",      textColor, 16.0f );
+    sliderLabelSetup ( lfoAmountLabel, "Amount",    textColor, 16.0f );
     
     
     // Attachments
@@ -193,11 +197,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     masterGainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "master_gain", masterGainSlider );
     
     // Wave Visual
-    oscVisual.setColors    ( magicMint, onyx, fieryRose );
-    subOscVisual.setColors ( magicMint, onyx, fieryRose );
-    lfoVisual.setColors    ( magicMint, onyx, fieryRose );
+    Colour onyx2 = onyx.darker().darker();
     
-    filterVisual.setColors ( magicMint, onyx, onyx, fieryRose );
+    oscVisual.setColors    ( magicMint, onyx, onyx2 );
+    subOscVisual.setColors ( magicMint, onyx, onyx2 );
+    lfoVisual.setColors    ( magicMint, onyx, onyx2 );
+    
+    filterVisual.setColors ( magicMint, onyx2, onyx, onyx2 );
     
     addAndMakeVisible ( oscVisual    );
     addAndMakeVisible ( subOscVisual );
@@ -318,7 +324,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     titleHeader.setBounds ( titleHeaderArea );
     
-    Rectangle<int> footerArea = totalArea.removeFromBottom( 15 );
+    Rectangle<int> footerArea = totalArea.removeFromBottom( 17 );
     
     titleFooter.setBounds( footerArea );
     
@@ -368,18 +374,22 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     mainOscSectionInner.setBounds( mainOscSectionReduced.getX(), mainOscSectionReduced.getY(),
                                    mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
     
-    Rectangle<int> oscGainSpace        = mainOscSectionReduced.removeFromRight  ( oscGainWidth    );
-    Rectangle<int> morphLabelSpace     = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
-    Rectangle<int> morphSliderSpace    = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
-    Rectangle<int> pitchBendLabelSpace = oscGainSpace.removeFromTop             ( gainLabelHeight );
+    Rectangle<int> oscGainSpace         = mainOscSectionReduced.removeFromRight  ( oscGainWidth    );
+    Rectangle<int> morphLabelSpace      = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
+    Rectangle<int> morphLabelSpace2     = morphLabelSpace.removeFromTop          ( morphLabelSpace.getHeight() * 0.5f );
+    Rectangle<int> morphOSCLabelSpace   = morphLabelSpace2.removeFromBottom      ( gainLabelHeight - 10.0f );
+    Rectangle<int> morphMORPHLabelSpace = morphLabelSpace.removeFromTop          ( gainLabelHeight - 10.0f );
+    Rectangle<int> morphSliderSpace     = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
+    Rectangle<int> pitchBendLabelSpace  = oscGainSpace.removeFromTop             ( gainLabelHeight );
     
     oscVisualSpace = mainOscSectionReduced.reduced( sectionSpacerSize );
     
-    oscMorphLabel.setBounds        ( morphLabelSpace     );
-    oscMorphSlider.setBounds       ( morphSliderSpace    );
-    oscVisual.setBounds            ( oscVisualSpace      );
-    pitchBendRangeSlider.setBounds ( oscGainSpace        );
-    pitchBendRangeLabel.setBounds  ( pitchBendLabelSpace );
+    oscMorphLabel.setBounds        ( morphOSCLabelSpace   );
+    oscMorphLabel2.setBounds       ( morphMORPHLabelSpace );
+    oscMorphSlider.setBounds       ( morphSliderSpace     );
+    oscVisual.setBounds            ( oscVisualSpace       );
+    pitchBendRangeSlider.setBounds ( oscGainSpace         );
+    pitchBendRangeLabel.setBounds  ( pitchBendLabelSpace  );
     
     // Sub Osc Section Area (Oscillator subarea)
     Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f );
@@ -387,17 +397,21 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     subOscSectionInner.setBounds ( oscSectionReduced2.getX(), oscSectionReduced2.getY(),
                                    oscSectionReduced2.getWidth(), oscSectionReduced2.getHeight() );
     
-    Rectangle<int> subGainSpace        = oscSectionReduced2.removeFromRight  ( oscGainWidth    );
-    Rectangle<int> subOctaveSpace      = subGainSpace.removeFromBottom       ( subOctaveHeight );
-    Rectangle<int> subGainLabelSpace   = subGainSpace.removeFromTop          ( gainLabelHeight );
-    Rectangle<int> subMorphLabelSpace  = oscSectionReduced2.removeFromLeft   ( morphLabelWidth );
-    Rectangle<int> subMorphSliderSpace = oscSectionReduced2.removeFromBottom ( gainLabelHeight );
+    Rectangle<int> subGainSpace            = oscSectionReduced2.removeFromRight   ( oscGainWidth    );
+    Rectangle<int> subOctaveSpace          = subGainSpace.removeFromBottom        ( subOctaveHeight );
+    Rectangle<int> subGainLabelSpace       = subGainSpace.removeFromTop           ( gainLabelHeight );
+    Rectangle<int> subMorphLabelSpace      = oscSectionReduced2.removeFromLeft    ( morphLabelWidth );
+    Rectangle<int> subMorphLabelSpace2     = subMorphLabelSpace.removeFromTop     ( subMorphLabelSpace.getHeight() * 0.5f );
+    Rectangle<int> subMorphOSCLabelSpace   = subMorphLabelSpace2.removeFromBottom ( gainLabelHeight - 10.0f );
+    Rectangle<int> subMorphMORPHLabelSpace = subMorphLabelSpace.removeFromTop     ( gainLabelHeight - 10.0f );
+    Rectangle<int> subMorphSliderSpace     = oscSectionReduced2.removeFromBottom  ( gainLabelHeight );
     
-    subGainLabel.setBounds   ( subGainLabelSpace   );
-    subMorphLabel.setBounds  ( subMorphLabelSpace  );
-    subOctave.setBounds      ( subOctaveSpace      );
-    subGainSlider.setBounds  ( subGainSpace        );
-    subMorphSlider.setBounds ( subMorphSliderSpace );
+    subGainLabel.setBounds   ( subGainLabelSpace       );
+    subMorphLabel.setBounds  ( subMorphOSCLabelSpace   );
+    subMorphLabel2.setBounds ( subMorphMORPHLabelSpace );
+    subOctave.setBounds      ( subOctaveSpace          );
+    subGainSlider.setBounds  ( subGainSpace            );
+    subMorphSlider.setBounds ( subMorphSliderSpace     );
     subOscVisual.setBounds   ( oscSectionReduced2.reduced( sectionSpacerSize ) );
     
     
@@ -541,7 +555,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     filterSectionInner.setBounds ( filterAreaReduced.getX(), filterAreaReduced.getY(),
                                    filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
     
-    int resWidth = (int)(filterAreaReduced.getWidth() * 0.25f);
+    int resWidth = (int)(filterAreaReduced.getWidth() * 0.125f);
     
     Rectangle<int> resArea         = filterAreaReduced.removeFromRight  ( resWidth        );
     Rectangle<int> resLableArea    = resArea.removeFromTop              ( filtLabelheight );
@@ -552,7 +566,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     resLabel.setBounds     ( resLableArea      );
     resSlider.setBounds    ( resArea           );
     filterType.setBounds   ( fltTypeArea       );
-    cutoffLabel.setBounds  ( cOLabelArea       );
+    cutoffLabel.setBounds  ( cOLabelArea.removeFromBottom( cOLabelArea.getHeight() * 0.5f )       );
     cutoffSlider.setBounds ( fltCOSliderArea   );
     filterVisual.setBounds ( filterAreaReduced );
     
@@ -565,8 +579,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
     Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
-    Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight );
-    Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight );
+    Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight - 9.0f );
+    Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight - 9.0f );
     
     adsrToResLabel.setBounds     ( fltADSRToResLabelArea );
     adsrToResSlider.setBounds    ( fltADSRToResArea      );
@@ -634,7 +648,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
     {
         sliderInstance.setTextBoxStyle ( Slider::TextBoxBelow, false, 40, 20 );
         sliderInstance.setColour       ( Slider::textBoxOutlineColourId, Colour( (uint8)0, (uint8)0, (uint8)0, (uint8)0 ) );
-        sliderInstance.setColour       ( Slider::textBoxTextColourId, orangePeel );
+        sliderInstance.setColour       ( Slider::textBoxTextColourId, textColor );
     }
     else
     {
@@ -661,9 +675,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
 }
 
 
-void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c)
+void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c, float fontSize)
 {
-    labelInstance.setFont              ( Font("helvetica", 12.0f, 1) );
+    labelInstance.setFont              ( Font("helvetica", fontSize, 1) );
     labelInstance.setText              ( labelText, dontSendNotification );
     labelInstance.setJustificationType ( Justification::centred );
     labelInstance.setColour            ( Label::textColourId, c );

@@ -4,7 +4,7 @@
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic"
               companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
-              version="1.1.1" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
+              version="1.1.2" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
               pluginManufacturerCode="FulM">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">

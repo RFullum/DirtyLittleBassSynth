@@ -33,14 +33,16 @@ public:
     void timerCallback() override;
 
 private:
-    OtherLookAndFeel otherLookAndFeel;
+    OtherLookAndFeel dialLookAndFeel;
+    OtherLookAndFeel dryWetLookAndFeel;
+    
     
     /// Sets up slider: Takes reference to a slider, the style of the slider, and the color of the fill
     void sliderSetup(Slider& sliderInstance, Slider::SliderStyle style, Colour& sliderFillColor,
                      Colour& sliderThumbColor, bool showTextBox);
     
     /// Sets up Label: Takes label reference, and the text
-    void sliderLabelSetup(Label& labelInstance, String labelText, Colour& c);
+    void sliderLabelSetup(Label& labelInstance, String labelText, Colour& c, float fontSize);
     
     /// ComboBox setup
     void comboBoxSetup(ComboBox& boxInstance, StringArray boxItems);
@@ -77,7 +79,9 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> subOctaveAttachment;
     
     Label oscMorphLabel;
+    Label oscMorphLabel2;
     Label subMorphLabel;
+    Label subMorphLabel2;
     Label subGainLabel;
     Label pitchBendRangeLabel;
     
@@ -191,6 +195,7 @@ private:
     Colour magicMint;
     Colour fieryRose;
     Colour orangePeel;
+    Colour textColor;
     
     
     // Subsections
