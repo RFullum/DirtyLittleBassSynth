@@ -6,4 +6,4 @@
 */
 
 #include "AppConfig.h"
-#include <juce_audio_plugin_client/juce_audio_plugin_client_RTAS_utils.cpp>
+#include <juce_graphics/juce_graphics_Harfbuzz.cpp>
