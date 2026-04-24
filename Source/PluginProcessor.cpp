@@ -37,86 +37,86 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
 parameters(*this, nullptr, "ParameterTree", {
     // Osc Params
-    std::make_unique<AudioParameterFloat>("osc_morph", "Osc Morph",
+    std::make_unique<AudioParameterFloat>(ParameterID{"osc_morph", 1}, "Osc Morph",
                                           NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
-    std::make_unique<AudioParameterFloat>("sub_osc_morph", "Sub Morph",
+    std::make_unique<AudioParameterFloat>(ParameterID{"sub_osc_morph", 1}, "Sub Morph",
                                           NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
-    std::make_unique<AudioParameterFloat>("sub_osc_gain", "Sub Gain",
+    std::make_unique<AudioParameterFloat>(ParameterID{"sub_osc_gain", 1}, "Sub Gain",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.0f, "gain" ),
-    std::make_unique<AudioParameterFloat>("pitch_bend_range", "Pitch Bend",
+    std::make_unique<AudioParameterFloat>(ParameterID{"pitch_bend_range", 1}, "Pitch Bend",
                                           NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, "semitones" ),
-    std::make_unique<AudioParameterChoice>("sub_osc_octave", "Sub Octave", StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
+    std::make_unique<AudioParameterChoice>(ParameterID{"sub_osc_octave", 1}, "Sub Octave", StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
     
     // Amp ADSR Params
-    std::make_unique<AudioParameterFloat>("amp_attack", "Amp Attack",
+    std::make_unique<AudioParameterFloat>(ParameterID{"amp_attack", 1}, "Amp Attack",
                                           NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.1f, "attack" ),
-    std::make_unique<AudioParameterFloat>("amp_decay", "Amp Decay",
+    std::make_unique<AudioParameterFloat>(ParameterID{"amp_decay", 1}, "Amp Decay",
                                           NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
-    std::make_unique<AudioParameterFloat>("amp_sustain", "Amp Sustain",
+    std::make_unique<AudioParameterFloat>(ParameterID{"amp_sustain", 1}, "Amp Sustain",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.75f, "sustain level" ),
-    std::make_unique<AudioParameterFloat>("amp_release", "Amp Release",
+    std::make_unique<AudioParameterFloat>(ParameterID{"amp_release", 1}, "Amp Release",
                                           NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
     
     // Portament Params
-    std::make_unique<AudioParameterFloat>("porta_time", "Portamento Time",
+    std::make_unique<AudioParameterFloat>(ParameterID{"porta_time", 1}, "Portamento Time",
                                           NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento" ),
     
     // Foldback Distortion Params
-    std::make_unique<AudioParameterFloat>("foldback_dist", "Foldback Distortion",
+    std::make_unique<AudioParameterFloat>(ParameterID{"foldback_dist", 1}, "Foldback Distortion",
                                           NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, "foldback" ),
     
     // Ring Modulator Params
-    std::make_unique<AudioParameterFloat>("ring_mod_pitch", "Ring Mod Pitch",
+    std::make_unique<AudioParameterFloat>(ParameterID{"ring_mod_pitch", 1}, "Ring Mod Pitch",
                                           NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "ring pitch" ),
-    std::make_unique<AudioParameterFloat>("ring_tone", "Ring Mod Tone",
+    std::make_unique<AudioParameterFloat>(ParameterID{"ring_tone", 1}, "Ring Mod Tone",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring tone" ),
-    std::make_unique<AudioParameterFloat>("ring_mod_mix", "Ring Mod Mix",
+    std::make_unique<AudioParameterFloat>(ParameterID{"ring_mod_mix", 1}, "Ring Mod Mix",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring dry/wet" ),
     
     // Frequency Shifter Params
-    std::make_unique<AudioParameterFloat>("freq_shift_pitch", "Freq Shift Pitch",
+    std::make_unique<AudioParameterFloat>(ParameterID{"freq_shift_pitch", 1}, "Freq Shift Pitch",
                                           NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "freq shift pitch" ),
-    std::make_unique<AudioParameterFloat>("freq_shift_mix", "Freq Shift Mix",
+    std::make_unique<AudioParameterFloat>(ParameterID{"freq_shift_mix", 1}, "Freq Shift Mix",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "freq shift dry/wet" ),
     
     // Sample and Hold Params
-    std::make_unique<AudioParameterFloat>("sandh_pitch", "S&H Pitch",
+    std::make_unique<AudioParameterFloat>(ParameterID{"sandh_pitch", 1}, "S&H Pitch",
                                           NormalisableRange<float>(1.0f, 128.0f, 0.01f, 1.0f, false), 128.0f, "s&h pitch" ),
-    std::make_unique<AudioParameterFloat>("sandh_mix", "S&H Mix",
+    std::make_unique<AudioParameterFloat>(ParameterID{"sandh_mix", 1}, "S&H Mix",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "s&h dry/wet" ),
     
     // Filter Params
-    std::make_unique<AudioParameterFloat>("filter_cutoff", "Filter Cutoff",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filter_cutoff", 1}, "Filter Cutoff",
                                           NormalisableRange<float>(1.1f, 100.0f, 0.01f, 0.25f, false), 100.0f, "cutoff" ),
-    std::make_unique<AudioParameterFloat>("filter_res", "Filter Resonance",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filter_res", 1}, "Filter Resonance",
                                           NormalisableRange<float>(1.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "resonance" ),
-    std::make_unique<AudioParameterChoice>("filter_type", "Filter Type",
+    std::make_unique<AudioParameterChoice>(ParameterID{"filter_type", 1}, "Filter Type",
                                            StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ), 0 ),
     
     // Filter Env Params
-    std::make_unique<AudioParameterFloat>("filtEnv_attack", "Filter Attack",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_attack", 1}, "Filter Attack",
                                           NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.01f, "attack" ),
-    std::make_unique<AudioParameterFloat>("filtEnv_decay", "Filter Decay",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_decay", 1}, "Filter Decay",
                                           NormalisableRange<float>(0.1f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
-    std::make_unique<AudioParameterFloat>("filtEnv_sustain", "Filter Sustain",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_sustain", 1}, "Filter Sustain",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 1.0f, "sustain level" ),
-    std::make_unique<AudioParameterFloat>("filtEnv_release", "Filter Release",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_release", 1}, "Filter Release",
                                           NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
-    std::make_unique<AudioParameterFloat>("filtEnv_COAmt", "Filter Env to Cutoff",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_COAmt", 1}, "Filter Env to Cutoff",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to cutoff" ),
-    std::make_unique<AudioParameterFloat>("filtEnv_ResAmt", "Filter Env to Res",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_ResAmt", 1}, "Filter Env to Res",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to resonance" ),
     
     // Filter LFO Params
-    std::make_unique<AudioParameterFloat>("filtLFO_freq", "Filter LFO Freq",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_freq", 1}, "Filter LFO Freq",
                                           NormalisableRange<float>(0.01f, 15.0f, 0.01f, 1.0f, false), 1.0f, "lfo freq" ),
-    std::make_unique<AudioParameterFloat>("filtLFO_amt", "Filter LFO Amount",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_amt", 1}, "Filter LFO Amount",
                                           NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "lfo amt" ),
-    std::make_unique<AudioParameterFloat>("filtLFO_shape", "Filter LFO Shape",
+    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_shape", 1}, "Filter LFO Shape",
                                           NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "lfo shape" ),
     
     // Master Gain
-    std::make_unique<AudioParameterFloat>("master_gain", "Master Gain",
+    std::make_unique<AudioParameterFloat>(ParameterID{"master_gain", 1}, "Master Gain",
                                           NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, "master gain" )
 })
 
