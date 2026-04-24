@@ -1,2 +1,99 @@
-/Builds/*
+# ---- JUCE / Projucer ----
+/Builds/
+*.jucer.bak
+
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ---- Xcode ----
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ---- Visual Studio / Windows ----
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opendb
+*.VC.db
+*.VC.opendb
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+ipch/
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*.tlog
+*.log
+
+# ---- C/C++ build artifacts ----
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.exp
+*.ilk
+*.idb
+*.pdb
+*.gch
+*.pch
+
+# ---- Plugin binaries (built artifacts) ----
+*.vst
+*.vst3
+*.component
+*.aaxplugin
+
+# ---- CMake (in case you migrate later) ----
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+_deps/
+
+# ---- IDEs / Editors ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cache/
+compile_commands.json
+
+# ---- Misc ----
+*.bak
+*.tmp
+*.orig
 /B150987_AudioProgramming_Assignment_3.pdf
