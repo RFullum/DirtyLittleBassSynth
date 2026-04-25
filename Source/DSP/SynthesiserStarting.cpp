@@ -38,7 +38,7 @@ void MySynthVoice::Init(float SR, int blockSize)
     wtSine .SetSampleRate(sampleRate);
     wtSaw  .SetSampleRate(sampleRate);
     wtSpike.SetSampleRate(sampleRate);
-    subOsc .setSampleRate(sampleRate);
+    subOsc .SetSampleRate(sampleRate);
     env    .setSampleRate(sampleRate);
     
     ringMod  .setSampleRate(sampleRate);
@@ -52,14 +52,14 @@ void MySynthVoice::Init(float SR, int blockSize)
     filtEnv           .setSampleRate(sampleRate);
     filtLFOClickingEnv.setSampleRate(sampleRate);
     
-    filterLFO.setSampleRate(sampleRate);
+    filterLFO.SetSampleRate(sampleRate);
     
     wtSine.PopulateWavetable();
     wtSaw.PopulateWavetable();
     wtSpike.PopulateWavetable();
-    subOsc.populateWavetable();
+    subOsc.PopulateWavetable();
     
-    filterLFO.populateWavetable();
+    filterLFO.PopulateWavetable();
     
     SetPortamentoTime(sampleRate, 0.02f);
     portamento.setCurrentAndTargetValue(0.0f);
@@ -344,14 +344,14 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
             wtSine .SetIncrement(finalFreq);
             wtSaw  .SetIncrement(finalFreq);
             wtSpike.SetIncrement(finalFreq);
-            subOsc .setIncrement(finalFreq, incrementDenominator);
+            subOsc .SetIncrement(finalFreq, incrementDenominator);
 
             previousFinalFreq = finalFreq;
         }
 
         if (previousIncrementDenom != incrementDenominator)
         {
-            subOsc.setIncrement(finalFreq, incrementDenominator);
+            subOsc.SetIncrement(finalFreq, incrementDenominator);
             previousIncrementDenom = incrementDenominator;
         }
 
@@ -435,7 +435,7 @@ void MySynthVoice::PrepareDspForBlock()
     ringMod.setRingToneSlider(ringModTone);
     freqShift.oscMorph(oscillatorMorph);
     freqShift.modFreq(freq, freqShiftPitch);
-    filterLFO.setIncrement(*filtLFOFreq, 1.0f);
+    filterLFO.SetIncrement(*filtLFOFreq, 1.0f);
 
     // Smoothed-value targets for the block.
     foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
@@ -475,14 +475,14 @@ float MySynthVoice::ProcessModifierChain(float input, float envVal)
 
 float MySynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &levels)
 {
-    return subOsc.process(levels.subSin, levels.subSquare, levels.subSaw)
+    return subOsc.Process(levels.subSin, levels.subSquare, levels.subSaw)
          * subGainSmooth.getNextValue()
          * envVal;
 }
 
 float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels)
 {
-    const float filtLFOSample      = filterLFO.process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
+    const float filtLFOSample      = filterLFO.Process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
 
     switch ((int) *filterSelector)
@@ -569,7 +569,7 @@ void MySynthVoice::PopulateShape(juce::AudioBuffer<float> &buf, float sin, float
         float centerWaveVal;
         
         centerWaveVal = isSubOsc == true
-                            ? spikeSqr * subOsc.getSquareWavetableValue(i)
+                            ? spikeSqr * subOsc.GetSquareWavetableValue(i)
                             : spikeSqr * wtSpike.GetWavetableSampleValue(i);
         
         float sampleVal = sinVal + centerWaveVal + sawVal;
