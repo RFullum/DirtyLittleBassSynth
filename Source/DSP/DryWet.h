@@ -12,18 +12,8 @@
 
 //============================================================
 
-class DryWet
+/// Linear dry/wet crossfade. mix=0 returns dry, mix=1 returns wet.
+inline float DryWetMix(float dry, float wet, float mix)
 {
-public:
-    DryWet();
-    ~DryWet();
-    
-    float DryWetMix(float dryIn, float wetIn, float mixVal);
-    
-private:
-    float DryWetCalculation();
-
-    float drySample;
-    float wetSample;
-    float mixFactor;
-};
+    return dry * (1.0f - mix) + wet * mix;
+}

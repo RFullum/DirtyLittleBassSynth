@@ -61,7 +61,7 @@ float RingMod::RingModProcess()
 {
     float sinVal = wtSine.Process();
     float sqVal  = wtSquare.Process();
-    float outVal = toneControl.DryWetMix(sinVal, sqVal, ringToneSlider);
+    float outVal = DryWetMix(sinVal, sqVal, ringToneSlider);
     
     return outVal;
 }

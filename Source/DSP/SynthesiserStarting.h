@@ -253,8 +253,7 @@ private:
     
     // Ring Mod Instances
     RingMod ringMod;
-    DryWet ringModMix;
-    
+
     // Ring Mod Parameters
     std::atomic<float>         *ringModPitch;
     std::atomic<float>         *ringModTone;
@@ -263,8 +262,7 @@ private:
     
     // Frequency Shifter Instances
     FrequencyShifter freqShift;
-    DryWet freqShiftMix;
-    
+
     // Frequency Shifter Parameters
     std::atomic<float>         *freqShiftPitch;
     std::atomic<float>         *freqShiftMixVal;
@@ -272,8 +270,7 @@ private:
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
-    DryWet sAndHMix;
-    
+
     // Sample and Hold Parameters
     std::atomic<float>         *sAndHPitch;
     std::atomic<float>         *sAndHMixVal;

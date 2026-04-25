@@ -42,8 +42,6 @@ private:
     Wavetable wtSine;
     SquareWavetable wtSquare;
 
-    DryWet toneControl;
-
     float ringToneSlider;
 };
 

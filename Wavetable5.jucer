@@ -43,8 +43,6 @@
               file="Source/DSP/Modifiers.cpp"/>
         <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0"
               file="Source/DSP/Modifiers.h"/>
-        <FILE id="bRJ8MC" name="DryWet.cpp" compile="1" resource="0"
-              file="Source/DSP/DryWet.cpp"/>
         <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0"
               file="Source/DSP/DryWet.h"/>
       </GROUP>
