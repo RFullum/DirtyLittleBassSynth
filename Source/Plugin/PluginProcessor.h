@@ -138,6 +138,10 @@ private:
     // Instance of SynthesiZer class
     juce::Synthesiser synth;
     int voiceCount = 1;
+
+    // Typed pointers to voices owned by `synth`. Populated in the constructor so
+    // processBlock can avoid dynamic_cast on the audio thread.
+    std::vector<MySynthVoice*> typedVoices;
     
     
     

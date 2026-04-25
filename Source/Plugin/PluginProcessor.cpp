@@ -173,20 +173,21 @@ parameters(*this, nullptr, "ParameterTree", {
     // Master Gain Parameter Construction
     masterGainParameter = parameters.getRawParameterValue("master_gain");
     
-    // Create Voices for each voice count
-    for (int i=0; i<voiceCount; i++)
+    // Create voices and cache typed pointers (synth owns them for our lifetime).
+    typedVoices.reserve(voiceCount);
+    for (int i = 0; i < voiceCount; ++i)
     {
-        synth.addVoice( new MySynthVoice() );
+        auto* voice = new MySynthVoice();
+        typedVoices.push_back(voice);
+        synth.addVoice(voice);
     }
-    
+
     // Add sound for synth class
     synth.addSound( new MySynthSound() );
-    
+
     // Set Parameter Pointers for each voice
-    for (int i=0; i<voiceCount; i++)
+    for (auto* v : typedVoices)
     {
-        MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        
         v->setOscParamPointers           (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->setAmpADSRParamPointers       (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
         v->setPortamentoParamPointers    (portaTimeParameter);
@@ -273,13 +274,9 @@ void DirtyLittleBassSynthAudioProcessor::changeProgramName (int index, const juc
 void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     synth.setCurrentPlaybackSampleRate(sampleRate);
-    
-    // Pass sampleRate to each voice's init()
-    for (int i=0; i<voiceCount; i++)
-    {
-        MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
+
+    for (auto* v : typedVoices)
         v->init(sampleRate, samplesPerBlock);
-    }
 }
 
 void DirtyLittleBassSynthAudioProcessor::releaseResources()
@@ -318,15 +315,13 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
     // Hand off DSP to juce::Synthesiser class
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-    
-    for (int i=0; i<voiceCount; i++)
+
+    for (auto* v : typedVoices)
     {
-        MySynthVoice* v = dynamic_cast<MySynthVoice*>(synth.getVoice(i));
-        
         mainOscVisualBuffer = v->oscVisualBuffer();
         subOscVisualBuffer  = v->subVisualBuffer();
         lfoOscVisualBuffer  = v->lfoVisualBuffer();
-        
+
         v->updatePitchBendRange(*pitchBendParameter);
         //v->setPlayheadInfo(playHeadInfo);
     }
