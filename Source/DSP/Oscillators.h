@@ -13,9 +13,7 @@
 #include <JuceHeader.h>
 
 
-//
 //=== Phasor Class ===================================================
-//
 
 class Phasor
 {
@@ -59,9 +57,7 @@ private:
 };
 
 
-//
 //=== TriOsc Class ===================================================
-//
 
 class TriOsc : public Phasor
 {
@@ -69,9 +65,7 @@ class TriOsc : public Phasor
 };
 
 
-//
 //=== SinOsc Class ===================================================
-//
 
 class SinOsc : public Phasor
 {
@@ -86,9 +80,7 @@ private:
 };
 
 
-//
 //=== SquareOsc Class ===================================================
-//
 
 class SquareOsc : public Phasor
 {
@@ -105,20 +97,15 @@ private:
     float pulseWidth;
 };
 
-
-//
 //=== SawtoothOsc Class ===================================================
-//
+
 class SawtoothOsc : public Phasor
 {
     float output(float p) override;
     
 };
 
-
-//
 //=== SparseLFO Class ===================================================
-//
 
 /// Sine wave, silent after the pulseWidth
 class SparseLFO : public Phasor
@@ -139,9 +126,7 @@ private:
 };
 
 
-//
 //=== SquareIOLFO Class ===================================================
-//
 
 /// Outputs 1.0f for pulseWidth, then outputs 0.0f
 class SquareIOLFO : public Phasor

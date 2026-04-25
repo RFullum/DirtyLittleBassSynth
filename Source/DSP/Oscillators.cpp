@@ -10,13 +10,15 @@
 
 #include "Oscillators.h"
 
-
-//
 //=== Phasor Class ===================================================
-//
 
 /// Constructor
-Phasor::Phasor() : frequency(0.0f), sampleRate(44100.0f), phase(0.0f), phaseDelta(0.0f) {}
+Phasor::Phasor()
+: frequency(0.0f)
+, sampleRate(44100.0f)
+, phase(0.0f)
+, phaseDelta(0.0f)
+{}
 
 /// virtual desctructor
 Phasor::~Phasor() {}
@@ -63,36 +65,31 @@ float Phasor::getSR()
     return sampleRate;
 }
 
-
-//
 //=== TriOsc Class ===================================================
-//
 
 float TriOsc::output(float p)
 {
     return fabsf(p - 0.5f) - 0.5f;
 }
 
-
-//
 //=== SinOsc Class ===================================================
-//
 
 /// Constructor
-SinOsc::SinOsc() : TWOPI(2.0f * M_PI) {}
+SinOsc::SinOsc()
+: TWOPI(2.0f * M_PI)
+{}
 
 float SinOsc::output(float p)
 {
     return std::sin(p * TWOPI);
 }
 
-
-//
 //=== SquareOsc Class ===================================================
-//
 
 /// Constructor
-SquareOsc::SquareOsc() : pulseWidth(0.5f) {}
+SquareOsc::SquareOsc()
+: pulseWidth(0.5f)
+{}
 
 float SquareOsc::output(float p)
 {
@@ -110,23 +107,20 @@ void SquareOsc::setPulseWidth(float pw)
     pulseWidth = pw;
 }
 
-
-//
 //=== SawtoothOsc Class ===================================================
-//
 
 float SawtoothOsc::output(float p)
 {
     return p -= 0.5f;
 }
 
-
-//
 //=== SparseLFO Class ===================================================
-//
 
 /// Constructor: Sine wave, silent after the pulseWidth
-SparseLFO::SparseLFO() : pulseWidth(0.5f), TWOPI(2.0f * M_PI) {}
+SparseLFO::SparseLFO()
+: pulseWidth(0.5f)
+, TWOPI(2.0f * M_PI)
+{}
 
 float SparseLFO::output(float p)
 {
@@ -144,13 +138,12 @@ void SparseLFO::setPulseWidth(float pw)
     pulseWidth = pw;
 }
 
-
-//
 //=== SquareIOLFO Class ===================================================
-//
 
 /// Constructor: Outputs 1.0f for pulseWidth, then outputs 0.0f
-SquareIOLFO::SquareIOLFO() : pulseWidth(0.5f) {}
+SquareIOLFO::SquareIOLFO()
+: pulseWidth(0.5f)
+{}
 
 float SquareIOLFO::output(float p)
 {
