@@ -56,12 +56,7 @@ public:
     float getOutLevel();
     
     juce::AudioProcessorValueTreeState parameters;
-    
-    // WaveDrawing
-    juce::AudioBuffer<float> mainOscVisualBuffer;
-    juce::AudioBuffer<float> subOscVisualBuffer;
-    juce::AudioBuffer<float> lfoOscVisualBuffer;
-    
+
     // Metering
     juce::AudioBuffer<float> outputLevelBuffer;
 

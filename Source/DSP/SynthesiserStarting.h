@@ -138,13 +138,6 @@ public:
      @return sound cast as a pointer to an instance of MySynthSound
      */
     bool canPlaySound (juce::SynthesiserSound* sound) override;
-    
-    //--------------------------------------------------------------------------
-    
-    juce::AudioBuffer<float> oscVisualBuffer();
-    juce::AudioBuffer<float> subVisualBuffer();
-    juce::AudioBuffer<float> lfoVisualBuffer();
-    
 
 private:
     // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
@@ -157,7 +150,6 @@ private:
 
     // Block-stage helpers (called once per block from renderNextBlock).
     BlockLevels ComputeBlockLevels();
-    void        PopulateVisualBuffers(const BlockLevels &levels);
     void        PrepareDspForBlock(const BlockLevels &levels);
 
     // Per-sample-stage helpers (called once per sample from the render loop).
@@ -165,9 +157,6 @@ private:
     float ProcessModifierChain(float input, float envVal);
     float ProcessSubOscSample(float envVal, const BlockLevels &levels);
     float ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels);
-
-    /// Populates the waveshape buffers
-    void PopulateShape(juce::AudioBuffer<float> &buf, float sin, float spikeSqr, float saw, bool isSubOsc);
 
     // Block-cached parameter values (loaded once per block in PrepareDspForBlock so
     // the per-sample loop never dereferences std::atomic<float>* on the audio thread).
@@ -316,10 +305,4 @@ private:
     // Master Sample Rate
     float sampleRate;
     int samplesPerBlock;
-    
-    // Waveshape Drawing
-    juce::AudioBuffer<float> mainOscShape;
-    juce::AudioBuffer<float> subOscShape;
-    juce::AudioBuffer<float> lfoOscShape;
-
 };

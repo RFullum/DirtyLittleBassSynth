@@ -270,14 +270,7 @@ void DirtyLittleBassSynthAudioProcessor::processBlock (juce::AudioBuffer<float>&
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     for (auto* v : typedVoices)
-    {
-        mainOscVisualBuffer = v->oscVisualBuffer();
-        subOscVisualBuffer  = v->subVisualBuffer();
-        lfoOscVisualBuffer  = v->lfoVisualBuffer();
-
         v->updatePitchBendRange(*pitchBendParameter);
-        //v->setPlayheadInfo(playHeadInfo);
-    }
     
     // Transport info
     //updateCurrentTimeInfoFromHost();

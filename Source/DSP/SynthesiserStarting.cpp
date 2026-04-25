@@ -86,11 +86,6 @@ void MySynthVoice::Init(float SR, int blockSize)
     
     velocitySmooth.reset(sampleRate, 0.01f);
     velocitySmooth.setCurrentAndTargetValue(1.0f);
-    
-    // WaveShape Drawing
-    mainOscShape.setSize(1, 1024);
-    subOscShape.setSize(1, 1024);
-    lfoOscShape.setSize(1, 1024);
 }
 
 void MySynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
@@ -316,12 +311,10 @@ void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 
 void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples)
 {
-    const auto levels = ComputeBlockLevels();
-    PopulateVisualBuffers(levels);
-
     if (!playing)
         return;
 
+    const auto levels = ComputeBlockLevels();
     PrepareDspForBlock(levels);
 
     // Per-sample change-detection state for increment updates.
@@ -417,17 +410,6 @@ MySynthVoice::BlockLevels MySynthVoice::ComputeBlockLevels()
     };
 }
 
-void MySynthVoice::PopulateVisualBuffers(const BlockLevels &levels)
-{
-    mainOscShape.clear();
-    subOscShape.clear();
-    lfoOscShape.clear();
-
-    PopulateShape(mainOscShape, levels.mainSin, levels.mainSpike,  levels.mainSaw, false);
-    PopulateShape(subOscShape,  levels.subSin,  levels.subSquare,  levels.subSaw,  true);
-    PopulateShape(lfoOscShape,  levels.lfoSin,  levels.lfoSquare,  levels.lfoSaw,  true);
-}
-
 void MySynthVoice::PrepareDspForBlock(const BlockLevels &levels)
 {
     // Cache atomic-loaded params used per-sample as plain floats (avoids std::atomic
@@ -520,41 +502,5 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
 bool MySynthVoice::canPlaySound (juce::SynthesiserSound* sound)
 {
     return dynamic_cast<MySynthSound*>(sound) != nullptr;
-}
-
-/// Returns the buffer of the main oscillator shape
-juce::AudioBuffer<float> MySynthVoice::oscVisualBuffer()
-{
-    return mainOscShape;
-}
-
-/// Returns the buffer of the sub oscillator shape
-juce::AudioBuffer<float> MySynthVoice::subVisualBuffer()
-{
-    return subOscShape;
-}
-
-juce::AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
-{
-    return lfoOscShape;
-}
-
-/// Populates shape buffer with morphed wave values
-void MySynthVoice::PopulateShape(juce::AudioBuffer<float> &buf, float sin, float spikeSqr, float saw, bool isSubOsc)
-{
-    for (int i=0; i<buf.getNumSamples(); i++)
-    {
-        float sinVal = sin * wtSine.GetWavetableSampleValue(i);
-        float sawVal = saw * wtSaw.GetWavetableSampleValue(i);
-        float centerWaveVal;
-        
-        centerWaveVal = isSubOsc == true
-                            ? spikeSqr * subOsc.GetSquareWavetableValue(i)
-                            : spikeSqr * wtSpike.GetWavetableSampleValue(i);
-        
-        float sampleVal = sinVal + centerWaveVal + sawVal;
-        
-        buf.addSample(0, i, sampleVal);
-    }
 }
 

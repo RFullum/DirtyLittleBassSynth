@@ -249,9 +249,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     // Wave Visual
     juce::Colour onyx2 = onyx.darker().darker();
     
-    oscVisual.setColors   (magicMint, onyx, onyx2);
-    subOscVisual.setColors(magicMint, onyx, onyx2);
-    lfoVisual.setColors   (magicMint, onyx, onyx2);
+    oscVisual   .SetColors(magicMint, onyx, onyx2);
+    subOscVisual.SetColors(magicMint, onyx, onyx2);
+    lfoVisual   .SetColors(magicMint, onyx, onyx2);
+
+    oscVisual   .Init(processor.parameters.getRawParameterValue("osc_morph"),     /*useSquare*/ false);
+    subOscVisual.Init(processor.parameters.getRawParameterValue("sub_osc_morph"), /*useSquare*/ true);
+    lfoVisual   .Init(processor.parameters.getRawParameterValue("filtLFO_shape"), /*useSquare*/ true);
     
     filterVisual.setColors(magicMint, onyx2, onyx, onyx2);
     
@@ -313,9 +317,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
-    oscVisual   .setOscShapeLine(processor.mainOscVisualBuffer);
-    subOscVisual.setOscShapeLine(processor.subOscVisualBuffer);
-    lfoVisual   .setOscShapeLine(processor.lfoOscVisualBuffer);
+    oscVisual   .Update();
+    subOscVisual.Update();
+    lfoVisual   .Update();
     
     filterVisual.drawFilterShape(filterType.getSelectedId()
                                  , (float)cutoffSlider.getValue()
