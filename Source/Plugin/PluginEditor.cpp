@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -113,7 +103,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     ComboBoxSetup(subOctave, juce::StringArray({"0", "-1 Oct", "-2 Oct"}));
     
-    // Osc juce::ADSR Section
+    // Osc ADSR Section
     SliderSetup(oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
     SliderSetup(oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
     SliderSetup(oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
@@ -171,7 +161,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     ComboBoxSetup(filterType, juce::StringArray({"-12LPF", "-24LPF", "-48LPF", "Notch"}));
     
-    // Filter juce::ADSR Section
+    // Filter ADSR Section
     SliderSetup(fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
     SliderSetup(fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
     SliderSetup(fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true);
@@ -380,7 +370,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     outMeter.setBounds        (meterOutArea);
     
     // Top Row of sections area: juce::Rectangle across top containing
-    // Osc Section, juce::ADSR Section, and Modifiers Section
+    // Osc Section, ADSR Section, and Modifiers Section
     int topRowHeight = (int)(getHeight() * 0.66f);
     
     juce::Rectangle<int> topSectionArea = totalArea.removeFromTop(topRowHeight);
@@ -581,7 +571,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     
     // Bottom Section: juce::Rectangle across bottom containing Filter Section,
-    // Filter juce::ADSR Section, and Filter LFO section
+    // Filter ADSR Section, and Filter LFO section
     auto bottomSectionArea = totalArea.reduced(sectionSpacerSize);
     
     bottomSectionInner.setBounds(bottomSectionArea.getX()
@@ -617,7 +607,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     cutoffSlider.setBounds(fltCOSliderArea);
     filterVisual.setBounds(filterAreaReduced);
     
-    // Filter juce::ADSR Area
+    // Filter ADSR Area
     juce::Rectangle<int> fltADSRArea        = bottomSectionArea.removeFromLeft(lowerGridWidth);
     juce::Rectangle<int> fltADSRAreaReduced = fltADSRArea.reduced(sectionSpacerSize);
     

@@ -90,7 +90,6 @@ class SquareWavetable
     : public Wavetable
 {
 public:
-    /// Constructor & Destructor
     SquareWavetable();
     ~SquareWavetable();
     

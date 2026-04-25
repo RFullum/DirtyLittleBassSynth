@@ -12,7 +12,6 @@
 
 //=== Phasor Class ===================================================
 
-/// Constructor
 Phasor::Phasor()
 : frequency(0.0f)
 , sampleRate(44100.0f)
@@ -20,50 +19,36 @@ Phasor::Phasor()
 , phaseDelta(0.0f)
 {}
 
-/// virtual desctructor
 Phasor::~Phasor() {}
 
-/// update the phase and output the next sample from the oscillator
 float Phasor::process()
 {
     phase += phaseDelta;
-    
+
     if (phase > 1.0f)
         phase -= 1.0f;
-    
+
     return output(phase);
 }
 
-/// Phase
 float Phasor::output(float p)
 {
     return p;
 }
 
-/// Sets sampleRate
 void Phasor::setSampleRate(float SR)
 {
     sampleRate = SR;
 }
 
-/// Sets oscillator frequency
 void Phasor::setFrequency(float freq)
 {
     frequency  = freq;
     phaseDelta = frequency / sampleRate;
 }
 
-/// Returns frequency
-float Phasor::getFreq()
-{
-    return frequency;
-}
-
-/// Returns sampleRate
-float Phasor::getSR()
-{
-    return sampleRate;
-}
+float Phasor::getFreq() { return frequency;  }
+float Phasor::getSR()   { return sampleRate; }
 
 //=== TriOsc Class ===================================================
 
@@ -74,7 +59,6 @@ float TriOsc::output(float p)
 
 //=== SinOsc Class ===================================================
 
-/// Constructor
 SinOsc::SinOsc()
 : TWOPI(2.0f * M_PI)
 {}
@@ -86,7 +70,6 @@ float SinOsc::output(float p)
 
 //=== SquareOsc Class ===================================================
 
-/// Constructor
 SquareOsc::SquareOsc()
 : pulseWidth(0.5f)
 {}
@@ -94,14 +77,13 @@ SquareOsc::SquareOsc()
 float SquareOsc::output(float p)
 {
     float outVal = 0.5;
-    
+
     if (p > pulseWidth)
         outVal = -0.5;
-    
+
     return outVal;
 }
 
-/// Sets pulseWidth
 void SquareOsc::setPulseWidth(float pw)
 {
     pulseWidth = pw;
@@ -116,7 +98,6 @@ float SawtoothOsc::output(float p)
 
 //=== SparseLFO Class ===================================================
 
-/// Constructor: Sine wave, silent after the pulseWidth
 SparseLFO::SparseLFO()
 : pulseWidth(0.5f)
 , TWOPI(2.0f * M_PI)
@@ -125,14 +106,13 @@ SparseLFO::SparseLFO()
 float SparseLFO::output(float p)
 {
     float outVal = sin(p * 0.5f * TWOPI / pulseWidth);
-    
+
     if (p > pulseWidth)
         outVal = 0.0f;
-    
-    return outVal*outVal;
+
+    return outVal * outVal;
 }
 
-/// Sets pulseWidth: float between 0.0 and 1.0
 void SparseLFO::setPulseWidth(float pw)
 {
     pulseWidth = pw;
@@ -140,7 +120,6 @@ void SparseLFO::setPulseWidth(float pw)
 
 //=== SquareIOLFO Class ===================================================
 
-/// Constructor: Outputs 1.0f for pulseWidth, then outputs 0.0f
 SquareIOLFO::SquareIOLFO()
 : pulseWidth(0.5f)
 {}
@@ -148,10 +127,10 @@ SquareIOLFO::SquareIOLFO()
 float SquareIOLFO::output(float p)
 {
     float outVal = 1.0f;
-    
+
     if (p > pulseWidth)
         outVal = 0.0f;
-    
+
     return outVal;
 }
 

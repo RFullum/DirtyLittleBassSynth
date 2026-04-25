@@ -101,36 +101,32 @@ void Wavetable::PopulateWT()
 
 float Wavetable::LagrangeInterpolation()
 {
-    float frac = readHeadPos - floor(readHeadPos);  // Position between indexes
-    float sum  = 0.0f;                              // initialize sum
-    
+    float frac = readHeadPos - floor(readHeadPos);  // fractional position between indexes
+    float sum  = 0.0f;
+
     for (int i = -2; i < 2; i++)
     {
-        int index = floor(readHeadPos + (i + 1));   // index after readHeadPos in time
-        
-        index %= waveTableSize;                     // wrap index
-        
+        int index = floor(readHeadPos + (i + 1));
+        index %= waveTableSize;
+
         if (index < 0.0f)
-        {
             index += waveTableSize;
-        }
-        
-        float outVal      = waveTable[index];       // value at wt[index] to outVal
-        float denominator = 1.0f;                   // initialize denominator
-        
-        // interpolate algorithm
+
+        float outVal      = waveTable[index];
+        float denominator = 1.0f;
+
         for (int j = -2; j < 2; j++)
         {
-            if (j != i)                             // denominator can't be 0
+            if (j != i)     // denominator can't be 0
             {
                 outVal      *= (frac - j);
                 denominator *= (i - j);
             }
         }
-        
+
         sum += outVal / denominator;
     }
-    
+
     return sum;
 }
 

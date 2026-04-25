@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include <JuceHeader.h>
@@ -49,15 +39,11 @@ public:
 
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
-    
-    /// Gets transport/bpm/etc info from host
-    //void updateCurrentTimeInfoFromHost();
-    
+
     float getOutLevel();
-    
+
     juce::AudioProcessorValueTreeState parameters;
 
-    // Metering
     juce::AudioBuffer<float> outputLevelBuffer;
 
 private:
@@ -73,10 +59,7 @@ private:
     std::atomic<float>* ampReleaseParameter;
     
     std::atomic<float>* foldbackDistParameter;
-    
-    // DryWet parameters
-    // std::atomic<float>* dryWetMixParameter;
-    
+
     std::atomic<float>* ringModPitchParameter;
     std::atomic<float>* ringToneParameter;
     std::atomic<float>* ringModMixParameter;
@@ -105,10 +88,7 @@ private:
     std::atomic<float>* portaTimeParameter;
     
     std::atomic<float>* masterGainParameter;
-    
-    // Transport Info
-    //juce::AudioPlayHead::CurrentPositionInfo playHeadInfo;
-    
+
     juce::Synthesiser synth;
     int voiceCount = 1;
 

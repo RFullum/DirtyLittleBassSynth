@@ -139,8 +139,6 @@ void OtherLookAndFeel::drawLinearSlider (juce::Graphics& g, int x, int y, int wi
             maxPoint = { kx, ky };
         }
 
-        //auto thumbWidth = getSliderThumbRadius (slider);
-
         valueTrack.startNewSubPath (minPoint);
         valueTrack.lineTo (isThreeVal ? thumbPoint : maxPoint);
         g.setColour (slider.findColour (juce::Slider::trackColourId));
@@ -149,7 +147,6 @@ void OtherLookAndFeel::drawLinearSlider (juce::Graphics& g, int x, int y, int wi
         if (! isTwoVal)
         {
             g.setColour (slider.findColour (juce::Slider::thumbColourId));
-            //g.fillEllipse (juce::Rectangle<float> (static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre (isThreeVal ? thumbPoint : maxPoint));
             g.fillRect( juce::Rectangle<float> (static_cast<float> (trackWidth), 6.0f).withCentre (isThreeVal ? thumbPoint : maxPoint));
         }
 

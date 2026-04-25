@@ -1,28 +1,5 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
-//==============================================================================
-
-//
-// ParameterFloats:
-// id, description, min, max, default
-// ~OR~
-// id, description, normalisableRange(min, max, increment, skew, symmetric),
-//                 default, param label, param category, string from value, string to value
-//
-// ParameterChoices:
-// id, descript, choices (juce::StringArray), default index of juce::StringArray
-//
 
 //==============================================================================
 
@@ -48,7 +25,7 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"pitch_bend_range", 1}, "Pitch Bend", juce::NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, "semitones"),
                     std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"sub_osc_octave",   1}, "Sub Octave", juce::StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
                     
-                    // Amp juce::ADSR Params
+                    // Amp ADSR Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_attack",  1}, "Amp Attack",  juce::NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.1f,  "attack"),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_decay",   1}, "Amp Decay",   juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f,  0.325f, false), 1.0f,  "decay"),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_sustain", 1}, "Amp Sustain", juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  4.0f,   false), 0.75f, "sustain level"),
@@ -145,9 +122,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
         synth.addVoice(voice);
     }
 
-    synth.addSound( new BassSynthSound() );
+    synth.addSound(new BassSynthSound());
 
-    // Set Parameter Pointers for each voice
     for (auto* v : typedVoices)
     {
         v->SetOscParamPointers          (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
@@ -206,8 +182,8 @@ double DirtyLittleBassSynthAudioProcessor::getTailLengthSeconds() const
 
 int DirtyLittleBassSynthAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    // Some hosts don't cope well with 0 programs.
+    return 1;
 }
 
 int DirtyLittleBassSynthAudioProcessor::getCurrentProgram()
@@ -232,26 +208,19 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int s
         v->Init(sampleRate, samplesPerBlock);
 }
 
-void DirtyLittleBassSynthAudioProcessor::releaseResources()
-{
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
-}
+void DirtyLittleBassSynthAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
+    juce::ignoreUnused(layouts);
     return true;
   #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -262,83 +231,46 @@ bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayou
 }
 #endif
 
-void DirtyLittleBassSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
 
-    // Hand off DSP to juce::Synthesiser class
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     for (auto* v : typedVoices)
         v->updatePitchBendRange(*pitchBendParameter);
-    
-    // Transport info
-    //updateCurrentTimeInfoFromHost();
-    
-    // Level Metering
+
     outputLevelBuffer.clear();
     outputLevelBuffer = buffer;
 }
 
 bool DirtyLittleBassSynthAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
 {
-    //return new GenericAudioProcessorEditor (*this);
     return new DirtyLittleBassSynthAudioProcessorEditor(*this);
 }
 
 void DirtyLittleBassSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
-    // getStateInformation
     auto state = parameters.copyState();
-    std::unique_ptr<juce::XmlElement> xml (state.createXml());
-    copyXmlToBinary (*xml, destData);
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
-    // setStateInformation
-    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
     if (xmlState.get() != nullptr)
     {
-        if (xmlState->hasTagName (parameters.state.getType()))
-        {
-            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
-        }
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
     }
 }
 
-//==============================================================================
-/*
-void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
-{
-    const auto newInfo = [&]
-    {
-        if (auto* ph = getPlayHead())
-        {
-            
-            
-            juce::AudioPlayHead::CurrentPositionInfo result;
-
-            if (ph->getCurrentPosition (result))
-                return result;
-        }
-
-        // If the host fails to provide the current time, we'll just use default values
-        juce::AudioPlayHead::CurrentPositionInfo result;
-        result.resetToDefault();
-        return result;
-    }();
-
-    playHeadInfo.bpm = newInfo.bpm;
-}
-*/
-
-// This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new DirtyLittleBassSynthAudioProcessor();

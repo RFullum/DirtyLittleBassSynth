@@ -21,7 +21,6 @@ OutMeter::OutMeter() : outLevel(0.0f), levelClipping(false), heightMult(0.0f),
 OutMeter::~OutMeter() {}
 
 
-/// Sets the colors of the level and clipping meter
 void OutMeter::setColors(juce::Colour &levelColor, juce::Colour &clipColor)
 {
     clipBackRed    = clipColor.darker().darker();
@@ -30,28 +29,19 @@ void OutMeter::setColors(juce::Colour &levelColor, juce::Colour &clipColor)
     levelGreen     = levelColor.brighter().brighter();
 }
 
-void OutMeter::paint (juce::Graphics& g)
+void OutMeter::paint(juce::Graphics& g)
 {
-    //juce::Colour clipBackRed    = juce::Colour( (juce::uint8)97,  (juce::uint8)9,   (juce::uint8)5 );
-    //juce::Colour clippingRed    = juce::Colour( (juce::uint8)255, (juce::uint8)52,  (juce::uint8)41 );
-    //juce::Colour levelBackGreen = juce::Colour( (juce::uint8)10,  (juce::uint8)87,  (juce::uint8)9 );
-    //juce::Colour levelGreen     = juce::Colour( (juce::uint8)27,  (juce::uint8)255, (juce::uint8)23 );
-    
-    if (levelClipping)
-        g.setColour( clippingRed );     // Bright Red
-    else
-        g.setColour ( clipBackRed );    // Dark Red
-    
-    g.fillRect  ( leftChannelClipBack );
-    g.fillRect  ( rightChannelClipBack );
-    
-    g.setColour ( levelBackGreen );     // Dark Green
-    g.fillRect  ( leftChannelBack );
-    g.fillRect  ( rightChannelBack );
-    
-    g.setColour ( levelGreen );
-    g.fillRect  ( leftChannelLevel );
-    g.fillRect  ( rightChannelLevel );
+    g.setColour(levelClipping ? clippingRed : clipBackRed);
+    g.fillRect(leftChannelClipBack);
+    g.fillRect(rightChannelClipBack);
+
+    g.setColour(levelBackGreen);
+    g.fillRect(leftChannelBack);
+    g.fillRect(rightChannelBack);
+
+    g.setColour(levelGreen);
+    g.fillRect(leftChannelLevel);
+    g.fillRect(rightChannelLevel);
 }
 
 void OutMeter::resized()
@@ -90,8 +80,8 @@ void OutMeter::resized()
 void OutMeter::outMeterLevel(float level, float sampleRate)
 {
     float multiplier = (level < 1.0f) ? level : 1.0f;
-    
-    // *** THIS NEEDS TO CHANGE THE DECAY FACTORS TOO ***
+
+    // TODO: should also recompute decayFactorRise/decayFactorFall when SR changes
     SR = (SR != sampleRate) ? sampleRate : SR;
     
     heightMultiplier(multiplier);

@@ -173,7 +173,6 @@ void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
     masterGainControl = gainAmt;
 }
 
-/// synth class automatically sends newPitchWheelValue from its render block
 void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
     if (previousPitchWheelValue != newPitchWheelValue)
@@ -184,7 +183,6 @@ void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
     }
 }
 
-/// Pitch wheel position to pitchBend up or down
 void BassSynthVoice::SetPitchBend(int pitchWheelPos)
 {
     if (pitchWheelPos > 8192)
@@ -193,13 +191,11 @@ void BassSynthVoice::SetPitchBend(int pitchWheelPos)
         pitchBend = float(8192 - pitchWheelPos) / -8192;
 }
 
-/// calculates pitch wheel's shift in hz
 float BassSynthVoice::CalcShiftHz(float centsOffset)
 {
     return std::powf(2.0f, centsOffset / 1200.0f);
 }
 
-/// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
 float BassSynthVoice::PitchBendCents()
 {
     if (pitchBend >= 0.0f)
@@ -208,7 +204,6 @@ float BassSynthVoice::PitchBendCents()
         return pitchBend * pitchBendDownSemitones * 100;
 }
 
-/// Updates the number of semitones the pitchWheel will bend
 void BassSynthVoice::updatePitchBendRange(float newRange)
 {
     pitchBendUpSemitones   = newRange;
@@ -217,78 +212,66 @@ void BassSynthVoice::updatePitchBendRange(float newRange)
 
 void BassSynthVoice::SetAmpADSRValues()
 {
-    envParams.attack  = *ampAttack;     // time (sec)
-    envParams.decay   = *ampDecay;      // time (sec)
-    envParams.sustain = *ampSustain;    // amplitude 0.0f to 1.0f
-    envParams.release = *ampRelease;    // time (sec)
-    
+    envParams.attack  = *ampAttack;     // sec
+    envParams.decay   = *ampDecay;      // sec
+    envParams.sustain = *ampSustain;    // amplitude 0..1
+    envParams.release = *ampRelease;    // sec
+
     env.setParameters(envParams);
 }
 
-/// Sets juce::ADSR values for filter
 void BassSynthVoice::SetFilterADSRValues()
 {
     juce::ADSR::Parameters filtEnvParams;
-    
+
     filtEnvParams.attack  = *filterAttack;
     filtEnvParams.decay   = *filterDecay;
     filtEnvParams.sustain = *filterSustain;
     filtEnvParams.release = *filterRelease;
-    
+
     filtEnv.setParameters(filtEnvParams);
 }
 
-/// Applies juce::ADSR to LFO to avoid clicking
+/// Short ADSR applied to the filter LFO so it fades in/out instead of clicking.
 void BassSynthVoice::SetFiltLFOClickValues()
 {
     juce::ADSR::Parameters filtLFOClickParams;
-    
+
     filtLFOClickParams.attack  = 0.02f;
     filtLFOClickParams.decay   = 0.5f;
     filtLFOClickParams.sustain = 1.0f;
     filtLFOClickParams.release = 0.02f;
-    
+
     filtLFOClickingEnv.setParameters(filtLFOClickParams);
 }
 
-/// Sets up the portamentoTime
 void BassSynthVoice::SetPortamentoTime(float SR, float portaTime)
 {
     portamento.reset(SR, portaTime);
 }
 
-void BassSynthVoice::startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
+void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
 {
     playing = true;
     ending  = false;
-    
+
     SetPortamentoTime(sampleRate, *portamentoAmount);
-    
-    // Sets Amp juce::ADSR for each note
     SetAmpADSRValues();
     SetFilterADSRValues();
-    
-    // Set Sub Octave
+
     incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
-    
-    // This just ensures the wheel position is set before the freq is calculated.
-    // The actual pitch bend frequency multiplication happens in the render block.
+
+    // Set the wheel position before the freq is calculated; the actual pitch-bend
+    // multiplication happens in renderNextBlock.
     SetPitchBend(currentPitchWheelPosition);
-    
-    // Converts incoming MIDI note to frequency
+
     freq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-    
     portamento.setTargetValue(freq);
-    
-    // Envelopes
-    // Amp envelope
-    env.noteOn();   // Start envelope
-    
-    //Filter Envelope
+
+    env.noteOn();
     filtEnv.noteOn();
     filtLFOClickingEnv.noteOn();
-    
-    // Velocity
+
     vel = velocity;
 }
 
@@ -296,7 +279,6 @@ void BassSynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
     if (allowTailOff)
     {
-        // ends envelope over release time
         env.noteOff();
         filtEnv.noteOff();
         filtLFOClickingEnv.noteOff();
@@ -326,11 +308,9 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
 
     for (int sampleIndex = startSample; sampleIndex < startSample + numSamples; ++sampleIndex)
     {
-        // Final playback frequency (portamento + pitch bend).
         const float portaFreq = portamento.getNextValue();
         const float finalFreq = portaFreq * shiftHz;
 
-        // Update wavetable increments only when the playback freq changes.
         if (previousFinalFreq != finalFreq)
         {
             wtSine .SetIncrement(finalFreq);
@@ -347,7 +327,6 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
             previousIncrementDenom = incrementDenominator;
         }
 
-        // Update modifier-osc increments when freq or their pitch params change.
         if (previousFinalFreq != finalFreq || prevRingModPitch != ringModPitchVal)
         {
             ringMod.ModFreq(finalFreq, ringModPitchVal);
@@ -363,15 +342,13 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         if (previousFinalFreq != finalFreq || prevSAndHPitch != sAndHPitchVal)
         {
             sAndH.ModFreq(finalFreq, sAndHPitchVal);
-            prevFreqShiftPitch = sAndHPitchVal;     // TODO: BUG ALERT! check prevFreqShiftPitch should be prevSAndHPitch
+            prevFreqShiftPitch = sAndHPitchVal;     // TODO: BUG ALERT! prevFreqShiftPitch should be prevSAndHPitch
         }
 
-        // Envelopes (advance once per sample).
         const float envVal        = env.getNextSample();
         const float filtEnvVal    = filtEnv.getNextSample();
         const float filtLFOEnvVal = filtLFOClickingEnv.getNextSample();
 
-        // DSP pipeline.
         const float mainSample     = ProcessMainOscSample(envVal, levels);
         const float modifiedSample = ProcessModifierChain(mainSample, envVal);
         const float subSample      = ProcessSubOscSample(envVal, levels);
@@ -382,9 +359,8 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
                                    * velocitySmooth.getNextValue();
 
         for (int chan = 0; chan < outputBuffer.getNumChannels(); ++chan)
-            outputBuffer.addSample (chan, sampleIndex, outputSample);
+            outputBuffer.addSample(chan, sampleIndex, outputSample);
 
-        // End-of-note: reset envelopes once they've decayed.
         if (ending && envVal < 0.001f)
         {
             env.reset();
@@ -412,8 +388,8 @@ BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 
 void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
 {
-    // Cache atomic-loaded params used per-sample as plain floats (avoids std::atomic
-    // dereferences on the audio thread).
+    // Cache atomic-loaded params as plain floats so the per-sample loop never derefs
+    // std::atomic<float>* on the audio thread.
     ringModPitchVal           = *ringModPitch;
     freqShiftPitchVal         = *freqShiftPitch;
     sAndHPitchVal             = *sAndHPitch;
@@ -423,8 +399,6 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     filterADSRResAmountVal    = *filterADSRResAmount;
     filtLFOAmtVal             = *filtLFOAmt;
 
-    // Pick the active filter once per block; ProcessFilter is virtual so the
-    // per-sample loop dispatches without re-branching.
     switch (filterSelectorIndex)
     {
         case 1:  activeFilter = &fourPoleLPF;  break;
@@ -434,13 +408,11 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
         default: activeFilter = &twoPoleLPF;   break;
     }
 
-    // Block-level mod/oscillator setup.
     ringMod  .SetRingToneSlider(*ringModTone);
     freqShift.OscMorph(levels.mainSin, levels.mainSpike, levels.mainSaw);
     freqShift.ModFreq(freq, freqShiftPitchVal);
     filterLFO.SetIncrement(*filtLFOFreq, 1.0f);
 
-    // Smoothed-value targets for the block.
     foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
     subGainSmooth           .setTargetValue(*subGain);
     ringMixSmooth           .setTargetValue(*ringMix);
@@ -457,11 +429,11 @@ float BassSynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& leve
     const float spikeSample = wtSpike.Process() * levels.mainSpike * envVal;
     const float sawSample   = wtSaw.Process()   * levels.mainSaw   * envVal;
 
-    // Sum of three shapes scaled so simultaneous shapes don't clip, then foldback.
+    // 0.5 prevents two summed shapes from clipping; foldback is sin-based wave folding.
     const float oscSample = (sinSample + spikeSample + sawSample) * 0.5f;
     const float foldback  = foldbackDistortionSmooth.getNextValue();
 
-    return std::sin (oscSample * foldback);
+    return std::sin(oscSample * foldback);
 }
 
 float BassSynthVoice::ProcessModifierChain(float input, float envVal)
@@ -499,7 +471,7 @@ float BassSynthVoice::ProcessFilterChain(float input, float filtEnvVal, float fi
                                        , filtLFOAmtVal);
 }
 
-bool BassSynthVoice::canPlaySound (juce::SynthesiserSound* sound)
+bool BassSynthVoice::canPlaySound(juce::SynthesiserSound* sound)
 {
     return dynamic_cast<BassSynthSound*>(sound) != nullptr;
 }

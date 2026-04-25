@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include <JuceHeader.h>
@@ -175,8 +165,8 @@ private:
     juce::Rectangle<float> oscSectionInner;       // Oscillators
     juce::Rectangle<float> mainOscSectionInner;   // Main Oscillator
     juce::Rectangle<float> subOscSectionInner;    // Sub Oscillator
-    juce::Rectangle<float> oscADSRSectionInner;   // juce::ADSR
-    juce::Rectangle<float> oscADSRSlidersInner;   // juce::ADSR
+    juce::Rectangle<float> oscADSRSectionInner;   // ADSR
+    juce::Rectangle<float> oscADSRSlidersInner;   // ADSR
     juce::Rectangle<float> adsrRotaryInner;       // Porta/Foldback
     juce::Rectangle<float> modSectionInner;       // Modifiers
     juce::Rectangle<float> ringModSectionInner;   // Ring Mod
@@ -184,7 +174,7 @@ private:
     juce::Rectangle<float> sAndHSectionInner;     // S&H
     juce::Rectangle<float> bottomSectionInner;    // Entire Bottom
     juce::Rectangle<float> filterSectionInner;    // Filter
-    juce::Rectangle<float> fltADSRSectionInner;   // Filter juce::ADSR
+    juce::Rectangle<float> fltADSRSectionInner;   // Filter ADSR
     juce::Rectangle<float> lfoSectionInner;       // LFO
     
     DirtyLittleBassSynthAudioProcessor& processor;

@@ -30,22 +30,14 @@ public:
 
 //======================================================
 
-/*!
- @class BassSynthVoice
- @abstract struct defining the DSP associated with a specific voice.
- @discussion multiple BassSynthVoice objects will be created by the juce::Synthesiser so that it can be played polyphicially
- 
- @namespace none
- @updated 2019-06-18
- */
 class BassSynthVoice
     : public juce::SynthesiserVoice
 {
 public:
     BassSynthVoice();
-    
+
     void Init(float SR, int blockSize);
-    
+
     void SetOscParamPointers(std::atomic<float>   *oscMorphIn
                              , std::atomic<float> *subOscMorphIn
                              , std::atomic<float> *subOscGainIn
@@ -79,65 +71,22 @@ public:
     void SetFilterADSRValues();
     void SetFiltLFOClickValues();
     void SetPortamentoTime(float SR, float portaTime);
-    
-    
-    //--------------------------------------------------------------------------
-    /**
-     What should be done when a note starts
 
-     @param midiNoteNumber
-     @param velocity
-     @param juce::SynthesiserSound unused variable
-     @param / unused variable
-     */
     void startNote(int                       midiNoteNumber
                    , float                   velocity
                    , juce::SynthesiserSound*
                    , int                     currentPitchWheelPosition) override;
-    
-    //--------------------------------------------------------------------------
-    /// Called when a MIDI noteOff message is received
-    /**
-     What should be done when a note stops
 
-     @param / unused variable
-     @param allowTailOff bool to decie if the should be any volume decay
-     */
     void stopNote(float /*velocity*/, bool allowTailOff) override;
-    
-    //--------------------------------------------------------------------------
-    /**
-     The Main DSP Block: Put My DSP code in here
-     
-     If the sound that the voice is playing finishes during the course of this rendered block, it must call clearCurrentNote(), to tell the synthesizer that it has finished
 
-     @param outputBuffer pointer to output
-     @param startSample position of first sample in buffer
-     @param numSamples number of smaples in output buffer
-     */
     void renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples) override;
-    
-    //--------------------------------------------------------------------------
-    
-    // Public Pitch Bend Methods
-    /// synth class automatically sends newPitchWheelValue from its render block
-    void pitchWheelMoved(int newPitchWheelValue) override; //{}
-    
-    /// Updates the number of semitones the pitchWheel will bend
-    void updatePitchBendRange(float newRange);
-    
-    
-    //--------------------------------------------------------------------------
-    void controllerMoved(int, int) override {}
-    //--------------------------------------------------------------------------
-    
-    /**
-     Can this voice play a sound. I wouldn't worry about this for the time being
 
-     @param sound a juce::SynthesiserSound* base class pointer
-     @return sound cast as a pointer to an instance of BassSynthSound
-     */
-    bool canPlaySound (juce::SynthesiserSound* sound) override;
+    void pitchWheelMoved(int newPitchWheelValue) override;
+    void updatePitchBendRange(float newRange);
+
+    void controllerMoved(int, int) override {}
+
+    bool canPlaySound(juce::SynthesiserSound* sound) override;
 
 private:
     // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
@@ -173,24 +122,16 @@ private:
     // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.
     Filter *activeFilter = nullptr;
 
-    // Private Pitch Bend methods
-    /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
     float PitchBendCents();
-    
-    /// calculates pitch wheel's shift in hz
     float CalcShiftHz(float centsOffset);
-    
-    /// Pitch wheel position to pitchBend up or down
-    void SetPitchBend(int pitchWheelPos);
-    
-    //--------------------------------------------------------------------------
-    // Are the voices playing:
+    void  SetPitchBend(int pitchWheelPos);
+
     bool playing;
     bool ending;
-    
+
     // Playback note
     float freq;
-    float vel;                        // velocity 0-1
+    float vel;                  // velocity 0-1
     float pitchBend;
     float shiftHz;
     float previousPitchWheelValue;
@@ -198,11 +139,7 @@ private:
     float pitchBendUpSemitones;
     float pitchBendDownSemitones;
     float lastRecievedPitchWheelValue;
-    
-    // Host Transport Data
-    //float hostBPM = 120.0f;
-    
-    /// juce::ADSR envelope instances
+
     juce::ADSR env;
     juce::ADSR filtEnv;
     juce::ADSR filtLFOClickingEnv;
