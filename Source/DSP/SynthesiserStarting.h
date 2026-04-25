@@ -182,7 +182,7 @@ private:
 
     // Selected filter for the current block. Set in PrepareDspForBlock so the per-sample
     // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.
-    TwoPoleLPF *activeFilter = nullptr;
+    Filter *activeFilter = nullptr;
 
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend

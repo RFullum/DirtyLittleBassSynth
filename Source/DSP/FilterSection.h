@@ -14,13 +14,52 @@
 
 //==============================================================================
 
-class TwoPoleLPF
+/// Shared cutoff/resonance/LFO modulation state used by the IIR-based filters.
+struct FilterModulation
+{
+    // Static config
+    float sampleRate    = 44100.0f;
+    float maxCutoff     = 17000.0f;
+    float minCutoff     = 20.0f;
+    float maxResonance  = 3.0f;
+
+    // User-set base values
+    float cutoffFreq = 1000.0f;
+    float resonance  = 1.0f;
+
+    // Output of ApplyEnvAndLfo (drives IIR coefficients)
+    float cutoffLFO      = 1000.0f;
+    float resonanceScale = 0.1f;
+
+    // Coefficient-update change-detection
+    float cutoffLFOPrev      = 1000.0f;
+    float resonanceScalePrev = 0.1f;
+
+    /// Maps cutoff slider position 1..100 to (noteFreq..maxCutoff). Key-tracked.
+    void KeyMapTracked(float noteFreq, float cutoffPos);
+
+    /// Maps cutoff slider position 1..100 to (20Hz..maxCutoff). Not key-tracked.
+    void KeyMapFixed(float cutoffPos);
+
+    /// Combines envelope and LFO modulation onto cutoffLFO and resonanceScale.
+    void ApplyEnvAndLfo(float envVal, float amtToCO, float amtToRes, float lfoVal, float amtToLFO);
+
+    /// True if cutoffLFO or resonanceScale changed since the last AcknowledgeUpdate.
+    bool CoefficientsNeedUpdate() const;
+
+    /// Stores current cutoffLFO / resonanceScale as the new "previous" baseline.
+    void AcknowledgeUpdate();
+};
+
+//==============================================================================
+
+/// Abstract filter interface used by MySynthVoice's per-block activeFilter dispatch.
+class Filter
 {
 public:
-    TwoPoleLPF();
-    virtual ~TwoPoleLPF();
+    virtual ~Filter() = default;
 
-    virtual void  SetSampleRate(float SR);
+    virtual void  SetSampleRate(float SR) = 0;
     virtual float ProcessFilter(float   noteFreq
                                 , float cutoff
                                 , float res
@@ -29,46 +68,37 @@ public:
                                 , float amtToCO
                                 , float amtToRes
                                 , float lfoVal
-                                , float amtToLFO);
-
-protected:
-    void KeyMap(float frqncy, float CO);
-    void FilterEnvControl(float envVal, float amtToCO, float amtToRes);
-    void FilterLFOControl();
-
-    float sampleRate;
-    float maxCutoff;
-    float minCutoff;
-    float maxResonance;
-
-    float cutoffFreq;
-    float resonance;
-    float inputSample;
-
-    float cutoffScale;
-    float resonanceScale;
-    float resonanceScalePrev;
-
-    float envelopeVal;
-    float lfoValue;
-    float cutoffLFO;
-    float cutoffLFOPrev;
-
-    float cutoffSend;
-    float resSend;
-    float lfoSend;
-
-private:
-    float Process();
-
-    juce::IIRFilter lowPass1;
+                                , float amtToLFO) = 0;
 };
 
+//==============================================================================
+
+class TwoPoleLPF
+    : public Filter
+{
+public:
+    TwoPoleLPF();
+
+    void  SetSampleRate(float SR) override;
+    float ProcessFilter(float   noteFreq
+                        , float cutoff
+                        , float res
+                        , float sampleIn
+                        , float envVal
+                        , float amtToCO
+                        , float amtToRes
+                        , float lfoVal
+                        , float amtToLFO) override;
+
+private:
+    FilterModulation mod;
+    juce::IIRFilter  lowPass;
+};
 
 //==============================================================================
 
 class FourPoleLPF
-    : public TwoPoleLPF
+    : public Filter
 {
 public:
     void  SetSampleRate(float SR) override;
@@ -83,15 +113,14 @@ public:
                         , float amtToLFO) override;
 
 private:
-    TwoPoleLPF twoPole1;
-    TwoPoleLPF twoPole2;
+    TwoPoleLPF stage1;
+    TwoPoleLPF stage2;
 };
-
 
 //==============================================================================
 
 class EightPoleLPF
-    : public FourPoleLPF
+    : public Filter
 {
 public:
     void  SetSampleRate(float SR) override;
@@ -106,14 +135,14 @@ public:
                         , float amtToLFO) override;
 
 private:
-    FourPoleLPF fourPole1;
-    FourPoleLPF fourPole2;
+    FourPoleLPF stage1;
+    FourPoleLPF stage2;
 };
 
 //==============================================================================
 
 class NotchFilter
-    : public TwoPoleLPF
+    : public Filter
 {
 public:
     void  SetSampleRate(float SR) override;
@@ -128,7 +157,6 @@ public:
                         , float amtToLFO) override;
 
 private:
-    float ProcessNotch();
-
-    juce::IIRFilter notchFilter;
+    FilterModulation mod;
+    juce::IIRFilter  notchFilter;
 };
