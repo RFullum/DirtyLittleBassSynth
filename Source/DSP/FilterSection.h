@@ -53,7 +53,7 @@ struct FilterModulation
 
 //==============================================================================
 
-/// Abstract filter interface used by MySynthVoice's per-block activeFilter dispatch.
+/// Abstract filter interface used by BassSynthVoice's per-block activeFilter dispatch.
 class Filter
 {
 public:

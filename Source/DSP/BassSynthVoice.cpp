@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-    SynthesiserStarting.cpp
+    BassSynthVoice.cpp
     Created: 26 Dec 2020 5:24:06pm
     Author:  Robert Fullum
 
   ==============================================================================
 */
 
-#include "SynthesiserStarting.h"
+#include "BassSynthVoice.h"
 
 
 
-MySynthVoice::MySynthVoice()
+BassSynthVoice::BassSynthVoice()
 : playing(false)
 , ending(false)
 , freq(0.0f)
@@ -29,7 +29,7 @@ MySynthVoice::MySynthVoice()
 , samplesPerBlock(0)
 {}
 
-void MySynthVoice::Init(float SR, int blockSize)
+void BassSynthVoice::Init(float SR, int blockSize)
 {
     sampleRate      = SR;
     samplesPerBlock = blockSize;
@@ -88,7 +88,7 @@ void MySynthVoice::Init(float SR, int blockSize)
     velocitySmooth.setCurrentAndTargetValue(1.0f);
 }
 
-void MySynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
+void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
                                        , std::atomic<float> *subOscMorphIn
                                        , std::atomic<float> *subOscGainIn
                                        , std::atomic<float> *subOctaveIn)
@@ -99,7 +99,7 @@ void MySynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
     subOctave       = subOctaveIn;
 }
 
-void MySynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
+void BassSynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
                                            , std::atomic<float> *decay
                                            , std::atomic<float> *sustain
                                            , std::atomic<float> *release)
@@ -110,38 +110,38 @@ void MySynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
     ampRelease = release;
 }
 
-void MySynthVoice::SetDistParamPointers(std::atomic<float> *foldDistIn)
+void BassSynthVoice::SetDistParamPointers(std::atomic<float> *foldDistIn)
 {
     foldbackDistortion = foldDistIn;
 }
 
-void MySynthVoice::SetRingModParamPointers(std::atomic<float>   *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
+void BassSynthVoice::SetRingModParamPointers(std::atomic<float>   *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
 {
     ringModPitch = ringPitch;
     ringModTone  = ringTone;
     ringMix      = mix;
 }
 
-void MySynthVoice::SetFreqShiftParamPointers(std::atomic<float> *shiftPitch, std::atomic<float> *mix)
+void BassSynthVoice::SetFreqShiftParamPointers(std::atomic<float> *shiftPitch, std::atomic<float> *mix)
 {
     freqShiftPitch  = shiftPitch;
     freqShiftMixVal = mix;
 }
 
-void MySynthVoice::SetSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
+void BassSynthVoice::SetSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
 {
     sAndHPitch  = pitch;
     sAndHMixVal = mix;
 }
 
-void MySynthVoice::SetFilterParamPointers(std::atomic<float> *cutoff, std::atomic<float> *res, std::atomic<float> *type)
+void BassSynthVoice::SetFilterParamPointers(std::atomic<float> *cutoff, std::atomic<float> *res, std::atomic<float> *type)
 {
     filterCutoffFreq = cutoff;
     filterResonance  = res;
     filterSelector   = type;
 }
 
-void MySynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
+void BassSynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
                                               , std::atomic<float> *decay
                                               , std::atomic<float> *sustain
                                               , std::atomic<float> *release
@@ -156,25 +156,25 @@ void MySynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
     filterADSRResAmount    = amtRes;
 }
 
-void MySynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::atomic<float> *amount, std::atomic<float> *shape)
+void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::atomic<float> *amount, std::atomic<float> *shape)
 {
     filtLFOFreq  = freq;
     filtLFOAmt   = amount;
     filtLFOShape = shape;
 }
 
-void MySynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
+void BassSynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
 {
     portamentoAmount = portaTime;
 }
 
-void MySynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
+void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
 {
     masterGainControl = gainAmt;
 }
 
 /// synth class automatically sends newPitchWheelValue from its render block
-void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
+void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
     if (previousPitchWheelValue != newPitchWheelValue)
     {
@@ -185,7 +185,7 @@ void MySynthVoice::pitchWheelMoved(int newPitchWheelValue)
 }
 
 /// Pitch wheel position to pitchBend up or down
-void MySynthVoice::SetPitchBend(int pitchWheelPos)
+void BassSynthVoice::SetPitchBend(int pitchWheelPos)
 {
     if (pitchWheelPos > 8192)
         pitchBend = float(pitchWheelPos - 8192) / (16383 - 8192);
@@ -194,13 +194,13 @@ void MySynthVoice::SetPitchBend(int pitchWheelPos)
 }
 
 /// calculates pitch wheel's shift in hz
-float MySynthVoice::CalcShiftHz(float centsOffset)
+float BassSynthVoice::CalcShiftHz(float centsOffset)
 {
     return std::powf(2.0f, centsOffset / 1200.0f);
 }
 
 /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
-float MySynthVoice::PitchBendCents()
+float BassSynthVoice::PitchBendCents()
 {
     if (pitchBend >= 0.0f)
         return pitchBend * pitchBendUpSemitones * 100;
@@ -209,13 +209,13 @@ float MySynthVoice::PitchBendCents()
 }
 
 /// Updates the number of semitones the pitchWheel will bend
-void MySynthVoice::updatePitchBendRange(float newRange)
+void BassSynthVoice::updatePitchBendRange(float newRange)
 {
     pitchBendUpSemitones   = newRange;
     pitchBendDownSemitones = newRange;
 }
 
-void MySynthVoice::SetAmpADSRValues()
+void BassSynthVoice::SetAmpADSRValues()
 {
     envParams.attack  = *ampAttack;     // time (sec)
     envParams.decay   = *ampDecay;      // time (sec)
@@ -226,7 +226,7 @@ void MySynthVoice::SetAmpADSRValues()
 }
 
 /// Sets juce::ADSR values for filter
-void MySynthVoice::SetFilterADSRValues()
+void BassSynthVoice::SetFilterADSRValues()
 {
     juce::ADSR::Parameters filtEnvParams;
     
@@ -239,7 +239,7 @@ void MySynthVoice::SetFilterADSRValues()
 }
 
 /// Applies juce::ADSR to LFO to avoid clicking
-void MySynthVoice::SetFiltLFOClickValues()
+void BassSynthVoice::SetFiltLFOClickValues()
 {
     juce::ADSR::Parameters filtLFOClickParams;
     
@@ -252,12 +252,12 @@ void MySynthVoice::SetFiltLFOClickValues()
 }
 
 /// Sets up the portamentoTime
-void MySynthVoice::SetPortamentoTime(float SR, float portaTime)
+void BassSynthVoice::SetPortamentoTime(float SR, float portaTime)
 {
     portamento.reset(SR, portaTime);
 }
 
-void MySynthVoice::startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
+void BassSynthVoice::startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
 {
     playing = true;
     ending  = false;
@@ -292,7 +292,7 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, juce::Synthesi
     vel = velocity;
 }
 
-void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
+void BassSynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
     if (allowTailOff)
     {
@@ -309,7 +309,7 @@ void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
     }
 }
 
-void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples)
+void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples)
 {
     if (!playing)
         return;
@@ -395,7 +395,7 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
     }
 }
 
-MySynthVoice::BlockLevels MySynthVoice::ComputeBlockLevels()
+BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 {
     return {
         oscParamControl.sinMorphGain      (oscillatorMorph),
@@ -410,7 +410,7 @@ MySynthVoice::BlockLevels MySynthVoice::ComputeBlockLevels()
     };
 }
 
-void MySynthVoice::PrepareDspForBlock(const BlockLevels &levels)
+void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
 {
     // Cache atomic-loaded params used per-sample as plain floats (avoids std::atomic
     // dereferences on the audio thread).
@@ -451,7 +451,7 @@ void MySynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     filterCutoffFreqSmooth  .setTargetValue(*filterCutoffFreq);
 }
 
-float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels)
+float BassSynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels)
 {
     const float sinSample   = wtSine.Process()  * levels.mainSin   * envVal;
     const float spikeSample = wtSpike.Process() * levels.mainSpike * envVal;
@@ -464,7 +464,7 @@ float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels
     return std::sin (oscSample * foldback);
 }
 
-float MySynthVoice::ProcessModifierChain(float input, float envVal)
+float BassSynthVoice::ProcessModifierChain(float input, float envVal)
 {
     const float ringSample = input * ringMod.Process() * envVal;
     const float oscRing    = DryWetMix(input, ringSample, ringMixSmooth.getNextValue());
@@ -476,14 +476,14 @@ float MySynthVoice::ProcessModifierChain(float input, float envVal)
     return DryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
 }
 
-float MySynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &levels)
+float BassSynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &levels)
 {
     return subOsc.Process(levels.subSin, levels.subSquare, levels.subSaw)
          * subGainSmooth.getNextValue()
          * envVal;
 }
 
-float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels)
+float BassSynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels)
 {
     const float filtLFOSample      = filterLFO.Process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
@@ -499,8 +499,8 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
                                        , filtLFOAmtVal);
 }
 
-bool MySynthVoice::canPlaySound (juce::SynthesiserSound* sound)
+bool BassSynthVoice::canPlaySound (juce::SynthesiserSound* sound)
 {
-    return dynamic_cast<MySynthSound*>(sound) != nullptr;
+    return dynamic_cast<BassSynthSound*>(sound) != nullptr;
 }
 

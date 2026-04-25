@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "SynthesiserStarting.h"
+#include "BassSynthVoice.h"
 
 //==============================================================================
 
@@ -114,7 +114,7 @@ private:
 
     // Typed pointers to voices owned by `synth`. Populated in the constructor so
     // processBlock can avoid dynamic_cast on the audio thread.
-    std::vector<MySynthVoice*> typedVoices;
+    std::vector<BassSynthVoice*> typedVoices;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessor)
 };

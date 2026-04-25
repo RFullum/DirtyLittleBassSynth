@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    MySynthesiser.h
+    BassSynthVoice.h
     Created: 7 Mar 2020 4:27:57pm
     Author:  Tom Mudd, modified by Robert Fullum
 
@@ -20,7 +20,7 @@
 
 //======================================================
 
-class MySynthSound
+class BassSynthSound
     : public juce::SynthesiserSound
 {
 public:
@@ -31,18 +31,18 @@ public:
 //======================================================
 
 /*!
- @class MySynthVoice
+ @class BassSynthVoice
  @abstract struct defining the DSP associated with a specific voice.
- @discussion multiple MySynthVoice objects will be created by the juce::Synthesiser so that it can be played polyphicially
+ @discussion multiple BassSynthVoice objects will be created by the juce::Synthesiser so that it can be played polyphicially
  
  @namespace none
  @updated 2019-06-18
  */
-class MySynthVoice
+class BassSynthVoice
     : public juce::SynthesiserVoice
 {
 public:
-    MySynthVoice();
+    BassSynthVoice();
     
     void Init(float SR, int blockSize);
     
@@ -109,7 +109,7 @@ public:
     /**
      The Main DSP Block: Put My DSP code in here
      
-     If the sound that the voice is playing finishes during the course of this rendered block, it must call clearCurrentNote(), to tell the synthesiser that it has finished
+     If the sound that the voice is playing finishes during the course of this rendered block, it must call clearCurrentNote(), to tell the synthesizer that it has finished
 
      @param outputBuffer pointer to output
      @param startSample position of first sample in buffer
@@ -135,7 +135,7 @@ public:
      Can this voice play a sound. I wouldn't worry about this for the time being
 
      @param sound a juce::SynthesiserSound* base class pointer
-     @return sound cast as a pointer to an instance of MySynthSound
+     @return sound cast as a pointer to an instance of BassSynthSound
      */
     bool canPlaySound (juce::SynthesiserSound* sound) override;
 

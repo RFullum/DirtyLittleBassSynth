@@ -55,7 +55,7 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_release", 1}, "Amp Release", juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f,  0.325f, false), 0.1f,  "release"),
                     
                     // Portament Params
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"porta_time", 1}, "Portamento juce::Time", juce::NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento"),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"porta_time", 1}, "Portamento Time", juce::NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento"),
                     
                     // Foldback Distortion Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"foldback_dist", 1}, "Foldback Distortion", juce::NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, "foldback"),
@@ -140,12 +140,12 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     typedVoices.reserve(voiceCount);
     for (int i = 0; i < voiceCount; ++i)
     {
-        auto* voice = new MySynthVoice();
+        auto* voice = new BassSynthVoice();
         typedVoices.push_back(voice);
         synth.addVoice(voice);
     }
 
-    synth.addSound( new MySynthSound() );
+    synth.addSound( new BassSynthSound() );
 
     // Set Parameter Pointers for each voice
     for (auto* v : typedVoices)

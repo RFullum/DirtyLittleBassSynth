@@ -19,10 +19,10 @@
               file="Source/Plugin/PluginEditor.h"/>
       </GROUP>
       <GROUP id="{A1000002-0000-0000-0000-000000000002}" name="DSP">
-        <FILE id="ibUAx0" name="SynthesiserStarting.cpp" compile="1" resource="0"
-              file="Source/DSP/SynthesiserStarting.cpp"/>
-        <FILE id="QXNhsN" name="SynthesiserStarting.h" compile="0" resource="0"
-              file="Source/DSP/SynthesiserStarting.h"/>
+        <FILE id="ibUAx0" name="BassSynthVoice.cpp" compile="1" resource="0"
+              file="Source/DSP/BassSynthVoice.cpp"/>
+        <FILE id="QXNhsN" name="BassSynthVoice.h" compile="0" resource="0"
+              file="Source/DSP/BassSynthVoice.h"/>
         <FILE id="W0mg5d" name="Oscillators.cpp" compile="1" resource="0"
               file="Source/DSP/Oscillators.cpp"/>
         <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0"
