@@ -45,10 +45,10 @@ void MySynthVoice::Init(float SR, int blockSize)
     freqShift.setSampleRate(sampleRate);
     sAndH    .setSampleRate(sampleRate);
     
-    twoPoleLPF        .setSampleRate(sampleRate);
-    fourPoleLPF       .setSampleRate(sampleRate);
-    eightPoleLPF      .setSampleRate(sampleRate);
-    notchFilter       .setSampleRate(sampleRate);
+    twoPoleLPF        .SetSampleRate(sampleRate);
+    fourPoleLPF       .SetSampleRate(sampleRate);
+    eightPoleLPF      .SetSampleRate(sampleRate);
+    notchFilter       .SetSampleRate(sampleRate);
     filtEnv           .setSampleRate(sampleRate);
     filtLFOClickingEnv.setSampleRate(sampleRate);
     
@@ -488,7 +488,7 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
     switch ((int) *filterSelector)
     {
         case 1:
-            filterSample = fourPoleLPF.processFilter(freq
+            filterSample = fourPoleLPF.ProcessFilter(freq
                                                      , filtCutoffSmoothed
                                                      , filterResonance
                                                      , input
@@ -499,7 +499,7 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
                                                      , filtLFOAmt);
             break;
         case 2:
-            filterSample = eightPoleLPF.processFilter(freq
+            filterSample = eightPoleLPF.ProcessFilter(freq
                                                       , filtCutoffSmoothed
                                                       , filterResonance
                                                       , input
@@ -510,7 +510,7 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
                                                       , filtLFOAmt);
             break;
         case 3:
-            filterSample = notchFilter.processFilter(freq
+            filterSample = notchFilter.ProcessFilter(freq
                                                      , filtCutoffSmoothed
                                                      , filterResonance
                                                      , input
@@ -522,7 +522,7 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
             break;
         case 0:     [[fallthrough]];
         default:
-            filterSample = twoPoleLPF.processFilter(freq
+            filterSample = twoPoleLPF.ProcessFilter(freq
                                                     , filtCutoffSmoothed
                                                     , filterResonance
                                                     , input

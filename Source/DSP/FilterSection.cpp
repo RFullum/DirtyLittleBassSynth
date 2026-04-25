@@ -11,47 +11,47 @@
 #include "FilterSection.h"
 
 //==============================================================================
-//==============================================================================
 
-//
-// Two Pole LPF Class
-//
 
-TwoPoleLPF::TwoPoleLPF() : sampleRate(44100.0f), maxCutoff(17000.0f), minCutoff(20.0f),
-                           maxResonance(3.0f), cutoffFreq(1000.0f), resonance(1.0f),
-                           inputSample(0.0f), cutoffScale(0.0f), resonanceScale(0.1f),
-                           resonanceScalePrev(0.1f), envelopeVal(0.0f), lfoValue(0.0f),
-                           cutoffLFO(1000.0f), cutoffLFOPrev(1000.0f)
-                           
+TwoPoleLPF::TwoPoleLPF()
+: sampleRate(44100.0f)
+, maxCutoff(17000.0f)
+, minCutoff(20.0f)
+, maxResonance(3.0f)
+, cutoffFreq(1000.0f)
+, resonance(1.0f)
+, inputSample(0.0f)
+, cutoffScale(0.0f)
+, resonanceScale(0.1f)
+, resonanceScalePrev(0.1f)
+, envelopeVal(0.0f)
+, lfoValue(0.0f)
+, cutoffLFO(1000.0f)
+, cutoffLFOPrev(1000.0f)
 {
-    lowPass1.setCoefficients( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+    lowPass1.setCoefficients(juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale));
 }
 
-/// Destructo
-TwoPoleLPF::~TwoPoleLPF()
-{
-}
+TwoPoleLPF::~TwoPoleLPF() {}
 
-/// Sets sampleRate of filters and resets
-void TwoPoleLPF::setSampleRate(float SR)
+void TwoPoleLPF::SetSampleRate(float SR)
 {
     sampleRate = SR;
-
     lowPass1.reset();
 }
 
 
-/**
-takes current note frequency, cutoff frequency, resonance, input sample value, envelope value, envelop to Cutoff
-amount, and envelope to resonance amount.
-Returns keytracked low pass sample value
-*/
-float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
-                            std::atomic<float>* res, float sampleIn, float envVal,
-                            std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
-                            float lfoVal, std::atomic<float>* amtToLFO)
+float TwoPoleLPF::ProcessFilter(float                 noteFreq
+                                , float               cutoff
+                                , std::atomic<float> *res
+                                , float               sampleIn
+                                , float               envVal
+                                , std::atomic<float> *amtToCO
+                                , std::atomic<float> *amtToRes
+                                , float               lfoVal
+                                , std::atomic<float> *amtToLFO)
 {
-    keyMap(noteFreq, cutoff);
+    KeyMap(noteFreq, cutoff);
     
     envelopeVal = envVal;
     cutoffSend  = amtToCO;
@@ -63,22 +63,16 @@ float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
     resonance   = *res;
     inputSample = sampleIn;
     
-    return process();
+    return Process();
 }
 
-
-/// Keytracking value mapping
-void TwoPoleLPF::keyMap(float frqncy, float CO)
+void TwoPoleLPF::KeyMap(float frqncy, float CO)
 {
     float cutoffPos = CO;
     cutoffFreq      = juce::jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
 }
 
-/**
-Scales the juce::ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
-The current note frequency is the minimum, and the maxCutoff frequency is the maximum.
-*/
-void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
+void TwoPoleLPF::FilterEnvControl(float envVal, std::atomic<float> *amtToCO, std::atomic<float> *amtToRes)
 {
     // Cutoff envelope scaling
     float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
@@ -97,40 +91,28 @@ void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std
         lowPass1.setCoefficients ( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
     }
     
-    
-    filterLFOControl();
+    FilterLFOControl();
 }
 
-/**
-Scales the LFO range, then scales that to the send amount. Modulates filter cutoff,
-scaled to minCutoff (20Hz) and maxCutoff (17000Hz)
-*/
-void TwoPoleLPF::filterLFOControl()
+void TwoPoleLPF::FilterLFOControl()
 {
-    
-    //float lfo       = lfoValue * *lfoSend;
     float headroom  = (maxCutoff - cutoffScale) * *lfoSend;
     float floorroom = (cutoffScale - minCutoff) * *lfoSend;
     
     if (lfoValue >= 0.0f)
-    {
         cutoffLFO = cutoffScale + (lfoValue * headroom);
-    }
     else
-    {
         cutoffLFO = cutoffScale + (lfoValue * floorroom);
-    }
 }
 
-/// Cascades two juce::IIRFilter lowpasses and returns the output sample value
-float TwoPoleLPF::process()
+float TwoPoleLPF::Process()
 {
-    filterEnvControl         ( envelopeVal, cutoffSend, resSend );
+    FilterEnvControl(envelopeVal, cutoffSend, resSend);
     
-    if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
+    if (cutoffLFOPrev != cutoffLFO
+        || resonanceScalePrev != resonanceScale)
     {
-        lowPass1.setCoefficients ( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
-        
+        lowPass1.setCoefficients(juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale));
         cutoffLFOPrev      = cutoffLFO;
         resonanceScalePrev = resonanceScale;
     }
@@ -139,114 +121,84 @@ float TwoPoleLPF::process()
     return lowPass1.processSingleSampleRaw(inputSample);
 }
 
-/*
-void TwoPoleLPF::setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playheadInfo)
-{
-    if (hostBPM != (float)playheadInfo.bpm)
-    {
-        hostBPM = playheadInfo.bpm;
-    }
-}
-*/
-
-//==============================================================================
 //==============================================================================
 
-//
-// Four Pole LPF Class
-//
-
-/// Sets sampleRate for filters and resets 
-void FourPoleLPF::setSampleRate(float SR)
+void FourPoleLPF::SetSampleRate(float SR)
 {
     sampleRate = SR;
-    
-    twoPole1.setSampleRate(sampleRate);
-    twoPole2.setSampleRate(sampleRate);
+    twoPole1.SetSampleRate(sampleRate);
+    twoPole2.SetSampleRate(sampleRate);
 }
 
-
-/**
-takes current note frequency, cutoff frequency, resonance, and input sample value.
-Returns keytracked low pass sample value
-*/
-float FourPoleLPF::processFilter(float noteFreq, float cutoff,
-                                 std::atomic<float>* res, float sampleIn, float envVal,
-                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
-                                 float lfoVal, std::atomic<float>* amtToLFO)
+float FourPoleLPF::ProcessFilter(float                 noteFreq
+                                 , float               cutoff
+                                 , std::atomic<float> *res
+                                 , float               sampleIn
+                                 , float               envVal
+                                 , std::atomic<float> *amtToCO
+                                 , std::atomic<float> *amtToRes
+                                 , float               lfoVal
+                                 , std::atomic<float> *amtToLFO)
 {
-    keyMap(noteFreq, cutoff);
+    KeyMap(noteFreq, cutoff);
     
     resonance   = *res;
     inputSample = sampleIn;
     
-    float stage1 = twoPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
-    float stage2 = twoPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
-    
-    return stage2;
-}
-
-
-//==============================================================================
-//==============================================================================
-
-//
-// Eight Pole LPF
-//
-
-/// Sets sampleRate for filters and resets
-void EightPoleLPF::setSampleRate(float SR)
-{
-    sampleRate = SR;
-    
-    fourPole1.setSampleRate(sampleRate);
-    fourPole2.setSampleRate(sampleRate);
-}
-
-
-/**
-takes current note frequency, cutoff frequency, resonance, and input sample value.
-Returns keytracked low pass sample value
-*/
-float EightPoleLPF::processFilter(float noteFreq, float cutoff, std::atomic<float>* res,
-                    float sampleIn, float envVal, std::atomic<float>* amtToCO,
-                    std::atomic<float>* amtToRes, float lfoVal,
-                    std::atomic<float>* amtToLFO)
-{
-    keyMap(noteFreq, cutoff);
-    
-    resonance   = *res;
-    inputSample = sampleIn;
-    
-    float stage1 = fourPole1.processFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
-    float stage2 = fourPole2.processFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+    float stage1 = twoPole1.ProcessFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+    float stage2 = twoPole2.ProcessFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
     
     return stage2;
 }
 
 //==============================================================================
-//==============================================================================
 
-//
-// Notch Filter Class
-//
-
-/// Sets sampleRate of filters and resets
-void NotchFilter::setSampleRate(float SR)
+void EightPoleLPF::SetSampleRate(float SR)
 {
     sampleRate = SR;
     
+    fourPole1.SetSampleRate(sampleRate);
+    fourPole2.SetSampleRate(sampleRate);
+}
+
+float EightPoleLPF::ProcessFilter(float                 noteFreq
+                                  , float               cutoff
+                                  , std::atomic<float> *res
+                                  , float               sampleIn
+                                  , float               envVal
+                                  , std::atomic<float> *amtToCO
+                                  , std::atomic<float> *amtToRes
+                                  , float               lfoVal
+                                  , std::atomic<float> *amtToLFO)
+{
+    KeyMap(noteFreq, cutoff);
+    
+    resonance   = *res;
+    inputSample = sampleIn;
+    
+    float stage1 = fourPole1.ProcessFilter(noteFreq, cutoff, res, sampleIn, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+    float stage2 = fourPole2.ProcessFilter(noteFreq, cutoff, res, stage1, envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
+    
+    return stage2;
+}
+
+//==============================================================================
+
+void NotchFilter::SetSampleRate(float SR)
+{
+    sampleRate = SR;
     notchFilter.reset();
 }
 
-
-/**
-Processes Non-keytracked notch filter from 20Hz to 17KHz wth resonance
-*/
-float NotchFilter::processFilter(float noteFreq, float cutoff,
-                                 std::atomic<float>* res, float sampleIn, float envVal,
-                                 std::atomic<float>* amtToCO, std::atomic<float>* amtToRes,
-                                 float lfoVal, std::atomic<float>* amtToLFO)
+float NotchFilter::ProcessFilter(float                 noteFreq
+                                 , float               cutoff
+                                 , std::atomic<float> *res
+                                 , float               sampleIn
+                                 , float               envVal
+                                 , std::atomic<float> *amtToCO
+                                 , std::atomic<float> *amtToRes
+                                 , float               lfoVal
+                                 , std::atomic<float> *amtToLFO)
 {
     envelopeVal = envVal;
     cutoffSend  = amtToCO;
@@ -260,23 +212,21 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
     float cutFreq = cutoff;
     cutoffFreq    = juce::jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
     
-    return processNotch();
+    return ProcessNotch();
 }
 
-
-/// Sets notch coeffients and processes inputSample
-float NotchFilter::processNotch()
+float NotchFilter::ProcessNotch()
 {
-    filterEnvControl            ( envelopeVal, cutoffSend, resSend );
+    FilterEnvControl(envelopeVal, cutoffSend, resSend);
     
-    if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
+    if (cutoffLFOPrev != cutoffLFO
+        || resonanceScalePrev != resonanceScale)
     {
-        notchFilter.setCoefficients ( juce::IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
+        notchFilter.setCoefficients(juce::IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale));
         
         cutoffLFOPrev      = cutoffLFO;
         resonanceScalePrev = resonanceScale;
     }
-    //notchFilter.setCoefficients ( juce::IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
     
     return notchFilter.processSingleSampleRaw(inputSample);
 }
