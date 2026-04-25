@@ -150,17 +150,17 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     // Set Parameter Pointers for each voice
     for (auto* v : typedVoices)
     {
-        v->setOscParamPointers          (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
-        v->setAmpADSRParamPointers      (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
-        v->setPortamentoParamPointers   (portaTimeParameter);
-        v->setDistParamPointers         (foldbackDistParameter);
-        v->setRingModParamPointers      (ringModPitchParameter, ringToneParameter, ringModMixParameter);
-        v->setFreqShiftParamPointers    (freqShiftPitchParameter, freqShiftMixParameter);
-        v->setSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
-        v->setFilterParamPointers       (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
-        v->setFilterADSRParamPointers   (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
-        v->setFilterLFOParamPointers    (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
-        v->setMasterGainParamPointers   (masterGainParameter);
+        v->SetOscParamPointers          (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
+        v->SetAmpADSRParamPointers      (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
+        v->SetPortamentoParamPointers   (portaTimeParameter);
+        v->SetDistParamPointers         (foldbackDistParameter);
+        v->SetRingModParamPointers      (ringModPitchParameter, ringToneParameter, ringModMixParameter);
+        v->SetFreqShiftParamPointers    (freqShiftPitchParameter, freqShiftMixParameter);
+        v->SetSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
+        v->SetFilterParamPointers       (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
+        v->SetFilterADSRParamPointers   (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
+        v->SetFilterLFOParamPointers    (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->SetMasterGainParamPointers   (masterGainParameter);
         v->updatePitchBendRange         (*pitchBendParameter);
     }
 }
@@ -229,7 +229,7 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int s
     synth.setCurrentPlaybackSampleRate(sampleRate);
 
     for (auto* v : typedVoices)
-        v->init(sampleRate, samplesPerBlock);
+        v->Init(sampleRate, samplesPerBlock);
 }
 
 void DirtyLittleBassSynthAudioProcessor::releaseResources()

@@ -18,23 +18,17 @@
 #include "Modifiers.h"
 #include "FilterSection.h"
 
-// ===========================
-// ===========================
-// SOUND
-class MySynthSound : public juce::SynthesiserSound
+//======================================================
+
+class MySynthSound
+    : public juce::SynthesiserSound
 {
 public:
-    bool appliesToNote      (int) override      { return true; }
-    //--------------------------------------------------------------------------
-    bool appliesToChannel   (int) override      { return true; }
+    bool appliesToNote    (int) override { return true; }
+    bool appliesToChannel (int) override { return true; }
 };
 
-
-
-
-// =================================
-// =================================
-// juce::Synthesiser Voice - My synth code goes in here
+//======================================================
 
 /*!
  @class MySynthVoice
@@ -44,68 +38,47 @@ public:
  @namespace none
  @updated 2019-06-18
  */
-class MySynthVoice : public juce::SynthesiserVoice
+class MySynthVoice
+    : public juce::SynthesiserVoice
 {
 public:
     MySynthVoice();
     
-    void init(float SR, int blockSize);
+    void Init(float SR, int blockSize);
     
-    //
-    // Parameter Pointers Setup
-    //
-    
-    // Main Oscs
-    void setOscParamPointers(std::atomic<float>* oscMorphIn, std::atomic<float>* subOscMorphIn,
-                             std::atomic<float>* subOscGainIn, std::atomic<float>* subOctaveIn);
-    
-    void setAmpADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
-                                 std::atomic<float>* sustain, std::atomic<float>* release);
-    
-    void setDistParamPointers(std::atomic<float>* foldDistIn);
-    
-    // Modifiers
-    void setRingModParamPointers(std::atomic<float>* ringPitch, std::atomic<float>* ringTone, std::atomic<float>* mix);
-    
-    void setFreqShiftParamPointers(std::atomic<float>* shiftPitch, std::atomic<float>* mix);
-    
-    void setSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix);
-    
-    // Filters
-    void setFilterParamPointers(std::atomic<float>* cutoff, std::atomic<float>* res, std::atomic<float>* type);
-    
-    void setFilterADSRParamPointers(std::atomic<float>* attack, std::atomic<float>* decay,
-                                    std::atomic<float>* sustain, std::atomic<float>* release,
-                                    std::atomic<float>* amtCO, std::atomic<float>* amtRes );
-    
-    void setFilterLFOParamPointers(std::atomic<float>* freq, std::atomic<float>* amount, std::atomic<float>* shape);
-    
-    void setPortamentoParamPointers(std::atomic<float>* portaTime);
-    
-    void setMasterGainParamPointers(std::atomic<float>* gainAmt);
-    
-    void setFilterSpec(float& sampRate, float& sampleSize);
-    
-    //void setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playhead);
-    
-    
-    
-    
-    //
-    // juce::ADSR Values
-    //
-    
-    // Main Osc juce::ADSR
-    void setAmpADSRValues();
-    
-    /// Sets juce::ADSR values for filter
-    void setFilterADSRValues();
-    
-    /// Applies juce::ADSR to LFO to avoid clicking
-    void setFiltLFOClickValues();
-    
-    /// Sets up the portamentoTime 
-    void setPortamentoTime(float SR, float portaTime);
+    void SetOscParamPointers(std::atomic<float>   *oscMorphIn
+                             , std::atomic<float> *subOscMorphIn
+                             , std::atomic<float> *subOscGainIn
+                             , std::atomic<float> *subOctaveIn);
+    void SetAmpADSRParamPointers(std::atomic<float>   *attack
+                                 , std::atomic<float> *decay
+                                 , std::atomic<float> *sustain
+                                 , std::atomic<float> *release);
+    void SetDistParamPointers(std::atomic<float> *foldDistIn);
+    void SetRingModParamPointers(std::atomic<float>   *ringPitch
+                                 , std::atomic<float> *ringTone
+                                 , std::atomic<float> *mix);
+    void SetFreqShiftParamPointers(std::atomic<float> *shiftPitch, std::atomic<float> *mix);
+    void SetSampleAndHoldParamPointers(std::atomic<float> *pitch, std::atomic<float> *mix);
+    void SetFilterParamPointers(std::atomic<float>   *cutoff
+                                , std::atomic<float> *res
+                                , std::atomic<float> *type);
+    void SetFilterADSRParamPointers(std::atomic<float>   *attack
+                                    , std::atomic<float> *decay
+                                    , std::atomic<float> *sustain
+                                    , std::atomic<float> *release
+                                    , std::atomic<float> *amtCO
+                                    , std::atomic<float> *amtRes);
+    void SetFilterLFOParamPointers(std::atomic<float>   *freq
+                                   , std::atomic<float> *amount
+                                   , std::atomic<float> *shape);
+    void SetPortamentoParamPointers(std::atomic<float> *portaTime);
+    void SetMasterGainParamPointers(std::atomic<float> *gainAmt);
+    void SetFilterSpec(float &sampRate, float &sampleSize);
+    void SetAmpADSRValues();
+    void SetFilterADSRValues();
+    void SetFiltLFOClickValues();
+    void SetPortamentoTime(float SR, float portaTime);
     
     
     //--------------------------------------------------------------------------
@@ -117,7 +90,10 @@ public:
      @param juce::SynthesiserSound unused variable
      @param / unused variable
      */
-    void startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition) override;
+    void startNote(int                       midiNoteNumber
+                   , float                   velocity
+                   , juce::SynthesiserSound*
+                   , int                     currentPitchWheelPosition) override;
     
     //--------------------------------------------------------------------------
     /// Called when a MIDI noteOff message is received
@@ -139,7 +115,7 @@ public:
      @param startSample position of first sample in buffer
      @param numSamples number of smaples in output buffer
      */
-    void renderNextBlock(juce::AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
+    void renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples) override;
     
     //--------------------------------------------------------------------------
     
@@ -180,28 +156,28 @@ private:
     };
 
     // Block-stage helpers (called once per block from renderNextBlock).
-    BlockLevels computeBlockLevels();
-    void        populateVisualBuffers(const BlockLevels& levels);
-    void        prepareDspForBlock();
+    BlockLevels ComputeBlockLevels();
+    void        PopulateVisualBuffers(const BlockLevels& levels);
+    void        PrepareDspForBlock();
 
     // Per-sample-stage helpers (called once per sample from the render loop).
-    float processMainOscSample (float envVal, const BlockLevels& levels);
-    float processModifierChain (float input, float envVal);
-    float processSubOscSample  (float envVal, const BlockLevels& levels);
-    float processFilterChain   (float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels& levels);
+    float ProcessMainOscSample(float envVal, const BlockLevels &levels);
+    float ProcessModifierChain(float input, float envVal);
+    float ProcessSubOscSample(float envVal, const BlockLevels &levels);
+    float ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels);
 
     /// Populates the waveshape buffers
-    void populateShape(juce::AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc);
+    void PopulateShape(juce::AudioBuffer<float> &buf, float sin, float spikeSqr, float saw, bool isSubOsc);
 
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
-    float pitchBendCents();
+    float PitchBendCents();
     
     /// calculates pitch wheel's shift in hz
-    float calcShiftHz(float centsOffset);
+    float CalcShiftHz(float centsOffset);
     
     /// Pitch wheel position to pitchBend up or down
-    void setPitchBend(int pitchWheelPos);
+    void SetPitchBend(int pitchWheelPos);
     
     //--------------------------------------------------------------------------
     // Are the voices playing:
@@ -234,28 +210,28 @@ private:
     SubOsc subOsc;
 
     // Oscillator parameter members
-    std::atomic<float>* oscillatorMorph;
-    std::atomic<float>* subOscMorph;
-    std::atomic<float>* subGain;
-    juce::SmoothedValue<float> subGainSmooth;
-    std::atomic<float>* subOctave;
-    std::atomic<float>* foldbackDistortion;
-    int incrementDenominator;
+    std::atomic<float>         *oscillatorMorph;
+    std::atomic<float>         *subOscMorph;
+    std::atomic<float>         *subGain;
+    juce::SmoothedValue<float>  subGainSmooth;
+    std::atomic<float>         *subOctave;
+    std::atomic<float>         *foldbackDistortion;
+    int                         incrementDenominator;
     
     // Oscillator Parameter Controls
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
     
     // Amp Envelope Parameter Controls
-    std::atomic<float>* ampAttack;
-    std::atomic<float>* ampDecay;
-    std::atomic<float>* ampSustain;
-    std::atomic<float>* ampRelease;
-    juce::ADSR::Parameters envParams;
+    std::atomic<float>     *ampAttack;
+    std::atomic<float>     *ampDecay;
+    std::atomic<float>     *ampSustain;
+    std::atomic<float>     *ampRelease;
+    juce::ADSR::Parameters  envParams;
     
     // Portamento
     juce::SmoothedValue<float> portamento;
-    std::atomic<float>* portamentoAmount;
+    std::atomic<float> *portamentoAmount;
     
     // Foldback Distortion
     juce::SmoothedValue<float> foldbackDistortionSmooth;
@@ -265,28 +241,28 @@ private:
     DryWet ringModMix;
     
     // Ring Mod Parameters
-    std::atomic<float>* ringModPitch;
-    std::atomic<float>* ringModTone;
-    std::atomic<float>* ringMix;
-    juce::SmoothedValue<float> ringMixSmooth;
+    std::atomic<float>         *ringModPitch;
+    std::atomic<float>         *ringModTone;
+    std::atomic<float>         *ringMix;
+    juce::SmoothedValue<float>  ringMixSmooth;
     
     // Frequency Shifter Instances
     FrequencyShifter freqShift;
     DryWet freqShiftMix;
     
     // Frequency Shifter Parameters
-    std::atomic<float>* freqShiftPitch;
-    std::atomic<float>* freqShiftMixVal;
-    juce::SmoothedValue<float> freqShiftMixValSmooth;
+    std::atomic<float>         *freqShiftPitch;
+    std::atomic<float>         *freqShiftMixVal;
+    juce::SmoothedValue<float>  freqShiftMixValSmooth;
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
     DryWet sAndHMix;
     
     // Sample and Hold Parameters
-    std::atomic<float>* sAndHPitch;
-    std::atomic<float>* sAndHMixVal;
-    juce::SmoothedValue<float> sAndHMixValSmooth;
+    std::atomic<float>         *sAndHPitch;
+    std::atomic<float>         *sAndHMixVal;
+    juce::SmoothedValue<float>  sAndHMixValSmooth;
     
     
     // Filter Instances
@@ -297,34 +273,34 @@ private:
     
     
     // Filter Parameters
-    std::atomic<float>* filterCutoffFreq;
-    juce::SmoothedValue<float> filterCutoffFreqSmooth;
-    std::atomic<float>* filterResonance;
-    std::atomic<float>* filterSelector;
-    float filterSample;
+    std::atomic<float>         *filterCutoffFreq;
+    juce::SmoothedValue<float>  filterCutoffFreqSmooth;
+    std::atomic<float>         *filterResonance;
+    std::atomic<float>         *filterSelector;
+    float                       filterSample;
     
     // Filter Envelope Parameters
-    std::atomic<float>* filterAttack;
-    std::atomic<float>* filterDecay;
-    std::atomic<float>* filterSustain;
-    std::atomic<float>* filterRelease;
-    std::atomic<float>* filterADSRCutOffAmount;
-    std::atomic<float>* filterADSRResAmount;
+    std::atomic<float> *filterAttack;
+    std::atomic<float> *filterDecay;
+    std::atomic<float> *filterSustain;
+    std::atomic<float> *filterRelease;
+    std::atomic<float> *filterADSRCutOffAmount;
+    std::atomic<float> *filterADSRResAmount;
     
     // Filter LFO Instance
     SubOsc filterLFO;
     
     // Filter LFO Parameters
-    std::atomic<float>* filtLFOFreq;
-    std::atomic<float>* filtLFOAmt;
-    std::atomic<float>* filtLFOShape;
-    SubOscParamControl filtLFOShapeControl;
+    std::atomic<float> *filtLFOFreq;
+    std::atomic<float> *filtLFOAmt;
+    std::atomic<float> *filtLFOShape;
+    SubOscParamControl  filtLFOShapeControl;
     
     // Master Gain
     float masterGain;
-    std::atomic<float>* masterGainControl;
-    juce::SmoothedValue<float> masterGainControlSmooth;
-    juce::SmoothedValue<float> velocitySmooth;
+    std::atomic<float>         *masterGainControl;
+    juce::SmoothedValue<float>  masterGainControlSmooth;
+    juce::SmoothedValue<float>  velocitySmooth;
     
     // Master Sample Rate
     float sampleRate;
