@@ -18,8 +18,6 @@ RingMod::RingMod()
 , ringToneSlider(0.0f)
 {}
 
-RingMod::~RingMod(){}
-
 void RingMod::SetSampleRate(float SR)
 {
     sampleRate = SR;
@@ -29,7 +27,7 @@ void RingMod::SetSampleRate(float SR)
 void RingMod::ModFreq(float fqncy, float offset)
 {
     modFrequency = fqncy * offset;
-    SetRingIncrement();
+    SetIncrement();
 }
 
 void RingMod::SetRingToneSlider(float toneSlider)
@@ -39,37 +37,33 @@ void RingMod::SetRingToneSlider(float toneSlider)
 
 float RingMod::Process()
 {
-    return RingModProcess();
+    float sinVal = wtSine  .Process();
+    float sqVal  = wtSquare.Process();
+
+    return DryWetMix(sinVal, sqVal, ringToneSlider);
 }
 
 void RingMod::SetUpWavetables()
 {
-    wtSine.SetSampleRate  (sampleRate);
+    wtSine  .SetSampleRate(sampleRate);
     wtSquare.SetSampleRate(sampleRate);
-    
-    wtSine.PopulateWavetable();
+
+    wtSine  .PopulateWavetable();
     wtSquare.PopulateWavetable();
 }
 
-void RingMod::SetRingIncrement()
+void RingMod::SetIncrement()
 {
-    wtSine.SetIncrement  (modFrequency);
+    wtSine  .SetIncrement(modFrequency);
     wtSquare.SetIncrement(modFrequency);
-}
-
-float RingMod::RingModProcess()
-{
-    float sinVal = wtSine.Process();
-    float sqVal  = wtSquare.Process();
-    float outVal = DryWetMix(sinVal, sqVal, ringToneSlider);
-    
-    return outVal;
 }
 
 //==============================================================================
 
 FrequencyShifter::FrequencyShifter()
-: sineLevel(1.0f)
+: sampleRate(44100.0f)
+, modFrequency(0.0f)
+, sineLevel(1.0f)
 , spikeLevel(0.0f)
 , sawLevel(0.0f)
 {}
@@ -77,13 +71,13 @@ FrequencyShifter::FrequencyShifter()
 void FrequencyShifter::SetSampleRate(float SR)
 {
     sampleRate = SR;
-    SetUpFreqShiftWavetables();
+    SetUpWavetables();
 }
 
 void FrequencyShifter::ModFreq(float fqncy, float offset)
 {
     modFrequency = fqncy * offset;
-    SetFreqShiftIncrement();
+    SetIncrement();
 }
 
 void FrequencyShifter::OscMorph(float sinLevelIn, float spikeLevelIn, float sawLevelIn)
@@ -95,77 +89,59 @@ void FrequencyShifter::OscMorph(float sinLevelIn, float spikeLevelIn, float sawL
 
 float FrequencyShifter::Process()
 {
-    return FreqShiftProcess();
-}
-
-void FrequencyShifter::SetUpFreqShiftWavetables()
-{
-    wtSine.SetSampleRate (sampleRate);
-    wtSaw.SetSampleRate  (sampleRate);
-    wtSpike.SetSampleRate(sampleRate);
-    
-    wtSine.PopulateWavetable();
-    wtSaw.PopulateWavetable();
-    wtSpike.PopulateWavetable();
-}
-
-void FrequencyShifter::SetFreqShiftIncrement()
-{
-    wtSine.SetIncrement (modFrequency);
-    wtSaw.SetIncrement  (modFrequency);
-    wtSpike.SetIncrement(modFrequency);
-}
-
-float FrequencyShifter::FreqShiftProcess()
-{
     float sinVal   = wtSine .Process() * sineLevel;
     float spikeVal = wtSpike.Process() * spikeLevel;
     float sawVal   = wtSaw  .Process() * sawLevel;
-    
+
     return (sinVal + spikeVal + sawVal) * 0.5f;
+}
+
+void FrequencyShifter::SetUpWavetables()
+{
+    wtSine .SetSampleRate(sampleRate);
+    wtSaw  .SetSampleRate(sampleRate);
+    wtSpike.SetSampleRate(sampleRate);
+
+    wtSine .PopulateWavetable();
+    wtSaw  .PopulateWavetable();
+    wtSpike.PopulateWavetable();
+}
+
+void FrequencyShifter::SetIncrement()
+{
+    wtSine .SetIncrement(modFrequency);
+    wtSaw  .SetIncrement(modFrequency);
+    wtSpike.SetIncrement(modFrequency);
 }
 
 //==============================================================================
 
 SampleAndHold::SampleAndHold()
-: oscSampleVal(0.0f)
+: sampleRate(44100.0f)
+, modFrequency(0.0f)
+, oscSampleVal(0.0f)
 , holdSampleVal(0.0f)
 {}
 
 void SampleAndHold::SetSampleRate(float SR)
 {
     sampleRate = SR;
-    SetSampHoldWavetables();
+    SetUpWavetable();
 }
 
 void SampleAndHold::ModFreq(float fqncy, float offset)
 {
     modFrequency = fqncy * offset;
-    SetSampHoldIncrement();
+    SetIncrement();
 }
 
 float SampleAndHold::ProcessSH(float oscSampleValIn)
 {
     oscSampleVal = oscSampleValIn;
-    return SampleHoldProcess();
-}
 
-void SampleAndHold::SetSampHoldWavetables()
-{
-    wtSampHold.SetSampleRate(sampleRate);
-    wtSampHold.PopulateWavetable();
-}
-
-void SampleAndHold::SetSampHoldIncrement()
-{
-    wtSampHold.SetIncrement(modFrequency);
-}
-
-float SampleAndHold::SampleHoldProcess()
-{
     float outVal;
     float sampHoldVal = wtSampHold.Process();
-    
+
     if (sampHoldVal >= 0.0f)
     {
         outVal        = oscSampleVal;
@@ -175,6 +151,17 @@ float SampleAndHold::SampleHoldProcess()
     {
         outVal = holdSampleVal;
     }
-        
+
     return outVal;
+}
+
+void SampleAndHold::SetUpWavetable()
+{
+    wtSampHold.SetSampleRate(sampleRate);
+    wtSampHold.PopulateWavetable();
+}
+
+void SampleAndHold::SetIncrement()
+{
+    wtSampHold.SetIncrement(modFrequency);
 }

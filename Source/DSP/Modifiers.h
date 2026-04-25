@@ -13,7 +13,6 @@
 #include <JuceHeader.h>
 #include "Wavetable.h"
 #include "DryWet.h"
-#include "OscillatorParameterControls.h"
 
 //==============================================================================
 
@@ -21,25 +20,20 @@ class RingMod
 {
 public:
     RingMod();
-    virtual ~RingMod();
 
-    virtual void SetSampleRate(float SR);
-    virtual void ModFreq(float fqncy, float offset);
+    void  SetSampleRate(float SR);
+    void  ModFreq(float fqncy, float offset);
+    void  SetRingToneSlider(float toneSlider);
+    float Process();
 
-    void SetRingToneSlider(float toneSlider);
+private:
+    void SetUpWavetables();
+    void SetIncrement();
 
-    virtual float Process();
-
-protected:
     float sampleRate;
     float modFrequency;
 
-private:
-    void  SetUpWavetables();
-    void  SetRingIncrement();
-    float RingModProcess();
-
-    Wavetable wtSine;
+    Wavetable       wtSine;
     SquareWavetable wtSquare;
 
     float ringToneSlider;
@@ -48,24 +42,25 @@ private:
 //============================================================
 
 class FrequencyShifter
-    : public RingMod
 {
 public:
     FrequencyShifter();
 
-    void  SetSampleRate(float SR) override;
-    void  ModFreq(float fqncy, float offset) override;
+    void  SetSampleRate(float SR);
+    void  ModFreq(float fqncy, float offset);
     void  OscMorph(float sinLevelIn, float spikeLevelIn, float sawLevelIn);
-    float Process() override;
+    float Process();
 
 private:
-    void  SetUpFreqShiftWavetables();
-    void  SetFreqShiftIncrement();
-    float FreqShiftProcess();
+    void SetUpWavetables();
+    void SetIncrement();
 
-    Wavetable wtSine;
+    float sampleRate;
+    float modFrequency;
+
+    Wavetable      wtSine;
     SpikeWavetable wtSpike;
-    SawWavetable wtSaw;
+    SawWavetable   wtSaw;
 
     float sineLevel;
     float spikeLevel;
@@ -75,19 +70,20 @@ private:
 //============================================================
 
 class SampleAndHold
-    : public RingMod
 {
 public:
     SampleAndHold();
 
-    void  SetSampleRate(float SR) override;
-    void  ModFreq(float fqncy, float offset) override;
+    void  SetSampleRate(float SR);
+    void  ModFreq(float fqncy, float offset);
     float ProcessSH(float oscSampleValIn);
 
 private:
-    void  SetSampHoldWavetables();
-    void  SetSampHoldIncrement();
-    float SampleHoldProcess();
+    void SetUpWavetable();
+    void SetIncrement();
+
+    float sampleRate;
+    float modFrequency;
 
     SquareWavetable wtSampHold;
 
