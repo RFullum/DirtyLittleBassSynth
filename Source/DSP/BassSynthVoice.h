@@ -138,7 +138,7 @@ private:
     float pitchBendSemitones;
     float pitchBendUpSemitones;
     float pitchBendDownSemitones;
-    float lastRecievedPitchWheelValue;
+    float lastReceivedPitchWheelValue;
 
     juce::ADSR env;
     juce::ADSR filtEnv;

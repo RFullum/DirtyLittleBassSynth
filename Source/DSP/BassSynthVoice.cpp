@@ -23,7 +23,7 @@ BassSynthVoice::BassSynthVoice()
 , pitchBendSemitones(12.0f)
 , pitchBendUpSemitones(12.0f)
 , pitchBendDownSemitones(12.0f)
-, lastRecievedPitchWheelValue(0.0f)
+, lastReceivedPitchWheelValue(0.0f)
 , masterGain(0.0f)
 , sampleRate(44100.0f)
 , samplesPerBlock(0)
@@ -342,7 +342,7 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         if (previousFinalFreq != finalFreq || prevSAndHPitch != sAndHPitchVal)
         {
             sAndH.ModFreq(finalFreq, sAndHPitchVal);
-            prevFreqShiftPitch = sAndHPitchVal;     // TODO: BUG ALERT! prevFreqShiftPitch should be prevSAndHPitch
+            prevSAndHPitch = sAndHPitchVal;
         }
 
         const float envVal        = env.getNextSample();
