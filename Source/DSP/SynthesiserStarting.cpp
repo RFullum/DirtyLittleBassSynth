@@ -41,9 +41,9 @@ void MySynthVoice::Init(float SR, int blockSize)
     subOsc .SetSampleRate(sampleRate);
     env    .setSampleRate(sampleRate);
     
-    ringMod  .setSampleRate(sampleRate);
-    freqShift.setSampleRate(sampleRate);
-    sAndH    .setSampleRate(sampleRate);
+    ringMod  .SetSampleRate(sampleRate);
+    freqShift.SetSampleRate(sampleRate);
+    sAndH    .SetSampleRate(sampleRate);
     
     twoPoleLPF        .SetSampleRate(sampleRate);
     fourPoleLPF       .SetSampleRate(sampleRate);
@@ -358,19 +358,19 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
         // Update modifier-osc increments when freq or their pitch params change.
         if (previousFinalFreq != finalFreq || prevRingModPitch != *ringModPitch)
         {
-            ringMod.modFreq(finalFreq, ringModPitch);
+            ringMod.ModFreq(finalFreq, ringModPitch);
             prevRingModPitch = *ringModPitch;
         }
 
         if (previousFinalFreq != finalFreq || prevFreqShiftPitch != *freqShiftPitch)
         {
-            freqShift.modFreq(finalFreq, freqShiftPitch);
+            freqShift.ModFreq(finalFreq, freqShiftPitch);
             prevFreqShiftPitch = *freqShiftPitch;
         }
 
         if (previousFinalFreq != finalFreq || prevSAndHPitch != *sAndHPitch)
         {
-            sAndH.modFreq(finalFreq, sAndHPitch);
+            sAndH.ModFreq(finalFreq, sAndHPitch);
             prevFreqShiftPitch = *sAndHPitch;   // TODO: BUG ALERT! check prevFreqShiftPitch should be prevSAndHPitch
         }
 
@@ -432,9 +432,9 @@ void MySynthVoice::PopulateVisualBuffers(const BlockLevels &levels)
 void MySynthVoice::PrepareDspForBlock()
 {
     // Block-level mod/oscillator setup.
-    ringMod.setRingToneSlider(ringModTone);
-    freqShift.oscMorph(oscillatorMorph);
-    freqShift.modFreq(freq, freqShiftPitch);
+    ringMod.SetRingToneSlider(ringModTone);
+    freqShift.OscMorph(oscillatorMorph);
+    freqShift.ModFreq(freq, freqShiftPitch);
     filterLFO.SetIncrement(*filtLFOFreq, 1.0f);
 
     // Smoothed-value targets for the block.
@@ -463,13 +463,13 @@ float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels
 
 float MySynthVoice::ProcessModifierChain(float input, float envVal)
 {
-    const float ringSample = input * ringMod.process() * envVal;
+    const float ringSample = input * ringMod.Process() * envVal;
     const float oscRing    = ringModMix.dryWetMix(input, ringSample, ringMixSmooth.getNextValue());
 
-    const float freqShiftSample = freqShift.process() * envVal;
+    const float freqShiftSample = freqShift.Process() * envVal;
     const float oscShift        = freqShiftMix.dryWetMix(oscRing, freqShiftSample, freqShiftMixValSmooth.getNextValue());
 
-    const float sandhSample = sAndH.processSH(oscShift) * envVal;
+    const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
     return sAndHMix.dryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
 }
 
