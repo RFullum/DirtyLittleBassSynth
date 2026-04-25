@@ -13,18 +13,18 @@
 /// Sets sampleRate of sub oscillators
 void SubOsc::setSampleRate(float SR)
 {
-    sinSub.setSampleRate    (SR);
-    squareSub.setSampleRate (SR);
-    sawSub.setSampleRate    (SR);
+    sinSub.SetSampleRate    (SR);
+    squareSub.SetSampleRate (SR);
+    sawSub.SetSampleRate    (SR);
 }
 
 
 /// Populates values to the sub oscillator wavetables
 void SubOsc::populateWavetable()
 {
-    sinSub.populateWavetable();
-    squareSub.populateWavetable();
-    sawSub.populateWavetable();
+    sinSub.PopulateWavetable();
+    squareSub.PopulateWavetable();
+    sawSub.PopulateWavetable();
 }
 
 
@@ -36,16 +36,16 @@ void SubOsc::setIncrement(float noteFreq, int denom)
 {
     float subFreq = noteFreq / (float)denom;
     
-    sinSub.setIncrement    (subFreq);
-    squareSub.setIncrement (subFreq);
-    sawSub.setIncrement    (subFreq);
+    sinSub.SetIncrement    (subFreq);
+    squareSub.SetIncrement (subFreq);
+    sawSub.SetIncrement    (subFreq);
 }
 
 
 /// Returns the sample value of the wavetable at the index
 float SubOsc::getSquareWavetableValue(int index)
 {
-    return squareSub.getWavetableSampleValue(index);
+    return squareSub.GetWavetableSampleValue(index);
 }
 
 /**
@@ -54,9 +54,9 @@ wave shapes: sinSubGain( ), squareSubGain( ), and sawSubGain( )
 */
 float SubOsc::process(float sinGain, float squareGain, float sawGain)
 {
-    float sinVal    = sinSub.process() * sinGain;
-    float squareVal = squareSub.process() * squareGain;
-    float sawVal    = sawSub.process() * sawGain;
+    float sinVal    = sinSub   .Process() * sinGain;
+    float squareVal = squareSub.Process() * squareGain;
+    float sawVal    = sawSub   .Process() * sawGain;
     
     float outVal = (sinVal + squareVal + sawVal) * 0.5f;
     

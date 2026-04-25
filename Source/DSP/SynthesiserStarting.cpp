@@ -35,9 +35,9 @@ void MySynthVoice::Init(float SR, int blockSize)
     sampleRate      = SR;
     samplesPerBlock = blockSize;
     
-    wtSine .setSampleRate(sampleRate);
-    wtSaw  .setSampleRate(sampleRate);
-    wtSpike.setSampleRate(sampleRate);
+    wtSine .SetSampleRate(sampleRate);
+    wtSaw  .SetSampleRate(sampleRate);
+    wtSpike.SetSampleRate(sampleRate);
     subOsc .setSampleRate(sampleRate);
     env    .setSampleRate(sampleRate);
     
@@ -54,9 +54,9 @@ void MySynthVoice::Init(float SR, int blockSize)
     
     filterLFO.setSampleRate(sampleRate);
     
-    wtSine.populateWavetable();
-    wtSaw.populateWavetable();
-    wtSpike.populateWavetable();
+    wtSine.PopulateWavetable();
+    wtSaw.PopulateWavetable();
+    wtSpike.PopulateWavetable();
     subOsc.populateWavetable();
     
     filterLFO.populateWavetable();
@@ -341,9 +341,9 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
         // Update wavetable increments only when the playback freq changes.
         if (previousFinalFreq != finalFreq)
         {
-            wtSine .setIncrement(finalFreq);
-            wtSaw  .setIncrement(finalFreq);
-            wtSpike.setIncrement(finalFreq);
+            wtSine .SetIncrement(finalFreq);
+            wtSaw  .SetIncrement(finalFreq);
+            wtSpike.SetIncrement(finalFreq);
             subOsc .setIncrement(finalFreq, incrementDenominator);
 
             previousFinalFreq = finalFreq;
@@ -450,9 +450,9 @@ void MySynthVoice::PrepareDspForBlock()
 
 float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels)
 {
-    const float sinSample   = wtSine.process()  * levels.mainSin   * envVal;
-    const float spikeSample = wtSpike.process() * levels.mainSpike * envVal;
-    const float sawSample   = wtSaw.process()   * levels.mainSaw   * envVal;
+    const float sinSample   = wtSine.Process()  * levels.mainSin   * envVal;
+    const float spikeSample = wtSpike.Process() * levels.mainSpike * envVal;
+    const float sawSample   = wtSaw.Process()   * levels.mainSaw   * envVal;
 
     // Sum of three shapes scaled so simultaneous shapes don't clip, then foldback.
     const float oscSample = (sinSample + spikeSample + sawSample) * 0.5f;
@@ -463,15 +463,12 @@ float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels
 
 float MySynthVoice::ProcessModifierChain(float input, float envVal)
 {
-    // Ring Modulation
     const float ringSample = input * ringMod.process() * envVal;
     const float oscRing    = ringModMix.dryWetMix(input, ringSample, ringMixSmooth.getNextValue());
 
-    // Frequency Shifter
     const float freqShiftSample = freqShift.process() * envVal;
     const float oscShift        = freqShiftMix.dryWetMix(oscRing, freqShiftSample, freqShiftMixValSmooth.getNextValue());
 
-    // Sample and Hold
     const float sandhSample = sAndH.processSH(oscShift) * envVal;
     return sAndHMix.dryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
 }
@@ -567,13 +564,13 @@ void MySynthVoice::PopulateShape(juce::AudioBuffer<float> &buf, float sin, float
 {
     for (int i=0; i<buf.getNumSamples(); i++)
     {
-        float sinVal = sin * wtSine.getWavetableSampleValue(i);
-        float sawVal = saw * wtSaw.getWavetableSampleValue(i);
+        float sinVal = sin * wtSine.GetWavetableSampleValue(i);
+        float sawVal = saw * wtSaw.GetWavetableSampleValue(i);
         float centerWaveVal;
         
         centerWaveVal = isSubOsc == true
                             ? spikeSqr * subOsc.getSquareWavetableValue(i)
-                            : spikeSqr * wtSpike.getWavetableSampleValue(i);
+                            : spikeSqr * wtSpike.GetWavetableSampleValue(i);
         
         float sampleVal = sinVal + centerWaveVal + sawVal;
         
