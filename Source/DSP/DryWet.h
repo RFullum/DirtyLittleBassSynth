@@ -10,24 +10,19 @@
 
 #pragma once
 
+//============================================================
 
-/// Dry/Wet Control
 class DryWet
 {
 public:
     DryWet();
-    /**
-     Takes the dry sample value, wet sample value, and mix value. Returns their mix sample value
-     */
-    float dryWetMix(float dryIn, float wetIn, float mixVal);
+    ~DryWet();
     
+    float DryWetMix(float dryIn, float wetIn, float mixVal);
     
 private:
-    /// Calculates gain of dry and wet samples. Returns mix sample
-    float dryWetCalculation();
-    
+    float DryWetCalculation();
 
-    // member variables
     float drySample;
     float wetSample;
     float mixFactor;

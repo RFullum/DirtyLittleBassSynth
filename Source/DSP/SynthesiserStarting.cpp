@@ -464,13 +464,13 @@ float MySynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels
 float MySynthVoice::ProcessModifierChain(float input, float envVal)
 {
     const float ringSample = input * ringMod.Process() * envVal;
-    const float oscRing    = ringModMix.dryWetMix(input, ringSample, ringMixSmooth.getNextValue());
+    const float oscRing    = ringModMix.DryWetMix(input, ringSample, ringMixSmooth.getNextValue());
 
     const float freqShiftSample = freqShift.Process() * envVal;
-    const float oscShift        = freqShiftMix.dryWetMix(oscRing, freqShiftSample, freqShiftMixValSmooth.getNextValue());
+    const float oscShift        = freqShiftMix.DryWetMix(oscRing, freqShiftSample, freqShiftMixValSmooth.getNextValue());
 
     const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
-    return sAndHMix.dryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
+    return sAndHMix.DryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
 }
 
 float MySynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &levels)
