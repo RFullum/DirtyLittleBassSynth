@@ -19,47 +19,45 @@ class TwoPoleLPF
 public:
     TwoPoleLPF();
     virtual ~TwoPoleLPF();
-    
+
     virtual void  SetSampleRate(float SR);
-    virtual float ProcessFilter(float                 noteFreq
-                                , float               cutoff
-                                , std::atomic<float> *res
-                                , float               sampleIn
-                                , float               envVal
-                                , std::atomic<float> *amtToCO
-                                , std::atomic<float> *amtToRes
-                                , float               lfoVal
-                                , std::atomic<float> *amtToLFO);
-    
+    virtual float ProcessFilter(float   noteFreq
+                                , float cutoff
+                                , float res
+                                , float sampleIn
+                                , float envVal
+                                , float amtToCO
+                                , float amtToRes
+                                , float lfoVal
+                                , float amtToLFO);
+
 protected:
     void KeyMap(float frqncy, float CO);
-    void FilterEnvControl(float                 envVal
-                          , std::atomic<float> *amtToCO
-                          , std::atomic<float> *amtToRes);
+    void FilterEnvControl(float envVal, float amtToCO, float amtToRes);
     void FilterLFOControl();
-    
+
     float sampleRate;
     float maxCutoff;
     float minCutoff;
     float maxResonance;
-    
+
     float cutoffFreq;
     float resonance;
     float inputSample;
-    
+
     float cutoffScale;
     float resonanceScale;
     float resonanceScalePrev;
-    
+
     float envelopeVal;
     float lfoValue;
     float cutoffLFO;
     float cutoffLFOPrev;
-    
-    std::atomic<float> *cutoffSend;
-    std::atomic<float> *resSend;
-    std::atomic<float> *lfoSend;
-    
+
+    float cutoffSend;
+    float resSend;
+    float lfoSend;
+
 private:
     float Process();
 
@@ -74,16 +72,16 @@ class FourPoleLPF
 {
 public:
     void  SetSampleRate(float SR) override;
-    float ProcessFilter(float                 noteFreq
-                        , float               cutoff
-                        , std::atomic<float> *res
-                        , float               sampleIn
-                        , float               envVal
-                        , std::atomic<float> *amtToCO
-                        , std::atomic<float> *amtToRes
-                        , float               lfoVal
-                        , std::atomic<float> *amtToLFO) override;
-    
+    float ProcessFilter(float   noteFreq
+                        , float cutoff
+                        , float res
+                        , float sampleIn
+                        , float envVal
+                        , float amtToCO
+                        , float amtToRes
+                        , float lfoVal
+                        , float amtToLFO) override;
+
 private:
     TwoPoleLPF twoPole1;
     TwoPoleLPF twoPole2;
@@ -97,16 +95,16 @@ class EightPoleLPF
 {
 public:
     void  SetSampleRate(float SR) override;
-    float ProcessFilter(float                 noteFreq
-                        , float               cutoff
-                        , std::atomic<float> *res
-                        , float               sampleIn
-                        , float               envVal
-                        , std::atomic<float> *amtToCO
-                        , std::atomic<float> *amtToRes
-                        , float               lfoVal
-                        , std::atomic<float> *amtToLFO) override;
-    
+    float ProcessFilter(float   noteFreq
+                        , float cutoff
+                        , float res
+                        , float sampleIn
+                        , float envVal
+                        , float amtToCO
+                        , float amtToRes
+                        , float lfoVal
+                        , float amtToLFO) override;
+
 private:
     FourPoleLPF fourPole1;
     FourPoleLPF fourPole2;
@@ -119,18 +117,18 @@ class NotchFilter
 {
 public:
     void  SetSampleRate(float SR) override;
-    float ProcessFilter(float                 noteFreq
-                        , float               cutoff
-                        , std::atomic<float> *res
-                        , float               sampleIn
-                        , float               envVal
-                        , std::atomic<float> *amtToCO
-                        , std::atomic<float> *amtToRes
-                        , float               lfoVal
-                        , std::atomic<float> *amtToLFO) override;
-    
+    float ProcessFilter(float   noteFreq
+                        , float cutoff
+                        , float res
+                        , float sampleIn
+                        , float envVal
+                        , float amtToCO
+                        , float amtToRes
+                        , float lfoVal
+                        , float amtToLFO) override;
+
 private:
     float ProcessNotch();
-    
+
     juce::IIRFilter notchFilter;
 };

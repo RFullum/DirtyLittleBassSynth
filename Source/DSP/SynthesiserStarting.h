@@ -157,8 +157,8 @@ private:
 
     // Block-stage helpers (called once per block from renderNextBlock).
     BlockLevels ComputeBlockLevels();
-    void        PopulateVisualBuffers(const BlockLevels& levels);
-    void        PrepareDspForBlock();
+    void        PopulateVisualBuffers(const BlockLevels &levels);
+    void        PrepareDspForBlock(const BlockLevels &levels);
 
     // Per-sample-stage helpers (called once per sample from the render loop).
     float ProcessMainOscSample(float envVal, const BlockLevels &levels);
@@ -168,6 +168,17 @@ private:
 
     /// Populates the waveshape buffers
     void PopulateShape(juce::AudioBuffer<float> &buf, float sin, float spikeSqr, float saw, bool isSubOsc);
+
+    // Block-cached parameter values (loaded once per block in PrepareDspForBlock so
+    // the per-sample loop never dereferences std::atomic<float>* on the audio thread).
+    float ringModPitchVal           = 0.0f;
+    float freqShiftPitchVal         = 0.0f;
+    float sAndHPitchVal             = 0.0f;
+    int   filterSelectorIndex       = 0;
+    float filterResonanceVal        = 0.0f;
+    float filterADSRCutOffAmountVal = 0.0f;
+    float filterADSRResAmountVal    = 0.0f;
+    float filtLFOAmtVal             = 0.0f;
 
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend

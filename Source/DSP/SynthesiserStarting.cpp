@@ -323,7 +323,7 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
     if (!playing)
         return;
 
-    PrepareDspForBlock();
+    PrepareDspForBlock(levels);
 
     // Per-sample change-detection state for increment updates.
     float previousFinalFreq      = 0.0f;
@@ -356,22 +356,22 @@ void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int st
         }
 
         // Update modifier-osc increments when freq or their pitch params change.
-        if (previousFinalFreq != finalFreq || prevRingModPitch != *ringModPitch)
+        if (previousFinalFreq != finalFreq || prevRingModPitch != ringModPitchVal)
         {
-            ringMod.ModFreq(finalFreq, ringModPitch);
-            prevRingModPitch = *ringModPitch;
+            ringMod.ModFreq(finalFreq, ringModPitchVal);
+            prevRingModPitch = ringModPitchVal;
         }
 
-        if (previousFinalFreq != finalFreq || prevFreqShiftPitch != *freqShiftPitch)
+        if (previousFinalFreq != finalFreq || prevFreqShiftPitch != freqShiftPitchVal)
         {
-            freqShift.ModFreq(finalFreq, freqShiftPitch);
-            prevFreqShiftPitch = *freqShiftPitch;
+            freqShift.ModFreq(finalFreq, freqShiftPitchVal);
+            prevFreqShiftPitch = freqShiftPitchVal;
         }
 
-        if (previousFinalFreq != finalFreq || prevSAndHPitch != *sAndHPitch)
+        if (previousFinalFreq != finalFreq || prevSAndHPitch != sAndHPitchVal)
         {
-            sAndH.ModFreq(finalFreq, sAndHPitch);
-            prevFreqShiftPitch = *sAndHPitch;   // TODO: BUG ALERT! check prevFreqShiftPitch should be prevSAndHPitch
+            sAndH.ModFreq(finalFreq, sAndHPitchVal);
+            prevFreqShiftPitch = sAndHPitchVal;     // TODO: BUG ALERT! check prevFreqShiftPitch should be prevSAndHPitch
         }
 
         // Envelopes (advance once per sample).
@@ -429,12 +429,23 @@ void MySynthVoice::PopulateVisualBuffers(const BlockLevels &levels)
     PopulateShape(lfoOscShape,  levels.lfoSin,  levels.lfoSquare,  levels.lfoSaw,  true);
 }
 
-void MySynthVoice::PrepareDspForBlock()
+void MySynthVoice::PrepareDspForBlock(const BlockLevels &levels)
 {
+    // Cache atomic-loaded params used per-sample as plain floats (avoids std::atomic
+    // dereferences on the audio thread).
+    ringModPitchVal           = *ringModPitch;
+    freqShiftPitchVal         = *freqShiftPitch;
+    sAndHPitchVal             = *sAndHPitch;
+    filterSelectorIndex       = (int) *filterSelector;
+    filterResonanceVal        = *filterResonance;
+    filterADSRCutOffAmountVal = *filterADSRCutOffAmount;
+    filterADSRResAmountVal    = *filterADSRResAmount;
+    filtLFOAmtVal             = *filtLFOAmt;
+
     // Block-level mod/oscillator setup.
-    ringMod.SetRingToneSlider(ringModTone);
-    freqShift.OscMorph(oscillatorMorph);
-    freqShift.ModFreq(freq, freqShiftPitch);
+    ringMod  .SetRingToneSlider(*ringModTone);
+    freqShift.OscMorph(levels.mainSin, levels.mainSpike, levels.mainSaw);
+    freqShift.ModFreq(freq, freqShiftPitchVal);
     filterLFO.SetIncrement(*filtLFOFreq, 1.0f);
 
     // Smoothed-value targets for the block.
@@ -485,52 +496,52 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
     const float filtLFOSample      = filterLFO.Process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
 
-    switch ((int) *filterSelector)
+    switch (filterSelectorIndex)
     {
         case 1:
             filterSample = fourPoleLPF.ProcessFilter(freq
                                                      , filtCutoffSmoothed
-                                                     , filterResonance
+                                                     , filterResonanceVal
                                                      , input
                                                      , filtEnvVal
-                                                     , filterADSRCutOffAmount
-                                                     , filterADSRResAmount
+                                                     , filterADSRCutOffAmountVal
+                                                     , filterADSRResAmountVal
                                                      , filtLFOSample
-                                                     , filtLFOAmt);
+                                                     , filtLFOAmtVal);
             break;
         case 2:
             filterSample = eightPoleLPF.ProcessFilter(freq
                                                       , filtCutoffSmoothed
-                                                      , filterResonance
+                                                      , filterResonanceVal
                                                       , input
                                                       , filtEnvVal
-                                                      , filterADSRCutOffAmount
-                                                      , filterADSRResAmount
+                                                      , filterADSRCutOffAmountVal
+                                                      , filterADSRResAmountVal
                                                       , filtLFOSample
-                                                      , filtLFOAmt);
+                                                      , filtLFOAmtVal);
             break;
         case 3:
             filterSample = notchFilter.ProcessFilter(freq
                                                      , filtCutoffSmoothed
-                                                     , filterResonance
+                                                     , filterResonanceVal
                                                      , input
                                                      , filtEnvVal
-                                                     , filterADSRCutOffAmount
-                                                     , filterADSRResAmount
+                                                     , filterADSRCutOffAmountVal
+                                                     , filterADSRResAmountVal
                                                      , filtLFOSample
-                                                     , filtLFOAmt);
+                                                     , filtLFOAmtVal);
             break;
         case 0:     [[fallthrough]];
         default:
             filterSample = twoPoleLPF.ProcessFilter(freq
                                                     , filtCutoffSmoothed
-                                                    , filterResonance
+                                                    , filterResonanceVal
                                                     , input
                                                     , filtEnvVal
-                                                    , filterADSRCutOffAmount
-                                                    , filterADSRResAmount
+                                                    , filterADSRCutOffAmountVal
+                                                    , filterADSRResAmountVal
                                                     , filtLFOSample
-                                                    , filtLFOAmt);
+                                                    , filtLFOAmtVal);
             break;
     }
 

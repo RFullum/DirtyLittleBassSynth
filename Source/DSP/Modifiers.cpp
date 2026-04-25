@@ -26,15 +26,15 @@ void RingMod::SetSampleRate(float SR)
     SetUpWavetables();
 }
 
-void RingMod::ModFreq(float fqncy, std::atomic<float> *offset)
+void RingMod::ModFreq(float fqncy, float offset)
 {
-    modFrequency = fqncy * *offset;
+    modFrequency = fqncy * offset;
     SetRingIncrement();
 }
 
-void RingMod::SetRingToneSlider(std::atomic<float> *toneSlider)
+void RingMod::SetRingToneSlider(float toneSlider)
 {
-    ringToneSlider = *toneSlider;
+    ringToneSlider = toneSlider;
 }
 
 float RingMod::Process()
@@ -80,17 +80,17 @@ void FrequencyShifter::SetSampleRate(float SR)
     SetUpFreqShiftWavetables();
 }
 
-void FrequencyShifter::ModFreq(float fqncy, std::atomic<float> *offset)
+void FrequencyShifter::ModFreq(float fqncy, float offset)
 {
-    modFrequency = fqncy * *offset;
+    modFrequency = fqncy * offset;
     SetFreqShiftIncrement();
 }
 
-void FrequencyShifter::OscMorph(std::atomic<float> *morph)
+void FrequencyShifter::OscMorph(float sinLevelIn, float spikeLevelIn, float sawLevelIn)
 {
-    sineLevel  = oscParamControl.sinMorphGain(morph);
-    spikeLevel = oscParamControl.spikeMorphGain(morph);
-    sawLevel   = oscParamControl.sawMorphGain(morph);
+    sineLevel  = sinLevelIn;
+    spikeLevel = spikeLevelIn;
+    sawLevel   = sawLevelIn;
 }
 
 float FrequencyShifter::Process()
@@ -138,9 +138,9 @@ void SampleAndHold::SetSampleRate(float SR)
     SetSampHoldWavetables();
 }
 
-void SampleAndHold::ModFreq(float fqncy, std::atomic<float> *offset)
+void SampleAndHold::ModFreq(float fqncy, float offset)
 {
-    modFrequency = fqncy * *offset;
+    modFrequency = fqncy * offset;
     SetSampHoldIncrement();
 }
 
