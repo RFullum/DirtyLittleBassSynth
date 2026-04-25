@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class OutMeter  : public Component
+class OutMeter  : public juce::Component
 {
 public:
     OutMeter();
@@ -28,18 +28,18 @@ public:
     
     
     /// Sets the colors of the level and clipping meter
-    void setColors(Colour& levelColor, Colour& clipColor);
+    void setColors(juce::Colour& levelColor, juce::Colour& clipColor);
 
 private:
     void heightMultiplier(float mult);
     
-    Rectangle<int> leftChannelBack;
-    Rectangle<int> leftChannelClipBack;
-    Rectangle<int> rightChannelBack;
-    Rectangle<int> rightChannelClipBack;
+    juce::Rectangle<int> leftChannelBack;
+    juce::Rectangle<int> leftChannelClipBack;
+    juce::Rectangle<int> rightChannelBack;
+    juce::Rectangle<int> rightChannelClipBack;
     
-    Rectangle<int> leftChannelLevel;
-    Rectangle<int> rightChannelLevel;
+    juce::Rectangle<int> leftChannelLevel;
+    juce::Rectangle<int> rightChannelLevel;
     
     float outLevel;
     bool levelClipping;
@@ -53,10 +53,10 @@ private:
     
     
     // Colors
-    Colour clipBackRed;
-    Colour clippingRed;
-    Colour levelBackGreen;
-    Colour levelGreen;
+    juce::Colour clipBackRed;
+    juce::Colour clippingRed;
+    juce::Colour levelBackGreen;
+    juce::Colour levelGreen;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutMeter)
 };

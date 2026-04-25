@@ -15,14 +15,14 @@
 OutMeter::OutMeter() : outLevel(0.0f), levelClipping(false), heightMult(0.0f),
                        SR(44100), decayRateRise(0.0005f), decayRateFall(0.001f),
                        decayFactorRise(decayRateRise * SR), decayFactorFall(decayRateFall * SR),
-                       clippingRed(Colour( (uint8)255, (uint8)10, (uint8)27, (uint8)255 ) )
+                       clippingRed(juce::Colour( (juce::uint8)255, (juce::uint8)10, (juce::uint8)27, (juce::uint8)255 ) )
 {}
 
 OutMeter::~OutMeter() {}
 
 
 /// Sets the colors of the level and clipping meter
-void OutMeter::setColors(Colour &levelColor, Colour &clipColor)
+void OutMeter::setColors(juce::Colour &levelColor, juce::Colour &clipColor)
 {
     clipBackRed    = clipColor.darker().darker();
     clippingRed    = clipColor;
@@ -30,12 +30,12 @@ void OutMeter::setColors(Colour &levelColor, Colour &clipColor)
     levelGreen     = levelColor.brighter().brighter();
 }
 
-void OutMeter::paint (Graphics& g)
+void OutMeter::paint (juce::Graphics& g)
 {
-    //Colour clipBackRed    = Colour( (uint8)97,  (uint8)9,   (uint8)5 );
-    //Colour clippingRed    = Colour( (uint8)255, (uint8)52,  (uint8)41 );
-    //Colour levelBackGreen = Colour( (uint8)10,  (uint8)87,  (uint8)9 );
-    //Colour levelGreen     = Colour( (uint8)27,  (uint8)255, (uint8)23 );
+    //juce::Colour clipBackRed    = juce::Colour( (juce::uint8)97,  (juce::uint8)9,   (juce::uint8)5 );
+    //juce::Colour clippingRed    = juce::Colour( (juce::uint8)255, (juce::uint8)52,  (juce::uint8)41 );
+    //juce::Colour levelBackGreen = juce::Colour( (juce::uint8)10,  (juce::uint8)87,  (juce::uint8)9 );
+    //juce::Colour levelGreen     = juce::Colour( (juce::uint8)27,  (juce::uint8)255, (juce::uint8)23 );
     
     if (levelClipping)
         g.setColour( clippingRed );     // Bright Red
@@ -59,10 +59,10 @@ void OutMeter::resized()
     int reducer = 2;
     auto totalArea = getLocalBounds();
     
-    Rectangle<int> reducedArea   = totalArea.reduced         ( reducer );
-    Rectangle<int> clipArea      = reducedArea.removeFromTop ( reducedArea.getHeight() * 0.2f );
-    Rectangle<int> clipLeftArea  = clipArea.removeFromLeft   ( clipArea.getWidth() * 0.5f ).reduced( reducer );
-    Rectangle<int> clipRightArea = clipArea.reduced          ( reducer );
+    juce::Rectangle<int> reducedArea   = totalArea.reduced         ( reducer );
+    juce::Rectangle<int> clipArea      = reducedArea.removeFromTop ( reducedArea.getHeight() * 0.2f );
+    juce::Rectangle<int> clipLeftArea  = clipArea.removeFromLeft   ( clipArea.getWidth() * 0.5f ).reduced( reducer );
+    juce::Rectangle<int> clipRightArea = clipArea.reduced          ( reducer );
     
     leftChannelClipBack.setBounds  ( clipLeftArea.getX(), clipLeftArea.getY(),
                                      clipLeftArea.getWidth(), clipLeftArea.getHeight() );
@@ -70,8 +70,8 @@ void OutMeter::resized()
                                      clipRightArea.getWidth(), clipRightArea.getHeight() );
     
     
-    Rectangle<int> meterLeftArea  = reducedArea.removeFromLeft( reducedArea.getWidth() * 0.5f ).reduced( reducer );
-    Rectangle<int> meterRightArea = reducedArea.reduced( reducer );
+    juce::Rectangle<int> meterLeftArea  = reducedArea.removeFromLeft( reducedArea.getWidth() * 0.5f ).reduced( reducer );
+    juce::Rectangle<int> meterRightArea = reducedArea.reduced( reducer );
     
     leftChannelBack.setBounds   ( meterLeftArea.getX(), meterLeftArea.getY(),
                                   meterLeftArea.getWidth(), meterLeftArea.getHeight() );

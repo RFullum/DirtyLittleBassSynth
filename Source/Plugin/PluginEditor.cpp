@@ -13,13 +13,13 @@
 
 //==============================================================================
 DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor& p)
-    : AudioProcessorEditor (&p),
-        onyx                   ( Colour( (uint8)53,  (uint8)59,  (uint8)60  ) ),
-        lightSlateGray         ( Colour( (uint8)130, (uint8)146, (uint8)152 ) ),
-        magicMint              ( Colour( (uint8)174, (uint8)255, (uint8)216 ) ),
-        fieryRose              ( Colour( (uint8)255, (uint8)104, (uint8)114 ) ),
-        orangePeel             ( Colour( (uint8)252, (uint8)152, (uint8)0   ) ),
-        textColor              ( Colour( (uint8)255, (uint8)255, (uint8)255 ) ),
+    : juce::AudioProcessorEditor (&p),
+        onyx                   ( juce::Colour( (juce::uint8)53,  (juce::uint8)59,  (juce::uint8)60  ) ),
+        lightSlateGray         ( juce::Colour( (juce::uint8)130, (juce::uint8)146, (juce::uint8)152 ) ),
+        magicMint              ( juce::Colour( (juce::uint8)174, (juce::uint8)255, (juce::uint8)216 ) ),
+        fieryRose              ( juce::Colour( (juce::uint8)255, (juce::uint8)104, (juce::uint8)114 ) ),
+        orangePeel             ( juce::Colour( (juce::uint8)252, (juce::uint8)152, (juce::uint8)0   ) ),
+        textColor              ( juce::Colour( (juce::uint8)255, (juce::uint8)255, (juce::uint8)255 ) ),
         processor (p)
         
 {
@@ -29,7 +29,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dryWetLookAndFeel.setColors ( orangePeel, onyx, magicMint );
     
     // Master Out
-    sliderSetup        ( masterGainSlider, Slider::SliderStyle::LinearVertical, orangePeel, orangePeel, true );
+    sliderSetup        ( masterGainSlider, juce::Slider::SliderStyle::LinearVertical, orangePeel, orangePeel, true );
     sliderLabelSetup   ( masterGainLabel, "Out Gain", textColor, 16.0f );
     outMeter.setColors ( magicMint, fieryRose );
     addAndMakeVisible  ( outMeter );
@@ -44,10 +44,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     addAndMakeVisible ( titleFooter );
     
     // Osc Section
-    sliderSetup ( oscMorphSlider,       Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
-    sliderSetup ( subMorphSlider,       Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
-    sliderSetup ( subGainSlider,        Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
-    sliderSetup ( pitchBendRangeSlider, Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, true  );
+    sliderSetup ( oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
+    sliderSetup ( subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, magicMint, magicMint,   false );
+    sliderSetup ( subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
+    sliderSetup ( pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, true  );
     
     oscMorphSlider.setLookAndFeel       ( &dialLookAndFeel );
     subMorphSlider.setLookAndFeel       ( &dialLookAndFeel );
@@ -61,15 +61,15 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( subGainLabel,        "Sub Gain",    textColor, 13.0f );
     sliderLabelSetup ( pitchBendRangeLabel, "Bend\nRange", textColor, 13.0f );
     
-    comboBoxSetup ( subOctave, StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
+    comboBoxSetup ( subOctave, juce::StringArray( {"0", "-1 Oct", "-2 Oct"} ) );
     
-    // Osc ADSR Section
-    sliderSetup( oscAttackSlider,  Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup( oscDecaySlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup( oscSustainSlider, Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup( oscReleaseSlider, Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup( portaSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup( foldbackSlider,   Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    // Osc juce::ADSR Section
+    sliderSetup( oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup( portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup( foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
     oscAttackSlider.setLookAndFeel  ( &dialLookAndFeel );
     oscDecaySlider.setLookAndFeel   ( &dialLookAndFeel );
@@ -86,13 +86,13 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( foldbackLabel,   "Foldback\nDistortion", textColor, 17.0f );
     
     // Modifiers Section
-    sliderSetup ( ringToneSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( ringPitchSlider,     Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( ringDryWetSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( frqShftPitchSlider,  Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( frqShftDryWetSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( sHPitchSlider,       Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( sHDryWetSlider,      Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
     ringToneSlider.setLookAndFeel      ( &dialLookAndFeel   );
     ringPitchSlider.setLookAndFeel     ( &dialLookAndFeel   );
@@ -110,8 +110,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( dryWetLabel,  "Dry/Wet",       onyx, 16.0f );
     
     // Filter Section
-    sliderSetup ( cutoffSlider, Slider::SliderStyle::LinearHorizontal, magicMint, magicMint, false );
-    sliderSetup ( resSlider,    Slider::SliderStyle::LinearVertical,   magicMint, magicMint, false );
+    sliderSetup ( cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, magicMint, magicMint, false );
+    sliderSetup ( resSlider,    juce::Slider::SliderStyle::LinearVertical,   magicMint, magicMint, false );
     
     cutoffSlider.setLookAndFeel ( &dialLookAndFeel );
     resSlider.setLookAndFeel    ( &dialLookAndFeel );
@@ -119,15 +119,15 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( cutoffLabel, "Cutoff", textColor, 15.0f );
     sliderLabelSetup ( resLabel,    "Rez",    textColor, 15.0f );
     
-    comboBoxSetup ( filterType, StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
+    comboBoxSetup ( filterType, juce::StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ) );
     
-    // Filter ADSR Section
-    sliderSetup ( fltAttackSlider,    Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup ( fltDecaySlider,     Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup ( fltSustainSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup ( fltReleaseSlider,   Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
-    sliderSetup ( adsrToCutoffSlider, Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
-    sliderSetup ( adsrToResSlider,    Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    // Filter juce::ADSR Section
+    sliderSetup ( fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               fieryRose, fieryRose, true  );
+    sliderSetup ( adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
+    sliderSetup ( adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, fieryRose, fieryRose, false );
     
     fltAttackSlider.setLookAndFeel    ( &dialLookAndFeel   );
     fltDecaySlider.setLookAndFeel     ( &dialLookAndFeel   );
@@ -144,9 +144,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     sliderLabelSetup ( adsrToResLabel,    "To Rez",       textColor, 15.0f );
     
     // Filter LFO Section
-    sliderSetup ( lfoShapeSlider,  Slider::SliderStyle::LinearHorizontal, magicMint,  magicMint, false  );
-    sliderSetup ( lfoFreqSlider,   Slider::SliderStyle::LinearVertical,   fieryRose,  fieryRose, false  );
-    sliderSetup ( lfoAmountSlider, Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
+    sliderSetup ( lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, magicMint,  magicMint, false  );
+    sliderSetup ( lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   fieryRose,  fieryRose, false  );
+    sliderSetup ( lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   orangePeel, orangePeel, false );
     
     lfoShapeSlider.setLookAndFeel  ( &dialLookAndFeel );
     lfoFreqSlider.setLookAndFeel   ( &dialLookAndFeel );
@@ -158,46 +158,46 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     
     // Attachments
-    oscMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "osc_morph",        oscMorphSlider       );
-    subMorphSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_morph",    subMorphSlider       );
-    subGainSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_gain",     subGainSlider        );
-    pitchBendRangeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "pitch_bend_range", pitchBendRangeSlider );
-    subOctaveAttachment      = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "sub_osc_octave",   subOctave            );
+    oscMorphSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "osc_morph",        oscMorphSlider       );
+    subMorphSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_morph",    subMorphSlider       );
+    subGainSliderAttachment  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "sub_osc_gain",     subGainSlider        );
+    pitchBendRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "pitch_bend_range", pitchBendRangeSlider );
+    subOctaveAttachment      = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "sub_osc_octave",   subOctave            );
     
-    oscAttackSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_attack",    oscAttackSlider  );
-    oscDecaySliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_decay",     oscDecaySlider   );
-    oscSustainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_sustain",   oscSustainSlider );
-    oscReleaseSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_release",   oscReleaseSlider );
-    portaSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "porta_time",    portaSlider      );
-    foldbackSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "foldback_dist", foldbackSlider   );
+    oscAttackSliderAttachment  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_attack",    oscAttackSlider  );
+    oscDecaySliderAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_decay",     oscDecaySlider   );
+    oscSustainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_sustain",   oscSustainSlider );
+    oscReleaseSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "amp_release",   oscReleaseSlider );
+    portaSliderAttachment      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "porta_time",    portaSlider      );
+    foldbackSliderAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "foldback_dist", foldbackSlider   );
     
-    ringToneSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_tone",        ringToneSlider      );
-    ringPitchSliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_pitch",   ringPitchSlider     );
-    ringDryWetSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_mix",     ringDryWetSlider    );
-    frqShftPitchSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_pitch", frqShftPitchSlider  );
-    frqShftDryWetSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_mix",   frqShftDryWetSlider );
-    sHPitchSliderAttachment       = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_pitch",      sHPitchSlider       );
-    sHDryWetSliderAttachment      = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_mix",        sHDryWetSlider      );
+    ringToneSliderAttachment      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_tone",        ringToneSlider      );
+    ringPitchSliderAttachment     = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_pitch",   ringPitchSlider     );
+    ringDryWetSliderAttachment    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "ring_mod_mix",     ringDryWetSlider    );
+    frqShftPitchSliderAttachment  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_pitch", frqShftPitchSlider  );
+    frqShftDryWetSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "freq_shift_mix",   frqShftDryWetSlider );
+    sHPitchSliderAttachment       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_pitch",      sHPitchSlider       );
+    sHDryWetSliderAttachment      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "sandh_mix",        sHDryWetSlider      );
     
-    cutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_cutoff", cutoffSlider );
-    resSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_res",    resSlider    );
-    filterTypeAttachment   = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "filter_type",   filterType   );
+    cutoffSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_cutoff", cutoffSlider );
+    resSliderAttachment    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>   ( processor.parameters, "filter_res",    resSlider    );
+    filterTypeAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment> ( processor.parameters, "filter_type",   filterType   );
     
-    fltAttackSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_attack",  fltAttackSlider    );
-    fltDecaySliderAttachment     = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_decay",   fltDecaySlider     );
-    fltSustainSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_sustain", fltSustainSlider   );
-    fltReleaseSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_release", fltReleaseSlider   );
-    adsrToCutoffSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_COAmt",   adsrToCutoffSlider );
-    adsrToResSliderAttachment    = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_ResAmt",  adsrToResSlider    );
+    fltAttackSliderAttachment    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_attack",  fltAttackSlider    );
+    fltDecaySliderAttachment     = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_decay",   fltDecaySlider     );
+    fltSustainSliderAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_sustain", fltSustainSlider   );
+    fltReleaseSliderAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_release", fltReleaseSlider   );
+    adsrToCutoffSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_COAmt",   adsrToCutoffSlider );
+    adsrToResSliderAttachment    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtEnv_ResAmt",  adsrToResSlider    );
     
-    lfoShapeSliderAttachment  = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_shape", lfoShapeSlider  );
-    lfoFreqSliderAttachment   = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_freq",  lfoFreqSlider   );
-    lfoAmountSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_amt",   lfoAmountSlider );
+    lfoShapeSliderAttachment  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_shape", lfoShapeSlider  );
+    lfoFreqSliderAttachment   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_freq",  lfoFreqSlider   );
+    lfoAmountSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "filtLFO_amt",   lfoAmountSlider );
     
-    masterGainSliderAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "master_gain", masterGainSlider );
+    masterGainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> ( processor.parameters, "master_gain", masterGainSlider );
     
     // Wave Visual
-    Colour onyx2 = onyx.darker().darker();
+    juce::Colour onyx2 = onyx.darker().darker();
     
     oscVisual.setColors    ( magicMint, onyx, onyx2 );
     subOscVisual.setColors ( magicMint, onyx, onyx2 );
@@ -211,24 +211,24 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     addAndMakeVisible ( filterVisual );
     
     
-    // Timer
-    Timer::startTimerHz(60);
+    // juce::Timer
+    juce::Timer::startTimerHz(60);
 }
 
 DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEditor()
 {
-    Timer::stopTimer();
+    juce::Timer::stopTimer();
 }
 
 //==============================================================================
-void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
+void DirtyLittleBassSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
     float cornerRound = 2.0f;
     
     g.fillAll ( onyx );
     
     // Main Out
-    g.setGradientFill      ( ColourGradient::vertical( onyx, mainOutAreaInner.getHeight() * 0.59f,
+    g.setGradientFill      ( juce::ColourGradient::vertical( onyx, mainOutAreaInner.getHeight() * 0.59f,
                                                        magicMint, mainOutAreaInner.getHeight() ));
     g.fillRoundedRectangle ( mainOutAreaInner, cornerRound );
     
@@ -242,7 +242,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.setColour            ( onyx );
     g.fillRoundedRectangle ( subOscSectionInner, cornerRound );
     
-    // Osc ADSR
+    // Osc juce::ADSR
     g.setColour            ( magicMint );
     g.fillRoundedRectangle ( oscADSRSectionInner, cornerRound );
     
@@ -273,7 +273,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint (Graphics& g)
     g.setColour            ( onyx );
     g.fillRoundedRectangle ( filterSectionInner, cornerRound );
     
-    // Filter ADSR
+    // Filter juce::ADSR
     g.setColour            ( onyx );
     g.fillRoundedRectangle ( fltADSRSectionInner, cornerRound );
     
@@ -313,18 +313,18 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // Header space at top for logo & name, etc
     int headerHeight = 66;
     
-    Rectangle<int> headerArea    = totalArea.removeFromTop ( headerHeight      );
-    Rectangle<int> headerReduced = headerArea.reduced      ( sectionSpacerSize );
+    juce::Rectangle<int> headerArea    = totalArea.removeFromTop ( headerHeight      );
+    juce::Rectangle<int> headerReduced = headerArea.reduced      ( sectionSpacerSize );
     
     headerAreaInner.setBounds( headerReduced.getX(), headerReduced.getY(),
                                headerReduced.getWidth(), headerReduced.getHeight() );
     
-    Rectangle<int> titleHeaderArea = Rectangle<int>(headerAreaInner.getX(), headerAreaInner.getY(),
+    juce::Rectangle<int> titleHeaderArea = juce::Rectangle<int>(headerAreaInner.getX(), headerAreaInner.getY(),
                                                     headerAreaInner.getWidth(), headerAreaInner.getHeight() );
     
     titleHeader.setBounds ( titleHeaderArea );
     
-    Rectangle<int> footerArea = totalArea.removeFromBottom( 17 );
+    juce::Rectangle<int> footerArea = totalArea.removeFromBottom( 17 );
     
     titleFooter.setBounds( footerArea );
     
@@ -333,25 +333,25 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     int mainOutWidth    = 100;
     int mainLabelHeight = 30;
     
-    Rectangle<int> mainOutArea    = totalArea.removeFromRight ( mainOutWidth      );
-    Rectangle<int> mainOutReduced = mainOutArea.reduced       ( sectionSpacerSize );
+    juce::Rectangle<int> mainOutArea    = totalArea.removeFromRight ( mainOutWidth      );
+    juce::Rectangle<int> mainOutReduced = mainOutArea.reduced       ( sectionSpacerSize );
     
     mainOutAreaInner.setBounds( mainOutReduced.getX(), mainOutReduced.getY(),
                                 mainOutReduced.getWidth(), mainOutReduced.getHeight() );
     
-    Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom ( mainOutReduced.getHeight() * 0.5f );
-    Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop    ( mainLabelHeight );
+    juce::Rectangle<int> meterOutArea     = mainOutReduced.removeFromBottom ( mainOutReduced.getHeight() * 0.5f );
+    juce::Rectangle<int> mainOutLabelArea = mainOutReduced.removeFromTop    ( mainLabelHeight );
     
     masterGainLabel.setBounds  ( mainOutLabelArea );
     masterGainSlider.setBounds ( mainOutReduced   );
     outMeter.setBounds         ( meterOutArea     );
     
     
-    // Top Row of sections area: Rectangle across top containing
-    // Osc Section, ADSR Section, and Modifiers Section
+    // Top Row of sections area: juce::Rectangle across top containing
+    // Osc Section, juce::ADSR Section, and Modifiers Section
     int topRowHeight = (int)( getHeight() * 0.66f );
     
-    Rectangle<int> topSectionArea = totalArea.removeFromTop( topRowHeight );
+    juce::Rectangle<int> topSectionArea = totalArea.removeFromTop( topRowHeight );
     
     
     // Oscillator Section area (Top Row subarea)
@@ -362,25 +362,25 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     int gainLabelHeight = 30;
     
     // Main Osc Section Area (Oscillator subarea)
-    Rectangle<int> oscSection        = topSectionArea.removeFromLeft ( oscSectionWidth );
-    Rectangle<int> oscSectionReduced = oscSection.reduced            ( sectionSpacerSize );
+    juce::Rectangle<int> oscSection        = topSectionArea.removeFromLeft ( oscSectionWidth );
+    juce::Rectangle<int> oscSectionReduced = oscSection.reduced            ( sectionSpacerSize );
     
     oscSectionInner.setBounds ( oscSectionReduced.getX(), oscSectionReduced.getY(),
                                 oscSectionReduced.getWidth(), oscSectionReduced.getHeight() );
     
-    Rectangle<int> mainOscSection        = oscSectionReduced.removeFromTop ( oscSectionReduced.getHeight() * 0.5f );
-    Rectangle<int> mainOscSectionReduced = mainOscSection.reduced          ( sectionSpacerSize * 2.0f );
+    juce::Rectangle<int> mainOscSection        = oscSectionReduced.removeFromTop ( oscSectionReduced.getHeight() * 0.5f );
+    juce::Rectangle<int> mainOscSectionReduced = mainOscSection.reduced          ( sectionSpacerSize * 2.0f );
     
     mainOscSectionInner.setBounds( mainOscSectionReduced.getX(), mainOscSectionReduced.getY(),
                                    mainOscSectionReduced.getWidth(), mainOscSectionReduced.getHeight() );
     
-    Rectangle<int> oscGainSpace         = mainOscSectionReduced.removeFromRight  ( oscGainWidth    );
-    Rectangle<int> morphLabelSpace      = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
-    Rectangle<int> morphLabelSpace2     = morphLabelSpace.removeFromTop          ( morphLabelSpace.getHeight() * 0.5f );
-    Rectangle<int> morphOSCLabelSpace   = morphLabelSpace2.removeFromBottom      ( gainLabelHeight - 10.0f );
-    Rectangle<int> morphMORPHLabelSpace = morphLabelSpace.removeFromTop          ( gainLabelHeight - 10.0f );
-    Rectangle<int> morphSliderSpace     = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
-    Rectangle<int> pitchBendLabelSpace  = oscGainSpace.removeFromTop             ( gainLabelHeight );
+    juce::Rectangle<int> oscGainSpace         = mainOscSectionReduced.removeFromRight  ( oscGainWidth    );
+    juce::Rectangle<int> morphLabelSpace      = mainOscSectionReduced.removeFromLeft   ( morphLabelWidth );
+    juce::Rectangle<int> morphLabelSpace2     = morphLabelSpace.removeFromTop          ( morphLabelSpace.getHeight() * 0.5f );
+    juce::Rectangle<int> morphOSCLabelSpace   = morphLabelSpace2.removeFromBottom      ( gainLabelHeight - 10.0f );
+    juce::Rectangle<int> morphMORPHLabelSpace = morphLabelSpace.removeFromTop          ( gainLabelHeight - 10.0f );
+    juce::Rectangle<int> morphSliderSpace     = mainOscSectionReduced.removeFromBottom ( gainLabelHeight );
+    juce::Rectangle<int> pitchBendLabelSpace  = oscGainSpace.removeFromTop             ( gainLabelHeight );
     
     oscVisualSpace = mainOscSectionReduced.reduced( sectionSpacerSize );
     
@@ -392,19 +392,19 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     pitchBendRangeLabel.setBounds  ( pitchBendLabelSpace  );
     
     // Sub Osc Section Area (Oscillator subarea)
-    Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f );
+    juce::Rectangle<int> oscSectionReduced2  = oscSectionReduced.reduced( sectionSpacerSize * 2.0f );
     
     subOscSectionInner.setBounds ( oscSectionReduced2.getX(), oscSectionReduced2.getY(),
                                    oscSectionReduced2.getWidth(), oscSectionReduced2.getHeight() );
     
-    Rectangle<int> subGainSpace            = oscSectionReduced2.removeFromRight   ( oscGainWidth    );
-    Rectangle<int> subOctaveSpace          = subGainSpace.removeFromBottom        ( subOctaveHeight );
-    Rectangle<int> subGainLabelSpace       = subGainSpace.removeFromTop           ( gainLabelHeight );
-    Rectangle<int> subMorphLabelSpace      = oscSectionReduced2.removeFromLeft    ( morphLabelWidth );
-    Rectangle<int> subMorphLabelSpace2     = subMorphLabelSpace.removeFromTop     ( subMorphLabelSpace.getHeight() * 0.5f );
-    Rectangle<int> subMorphOSCLabelSpace   = subMorphLabelSpace2.removeFromBottom ( gainLabelHeight - 10.0f );
-    Rectangle<int> subMorphMORPHLabelSpace = subMorphLabelSpace.removeFromTop     ( gainLabelHeight - 10.0f );
-    Rectangle<int> subMorphSliderSpace     = oscSectionReduced2.removeFromBottom  ( gainLabelHeight );
+    juce::Rectangle<int> subGainSpace            = oscSectionReduced2.removeFromRight   ( oscGainWidth    );
+    juce::Rectangle<int> subOctaveSpace          = subGainSpace.removeFromBottom        ( subOctaveHeight );
+    juce::Rectangle<int> subGainLabelSpace       = subGainSpace.removeFromTop           ( gainLabelHeight );
+    juce::Rectangle<int> subMorphLabelSpace      = oscSectionReduced2.removeFromLeft    ( morphLabelWidth );
+    juce::Rectangle<int> subMorphLabelSpace2     = subMorphLabelSpace.removeFromTop     ( subMorphLabelSpace.getHeight() * 0.5f );
+    juce::Rectangle<int> subMorphOSCLabelSpace   = subMorphLabelSpace2.removeFromBottom ( gainLabelHeight - 10.0f );
+    juce::Rectangle<int> subMorphMORPHLabelSpace = subMorphLabelSpace.removeFromTop     ( gainLabelHeight - 10.0f );
+    juce::Rectangle<int> subMorphSliderSpace     = oscSectionReduced2.removeFromBottom  ( gainLabelHeight );
     
     subGainLabel.setBounds   ( subGainLabelSpace       );
     subMorphLabel.setBounds  ( subMorphOSCLabelSpace   );
@@ -415,32 +415,32 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     subOscVisual.setBounds   ( oscSectionReduced2.reduced( sectionSpacerSize ) );
     
     
-    // Osc ADSR Section Area
-    Rectangle<int> oscADSRSpace        = topSectionArea.removeFromLeft ( topSectionArea.getWidth() * 0.33f );
-    Rectangle<int> oscADSRSpaceReduced = oscADSRSpace.reduced          ( sectionSpacerSize );
+    // Osc juce::ADSR Section Area
+    juce::Rectangle<int> oscADSRSpace        = topSectionArea.removeFromLeft ( topSectionArea.getWidth() * 0.33f );
+    juce::Rectangle<int> oscADSRSpaceReduced = oscADSRSpace.reduced          ( sectionSpacerSize );
     
     oscADSRSectionInner.setBounds ( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(),
                                     oscADSRSpaceReduced.getWidth(), oscADSRSpaceReduced.getHeight() );
     
     int rotaryLabelHeight = 60;
     
-    Rectangle<int> rotarySpace = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f );
+    juce::Rectangle<int> rotarySpace = oscADSRSpaceReduced.removeFromBottom ( oscADSRSpaceReduced.getHeight() * 0.33f ).reduced( sectionSpacerSize * 2.0f );
     
     adsrRotaryInner.setBounds ( rotarySpace.getX(), rotarySpace.getY(),
                                 rotarySpace.getWidth(), rotarySpace.getHeight() );
     
-    Rectangle<int> portaSpace      = rotarySpace.removeFromLeft    ( rotarySpace.getWidth() * 0.5f );
-    Rectangle<int> portaLabelSpace = portaSpace.removeFromTop      ( rotaryLabelHeight );
+    juce::Rectangle<int> portaSpace      = rotarySpace.removeFromLeft    ( rotarySpace.getWidth() * 0.5f );
+    juce::Rectangle<int> portaLabelSpace = portaSpace.removeFromTop      ( rotaryLabelHeight );
     
     portaSlider.setBounds ( portaSpace );
     portaLabel.setBounds  ( portaLabelSpace );
     
-    Rectangle<int> foldbackLabelSpace = rotarySpace.removeFromTop( rotaryLabelHeight );
+    juce::Rectangle<int> foldbackLabelSpace = rotarySpace.removeFromTop( rotaryLabelHeight );
     
     foldbackSlider.setBounds ( rotarySpace );
     foldbackLabel.setBounds  ( foldbackLabelSpace );
     
-    // ADSR Slider Area (Osc ADSR subsection)
+    // juce::ADSR juce::Slider Area (Osc juce::ADSR subsection)
     oscADSRSpaceReduced = oscADSRSpaceReduced.reduced( sectionSpacerSize * 2.0f );
     
     oscADSRSlidersInner.setBounds ( oscADSRSpaceReduced.getX(), oscADSRSpaceReduced.getY(),
@@ -448,18 +448,18 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     int oscADSRSliderWidth = oscADSRSpaceReduced.getWidth() * 0.25f;
     
-    Rectangle<int> oscASpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
-    Rectangle<int> oscDSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
-    Rectangle<int> oscSSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
-    Rectangle<int> oscRSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
+    juce::Rectangle<int> oscASpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
+    juce::Rectangle<int> oscDSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
+    juce::Rectangle<int> oscSSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
+    juce::Rectangle<int> oscRSpace = oscADSRSpaceReduced.removeFromLeft( oscADSRSliderWidth );
     
-    // ADSR Labels Area (Osc ADSR subsection)
+    // juce::ADSR Labels Area (Osc juce::ADSR subsection)
     int oscADSRLableHeight = 30;
     
-    Rectangle<int> oscALabelSpace = oscASpace.removeFromTop( oscADSRLableHeight );
-    Rectangle<int> oscDLabelSpace = oscDSpace.removeFromTop( oscADSRLableHeight );
-    Rectangle<int> oscSLabelSpace = oscSSpace.removeFromTop( oscADSRLableHeight );
-    Rectangle<int> oscRLabelSpace = oscRSpace.removeFromTop( oscADSRLableHeight );
+    juce::Rectangle<int> oscALabelSpace = oscASpace.removeFromTop( oscADSRLableHeight );
+    juce::Rectangle<int> oscDLabelSpace = oscDSpace.removeFromTop( oscADSRLableHeight );
+    juce::Rectangle<int> oscSLabelSpace = oscSSpace.removeFromTop( oscADSRLableHeight );
+    juce::Rectangle<int> oscRLabelSpace = oscRSpace.removeFromTop( oscADSRLableHeight );
     
     oscAttackSlider.setBounds  ( oscASpace );
     oscDecaySlider.setBounds   ( oscDSpace );
@@ -476,16 +476,16 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     int modHeadingHeight    = 30;
     int modSectionGridWidth = (int)(topSectionArea.getWidth() * 0.25f);
     
-    Rectangle<int> modSectionSpace   = topSectionArea;
-    Rectangle<int> modSectionReduced = modSectionSpace.reduced ( sectionSpacerSize );
+    juce::Rectangle<int> modSectionSpace   = topSectionArea;
+    juce::Rectangle<int> modSectionReduced = modSectionSpace.reduced ( sectionSpacerSize );
     
     modSectionInner.setBounds( modSectionReduced.getX(), modSectionReduced.getY(),
                                modSectionReduced.getWidth(), modSectionReduced.getHeight() );
     
-    Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop( modHeadingHeight    );
-    Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> toneHeadingSpace   = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> pitchHeadingSpace  = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
+    juce::Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop( modHeadingHeight    );
+    juce::Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
+    juce::Rectangle<int> toneHeadingSpace   = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
+    juce::Rectangle<int> pitchHeadingSpace  = modHeadingsSpace.removeFromLeft( modSectionGridWidth );
     
     toneLabel.setBounds   ( toneHeadingSpace  );
     pitchLabel.setBounds  ( pitchHeadingSpace );
@@ -493,10 +493,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     int modKnobHeight = (int)( modSectionReduced.getHeight() * 0.33f );
     
-    Rectangle<int> modSubsections = modSectionReduced.reduced( sectionSpacerSize );
-    Rectangle<int> ringRowArea    = modSubsections.removeFromTop( modKnobHeight ).reduced( sectionSpacerSize );
-    Rectangle<int> frqShftRowArea = modSubsections.removeFromTop( modKnobHeight ).reduced( sectionSpacerSize );
-    Rectangle<int> sAndHRowArea   = modSubsections.reduced( sectionSpacerSize );
+    juce::Rectangle<int> modSubsections = modSectionReduced.reduced( sectionSpacerSize );
+    juce::Rectangle<int> ringRowArea    = modSubsections.removeFromTop( modKnobHeight ).reduced( sectionSpacerSize );
+    juce::Rectangle<int> frqShftRowArea = modSubsections.removeFromTop( modKnobHeight ).reduced( sectionSpacerSize );
+    juce::Rectangle<int> sAndHRowArea   = modSubsections.reduced( sectionSpacerSize );
     
     ringModSectionInner.setBounds ( ringRowArea.getX(), ringRowArea.getY(),
                                     ringRowArea.getWidth(), ringRowArea.getHeight() );
@@ -507,38 +507,38 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     sAndHSectionInner.setBounds   ( sAndHRowArea.getX(), sAndHRowArea.getY(),
                                     sAndHRowArea.getWidth(), sAndHRowArea.getHeight() );
     
-    Rectangle<int> modTypeSection   = modSectionReduced.removeFromLeft ( modSectionGridWidth );
-    Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop     ( modKnobHeight       );
-    Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop     ( modKnobHeight       );
+    juce::Rectangle<int> modTypeSection   = modSectionReduced.removeFromLeft ( modSectionGridWidth );
+    juce::Rectangle<int> ringLabelArea    = modTypeSection.removeFromTop     ( modKnobHeight       );
+    juce::Rectangle<int> frqShftLabelArea = modTypeSection.removeFromTop     ( modKnobHeight       );
     
     ringLabel.setBounds    ( ringLabelArea    );
     frqShftLabel.setBounds ( frqShftLabelArea );
     sHLabel.setBounds      ( modTypeSection   );
     
-    Rectangle<int> ringKnobArea      = modSectionReduced.removeFromTop ( modKnobHeight       );
-    Rectangle<int> ringToneKnobArea  = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
-    Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
+    juce::Rectangle<int> ringKnobArea      = modSectionReduced.removeFromTop ( modKnobHeight       );
+    juce::Rectangle<int> ringToneKnobArea  = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
+    juce::Rectangle<int> ringPitchKnobArea = ringKnobArea.removeFromLeft     ( modSectionGridWidth );
     
     ringToneSlider.setBounds   ( ringToneKnobArea  );
     ringPitchSlider.setBounds  ( ringPitchKnobArea );
     ringDryWetSlider.setBounds ( ringKnobArea      );
     
-    Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop ( modKnobHeight );
-    Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
-    Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
+    juce::Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop ( modKnobHeight );
+    juce::Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
+    juce::Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft    ( modSectionGridWidth );
     
     frqShftPitchSlider.setBounds  ( frqShPtchArea );
     frqShftDryWetSlider.setBounds ( frqShKnobArea );
     
-    Rectangle<int> sHSpacer    = modSectionReduced.removeFromLeft( modSectionGridWidth );
-    Rectangle<int> sHPitchArea = modSectionReduced.removeFromLeft( modSectionGridWidth );
+    juce::Rectangle<int> sHSpacer    = modSectionReduced.removeFromLeft( modSectionGridWidth );
+    juce::Rectangle<int> sHPitchArea = modSectionReduced.removeFromLeft( modSectionGridWidth );
     
     sHPitchSlider.setBounds  ( sHPitchArea       );
     sHDryWetSlider.setBounds ( modSectionReduced );
     
     
-    // Bottom Section: Rectangle across bottom containing Filter Section,
-    // Filter ADSR Section, and Filter LFO section
+    // Bottom Section: juce::Rectangle across bottom containing Filter Section,
+    // Filter juce::ADSR Section, and Filter LFO section
     auto bottomSectionArea = totalArea.reduced( sectionSpacerSize );
     
     bottomSectionInner.setBounds( bottomSectionArea.getX(), bottomSectionArea.getY(),
@@ -549,19 +549,19 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     
     // Filter Area
-    Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft ( lowerGridWidth    );
-    Rectangle<int> filterAreaReduced = filterArea.reduced               ( sectionSpacerSize );
+    juce::Rectangle<int> filterArea        = bottomSectionArea.removeFromLeft ( lowerGridWidth    );
+    juce::Rectangle<int> filterAreaReduced = filterArea.reduced               ( sectionSpacerSize );
     
     filterSectionInner.setBounds ( filterAreaReduced.getX(), filterAreaReduced.getY(),
                                    filterAreaReduced.getWidth(), filterAreaReduced.getHeight() );
     
     int resWidth = (int)(filterAreaReduced.getWidth() * 0.125f);
     
-    Rectangle<int> resArea         = filterAreaReduced.removeFromRight  ( resWidth        );
-    Rectangle<int> resLableArea    = resArea.removeFromTop              ( filtLabelheight );
-    Rectangle<int> cOLabelArea     = filterAreaReduced.removeFromLeft   ( morphLabelWidth );
-    Rectangle<int> fltTypeArea     = filterAreaReduced.removeFromBottom ( filtLabelheight ).removeFromRight( 75 );
-    Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom ( filtLabelheight );
+    juce::Rectangle<int> resArea         = filterAreaReduced.removeFromRight  ( resWidth        );
+    juce::Rectangle<int> resLableArea    = resArea.removeFromTop              ( filtLabelheight );
+    juce::Rectangle<int> cOLabelArea     = filterAreaReduced.removeFromLeft   ( morphLabelWidth );
+    juce::Rectangle<int> fltTypeArea     = filterAreaReduced.removeFromBottom ( filtLabelheight ).removeFromRight( 75 );
+    juce::Rectangle<int> fltCOSliderArea = filterAreaReduced.removeFromBottom ( filtLabelheight );
     
     resLabel.setBounds     ( resLableArea      );
     resSlider.setBounds    ( resArea           );
@@ -570,17 +570,17 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     cutoffSlider.setBounds ( fltCOSliderArea   );
     filterVisual.setBounds ( filterAreaReduced );
     
-    // Filter ADSR Area
-    Rectangle<int> fltADSRArea           = bottomSectionArea.removeFromLeft ( lowerGridWidth );
-    Rectangle<int> fltADSRAreaReduced    = fltADSRArea.reduced              ( sectionSpacerSize );
+    // Filter juce::ADSR Area
+    juce::Rectangle<int> fltADSRArea           = bottomSectionArea.removeFromLeft ( lowerGridWidth );
+    juce::Rectangle<int> fltADSRAreaReduced    = fltADSRArea.reduced              ( sectionSpacerSize );
     
     fltADSRSectionInner.setBounds ( fltADSRAreaReduced.getX(), fltADSRAreaReduced.getY(),
                                     fltADSRAreaReduced.getWidth(), fltADSRAreaReduced.getHeight() );
     
-    Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
-    Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
-    Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight - 9.0f );
-    Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight - 9.0f );
+    juce::Rectangle<int> fltADSRRotaryArea     = fltADSRAreaReduced.removeFromRight ( (int)(fltADSRAreaReduced.getWidth() * 0.33f) );
+    juce::Rectangle<int> fltADSRToResArea      = fltADSRRotaryArea.removeFromBottom ( (int)(fltADSRRotaryArea.getHeight() * 0.5f) );
+    juce::Rectangle<int> fltADSRToResLabelArea = fltADSRToResArea.removeFromTop     ( filtLabelheight - 9.0f );
+    juce::Rectangle<int> fltADSRToCOLabelArea  = fltADSRRotaryArea.removeFromTop    ( filtLabelheight - 9.0f );
     
     adsrToResLabel.setBounds     ( fltADSRToResLabelArea );
     adsrToResSlider.setBounds    ( fltADSRToResArea      );
@@ -589,19 +589,19 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
     int fltADSRWidth = (int)(fltADSRAreaReduced.getWidth() * 0.25f);
     
-    Rectangle<int> fltADSRHeader = fltADSRAreaReduced.removeFromTop ( filtLabelheight );
-    Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
-    Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
-    Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
+    juce::Rectangle<int> fltADSRHeader = fltADSRAreaReduced.removeFromTop ( filtLabelheight );
+    juce::Rectangle<int> fltALabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
+    juce::Rectangle<int> fltDLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
+    juce::Rectangle<int> fltSLabelArea = fltADSRHeader.removeFromLeft     ( fltADSRWidth    );
     
     fltAttackLabel.setBounds  ( fltALabelArea );
     fltDecayLabel.setBounds   ( fltDLabelArea );
     fltSustainLabel.setBounds ( fltSLabelArea );
     fltReleaseLabel.setBounds ( fltADSRHeader );
     
-    Rectangle<int> fltASliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
-    Rectangle<int> fltDSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
-    Rectangle<int> fltSSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
+    juce::Rectangle<int> fltASliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
+    juce::Rectangle<int> fltDSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
+    juce::Rectangle<int> fltSSliderArea = fltADSRAreaReduced.removeFromLeft( fltADSRWidth );
     
     fltAttackSlider.setBounds  ( fltASliderArea     );
     fltDecaySlider.setBounds   ( fltDSliderArea     );
@@ -611,24 +611,24 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // LFO Area
     auto lfoArea = bottomSectionArea;
     
-    Rectangle<int> lfoAreaReduced = lfoArea.reduced( sectionSpacerSize );
+    juce::Rectangle<int> lfoAreaReduced = lfoArea.reduced( sectionSpacerSize );
     
     lfoSectionInner.setBounds( lfoAreaReduced.getX(), lfoAreaReduced.getY(), lfoAreaReduced.getWidth(), lfoAreaReduced.getHeight() );
     
-    Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight      ( (int)( lfoAreaReduced.getWidth() * 0.33f ) );
-    Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop     ( filtLabelheight );
-    Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)( lfoVertLabelFootArea.getWidth() * 0.5f ) );
+    juce::Rectangle<int> lfoVertSliderArea    = lfoAreaReduced.removeFromRight      ( (int)( lfoAreaReduced.getWidth() * 0.33f ) );
+    juce::Rectangle<int> lfoVertLabelFootArea = lfoVertSliderArea.removeFromTop     ( filtLabelheight );
+    juce::Rectangle<int> lfoFrqLabelArea      = lfoVertLabelFootArea.removeFromLeft ( (int)( lfoVertLabelFootArea.getWidth() * 0.5f ) );
     
     lfoFreqLabel.setBounds   ( lfoFrqLabelArea      );
     lfoAmountLabel.setBounds ( lfoVertLabelFootArea );
     
-    Rectangle<int> lfoFreqSliderArea = lfoVertSliderArea.removeFromLeft( (int)( lfoVertSliderArea.getWidth() * 0.5f ) );
+    juce::Rectangle<int> lfoFreqSliderArea = lfoVertSliderArea.removeFromLeft( (int)( lfoVertSliderArea.getWidth() * 0.5f ) );
     
     lfoFreqSlider.setBounds   ( lfoFreqSliderArea );
     lfoAmountSlider.setBounds ( lfoVertSliderArea );
     
-    Rectangle<int> lfoShapeArea       = lfoAreaReduced.removeFromBottom( filtLabelheight );
-    Rectangle<int> lfoShapeSliderArea = lfoAreaReduced.removeFromBottom( filtLabelheight );
+    juce::Rectangle<int> lfoShapeArea       = lfoAreaReduced.removeFromBottom( filtLabelheight );
+    juce::Rectangle<int> lfoShapeSliderArea = lfoAreaReduced.removeFromBottom( filtLabelheight );
     
     lfoShapeLabel.setBounds  ( lfoShapeArea       );
     lfoShapeSlider.setBounds ( lfoShapeSliderArea );
@@ -637,8 +637,8 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     
 }
 
-void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstance, Slider::SliderStyle style,
-                                                           Colour& sliderFillColor, Colour& sliderThumbColor,
+void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(juce::Slider& sliderInstance, juce::Slider::SliderStyle style,
+                                                           juce::Colour& sliderFillColor, juce::Colour& sliderThumbColor,
                                                            bool showTextBox)
 {
     sliderInstance.setSliderStyle(style);
@@ -646,49 +646,49 @@ void DirtyLittleBassSynthAudioProcessorEditor::sliderSetup(Slider& sliderInstanc
     // If slider has a textbox, draw it, otherwise, don't
     if (showTextBox)
     {
-        sliderInstance.setTextBoxStyle ( Slider::TextBoxBelow, false, 40, 20 );
-        sliderInstance.setColour       ( Slider::textBoxOutlineColourId, Colour( (uint8)0, (uint8)0, (uint8)0, (uint8)0 ) );
-        sliderInstance.setColour       ( Slider::textBoxTextColourId, textColor );
+        sliderInstance.setTextBoxStyle ( juce::Slider::TextBoxBelow, false, 40, 20 );
+        sliderInstance.setColour       ( juce::Slider::textBoxOutlineColourId, juce::Colour( (juce::uint8)0, (juce::uint8)0, (juce::uint8)0, (juce::uint8)0 ) );
+        sliderInstance.setColour       ( juce::Slider::textBoxTextColourId, textColor );
     }
     else
     {
-        sliderInstance.setTextBoxStyle( Slider::NoTextBox, false, 0, 0 );
+        sliderInstance.setTextBoxStyle( juce::Slider::NoTextBox, false, 0, 0 );
     }
     
-    // Slider types
-    if (sliderInstance.getSliderStyle() == Slider::SliderStyle::LinearHorizontal)
+    // juce::Slider types
+    if (sliderInstance.getSliderStyle() == juce::Slider::SliderStyle::LinearHorizontal)
     {
-        sliderInstance.setColour( Slider::trackColourId, sliderFillColor );
+        sliderInstance.setColour( juce::Slider::trackColourId, sliderFillColor );
     }
-    else if (sliderInstance.getSliderStyle() == Slider::SliderStyle::LinearVertical)
+    else if (sliderInstance.getSliderStyle() == juce::Slider::SliderStyle::LinearVertical)
     {
-        sliderInstance.setColour( Slider::trackColourId, sliderFillColor );
+        sliderInstance.setColour( juce::Slider::trackColourId, sliderFillColor );
     }
-    else if (sliderInstance.getSliderStyle() == Slider::SliderStyle::RotaryHorizontalVerticalDrag)
+    else if (sliderInstance.getSliderStyle() == juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag)
     {
-        sliderInstance.setColour( Slider::rotarySliderFillColourId, sliderFillColor );
+        sliderInstance.setColour( juce::Slider::rotarySliderFillColourId, sliderFillColor );
     }
     
-    sliderInstance.setColour( Slider::thumbColourId, sliderThumbColor );
+    sliderInstance.setColour( juce::Slider::thumbColourId, sliderThumbColor );
     
     addAndMakeVisible(sliderInstance);
 }
 
 
-void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(Label& labelInstance, String labelText, Colour& c, float fontSize)
+void DirtyLittleBassSynthAudioProcessorEditor::sliderLabelSetup(juce::Label& labelInstance, juce::String labelText, juce::Colour& c, float fontSize)
 {
-    labelInstance.setFont              ( Font("helvetica", fontSize, 1) );
-    labelInstance.setText              ( labelText, dontSendNotification );
-    labelInstance.setJustificationType ( Justification::centred );
-    labelInstance.setColour            ( Label::textColourId, c );
+    labelInstance.setFont              ( juce::Font("helvetica", fontSize, 1) );
+    labelInstance.setText              ( labelText, juce::dontSendNotification );
+    labelInstance.setJustificationType ( juce::Justification::centred );
+    labelInstance.setColour            ( juce::Label::textColourId, c );
     
     addAndMakeVisible(labelInstance);
 }
 
-void DirtyLittleBassSynthAudioProcessorEditor::comboBoxSetup(ComboBox& boxInstance, StringArray boxItems)
+void DirtyLittleBassSynthAudioProcessorEditor::comboBoxSetup(juce::ComboBox& boxInstance, juce::StringArray boxItems)
 {
     boxInstance.addItemList          ( boxItems, 1 );
-    boxInstance.setJustificationType ( Justification::centred );
+    boxInstance.setJustificationType ( juce::Justification::centred );
     boxInstance.setSelectedItemIndex ( 0 );
     addAndMakeVisible                ( boxInstance );
 }

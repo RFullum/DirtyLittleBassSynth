@@ -16,7 +16,7 @@
 //==============================================================================
 /**
 */
-class DirtyLittleBassSynthAudioProcessor  : public AudioProcessor
+class DirtyLittleBassSynthAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
@@ -31,14 +31,14 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
-    void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
-    AudioProcessorEditor* createEditor() override;
+    juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
-    const String getName() const override;
+    const juce::String getName() const override;
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
@@ -49,11 +49,11 @@ public:
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int index) override;
-    const String getProgramName (int index) override;
-    void changeProgramName (int index, const String& newName) override;
+    const juce::String getProgramName (int index) override;
+    void changeProgramName (int index, const juce::String& newName) override;
 
     //==============================================================================
-    void getStateInformation (MemoryBlock& destData) override;
+    void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     //==============================================================================
@@ -63,15 +63,15 @@ public:
     float getOutLevel();
     
     // Parameter members
-    AudioProcessorValueTreeState parameters;
+    juce::AudioProcessorValueTreeState parameters;
     
     // WaveDrawing
-    AudioBuffer<float> mainOscVisualBuffer;
-    AudioBuffer<float> subOscVisualBuffer;
-    AudioBuffer<float> lfoOscVisualBuffer;
+    juce::AudioBuffer<float> mainOscVisualBuffer;
+    juce::AudioBuffer<float> subOscVisualBuffer;
+    juce::AudioBuffer<float> lfoOscVisualBuffer;
     
     // Metering
-    AudioBuffer<float> outputLevelBuffer;
+    juce::AudioBuffer<float> outputLevelBuffer;
 
 private:
     // Parameter members
@@ -83,7 +83,7 @@ private:
     std::atomic<float>* subOctaveParameter;
     std::atomic<float>* pitchBendParameter;
     
-    // Amp ADSR parameters
+    // Amp juce::ADSR parameters
     std::atomic<float>* ampAttackParameter;
     std::atomic<float>* ampDecayParameter;
     std::atomic<float>* ampSustainParameter;
@@ -113,7 +113,7 @@ private:
     std::atomic<float>* filterResonanceParameter;
     std::atomic<float>* filterSelectorParameter;
     
-    // Filter ADSR Parameters
+    // Filter juce::ADSR Parameters
     std::atomic<float>* filtEnvAttackParameter;
     std::atomic<float>* filtEnvDecayParameter;
     std::atomic<float>* filtEnvSustainParameter;
@@ -133,10 +133,10 @@ private:
     std::atomic<float>* masterGainParameter;
     
     // Transport Info
-    //AudioPlayHead::CurrentPositionInfo playHeadInfo;
+    //juce::AudioPlayHead::CurrentPositionInfo playHeadInfo;
     
     // Instance of SynthesiZer class
-    Synthesiser synth;
+    juce::Synthesiser synth;
     int voiceCount = 1;
     
     

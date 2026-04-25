@@ -24,7 +24,7 @@ TwoPoleLPF::TwoPoleLPF() : sampleRate(44100.0f), maxCutoff(17000.0f), minCutoff(
                            cutoffLFO(1000.0f), cutoffLFOPrev(1000.0f)
                            
 {
-    lowPass1.setCoefficients( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+    lowPass1.setCoefficients( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
 }
 
 /// Destructo
@@ -71,30 +71,30 @@ float TwoPoleLPF::processFilter(float noteFreq, float cutoff,
 void TwoPoleLPF::keyMap(float frqncy, float CO)
 {
     float cutoffPos = CO;
-    cutoffFreq      = jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
+    cutoffFreq      = juce::jmap(cutoffPos, 1.0f, 100.0f, frqncy, maxCutoff);
 }
 
 /**
-Scales the ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
+Scales the juce::ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
 The current note frequency is the minimum, and the maxCutoff frequency is the maximum.
 */
 void TwoPoleLPF::filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes)
 {
     // Cutoff envelope scaling
     float filterHeadroom = (maxCutoff - cutoffFreq) * *amtToCO;
-    cutoffScale          = jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
+    cutoffScale          = juce::jmap(envVal, 0.0f, 1.0f, cutoffFreq, cutoffFreq + filterHeadroom);
     if (cutoffScale <= 0.0f)
     {
         cutoffScale = 0.01f;
     }
     
     float resHeadroom = (maxResonance - resonance) * *amtToRes;
-    float newResScale = jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
+    float newResScale = juce::jmap(envVal, 0.1f, 0.98f, resonance, resonance + resHeadroom);
     
     if (resonanceScale != newResScale)
     {
         resonanceScale = newResScale;
-        lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+        lowPass1.setCoefficients ( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
     }
     
     
@@ -122,14 +122,14 @@ void TwoPoleLPF::filterLFOControl()
     }
 }
 
-/// Cascades two IIRFilter lowpasses and returns the output sample value
+/// Cascades two juce::IIRFilter lowpasses and returns the output sample value
 float TwoPoleLPF::process()
 {
     filterEnvControl         ( envelopeVal, cutoffSend, resSend );
     
     if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
     {
-        lowPass1.setCoefficients ( IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
+        lowPass1.setCoefficients ( juce::IIRCoefficients::makeLowPass(sampleRate, cutoffLFO, resonanceScale) );
         
         cutoffLFOPrev      = cutoffLFO;
         resonanceScalePrev = resonanceScale;
@@ -140,7 +140,7 @@ float TwoPoleLPF::process()
 }
 
 /*
-void TwoPoleLPF::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo)
+void TwoPoleLPF::setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playheadInfo)
 {
     if (hostBPM != (float)playheadInfo.bpm)
     {
@@ -258,7 +258,7 @@ float NotchFilter::processFilter(float noteFreq, float cutoff,
     resonance     = *res;
     inputSample   = sampleIn;
     float cutFreq = cutoff;
-    cutoffFreq    = jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
+    cutoffFreq    = juce::jmap(cutFreq, 1.0f, 100.0f, 20.0f, maxCutoff);
     
     return processNotch();
 }
@@ -271,12 +271,12 @@ float NotchFilter::processNotch()
     
     if (cutoffLFOPrev != cutoffLFO || resonanceScalePrev != resonanceScale)
     {
-        notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
+        notchFilter.setCoefficients ( juce::IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
         
         cutoffLFOPrev      = cutoffLFO;
         resonanceScalePrev = resonanceScale;
     }
-    //notchFilter.setCoefficients ( IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
+    //notchFilter.setCoefficients ( juce::IIRCoefficients::makeNotchFilter(sampleRate, cutoffLFO, resonanceScale) );
     
     return notchFilter.processSingleSampleRaw(inputSample);
 }

@@ -13,16 +13,16 @@
 
 //==============================================================================
 FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThickness(1.0f),
-                               lineColor1 ( Colour( (uint8)255, (uint8)94, (uint8)0  ) ),
-                               lineColor2 ( Colour( (uint8)100, (uint8)36, (uint8)0  ) ),
-                               bgColor    ( Colour( (uint8)7,   (uint8)10, (uint8)59 ) ),
-                               bgFade     ( Colour( (uint8)100, (uint8)36, (uint8)0  ) )
+                               lineColor1 ( juce::Colour( (juce::uint8)255, (juce::uint8)94, (juce::uint8)0  ) ),
+                               lineColor2 ( juce::Colour( (juce::uint8)100, (juce::uint8)36, (juce::uint8)0  ) ),
+                               bgColor    ( juce::Colour( (juce::uint8)7,   (juce::uint8)10, (juce::uint8)59 ) ),
+                               bgFade     ( juce::Colour( (juce::uint8)100, (juce::uint8)36, (juce::uint8)0  ) )
 {}
 
 FilterVisual::~FilterVisual() {}
 
 
-void FilterVisual::setColors(Colour& line1, Colour& line2, Colour& background, Colour& fade)
+void FilterVisual::setColors(juce::Colour& line1, juce::Colour& line2, juce::Colour& background, juce::Colour& fade)
 {
     lineColor1 = line1;
     lineColor2 = line2;
@@ -35,11 +35,11 @@ void FilterVisual::paint (juce::Graphics& g)
 {
     float cornerRound = 2.0f;
     
-    g.setGradientFill      ( ColourGradient::vertical( bgColor, bgFade, visualBox ) );
+    g.setGradientFill      ( juce::ColourGradient::vertical( bgColor, bgFade, visualBox ) );
     g.fillRoundedRectangle ( visualBox, cornerRound );
     
     g.setColour            ( lineColor1 );
-    g.setFillType          ( ColourGradient::vertical( lineColor1, lineColor2, visualBox ) );
+    g.setFillType          ( juce::ColourGradient::vertical( lineColor1, lineColor2, visualBox ) );
     g.fillPath             ( filterShape );
 }
 
@@ -48,7 +48,7 @@ void FilterVisual::resized()
     int reducer    = 2;
     auto totalArea = getLocalBounds();
     
-    Rectangle<int> reducedArea = totalArea.reduced( reducer );
+    juce::Rectangle<int> reducedArea = totalArea.reduced( reducer );
     
     visualBox.setBounds( reducedArea.getX(), reducedArea.getY(),
                          reducedArea.getWidth(), reducedArea.getHeight() );
@@ -88,7 +88,7 @@ void FilterVisual::drawFilterShape(int filtType, float cutoff, float res)
 void FilterVisual::drawFilterShape(int type)
 {
     float halfHeight = getHeight() * 0.5f;
-    float resMap     = jmap( resonance, 1.0f, 2.0f, 0.0f, halfHeight * 2.5f ); // for y2, to get res height for ctrlPt2
+    float resMap     = juce::jmap( resonance, 1.0f, 2.0f, 0.0f, halfHeight * 2.5f ); // for y2, to get res height for ctrlPt2
     
     float rollOffControl;   // moves ctrlPt1 & ctrlPt2 to adjust lpf order rolloff
     
@@ -116,15 +116,15 @@ void FilterVisual::drawFilterShape(int type)
     
     float x1 = 0.0f + reducer;                                  // Top left of path: Left
     float y1 = getHeight() * 0.5f;                              // Top left of path: halfHeight
-    float x2 = jmap( powf( cutoffFreq * 0.01f, 0.25f),
+    float x2 = juce::jmap( powf( cutoffFreq * 0.01f, 0.25f),
                     0.32f, 1.0f,
                     15.0f, (float)getWidth() - reducer );       // cutoff freq
     float y2 = ( halfHeight ) - resMap;                         // halfHeight, minus (up) to resonance
     
-    Point<float> origin    ( x1, y1 );
-    Point<float> maxFilter ( x2, getHeight() - reducer );
-    Point<float> ctrlPt1   ( x2 - rollOffControl, halfHeight );
-    Point<float> ctrlPt2   ( x2 - rollOffControl, y2 );
+    juce::Point<float> origin    ( x1, y1 );
+    juce::Point<float> maxFilter ( x2, getHeight() - reducer );
+    juce::Point<float> ctrlPt1   ( x2 - rollOffControl, halfHeight );
+    juce::Point<float> ctrlPt2   ( x2 - rollOffControl, y2 );
     
     if (ctrlPt1.getX() < reducer)
         ctrlPt1.setX(reducer);
@@ -143,9 +143,9 @@ void FilterVisual::drawFilterShape(int type)
         float x4 = x2 + rollOffControl;//(x2 - (x2 * rollOffControl) );  // *** THIS IS BEHAVING FUNNY? ***
         float y4 = y2;
         
-        Point<float> maxFreq( x3, y3 );
-        Point<float> ctrlPt3( x4, y4 );
-        Point<float> ctrlPt4( x4, halfHeight );
+        juce::Point<float> maxFreq( x3, y3 );
+        juce::Point<float> ctrlPt3( x4, y4 );
+        juce::Point<float> ctrlPt4( x4, halfHeight );
         
         if (ctrlPt3.getX() > getWidth() - reducer)
             ctrlPt3.setX(getWidth() - reducer);

@@ -14,12 +14,12 @@
 //==============================================================================
 DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
+     : juce::AudioProcessor (juce::AudioProcessor::BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                       #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
 #endif
@@ -32,92 +32,92 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 //                 default, param label, param category, string from value, string to value
 //
 // ParameterChoices:
-// id, descript, choices (StringArray), default index of StringArray
+// id, descript, choices (juce::StringArray), default index of juce::StringArray
 //
 
 parameters(*this, nullptr, "ParameterTree", {
     // Osc Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"osc_morph", 1}, "Osc Morph",
-                                          NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"sub_osc_morph", 1}, "Sub Morph",
-                                          NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"sub_osc_gain", 1}, "Sub Gain",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.0f, "gain" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"pitch_bend_range", 1}, "Pitch Bend",
-                                          NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, "semitones" ),
-    std::make_unique<AudioParameterChoice>(ParameterID{"sub_osc_octave", 1}, "Sub Octave", StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"osc_morph", 1}, "Osc Morph",
+                                          juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sub_osc_morph", 1}, "Sub Morph",
+                                          juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "Morph" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sub_osc_gain", 1}, "Sub Gain",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.0f, "gain" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"pitch_bend_range", 1}, "Pitch Bend",
+                                          juce::NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, "semitones" ),
+    std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"sub_osc_octave", 1}, "Sub Octave", juce::StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
     
-    // Amp ADSR Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"amp_attack", 1}, "Amp Attack",
-                                          NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.1f, "attack" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"amp_decay", 1}, "Amp Decay",
-                                          NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"amp_sustain", 1}, "Amp Sustain",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.75f, "sustain level" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"amp_release", 1}, "Amp Release",
-                                          NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
+    // Amp juce::ADSR Params
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_attack", 1}, "Amp Attack",
+                                          juce::NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.1f, "attack" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_decay", 1}, "Amp Decay",
+                                          juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_sustain", 1}, "Amp Sustain",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.75f, "sustain level" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_release", 1}, "Amp Release",
+                                          juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
     
     // Portament Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"porta_time", 1}, "Portamento Time",
-                                          NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"porta_time", 1}, "Portamento juce::Time",
+                                          juce::NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, "portamento" ),
     
     // Foldback Distortion Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"foldback_dist", 1}, "Foldback Distortion",
-                                          NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, "foldback" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"foldback_dist", 1}, "Foldback Distortion",
+                                          juce::NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, "foldback" ),
     
     // Ring Modulator Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"ring_mod_pitch", 1}, "Ring Mod Pitch",
-                                          NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "ring pitch" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"ring_tone", 1}, "Ring Mod Tone",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring tone" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"ring_mod_mix", 1}, "Ring Mod Mix",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring dry/wet" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"ring_mod_pitch", 1}, "Ring Mod Pitch",
+                                          juce::NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "ring pitch" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"ring_tone", 1}, "Ring Mod Tone",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring tone" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"ring_mod_mix", 1}, "Ring Mod Mix",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "ring dry/wet" ),
     
     // Frequency Shifter Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"freq_shift_pitch", 1}, "Freq Shift Pitch",
-                                          NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "freq shift pitch" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"freq_shift_mix", 1}, "Freq Shift Mix",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "freq shift dry/wet" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"freq_shift_pitch", 1}, "Freq Shift Pitch",
+                                          juce::NormalisableRange<float>(0.25f, 4.0f, 0.01f, 1.0f, false), 1.0f, "freq shift pitch" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"freq_shift_mix", 1}, "Freq Shift Mix",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "freq shift dry/wet" ),
     
     // Sample and Hold Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"sandh_pitch", 1}, "S&H Pitch",
-                                          NormalisableRange<float>(1.0f, 128.0f, 0.01f, 1.0f, false), 128.0f, "s&h pitch" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"sandh_mix", 1}, "S&H Mix",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "s&h dry/wet" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_pitch", 1}, "S&H Pitch",
+                                          juce::NormalisableRange<float>(1.0f, 128.0f, 0.01f, 1.0f, false), 128.0f, "s&h pitch" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_mix", 1}, "S&H Mix",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "s&h dry/wet" ),
     
     // Filter Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"filter_cutoff", 1}, "Filter Cutoff",
-                                          NormalisableRange<float>(1.1f, 100.0f, 0.01f, 0.25f, false), 100.0f, "cutoff" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filter_res", 1}, "Filter Resonance",
-                                          NormalisableRange<float>(1.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "resonance" ),
-    std::make_unique<AudioParameterChoice>(ParameterID{"filter_type", 1}, "Filter Type",
-                                           StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ), 0 ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filter_cutoff", 1}, "Filter Cutoff",
+                                          juce::NormalisableRange<float>(1.1f, 100.0f, 0.01f, 0.25f, false), 100.0f, "cutoff" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filter_res", 1}, "Filter Resonance",
+                                          juce::NormalisableRange<float>(1.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "resonance" ),
+    std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"filter_type", 1}, "Filter Type",
+                                           juce::StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ), 0 ),
     
     // Filter Env Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_attack", 1}, "Filter Attack",
-                                          NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.01f, "attack" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_decay", 1}, "Filter Decay",
-                                          NormalisableRange<float>(0.1f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_sustain", 1}, "Filter Sustain",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 1.0f, "sustain level" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_release", 1}, "Filter Release",
-                                          NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_COAmt", 1}, "Filter Env to Cutoff",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to cutoff" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtEnv_ResAmt", 1}, "Filter Env to Res",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to resonance" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_attack", 1}, "Filter Attack",
+                                          juce::NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.01f, "attack" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_decay", 1}, "Filter Decay",
+                                          juce::NormalisableRange<float>(0.1f, 4.0f, 0.01f, 0.325f, false), 1.0f, "decay" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_sustain", 1}, "Filter Sustain",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 1.0f, "sustain level" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_release", 1}, "Filter Release",
+                                          juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f, 0.325f, false), 0.1f, "release" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_COAmt", 1}, "Filter Env to Cutoff",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to cutoff" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_ResAmt", 1}, "Filter Env to Res",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "env to resonance" ),
     
     // Filter LFO Params
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_freq", 1}, "Filter LFO Freq",
-                                          NormalisableRange<float>(0.01f, 15.0f, 0.01f, 1.0f, false), 1.0f, "lfo freq" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_amt", 1}, "Filter LFO Amount",
-                                          NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "lfo amt" ),
-    std::make_unique<AudioParameterFloat>(ParameterID{"filtLFO_shape", 1}, "Filter LFO Shape",
-                                          NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "lfo shape" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_freq", 1}, "Filter LFO Freq",
+                                          juce::NormalisableRange<float>(0.01f, 15.0f, 0.01f, 1.0f, false), 1.0f, "lfo freq" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_amt", 1}, "Filter LFO Amount",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, "lfo amt" ),
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_shape", 1}, "Filter LFO Shape",
+                                          juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, "lfo shape" ),
     
     // Master Gain
-    std::make_unique<AudioParameterFloat>(ParameterID{"master_gain", 1}, "Master Gain",
-                                          NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, "master gain" )
+    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_gain", 1}, "Master Gain",
+                                          juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, "master gain" )
 })
 
 // CONSTRUCTOR!
@@ -130,7 +130,7 @@ parameters(*this, nullptr, "ParameterTree", {
     portaTimeParameter   = parameters.getRawParameterValue("porta_time");
     pitchBendParameter   = parameters.getRawParameterValue("pitch_bend_range");
     
-    // Amp ADSR Parameter Construction
+    // Amp juce::ADSR Parameter Construction
     ampAttackParameter  = parameters.getRawParameterValue("amp_attack");
     ampDecayParameter   = parameters.getRawParameterValue("amp_decay");
     ampSustainParameter = parameters.getRawParameterValue("amp_sustain");
@@ -157,7 +157,7 @@ parameters(*this, nullptr, "ParameterTree", {
     filterResonanceParameter = parameters.getRawParameterValue("filter_res");
     filterSelectorParameter  = parameters.getRawParameterValue("filter_type");
     
-    // Filter ADSR Parameter Construction
+    // Filter juce::ADSR Parameter Construction
     filtEnvAttackParameter  = parameters.getRawParameterValue("filtEnv_attack");
     filtEnvDecayParameter   = parameters.getRawParameterValue("filtEnv_decay");
     filtEnvSustainParameter = parameters.getRawParameterValue("filtEnv_sustain");
@@ -208,7 +208,7 @@ DirtyLittleBassSynthAudioProcessor::~DirtyLittleBassSynthAudioProcessor()
 }
 
 //==============================================================================
-const String DirtyLittleBassSynthAudioProcessor::getName() const
+const juce::String DirtyLittleBassSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
@@ -260,12 +260,12 @@ void DirtyLittleBassSynthAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String DirtyLittleBassSynthAudioProcessor::getProgramName (int index)
+const juce::String DirtyLittleBassSynthAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void DirtyLittleBassSynthAudioProcessor::changeProgramName (int index, const String& newName)
+void DirtyLittleBassSynthAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
@@ -292,13 +292,13 @@ void DirtyLittleBassSynthAudioProcessor::releaseResources()
 bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
+    juce::ignoreUnused (layouts);
     return true;
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -312,11 +312,11 @@ bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported (const BusesLayo
 }
 #endif
 
-void DirtyLittleBassSynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void DirtyLittleBassSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
 
-    // Hand off DSP to Synthesiser class
+    // Hand off DSP to juce::Synthesiser class
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
     
     for (int i=0; i<voiceCount; i++)
@@ -345,30 +345,30 @@ bool DirtyLittleBassSynthAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
+juce::AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
 {
     //return new GenericAudioProcessorEditor (*this);
     return new DirtyLittleBassSynthAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void DirtyLittleBassSynthAudioProcessor::getStateInformation (MemoryBlock& destData)
+void DirtyLittleBassSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // getStateInformation
     auto state = parameters.copyState();
-    std::unique_ptr<XmlElement> xml (state.createXml());
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
 void DirtyLittleBassSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // setStateInformation
-    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
     if (xmlState.get() != nullptr)
     {
         if (xmlState->hasTagName (parameters.state.getType()))
         {
-            parameters.replaceState (ValueTree::fromXml (*xmlState));
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
         }
     }
 }
@@ -383,14 +383,14 @@ void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
         {
             
             
-            AudioPlayHead::CurrentPositionInfo result;
+            juce::AudioPlayHead::CurrentPositionInfo result;
 
             if (ph->getCurrentPosition (result))
                 return result;
         }
 
         // If the host fails to provide the current time, we'll just use default values
-        AudioPlayHead::CurrentPositionInfo result;
+        juce::AudioPlayHead::CurrentPositionInfo result;
         result.resetToDefault();
         return result;
     }();
@@ -400,7 +400,7 @@ void DirtyLittleBassSynthAudioProcessor::updateCurrentTimeInfoFromHost()
 */
 
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new DirtyLittleBassSynthAudioProcessor();
 }

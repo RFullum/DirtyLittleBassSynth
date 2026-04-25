@@ -21,7 +21,7 @@ public:
     FilterVisual();
     ~FilterVisual() override;
 
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
     
     /**
@@ -30,24 +30,24 @@ public:
      */
     void drawFilterShape(int filtType, float cutoff, float res);
     
-    void setColors(Colour& line1, Colour& line2, Colour& background, Colour& fade);
+    void setColors(juce::Colour& line1, juce::Colour& line2, juce::Colour& background, juce::Colour& fade);
 
 private:
     void drawFilterShape(int type);
     
-    Rectangle<float> visualBox;
+    juce::Rectangle<float> visualBox;
     
-    Path filterShape;
+    juce::Path filterShape;
     
     float cutoffFreq;
     float resonance;
     float segmentThickness;
     float order;
     
-    Colour lineColor1;
-    Colour lineColor2;
-    Colour bgColor;
-    Colour bgFade;
+    juce::Colour lineColor1;
+    juce::Colour lineColor2;
+    juce::Colour bgColor;
+    juce::Colour bgFade;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterVisual)

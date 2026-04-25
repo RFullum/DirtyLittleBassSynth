@@ -13,13 +13,13 @@
 
 /// Constructor
 OtherLookAndFeel::OtherLookAndFeel() :
-    dialColor( Colour( (uint8)125, (uint8)46,  (uint8)0   ) ),
-    tickColor( Colour( (uint8)184, (uint8)210, (uint8)222 ) ),
-    backColor( Colour( (uint8)255, (uint8)255, (uint8)255 ) )
+    dialColor( juce::Colour( (juce::uint8)125, (juce::uint8)46,  (juce::uint8)0   ) ),
+    tickColor( juce::Colour( (juce::uint8)184, (juce::uint8)210, (juce::uint8)222 ) ),
+    backColor( juce::Colour( (juce::uint8)255, (juce::uint8)255, (juce::uint8)255 ) )
 {}
 
 /// Sets the dial and tick colors
-void OtherLookAndFeel::setColors(Colour& dial, Colour& tick, Colour& back)
+void OtherLookAndFeel::setColors(juce::Colour& dial, juce::Colour& tick, juce::Colour& back)
 {
     dialColor = dial;
     tickColor = tick;
@@ -27,14 +27,14 @@ void OtherLookAndFeel::setColors(Colour& dial, Colour& tick, Colour& back)
 }
 
 /**
- Customizing the drawRotarySlider() method from LookAndFeel_V4
+ Customizing the drawRotarySlider() method from juce::LookAndFeel_V4
  */
-void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, int height, float sliderPos,
-                                        float rotaryStartAngle, float rotaryEndAngle, Slider &slider)
+void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
+                                        float rotaryStartAngle, float rotaryEndAngle, juce::Slider &slider)
 {
     // Local Variables
     float reducer  = 0.75f;
-    float diameter = jmin(width * reducer, height * reducer);   // Lesser of two creates squre & circle from rect & ellipse
+    float diameter = juce::jmin(width * reducer, height * reducer);   // Lesser of two creates squre & circle from rect & ellipse
     float radius   = diameter * 0.5f;
     float centerX  = x + (width / 2.0f);     // Finds center offset by x value to actually center it
     float centerY  = y + (height / 2.0f);    // Ditto for centerY
@@ -58,10 +58,10 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
     float radiusX3  = radiusX + ( (diameter - diameter3) * 0.5f );
     float radiusY3  = radiusY + ( (diameter - diameter3) * 0.5f );
     
-    // Rectangle the slider will go inside
-    Rectangle<float> dialArea( radiusX, radiusY, diameter, diameter );
-    Rectangle<float> dialArea2 ( radiusX2, radiusY2, diameter2, diameter2 );
-    Rectangle<float> dialArea3 ( radiusX3, radiusY3, diameter3, diameter3 );
+    // juce::Rectangle the slider will go inside
+    juce::Rectangle<float> dialArea( radiusX, radiusY, diameter, diameter );
+    juce::Rectangle<float> dialArea2 ( radiusX2, radiusY2, diameter2, diameter2 );
+    juce::Rectangle<float> dialArea3 ( radiusX3, radiusY3, diameter3, diameter3 );
     
     g.setColour   ( backColor );
     g.fillEllipse ( dialArea  );
@@ -75,48 +75,48 @@ void OtherLookAndFeel::drawRotarySlider(Graphics &g, int x, int y, int width, in
     // The radius of the inner dial area to put the tick directly on its edge
     float radius3 = diameter3 * 0.5f;
     
-    Path dialTick;      // Drawable path to draw the dial tick
+    juce::Path dialTick;      // Drawable path to draw the dial tick
     dialTick.addEllipse ( 0.0f, -radius3 + 5.0f, tickWidth, tickWidth );
     
     g.setColour ( tickColor );
-    g.fillPath  ( dialTick, AffineTransform::rotation( tickAngle ).translated( centerX, centerY ) );
+    g.fillPath  ( dialTick, juce::AffineTransform::rotation( tickAngle ).translated( centerX, centerY ) );
 }
 
 
 /// Draws linear slider with a square thumb, only as wide as the track
-void OtherLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, int height,
+void OtherLookAndFeel::drawLinearSlider (juce::Graphics& g, int x, int y, int width, int height,
                                        float sliderPos,
                                        float minSliderPos,
                                        float maxSliderPos,
-                                       const Slider::SliderStyle style, Slider& slider)
+                                       const juce::Slider::SliderStyle style, juce::Slider& slider)
 {
     if (slider.isBar())
     {
-        g.setColour (slider.findColour (Slider::trackColourId));
-        g.fillRect (slider.isHorizontal() ? Rectangle<float> (static_cast<float> (x), (float) y + 0.5f, sliderPos - (float) x, (float) height - 1.0f)
-                                          : Rectangle<float> ((float) x + 0.5f, sliderPos, (float) width - 1.0f, (float) y + ((float) height - sliderPos)));
+        g.setColour (slider.findColour (juce::Slider::trackColourId));
+        g.fillRect (slider.isHorizontal() ? juce::Rectangle<float> (static_cast<float> (x), (float) y + 0.5f, sliderPos - (float) x, (float) height - 1.0f)
+                                          : juce::Rectangle<float> ((float) x + 0.5f, sliderPos, (float) width - 1.0f, (float) y + ((float) height - sliderPos)));
     }
     else
     {
-        auto isTwoVal   = (style == Slider::SliderStyle::TwoValueVertical   || style == Slider::SliderStyle::TwoValueHorizontal);
-        auto isThreeVal = (style == Slider::SliderStyle::ThreeValueVertical || style == Slider::SliderStyle::ThreeValueHorizontal);
+        auto isTwoVal   = (style == juce::Slider::SliderStyle::TwoValueVertical   || style == juce::Slider::SliderStyle::TwoValueHorizontal);
+        auto isThreeVal = (style == juce::Slider::SliderStyle::ThreeValueVertical || style == juce::Slider::SliderStyle::ThreeValueHorizontal);
 
-        auto trackWidth = jmin (6.0f, slider.isHorizontal() ? (float) height * 0.25f : (float) width * 0.25f);
+        auto trackWidth = juce::jmin (6.0f, slider.isHorizontal() ? (float) height * 0.25f : (float) width * 0.25f);
 
-        Point<float> startPoint (slider.isHorizontal() ? (float) x : (float) x + (float) width * 0.5f,
+        juce::Point<float> startPoint (slider.isHorizontal() ? (float) x : (float) x + (float) width * 0.5f,
                                  slider.isHorizontal() ? (float) y + (float) height * 0.5f : (float) (height + y));
 
-        Point<float> endPoint (slider.isHorizontal() ? (float) (width + x) : startPoint.x,
+        juce::Point<float> endPoint (slider.isHorizontal() ? (float) (width + x) : startPoint.x,
                                slider.isHorizontal() ? startPoint.y : (float) y);
 
-        Path backgroundTrack;
+        juce::Path backgroundTrack;
         backgroundTrack.startNewSubPath (startPoint);
         backgroundTrack.lineTo (endPoint);
-        g.setColour (slider.findColour (Slider::backgroundColourId));
-        g.strokePath (backgroundTrack, { trackWidth, PathStrokeType::curved, PathStrokeType::rounded });
+        g.setColour (slider.findColour (juce::Slider::backgroundColourId));
+        g.strokePath (backgroundTrack, { trackWidth, juce::PathStrokeType::curved, juce::PathStrokeType::rounded });
 
-        Path valueTrack;
-        Point<float> minPoint, maxPoint, thumbPoint;
+        juce::Path valueTrack;
+        juce::Point<float> minPoint, maxPoint, thumbPoint;
 
         if (isTwoVal || isThreeVal)
         {
@@ -143,38 +143,38 @@ void OtherLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, i
 
         valueTrack.startNewSubPath (minPoint);
         valueTrack.lineTo (isThreeVal ? thumbPoint : maxPoint);
-        g.setColour (slider.findColour (Slider::trackColourId));
-        g.strokePath (valueTrack, { trackWidth, PathStrokeType::curved, PathStrokeType::rounded });
+        g.setColour (slider.findColour (juce::Slider::trackColourId));
+        g.strokePath (valueTrack, { trackWidth, juce::PathStrokeType::curved, juce::PathStrokeType::rounded });
 
         if (! isTwoVal)
         {
-            g.setColour (slider.findColour (Slider::thumbColourId));
-            //g.fillEllipse (Rectangle<float> (static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre (isThreeVal ? thumbPoint : maxPoint));
-            g.fillRect( Rectangle<float> (static_cast<float> (trackWidth), 6.0f).withCentre (isThreeVal ? thumbPoint : maxPoint));
+            g.setColour (slider.findColour (juce::Slider::thumbColourId));
+            //g.fillEllipse (juce::Rectangle<float> (static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre (isThreeVal ? thumbPoint : maxPoint));
+            g.fillRect( juce::Rectangle<float> (static_cast<float> (trackWidth), 6.0f).withCentre (isThreeVal ? thumbPoint : maxPoint));
         }
 
         if (isTwoVal || isThreeVal)
         {
-            auto sr = jmin (trackWidth, (slider.isHorizontal() ? (float) height : (float) width) * 0.4f);
-            auto pointerColour = slider.findColour (Slider::thumbColourId);
+            auto sr = juce::jmin (trackWidth, (slider.isHorizontal() ? (float) height : (float) width) * 0.4f);
+            auto pointerColour = slider.findColour (juce::Slider::thumbColourId);
 
             if (slider.isHorizontal())
             {
                 drawPointer (g, minSliderPos - sr,
-                             jmax (0.0f, (float) y + (float) height * 0.5f - trackWidth * 2.0f),
+                             juce::jmax (0.0f, (float) y + (float) height * 0.5f - trackWidth * 2.0f),
                              trackWidth * 2.0f, pointerColour, 2);
 
                 drawPointer (g, maxSliderPos - trackWidth,
-                             jmin ((float) (y + height) - trackWidth * 2.0f, (float) y + (float) height * 0.5f),
+                             juce::jmin ((float) (y + height) - trackWidth * 2.0f, (float) y + (float) height * 0.5f),
                              trackWidth * 2.0f, pointerColour, 4);
             }
             else
             {
-                drawPointer (g, jmax (0.0f, (float) x + (float) width * 0.5f - trackWidth * 2.0f),
+                drawPointer (g, juce::jmax (0.0f, (float) x + (float) width * 0.5f - trackWidth * 2.0f),
                              minSliderPos - trackWidth,
                              trackWidth * 2.0f, pointerColour, 1);
 
-                drawPointer (g, jmin ((float) (x + width) - trackWidth * 2.0f, (float) x + (float) width * 0.5f), maxSliderPos - sr,
+                drawPointer (g, juce::jmin ((float) (x + width) - trackWidth * 2.0f, (float) x + (float) width * 0.5f), maxSliderPos - sr,
                              trackWidth * 2.0f, pointerColour, 3);
             }
         }

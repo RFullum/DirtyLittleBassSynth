@@ -25,12 +25,12 @@ public:
     void resized() override;
     
     /// Set the colors for the title header
-    void setColors(Colour& light, Colour& dark, Colour& text);
+    void setColors(juce::Colour& light, juce::Colour& dark, juce::Colour& text);
 
 protected:
-    Colour lightColor;
-    Colour darkColor;
-    Colour textColor;
+    juce::Colour lightColor;
+    juce::Colour darkColor;
+    juce::Colour textColor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TitleHeader)
 };
@@ -48,8 +48,8 @@ public:
     void resized() override;
     
 private:
-    Rectangle<int> versionArea;
-    Rectangle<int> urlArea;
+    juce::Rectangle<int> versionArea;
+    juce::Rectangle<int> urlArea;
 };
 
 

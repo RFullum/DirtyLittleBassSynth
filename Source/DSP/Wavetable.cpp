@@ -195,7 +195,7 @@ void SawWavetable::populateWavetable()
 }
 
 
-/// Adds instances of SinOsc into sawHarmonics OwnedArray
+/// Adds instances of SinOsc into sawHarmonics juce::OwnedArray
 void SawWavetable::createHarmonics()
 {
     for (int i=0; i<numSawHarmonics; i++)
@@ -286,7 +286,7 @@ void SquareWavetable::populateWavetable()
 }
 
 
-/// Adds instances of SinOsc into squareHarmonics OwnedArray
+/// Adds instances of SinOsc into squareHarmonics juce::OwnedArray
 void SquareWavetable::createHarmonics()
 {
     for (int i=0; i<numSquareHarmonics; i++)
@@ -374,7 +374,7 @@ void SpikeWavetable::highPassSpike()
     cutoffFreq = frequency * 10.0f;
     
     highPass.reset();
-    highPass.setCoefficients( IIRCoefficients::makeHighPass(sampleRate, cutoffFreq, 2.0f) );
+    highPass.setCoefficients( juce::IIRCoefficients::makeHighPass(sampleRate, cutoffFreq, 2.0f) );
     
     for (int i=0; i<waveTableSize; i++)
     {

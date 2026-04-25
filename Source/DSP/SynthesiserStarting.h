@@ -21,7 +21,7 @@
 // ===========================
 // ===========================
 // SOUND
-class MySynthSound : public SynthesiserSound
+class MySynthSound : public juce::SynthesiserSound
 {
 public:
     bool appliesToNote      (int) override      { return true; }
@@ -34,17 +34,17 @@ public:
 
 // =================================
 // =================================
-// Synthesiser Voice - My synth code goes in here
+// juce::Synthesiser Voice - My synth code goes in here
 
 /*!
  @class MySynthVoice
  @abstract struct defining the DSP associated with a specific voice.
- @discussion multiple MySynthVoice objects will be created by the Synthesiser so that it can be played polyphicially
+ @discussion multiple MySynthVoice objects will be created by the juce::Synthesiser so that it can be played polyphicially
  
  @namespace none
  @updated 2019-06-18
  */
-class MySynthVoice : public SynthesiserVoice
+class MySynthVoice : public juce::SynthesiserVoice
 {
 public:
     MySynthVoice();
@@ -86,22 +86,22 @@ public:
     
     void setFilterSpec(float& sampRate, float& sampleSize);
     
-    //void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead);
+    //void setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playhead);
     
     
     
     
     //
-    // ADSR Values
+    // juce::ADSR Values
     //
     
-    // Main Osc ADSR
+    // Main Osc juce::ADSR
     void setAmpADSRValues();
     
-    /// Sets ADSR values for filter
+    /// Sets juce::ADSR values for filter
     void setFilterADSRValues();
     
-    /// Applies ADSR to LFO to avoid clicking
+    /// Applies juce::ADSR to LFO to avoid clicking
     void setFiltLFOClickValues();
     
     /// Sets up the portamentoTime 
@@ -114,10 +114,10 @@ public:
 
      @param midiNoteNumber
      @param velocity
-     @param SynthesiserSound unused variable
+     @param juce::SynthesiserSound unused variable
      @param / unused variable
      */
-    void startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int currentPitchWheelPosition) override;
+    void startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition) override;
     
     //--------------------------------------------------------------------------
     /// Called when a MIDI noteOff message is received
@@ -139,7 +139,7 @@ public:
      @param startSample position of first sample in buffer
      @param numSamples number of smaples in output buffer
      */
-    void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
+    void renderNextBlock(juce::AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
     
     //--------------------------------------------------------------------------
     
@@ -161,13 +161,13 @@ public:
      @param sound a juce::SynthesiserSound* base class pointer
      @return sound cast as a pointer to an instance of MySynthSound
      */
-    bool canPlaySound (SynthesiserSound* sound) override;
+    bool canPlaySound (juce::SynthesiserSound* sound) override;
     
     //--------------------------------------------------------------------------
     
-    AudioBuffer<float> oscVisualBuffer();
-    AudioBuffer<float> subVisualBuffer();
-    AudioBuffer<float> lfoVisualBuffer();
+    juce::AudioBuffer<float> oscVisualBuffer();
+    juce::AudioBuffer<float> subVisualBuffer();
+    juce::AudioBuffer<float> lfoVisualBuffer();
     
 
 private:
@@ -191,7 +191,7 @@ private:
     float processFilterChain   (float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels& levels);
 
     /// Populates the waveshape buffers
-    void populateShape(AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc);
+    void populateShape(juce::AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc);
 
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
@@ -222,10 +222,10 @@ private:
     // Host Transport Data
     //float hostBPM = 120.0f;
     
-    /// ADSR envelope instances
-    ADSR env;
-    ADSR filtEnv;
-    ADSR filtLFOClickingEnv;
+    /// juce::ADSR envelope instances
+    juce::ADSR env;
+    juce::ADSR filtEnv;
+    juce::ADSR filtLFOClickingEnv;
     
     // Wavetable Class Instances
     Wavetable wtSine;
@@ -237,7 +237,7 @@ private:
     std::atomic<float>* oscillatorMorph;
     std::atomic<float>* subOscMorph;
     std::atomic<float>* subGain;
-    SmoothedValue<float> subGainSmooth;
+    juce::SmoothedValue<float> subGainSmooth;
     std::atomic<float>* subOctave;
     std::atomic<float>* foldbackDistortion;
     int incrementDenominator;
@@ -251,14 +251,14 @@ private:
     std::atomic<float>* ampDecay;
     std::atomic<float>* ampSustain;
     std::atomic<float>* ampRelease;
-    ADSR::Parameters envParams;
+    juce::ADSR::Parameters envParams;
     
     // Portamento
-    SmoothedValue<float> portamento;
+    juce::SmoothedValue<float> portamento;
     std::atomic<float>* portamentoAmount;
     
     // Foldback Distortion
-    SmoothedValue<float> foldbackDistortionSmooth;
+    juce::SmoothedValue<float> foldbackDistortionSmooth;
     
     // Ring Mod Instances
     RingMod ringMod;
@@ -268,7 +268,7 @@ private:
     std::atomic<float>* ringModPitch;
     std::atomic<float>* ringModTone;
     std::atomic<float>* ringMix;
-    SmoothedValue<float> ringMixSmooth;
+    juce::SmoothedValue<float> ringMixSmooth;
     
     // Frequency Shifter Instances
     FrequencyShifter freqShift;
@@ -277,7 +277,7 @@ private:
     // Frequency Shifter Parameters
     std::atomic<float>* freqShiftPitch;
     std::atomic<float>* freqShiftMixVal;
-    SmoothedValue<float> freqShiftMixValSmooth;
+    juce::SmoothedValue<float> freqShiftMixValSmooth;
     
     // Sample and Hold Instances
     SampleAndHold sAndH;
@@ -286,7 +286,7 @@ private:
     // Sample and Hold Parameters
     std::atomic<float>* sAndHPitch;
     std::atomic<float>* sAndHMixVal;
-    SmoothedValue<float> sAndHMixValSmooth;
+    juce::SmoothedValue<float> sAndHMixValSmooth;
     
     
     // Filter Instances
@@ -298,7 +298,7 @@ private:
     
     // Filter Parameters
     std::atomic<float>* filterCutoffFreq;
-    SmoothedValue<float> filterCutoffFreqSmooth;
+    juce::SmoothedValue<float> filterCutoffFreqSmooth;
     std::atomic<float>* filterResonance;
     std::atomic<float>* filterSelector;
     float filterSample;
@@ -323,16 +323,16 @@ private:
     // Master Gain
     float masterGain;
     std::atomic<float>* masterGainControl;
-    SmoothedValue<float> masterGainControlSmooth;
-    SmoothedValue<float> velocitySmooth;
+    juce::SmoothedValue<float> masterGainControlSmooth;
+    juce::SmoothedValue<float> velocitySmooth;
     
     // Master Sample Rate
     float sampleRate;
     int samplesPerBlock;
     
     // Waveshape Drawing
-    AudioBuffer<float> mainOscShape;
-    AudioBuffer<float> subOscShape;
-    AudioBuffer<float> lfoOscShape;
+    juce::AudioBuffer<float> mainOscShape;
+    juce::AudioBuffer<float> subOscShape;
+    juce::AudioBuffer<float> lfoOscShape;
 
 };

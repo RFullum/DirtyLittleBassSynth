@@ -15,32 +15,32 @@
 //==============================================================================
 /*
 */
-class OscVisual  : public Component
+class OscVisual  : public juce::Component
 {
 public:
     OscVisual();
     ~OscVisual() override;
 
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
     
-    /// Concatenates Path line segments acress visualBox using sample values in buffer
-    void setOscShapeLine(AudioBuffer<float>& buffer);
+    /// Concatenates juce::Path line segments acress visualBox using sample values in buffer
+    void setOscShapeLine(juce::AudioBuffer<float>& buffer);
     
     /// Sets the colors of the wave line and background area
-    void setColors(Colour& line, Colour& background, Colour& fade);
+    void setColors(juce::Colour& line, juce::Colour& background, juce::Colour& fade);
 
 private:
     float segmentThickness;
     
-    Colour lineColor;
-    Colour bgColor;
-    Colour fadeColor;
+    juce::Colour lineColor;
+    juce::Colour bgColor;
+    juce::Colour fadeColor;
     
-    Rectangle<float> visualBox;
-    Rectangle<float> visualBoxReduced;
+    juce::Rectangle<float> visualBox;
+    juce::Rectangle<float> visualBoxReduced;
     
-    Path oscShape;
+    juce::Path oscShape;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscVisual)
 };

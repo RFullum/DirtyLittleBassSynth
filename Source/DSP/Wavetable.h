@@ -107,7 +107,7 @@ public:
     void populateWavetable() override;
     
 private:
-    /// Adds instances of SinOsc into sawHarmonics OwnedArray
+    /// Adds instances of SinOsc into sawHarmonics juce::OwnedArray
     void createHarmonics();
     
     /// Sets sample rate for each SineOsc in saw harmonics
@@ -123,7 +123,7 @@ private:
     void populateSawWT();
     
     // Instance of oscillators
-    OwnedArray<SinOsc> sawHarmonics;
+    juce::OwnedArray<SinOsc> sawHarmonics;
     int numSawHarmonics; // Fundamental + 56 partials  -- Adjust this number to mod saw timbre
 };
 
@@ -143,7 +143,7 @@ public:
     void populateWavetable() override;
     
 protected:
-    /// Adds instances of SinOsc into squareHarmonics OwnedArray
+    /// Adds instances of SinOsc into squareHarmonics juce::OwnedArray
     void createHarmonics();
     
     /// Sets sample rate for each SineOsc in square harmonics
@@ -163,7 +163,7 @@ private:
     virtual void populateSquareWT();
     
     // Instance of oscillators
-    OwnedArray<SinOsc> squareHarmonics;
+    juce::OwnedArray<SinOsc> squareHarmonics;
     int numSquareHarmonics; // Fundamental + 56 partials -- Adjust this number to mod square timbre
     
 };
@@ -184,6 +184,6 @@ private:
     void populateSquareWT() override;
     
     // Highpass members
-    IIRFilter highPass;
+    juce::IIRFilter highPass;
     float cutoffFreq;
 };

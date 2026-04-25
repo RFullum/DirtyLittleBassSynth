@@ -12,7 +12,7 @@
 
 #include <JuceHeader.h>
 
-/// Creates a -12dB/octave Low Pass Filter by cascading two IIRFilter Low Pass Filters
+/// Creates a -12dB/octave Low Pass Filter by cascading two juce::IIRFilter Low Pass Filters
 class TwoPoleLPF
 {
 public:
@@ -37,14 +37,14 @@ public:
                                 float lfoVal, std::atomic<float>* amtToLFO);
     
     
-    //void setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playheadInfo);
+    //void setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playheadInfo);
     
 protected:
     /// Keytracking value mapping
     void keyMap(float frqncy, float CO);
     
     /**
-     Scales the ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
+     Scales the juce::ADSR value by the Envelope Amount to Cutoff, that then scales the filter cutoff frequency.
      The current note frequency is the minimum, and the maxCutoff frequency is the maximum.
      */
     void filterEnvControl(float envVal, std::atomic<float>* amtToCO, std::atomic<float>* amtToRes);
@@ -80,11 +80,11 @@ protected:
     std::atomic<float>* lfoSend;
     
 private:
-    /// Cascades two IIRFilter lowpasses and returns the output sample value
+    /// Cascades two juce::IIRFilter lowpasses and returns the output sample value
     float process();
 
-    // IIRFilter instances
-    IIRFilter lowPass1;
+    // juce::IIRFilter instances
+    juce::IIRFilter lowPass1;
     
 };
 
@@ -166,7 +166,7 @@ private:
     /// Sets notch coeffients and processes inputSample
     float processNotch();
     
-    // Instance of IIRFilter class
-    IIRFilter notchFilter;
+    // Instance of juce::IIRFilter class
+    juce::IIRFilter notchFilter;
     
 };

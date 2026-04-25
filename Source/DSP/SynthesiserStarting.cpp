@@ -198,7 +198,7 @@ void MySynthVoice::setMasterGainParamPointers(std::atomic<float>* gainAmt)
 }
 
 /*
-void MySynthVoice::setPlayheadInfo(AudioPlayHead::CurrentPositionInfo& playhead)
+void MySynthVoice::setPlayheadInfo(juce::AudioPlayHead::CurrentPositionInfo& playhead)
 {
     if (hostBPM != (float)playhead.bpm)
     {
@@ -273,10 +273,10 @@ void MySynthVoice::updatePitchBendRange(float newRange)
 }
 
 //
-// ADSR Values
+// juce::ADSR Values
 //
 
-// Main Osc ADSR
+// Main Osc juce::ADSR
 void MySynthVoice::setAmpADSRValues()
 {
     envParams.attack  = *ampAttack;     // time (sec)
@@ -287,10 +287,10 @@ void MySynthVoice::setAmpADSRValues()
     env.setParameters(envParams);
 }
 
-/// Sets ADSR values for filter
+/// Sets juce::ADSR values for filter
 void MySynthVoice::setFilterADSRValues()
 {
-    ADSR::Parameters filtEnvParams;
+    juce::ADSR::Parameters filtEnvParams;
     
     filtEnvParams.attack  = *filterAttack;
     filtEnvParams.decay   = *filterDecay;
@@ -300,10 +300,10 @@ void MySynthVoice::setFilterADSRValues()
     filtEnv.setParameters(filtEnvParams);
 }
 
-/// Applies ADSR to LFO to avoid clicking
+/// Applies juce::ADSR to LFO to avoid clicking
 void MySynthVoice::setFiltLFOClickValues()
 {
-    ADSR::Parameters filtLFOClickParams;
+    juce::ADSR::Parameters filtLFOClickParams;
     
     filtLFOClickParams.attack  = 0.02f;
     filtLFOClickParams.decay   = 0.5f;
@@ -322,14 +322,14 @@ void MySynthVoice::setPortamentoTime(float SR, float portaTime)
 
 //--------------------------------------------------------------------------
 
-void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSound*, int currentPitchWheelPosition)
+void MySynthVoice::startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
 {
     playing = true;
     ending  = false;
     
     setPortamentoTime(sampleRate, *portamentoAmount);
     
-    // Sets Amp ADSR for each note
+    // Sets Amp juce::ADSR for each note
     setAmpADSRValues();
     setFilterADSRValues();
     
@@ -341,7 +341,7 @@ void MySynthVoice::startNote (int midiNoteNumber, float velocity, SynthesiserSou
     setPitchBend( currentPitchWheelPosition );
     
     // Converts incoming MIDI note to frequency
-    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+    freq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     
     portamento.setTargetValue(freq);
     
@@ -380,7 +380,7 @@ void MySynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 //--------------------------------------------------------------------------
 
 // The Main DSP Block
-void MySynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples)
+void MySynthVoice::renderNextBlock(juce::AudioSampleBuffer& outputBuffer, int startSample, int numSamples)
 {
     const auto levels = computeBlockLevels();
     populateVisualBuffers(levels);
@@ -581,24 +581,24 @@ float MySynthVoice::processFilterChain(float input, float filtEnvVal, float filt
     return filterSample;
 }
 
-bool MySynthVoice::canPlaySound (SynthesiserSound* sound)
+bool MySynthVoice::canPlaySound (juce::SynthesiserSound* sound)
 {
     return dynamic_cast<MySynthSound*> (sound) != nullptr;
 }
 
 /// Returns the buffer of the main oscillator shape
-AudioBuffer<float> MySynthVoice::oscVisualBuffer()
+juce::AudioBuffer<float> MySynthVoice::oscVisualBuffer()
 {
     return mainOscShape;
 }
 
 /// Returns the buffer of the sub oscillator shape
-AudioBuffer<float> MySynthVoice::subVisualBuffer()
+juce::AudioBuffer<float> MySynthVoice::subVisualBuffer()
 {
     return subOscShape;
 }
 
-AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
+juce::AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
 {
     return lfoOscShape;
 }
@@ -608,7 +608,7 @@ AudioBuffer<float> MySynthVoice::lfoVisualBuffer()
 
 
 /// Populates shape buffer with morphed wave values
-void MySynthVoice::populateShape(AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc)
+void MySynthVoice::populateShape(juce::AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc)
 {
     for (int i=0; i<buf.getNumSamples(); i++)
     {
