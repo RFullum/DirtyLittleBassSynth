@@ -19,53 +19,35 @@
 #include "TitleHeader.h"
 
 //==============================================================================
-/**
-*/
-class DirtyLittleBassSynthAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
+
+class DirtyLittleBassSynthAudioProcessorEditor
+: public  juce::AudioProcessorEditor
+, private juce::Timer
 {
 public:
-    DirtyLittleBassSynthAudioProcessorEditor (DirtyLittleBassSynthAudioProcessor&);
+    DirtyLittleBassSynthAudioProcessorEditor(DirtyLittleBassSynthAudioProcessor&);
     ~DirtyLittleBassSynthAudioProcessorEditor();
 
-    //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void timerCallback() override;
 
 private:
+    void timerCallback() override;
+    
     OtherLookAndFeel dialLookAndFeel;
     OtherLookAndFeel dryWetLookAndFeel;
     
-    
-    /// Sets up slider: Takes reference to a slider, the style of the slider, and the color of the fill
-    void sliderSetup(juce::Slider& sliderInstance, juce::Slider::SliderStyle style, juce::Colour& sliderFillColor,
-                     juce::Colour& sliderThumbColor, bool showTextBox);
-    
-    /// Sets up juce::Label: Takes label reference, and the text
-    void sliderLabelSetup(juce::Label& labelInstance, juce::String labelText, juce::Colour& c, float fontSize);
-    
-    /// juce::ComboBox setup
-    void comboBoxSetup(juce::ComboBox& boxInstance, juce::StringArray boxItems);
-    
-    // Header area
     TitleHeader titleHeader;
     TitleFooter titleFooter;
 
-    // Wavetable Drawing
     OscVisual oscVisual;
     OscVisual subOscVisual;
     OscVisual lfoVisual;
     
     juce::Rectangle<int> oscVisualSpace;
     
-    // Filter Drawing
     FilterVisual filterVisual;
     
-    //juce::Slider testSlider1;
-    //juce::Slider testSlider2;
-    //juce::Slider testSlider3;
-    
-    // Osc Section
     juce::Slider oscMorphSlider;
     juce::Slider subMorphSlider;
     juce::Slider subGainSlider;
@@ -85,7 +67,6 @@ private:
     juce::Label subGainLabel;
     juce::Label pitchBendRangeLabel;
     
-    // Osc juce::ADSR Section
     juce::Slider oscAttackSlider;
     juce::Slider oscDecaySlider;
     juce::Slider oscSustainSlider;
@@ -107,7 +88,6 @@ private:
     juce::Label portaLabel;
     juce::Label foldbackLabel;
     
-    // Modifiers Section
     juce::Slider ringToneSlider;
     juce::Slider ringPitchSlider;
     juce::Slider ringDryWetSlider;
@@ -131,7 +111,6 @@ private:
     juce::Label pitchLabel;
     juce::Label dryWetLabel;
     
-    // Filter Section
     juce::Slider cutoffSlider;
     juce::Slider resSlider;
     juce::ComboBox filterType;
@@ -143,7 +122,6 @@ private:
     juce::Label cutoffLabel;
     juce::Label resLabel;
     
-    // Filter juce::ADSR Section
     juce::Slider fltAttackSlider;
     juce::Slider fltDecaySlider;
     juce::Slider fltSustainSlider;
@@ -165,8 +143,6 @@ private:
     juce::Label adsrToCutoffLabel;
     juce::Label adsrToResLabel;
     
-    
-    // Filter LFO Section
     juce::Slider lfoShapeSlider;
     juce::Slider lfoFreqSlider;
     juce::Slider lfoAmountSlider;
@@ -179,7 +155,6 @@ private:
     juce::Label lfoFreqLabel;
     juce::Label lfoAmountLabel;
     
-    // Main Out Section
     juce::Slider masterGainSlider;
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> masterGainSliderAttachment;
@@ -188,8 +163,6 @@ private:
     
     OutMeter outMeter;
     
-    
-    // Colors
     juce::Colour onyx;
     juce::Colour lightSlateGray;
     juce::Colour magicMint;
@@ -197,8 +170,6 @@ private:
     juce::Colour orangePeel;
     juce::Colour textColor;
     
-    
-    // Subsections
     juce::Rectangle<float> headerAreaInner;       // Header
     juce::Rectangle<float> mainOutAreaInner;      // Main Out
     juce::Rectangle<float> oscSectionInner;       // Oscillators
@@ -216,8 +187,6 @@ private:
     juce::Rectangle<float> fltADSRSectionInner;   // Filter juce::ADSR
     juce::Rectangle<float> lfoSectionInner;       // LFO
     
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     DirtyLittleBassSynthAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirtyLittleBassSynthAudioProcessorEditor)
