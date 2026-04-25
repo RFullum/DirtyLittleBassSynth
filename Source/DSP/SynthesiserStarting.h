@@ -180,6 +180,10 @@ private:
     float filterADSRResAmountVal    = 0.0f;
     float filtLFOAmtVal             = 0.0f;
 
+    // Selected filter for the current block. Set in PrepareDspForBlock so the per-sample
+    // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.
+    TwoPoleLPF *activeFilter = nullptr;
+
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
     float PitchBendCents();
@@ -288,7 +292,6 @@ private:
     juce::SmoothedValue<float>  filterCutoffFreqSmooth;
     std::atomic<float>         *filterResonance;
     std::atomic<float>         *filterSelector;
-    float                       filterSample;
     
     // Filter Envelope Parameters
     std::atomic<float> *filterAttack;

@@ -24,7 +24,6 @@ MySynthVoice::MySynthVoice()
 , pitchBendUpSemitones(12.0f)
 , pitchBendDownSemitones(12.0f)
 , lastRecievedPitchWheelValue(0.0f)
-, filterSample(0.0f)
 , masterGain(0.0f)
 , sampleRate(44100.0f)
 , samplesPerBlock(0)
@@ -442,6 +441,17 @@ void MySynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     filterADSRResAmountVal    = *filterADSRResAmount;
     filtLFOAmtVal             = *filtLFOAmt;
 
+    // Pick the active filter once per block; ProcessFilter is virtual so the
+    // per-sample loop dispatches without re-branching.
+    switch (filterSelectorIndex)
+    {
+        case 1:  activeFilter = &fourPoleLPF;  break;
+        case 2:  activeFilter = &eightPoleLPF; break;
+        case 3:  activeFilter = &notchFilter;  break;
+        case 0:  [[fallthrough]];
+        default: activeFilter = &twoPoleLPF;   break;
+    }
+
     // Block-level mod/oscillator setup.
     ringMod  .SetRingToneSlider(*ringModTone);
     freqShift.OscMorph(levels.mainSin, levels.mainSpike, levels.mainSaw);
@@ -496,56 +506,15 @@ float MySynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filt
     const float filtLFOSample      = filterLFO.Process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
 
-    switch (filterSelectorIndex)
-    {
-        case 1:
-            filterSample = fourPoleLPF.ProcessFilter(freq
-                                                     , filtCutoffSmoothed
-                                                     , filterResonanceVal
-                                                     , input
-                                                     , filtEnvVal
-                                                     , filterADSRCutOffAmountVal
-                                                     , filterADSRResAmountVal
-                                                     , filtLFOSample
-                                                     , filtLFOAmtVal);
-            break;
-        case 2:
-            filterSample = eightPoleLPF.ProcessFilter(freq
-                                                      , filtCutoffSmoothed
-                                                      , filterResonanceVal
-                                                      , input
-                                                      , filtEnvVal
-                                                      , filterADSRCutOffAmountVal
-                                                      , filterADSRResAmountVal
-                                                      , filtLFOSample
-                                                      , filtLFOAmtVal);
-            break;
-        case 3:
-            filterSample = notchFilter.ProcessFilter(freq
-                                                     , filtCutoffSmoothed
-                                                     , filterResonanceVal
-                                                     , input
-                                                     , filtEnvVal
-                                                     , filterADSRCutOffAmountVal
-                                                     , filterADSRResAmountVal
-                                                     , filtLFOSample
-                                                     , filtLFOAmtVal);
-            break;
-        case 0:     [[fallthrough]];
-        default:
-            filterSample = twoPoleLPF.ProcessFilter(freq
-                                                    , filtCutoffSmoothed
-                                                    , filterResonanceVal
-                                                    , input
-                                                    , filtEnvVal
-                                                    , filterADSRCutOffAmountVal
-                                                    , filterADSRResAmountVal
-                                                    , filtLFOSample
-                                                    , filtLFOAmtVal);
-            break;
-    }
-
-    return filterSample;
+    return activeFilter->ProcessFilter(freq
+                                       , filtCutoffSmoothed
+                                       , filterResonanceVal
+                                       , input
+                                       , filtEnvVal
+                                       , filterADSRCutOffAmountVal
+                                       , filterADSRResAmountVal
+                                       , filtLFOSample
+                                       , filtLFOAmtVal);
 }
 
 bool MySynthVoice::canPlaySound (juce::SynthesiserSound* sound)
