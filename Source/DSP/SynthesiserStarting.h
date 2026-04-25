@@ -171,9 +171,28 @@ public:
     
 
 private:
+    // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
+    struct BlockLevels
+    {
+        float mainSin, mainSpike, mainSaw;
+        float subSin,  subSquare, subSaw;
+        float lfoSin,  lfoSquare, lfoSaw;
+    };
+
+    // Block-stage helpers (called once per block from renderNextBlock).
+    BlockLevels computeBlockLevels();
+    void        populateVisualBuffers(const BlockLevels& levels);
+    void        prepareDspForBlock();
+
+    // Per-sample-stage helpers (called once per sample from the render loop).
+    float processMainOscSample (float envVal, const BlockLevels& levels);
+    float processModifierChain (float input, float envVal);
+    float processSubOscSample  (float envVal, const BlockLevels& levels);
+    float processFilterChain   (float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels& levels);
+
     /// Populates the waveshape buffers
-    void populateShape(AudioBuffer<float>& buf, float& sin, float& spikeSqr, float& saw, bool isSubOsc);
-    
+    void populateShape(AudioBuffer<float>& buf, float sin, float spikeSqr, float saw, bool isSubOsc);
+
     // Private Pitch Bend methods
     /// maps pitchwheel min/max positions to bend in cents as a function of pitchBend
     float pitchBendCents();
