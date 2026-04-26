@@ -512,7 +512,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
                               , modSectionReduced.getHeight());
     
     juce::Rectangle<int> modHeadingsSpace   = modSectionReduced.removeFromTop(modHeadingHeight);
-    juce::Rectangle<int> spacerHeadingSpace = modHeadingsSpace.removeFromLeft(modSectionGridWidth);
+    modHeadingsSpace.removeFromLeft(modSectionGridWidth);
     juce::Rectangle<int> toneHeadingSpace   = modHeadingsSpace.removeFromLeft(modSectionGridWidth);
     juce::Rectangle<int> pitchHeadingSpace  = modHeadingsSpace.removeFromLeft(modSectionGridWidth);
     
@@ -557,13 +557,13 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     ringDryWetSlider.setBounds(ringKnobArea);
     
     juce::Rectangle<int> frqShKnobArea = modSectionReduced.removeFromTop(modKnobHeight);
-    juce::Rectangle<int> frqShSpacer   = frqShKnobArea.removeFromLeft(modSectionGridWidth);
+    frqShKnobArea.removeFromLeft(modSectionGridWidth);
     juce::Rectangle<int> frqShPtchArea = frqShKnobArea.removeFromLeft(modSectionGridWidth);
     
     frqShftPitchSlider.setBounds(frqShPtchArea);
     frqShftDryWetSlider.setBounds(frqShKnobArea);
     
-    juce::Rectangle<int> sHSpacer    = modSectionReduced.removeFromLeft(modSectionGridWidth);
+    modSectionReduced.removeFromLeft(modSectionGridWidth);
     juce::Rectangle<int> sHPitchArea = modSectionReduced.removeFromLeft(modSectionGridWidth);
     
     sHPitchSlider.setBounds(sHPitchArea);
