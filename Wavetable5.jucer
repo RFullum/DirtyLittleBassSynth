@@ -5,7 +5,8 @@
               displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic"
               companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
               version="1.1.2" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
-              pluginManufacturerCode="FulM" addUsingNamespaceToJuceHeader="0">
+              pluginManufacturerCode="FulM" addUsingNamespaceToJuceHeader="0"
+              cppLanguageStandard="20">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <GROUP id="{A1000001-0000-0000-0000-000000000001}" name="Plugin">
@@ -15,58 +16,41 @@
               file="Source/Plugin/PluginProcessor.h"/>
         <FILE id="amiUsW" name="PluginEditor.cpp" compile="1" resource="0"
               file="Source/Plugin/PluginEditor.cpp"/>
-        <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0"
-              file="Source/Plugin/PluginEditor.h"/>
+        <FILE id="a6OCZ9" name="PluginEditor.h" compile="0" resource="0" file="Source/Plugin/PluginEditor.h"/>
       </GROUP>
       <GROUP id="{A1000002-0000-0000-0000-000000000002}" name="DSP">
         <FILE id="ibUAx0" name="BassSynthVoice.cpp" compile="1" resource="0"
               file="Source/DSP/BassSynthVoice.cpp"/>
         <FILE id="QXNhsN" name="BassSynthVoice.h" compile="0" resource="0"
               file="Source/DSP/BassSynthVoice.h"/>
-        <FILE id="W0mg5d" name="Oscillators.cpp" compile="1" resource="0"
-              file="Source/DSP/Oscillators.cpp"/>
-        <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0"
-              file="Source/DSP/Oscillators.h"/>
-        <FILE id="qkHWvk" name="Wavetable.cpp" compile="1" resource="0"
-              file="Source/DSP/Wavetable.cpp"/>
-        <FILE id="GN3qnd" name="Wavetable.h" compile="0" resource="0"
-              file="Source/DSP/Wavetable.h"/>
+        <FILE id="W0mg5d" name="Oscillators.cpp" compile="1" resource="0" file="Source/DSP/Oscillators.cpp"/>
+        <FILE id="YaQMoD" name="Oscillators.h" compile="0" resource="0" file="Source/DSP/Oscillators.h"/>
+        <FILE id="qkHWvk" name="Wavetable.cpp" compile="1" resource="0" file="Source/DSP/Wavetable.cpp"/>
+        <FILE id="GN3qnd" name="Wavetable.h" compile="0" resource="0" file="Source/DSP/Wavetable.h"/>
         <FILE id="CLzMZP" name="SubOscillator.cpp" compile="1" resource="0"
               file="Source/DSP/SubOscillator.cpp"/>
-        <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0"
-              file="Source/DSP/SubOscillator.h"/>
+        <FILE id="zOlPys" name="SubOscillator.h" compile="0" resource="0" file="Source/DSP/SubOscillator.h"/>
         <FILE id="kst25K" name="FilterSection.cpp" compile="1" resource="0"
               file="Source/DSP/FilterSection.cpp"/>
-        <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0"
-              file="Source/DSP/FilterSection.h"/>
-        <FILE id="LRcUpf" name="Modifiers.cpp" compile="1" resource="0"
-              file="Source/DSP/Modifiers.cpp"/>
-        <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0"
-              file="Source/DSP/Modifiers.h"/>
-        <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0"
-              file="Source/DSP/DryWet.h"/>
+        <FILE id="vewvJa" name="FilterSection.h" compile="0" resource="0" file="Source/DSP/FilterSection.h"/>
+        <FILE id="LRcUpf" name="Modifiers.cpp" compile="1" resource="0" file="Source/DSP/Modifiers.cpp"/>
+        <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/DSP/Modifiers.h"/>
+        <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
         <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
               resource="0" file="Source/GUI/OscillatorParameterControls.cpp"/>
         <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
               resource="0" file="Source/GUI/OscillatorParameterControls.h"/>
-        <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0"
-              file="Source/GUI/OscVisual.cpp"/>
-        <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0"
-              file="Source/GUI/OscVisual.h"/>
+        <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/GUI/OscVisual.cpp"/>
+        <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/GUI/OscVisual.h"/>
         <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
               file="Source/GUI/FilterVisual.cpp"/>
-        <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0"
-              file="Source/GUI/FilterVisual.h"/>
-        <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0"
-              file="Source/GUI/OutMeter.cpp"/>
-        <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0"
-              file="Source/GUI/OutMeter.h"/>
-        <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0"
-              file="Source/GUI/TitleHeader.cpp"/>
-        <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0"
-              file="Source/GUI/TitleHeader.h"/>
+        <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/GUI/FilterVisual.h"/>
+        <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/GUI/OutMeter.cpp"/>
+        <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/GUI/OutMeter.h"/>
+        <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/TitleHeader.cpp"/>
+        <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/TitleHeader.h"/>
         <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
               file="Source/GUI/OtherLookAndFeel.cpp"/>
         <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
