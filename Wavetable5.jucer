@@ -38,6 +38,22 @@
         <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
+        <FILE id="GR000001" name="GuiResources.h"      compile="0" resource="0" file="Source/GUI/GuiResources.h"/>
+        <FILE id="GR000002" name="GuiHelpers.h"        compile="0" resource="0" file="Source/GUI/GuiHelpers.h"/>
+        <FILE id="GR000003" name="OscPanel.h"          compile="0" resource="0" file="Source/GUI/OscPanel.h"/>
+        <FILE id="GR000004" name="OscPanel.cpp"        compile="1" resource="0" file="Source/GUI/OscPanel.cpp"/>
+        <FILE id="GR000005" name="AmpAdsrPanel.h"      compile="0" resource="0" file="Source/GUI/AmpAdsrPanel.h"/>
+        <FILE id="GR000006" name="AmpAdsrPanel.cpp"    compile="1" resource="0" file="Source/GUI/AmpAdsrPanel.cpp"/>
+        <FILE id="GR000007" name="ModifierPanel.h"     compile="0" resource="0" file="Source/GUI/ModifierPanel.h"/>
+        <FILE id="GR000008" name="ModifierPanel.cpp"   compile="1" resource="0" file="Source/GUI/ModifierPanel.cpp"/>
+        <FILE id="GR000009" name="FilterPanel.h"       compile="0" resource="0" file="Source/GUI/FilterPanel.h"/>
+        <FILE id="GR000010" name="FilterPanel.cpp"     compile="1" resource="0" file="Source/GUI/FilterPanel.cpp"/>
+        <FILE id="GR000011" name="FilterAdsrPanel.h"   compile="0" resource="0" file="Source/GUI/FilterAdsrPanel.h"/>
+        <FILE id="GR000012" name="FilterAdsrPanel.cpp" compile="1" resource="0" file="Source/GUI/FilterAdsrPanel.cpp"/>
+        <FILE id="GR000013" name="LfoPanel.h"          compile="0" resource="0" file="Source/GUI/LfoPanel.h"/>
+        <FILE id="GR000014" name="LfoPanel.cpp"        compile="1" resource="0" file="Source/GUI/LfoPanel.cpp"/>
+        <FILE id="GR000015" name="MasterPanel.h"       compile="0" resource="0" file="Source/GUI/MasterPanel.h"/>
+        <FILE id="GR000016" name="MasterPanel.cpp"     compile="1" resource="0" file="Source/GUI/MasterPanel.cpp"/>
         <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
               resource="0" file="Source/GUI/OscillatorParameterControls.cpp"/>
         <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
