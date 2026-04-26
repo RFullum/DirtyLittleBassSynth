@@ -31,8 +31,6 @@ OscVisual::OscVisual()
     wtSaw   .PopulateWavetable();
 }
 
-OscVisual::~OscVisual() {}
-
 void OscVisual::Init(std::atomic<float> *morphParamIn, bool useSquareIn)
 {
     morphParam = morphParamIn;

@@ -17,8 +17,6 @@ TitleHeader::TitleHeader() : lightColor( juce::Colour( (juce::uint8)143, (juce::
                              textColor ( juce::Colour( (juce::uint8)255, (juce::uint8)46,  (juce::uint8)0   ) )
 {}
 
-TitleHeader::~TitleHeader() {}
-
 /// Sets the colors of the TitleHeader
 void TitleHeader::setColors(juce::Colour& light, juce::Colour& dark, juce::Colour& text)
 {

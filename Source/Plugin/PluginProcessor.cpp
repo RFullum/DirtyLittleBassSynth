@@ -141,8 +141,6 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     }
 }
 
-DirtyLittleBassSynthAudioProcessor::~DirtyLittleBassSynthAudioProcessor() {}
-
 const juce::String DirtyLittleBassSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;

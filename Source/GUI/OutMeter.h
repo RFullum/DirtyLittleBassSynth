@@ -19,7 +19,7 @@ class OutMeter  : public juce::Component
 {
 public:
     OutMeter();
-    ~OutMeter() override;
+    ~OutMeter() override = default;
 
     void paint (juce::Graphics&) override;
     void resized() override;

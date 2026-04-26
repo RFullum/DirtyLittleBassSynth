@@ -10,7 +10,7 @@ class DirtyLittleBassSynthAudioProcessor
 {
 public:
     DirtyLittleBassSynthAudioProcessor();
-    ~DirtyLittleBassSynthAudioProcessor();
+    ~DirtyLittleBassSynthAudioProcessor() override = default;
 
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;

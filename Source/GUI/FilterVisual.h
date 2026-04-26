@@ -19,7 +19,7 @@ class FilterVisual  : public juce::Component
 {
 public:
     FilterVisual();
-    ~FilterVisual() override;
+    ~FilterVisual() override = default;
 
     void paint (juce::Graphics&) override;
     void resized() override;

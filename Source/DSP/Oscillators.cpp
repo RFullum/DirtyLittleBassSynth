@@ -19,8 +19,6 @@ Phasor::Phasor()
 , phaseDelta(0.0f)
 {}
 
-Phasor::~Phasor() {}
-
 float Phasor::process()
 {
     phase += phaseDelta;

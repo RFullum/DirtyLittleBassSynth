@@ -17,9 +17,6 @@
 class SubOsc
 {
 public:
-    SubOsc();
-    ~SubOsc();
-    
     void SetSampleRate(float SR);
     void PopulateWavetable();
     /**

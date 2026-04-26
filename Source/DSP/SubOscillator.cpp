@@ -12,10 +12,6 @@
 
 //=======================================================================
 
-SubOsc::SubOsc() {}
-
-SubOsc::~SubOsc() {}
-
 void SubOsc::SetSampleRate(float SR)
 {
     sinSub.SetSampleRate   (SR);

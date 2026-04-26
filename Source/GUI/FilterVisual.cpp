@@ -19,8 +19,6 @@ FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThick
                                bgFade     ( juce::Colour( (juce::uint8)100, (juce::uint8)36, (juce::uint8)0  ) )
 {}
 
-FilterVisual::~FilterVisual() {}
-
 
 void FilterVisual::setColors(juce::Colour& line1, juce::Colour& line2, juce::Colour& background, juce::Colour& fade)
 {

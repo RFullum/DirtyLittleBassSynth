@@ -24,7 +24,7 @@ class OscVisual
 {
 public:
     OscVisual();
-    ~OscVisual() override;
+    ~OscVisual() override = default;
 
     /// One-time setup: which morph parameter to follow and whether the centre wavetable
     /// is the main-osc spike (false) or the sub/LFO square (true). Call once after construction.

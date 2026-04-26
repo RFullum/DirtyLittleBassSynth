@@ -18,9 +18,6 @@ OutMeter::OutMeter() : outLevel(0.0f), levelClipping(false), heightMult(0.0f),
                        clippingRed(juce::Colour( (juce::uint8)255, (juce::uint8)10, (juce::uint8)27, (juce::uint8)255 ) )
 {}
 
-OutMeter::~OutMeter() {}
-
-
 void OutMeter::setColors(juce::Colour &levelColor, juce::Colour &clipColor)
 {
     clipBackRed    = clipColor.darker().darker();

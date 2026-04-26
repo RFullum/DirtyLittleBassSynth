@@ -16,7 +16,7 @@ class Phasor
 {
 public:
     Phasor();
-    virtual ~Phasor();
+    virtual ~Phasor() = default;
 
     float         process();
     virtual float output(float p);

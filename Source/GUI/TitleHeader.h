@@ -19,7 +19,7 @@ class TitleHeader  : public juce::Component
 {
 public:
     TitleHeader();
-    ~TitleHeader() override;
+    ~TitleHeader() override = default;
 
     void paint (juce::Graphics&) override;
     void resized() override;
