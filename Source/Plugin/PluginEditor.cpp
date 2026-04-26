@@ -51,8 +51,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     auto SliderLabelSetup = [&](juce::Label &labelInstance, juce::String labelText, juce::Colour &c, float fontSize)
     {
-        // TODO: Font Depricated, use FontOptions argument
-        labelInstance.setFont             (juce::Font("helvetica", fontSize, 1));
+        labelInstance.setFont             (juce::FontOptions("helvetica", fontSize, 1));
         labelInstance.setText             (labelText, juce::dontSendNotification);
         labelInstance.setJustificationType(juce::Justification::centred);
         labelInstance.setColour           (juce::Label::textColourId, c);

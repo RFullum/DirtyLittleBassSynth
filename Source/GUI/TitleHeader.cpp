@@ -12,9 +12,10 @@
 #include "TitleHeader.h"
 
 //==============================================================================
-TitleHeader::TitleHeader() : lightColor( juce::Colour( (juce::uint8)143, (juce::uint8)173, (juce::uint8)186 ) ),
-                             darkColor ( juce::Colour( (juce::uint8)7,   (juce::uint8)10,  (juce::uint8)59  ) ),
-                             textColor ( juce::Colour( (juce::uint8)255, (juce::uint8)46,  (juce::uint8)0   ) )
+TitleHeader::TitleHeader()
+: lightColor(juce::Colour((juce::uint8)143, (juce::uint8)173, (juce::uint8)186))
+, darkColor (juce::Colour((juce::uint8)7,   (juce::uint8)10,  (juce::uint8)59))
+, textColor (juce::Colour((juce::uint8)255, (juce::uint8)46,  (juce::uint8)0))
 {}
 
 /// Sets the colors of the TitleHeader
@@ -37,13 +38,13 @@ void TitleHeader::paint (juce::Graphics& g)
     g.fillRoundedRectangle ( headerAreaInner, cornerRound );
     
     g.setColour ( textColor);
-    g.setFont   ( juce::Font("technoid", 60.0f, 0) );
+    g.setFont(juce::Font(juce::FontOptions("technoid", 60.0f, 0)));
     g.drawText  ( "FULLUMMUSIC", headerAreaInner.removeFromBottom( 45.0f ), juce::Justification::right );
     
     headerAreaInner.removeFromRight( 3.0f );
     
     g.setColour ( lightColor );
-    g.setFont   ( juce::Font("technoid", 30.0f, 0) );
+    g.setFont(juce::Font(juce::FontOptions("technoid", 30.0f, 0)));
     g.drawText  ( "DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), juce::Justification::right );
     
 }
@@ -63,7 +64,7 @@ void TitleFooter::paint(juce::Graphics& g)
     g.fillAll   ( darkColor );
     g.setColour ( textColor );
     
-    g.setFont  ( juce::Font("Helvetica", 14, 0) );
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 14, 0)));
     g.drawText ( "Version 1.1.2", versionArea.reduced( 2, 6 ), juce::Justification::left );
     g.drawText ( "www.FullumMusic.com", urlArea.reduced( 2, 6 ), juce::Justification::right );
 }
