@@ -45,7 +45,7 @@ void TitleHeader::paint (juce::Graphics& g)
     
     g.setColour ( lightColor );
     g.setFont(juce::Font(juce::FontOptions("technoid", 30.0f, 0)));
-    g.drawText  ( "DIRTY LITTLE BASS SYTNH", headerAreaInner.removeFromTop(25.0f), juce::Justification::right );
+    g.drawText  ( "DIRTY LITTLE BASS SYNTH", headerAreaInner.removeFromTop(25.0f), juce::Justification::right );
     
 }
 
