@@ -193,7 +193,7 @@ void BassSynthVoice::SetPitchBend(int pitchWheelPos)
 
 float BassSynthVoice::CalcShiftHz(float centsOffset)
 {
-    return std::powf(2.0f, centsOffset / 1200.0f);
+    return std::pow(2.0f, centsOffset / 1200.0f);
 }
 
 float BassSynthVoice::PitchBendCents()
