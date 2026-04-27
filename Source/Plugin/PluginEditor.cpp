@@ -34,8 +34,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize(1300, 700);
 
-    dialLookAndFeel  .setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
-    dryWetLookAndFeel.setColors(resources.theme.orangeAccent,  resources.theme.background, resources.theme.textPrimary);
+    dialLookAndFeel  .setTrackBackground(resources.theme.structure);
+    dryWetLookAndFeel.setTrackBackground(resources.theme.structure);
 
     titleHeader.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
     titleFooter.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
