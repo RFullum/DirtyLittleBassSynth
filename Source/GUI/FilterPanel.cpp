@@ -16,14 +16,18 @@ FilterPanel::FilterPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, res.magicMint, res.magicMint, res.textColor, false);
-    SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   res.magicMint, res.magicMint, res.textColor, false);
+    auto accent = res.theme.secondaryAccent;
+    auto thumb  = res.theme.textPrimary;
+    auto txt    = res.theme.textPrimary;
+
+    SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
+    SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
 
     cutoffSlider.setLookAndFeel(res.dialLookAndFeel);
     resSlider   .setLookAndFeel(res.dialLookAndFeel);
 
-    SetupLabel(this, cutoffLabel, "Cutoff", res.textColor, 15.0f);
-    SetupLabel(this, resLabel,    "Rez",    res.textColor, 15.0f);
+    SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
+    SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
     SetupComboBox(this, filterType, juce::StringArray({"-12LPF", "-24LPF", "-48LPF", "Notch"}));
 
@@ -31,8 +35,9 @@ FilterPanel::FilterPanel(GuiResources &res)
     resAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "filter_res",    resSlider);
     filterTypeAtt = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(*res.apvts, "filter_type",   filterType);
 
-    juce::Colour onyxDark = res.onyx.darker().darker();
-    filterVisual.setColors(res.magicMint, onyxDark, res.onyx, onyxDark);
+    auto bg     = res.theme.background;
+    auto bgFade = res.theme.background.darker();
+    filterVisual.setColors(accent, res.theme.structure, bg, bgFade);
 
     addAndMakeVisible(filterVisual);
 }
@@ -41,10 +46,10 @@ void FilterPanel::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    g.setColour(resources.magicMint);
+    g.setColour(resources.theme.structure);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
 
-    g.setColour(resources.onyx);
+    g.setColour(resources.theme.background);
     g.fillRoundedRectangle(innerBg, cornerRound);
 }
 

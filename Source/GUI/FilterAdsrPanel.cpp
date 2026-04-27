@@ -16,12 +16,16 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
+    auto accent = res.theme.secondaryAccent;
+    auto thumb  = res.theme.textPrimary;
+    auto txt    = res.theme.textPrimary;
+
+    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
+    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
+    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
+    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
+    SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt, false);
+    SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt, false);
 
     fltAttackSlider   .setLookAndFeel(res.dialLookAndFeel);
     fltDecaySlider    .setLookAndFeel(res.dialLookAndFeel);
@@ -30,12 +34,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     adsrToCutoffSlider.setLookAndFeel(res.dryWetLookAndFeel);
     adsrToResSlider   .setLookAndFeel(res.dryWetLookAndFeel);
 
-    SetupLabel(this, fltAttackLabel,    "A",         res.textColor, 17.0f);
-    SetupLabel(this, fltDecayLabel,     "D",         res.textColor, 17.0f);
-    SetupLabel(this, fltSustainLabel,   "S",         res.textColor, 17.0f);
-    SetupLabel(this, fltReleaseLabel,   "R",         res.textColor, 17.0f);
-    SetupLabel(this, adsrToCutoffLabel, "To Cutoff", res.textColor, 15.0f);
-    SetupLabel(this, adsrToResLabel,    "To Rez",    res.textColor, 15.0f);
+    SetupLabel(this, fltAttackLabel,    "A",         txt, 17.0f);
+    SetupLabel(this, fltDecayLabel,     "D",         txt, 17.0f);
+    SetupLabel(this, fltSustainLabel,   "S",         txt, 17.0f);
+    SetupLabel(this, fltReleaseLabel,   "R",         txt, 17.0f);
+    SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 15.0f);
+    SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 15.0f);
 
     attackAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_attack",  fltAttackSlider);
     decayAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_decay",   fltDecaySlider);
@@ -49,10 +53,10 @@ void FilterAdsrPanel::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    g.setColour(resources.magicMint);
+    g.setColour(resources.theme.structure);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
 
-    g.setColour(resources.onyx);
+    g.setColour(resources.theme.background);
     g.fillRoundedRectangle(innerBg, cornerRound);
 }
 

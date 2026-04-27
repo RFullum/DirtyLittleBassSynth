@@ -9,17 +9,12 @@ namespace
                                , juce::LookAndFeel               &dialLAF
                                , juce::LookAndFeel               &dryWetLAF)
     {
-        GuiResources r;
-        r.apvts             = &processor.parameters;
-        r.dialLookAndFeel   = &dialLAF;
-        r.dryWetLookAndFeel = &dryWetLAF;
-        r.onyx              = juce::Colour((juce::uint8)53,  (juce::uint8)59,  (juce::uint8)60);
-        r.lightSlateGray    = juce::Colour((juce::uint8)130, (juce::uint8)146, (juce::uint8)152);
-        r.magicMint         = juce::Colour((juce::uint8)174, (juce::uint8)255, (juce::uint8)216);
-        r.fieryRose         = juce::Colour((juce::uint8)255, (juce::uint8)104, (juce::uint8)114);
-        r.orangePeel        = juce::Colour((juce::uint8)252, (juce::uint8)152, (juce::uint8)0);
-        r.textColor         = juce::Colour((juce::uint8)255, (juce::uint8)255, (juce::uint8)255);
-        return r;
+        return GuiResources{
+            .apvts             = &processor.parameters,
+            .dialLookAndFeel   = &dialLAF,
+            .dryWetLookAndFeel = &dryWetLAF,
+            .theme             = Palette::DefaultTheme,
+        };
     }
 }
 
@@ -39,11 +34,11 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize(1300, 700);
 
-    dialLookAndFeel  .setColors(resources.fieryRose,  resources.onyx, resources.magicMint);
-    dryWetLookAndFeel.setColors(resources.orangePeel, resources.onyx, resources.magicMint);
+    dialLookAndFeel  .setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
+    dryWetLookAndFeel.setColors(resources.theme.orangeAccent,  resources.theme.background, resources.theme.textPrimary);
 
-    titleHeader.setColors(resources.magicMint, resources.onyx, resources.orangePeel);
-    titleFooter.setColors(resources.magicMint, resources.onyx, resources.orangePeel);
+    titleHeader.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
+    titleFooter.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
 
     addAndMakeVisible(titleHeader);
     addAndMakeVisible(titleFooter);
@@ -65,7 +60,7 @@ DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEdi
 
 void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
 {
-    g.fillAll(resources.onyx);
+    g.fillAll(resources.theme.background);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()

@@ -16,12 +16,17 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               res.fieryRose, res.fieryRose, res.textColor, true);
-    SetupSlider(this, portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
+    auto primary = res.theme.primaryAccent;
+    auto orange  = res.theme.orangeAccent;
+    auto thumb   = res.theme.textPrimary;
+    auto txt     = res.theme.textPrimary;
+
+    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
+    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
+    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
+    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
+    SetupSlider(this, portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt, false);
+    SetupSlider(this, foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt, false);
 
     oscAttackSlider .setLookAndFeel(res.dialLookAndFeel);
     oscDecaySlider  .setLookAndFeel(res.dialLookAndFeel);
@@ -30,12 +35,12 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     portaSlider     .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider  .setLookAndFeel(res.dialLookAndFeel);
 
-    SetupLabel(this, oscAttackLabel,  "A",                    res.textColor, 18.0f);
-    SetupLabel(this, oscDecayLabel,   "D",                    res.textColor, 18.0f);
-    SetupLabel(this, oscSustainLabel, "S",                    res.textColor, 18.0f);
-    SetupLabel(this, oscReleaseLabel, "R",                    res.textColor, 18.0f);
-    SetupLabel(this, portaLabel,      "Portamento",           res.textColor, 17.0f);
-    SetupLabel(this, foldbackLabel,   "Foldback\nDistortion", res.textColor, 17.0f);
+    SetupLabel(this, oscAttackLabel,  "A",                    txt, 18.0f);
+    SetupLabel(this, oscDecayLabel,   "D",                    txt, 18.0f);
+    SetupLabel(this, oscSustainLabel, "S",                    txt, 18.0f);
+    SetupLabel(this, oscReleaseLabel, "R",                    txt, 18.0f);
+    SetupLabel(this, portaLabel,      "Portamento",           txt, 17.0f);
+    SetupLabel(this, foldbackLabel,   "Foldback\nDistortion", txt, 17.0f);
 
     attackAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_attack",    oscAttackSlider);
     decayAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_decay",     oscDecaySlider);
@@ -49,10 +54,10 @@ void AmpAdsrPanel::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    g.setColour(resources.magicMint);
+    g.setColour(resources.theme.structure);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
 
-    g.setColour(resources.onyx);
+    g.setColour(resources.theme.background);
     g.fillRoundedRectangle(rotaryBg,  cornerRound);
     g.fillRoundedRectangle(slidersBg, cornerRound);
 }

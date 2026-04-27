@@ -19,7 +19,7 @@ TitleHeader::TitleHeader()
 {}
 
 /// Sets the colors of the TitleHeader
-void TitleHeader::setColors(juce::Colour& light, juce::Colour& dark, juce::Colour& text)
+void TitleHeader::setColors(juce::Colour light, juce::Colour dark, juce::Colour text)
 {
     lightColor = light;
     darkColor  = dark;

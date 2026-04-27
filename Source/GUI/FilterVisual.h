@@ -30,7 +30,7 @@ public:
      */
     void drawFilterShape(int filtType, float cutoff, float res);
     
-    void setColors(juce::Colour& line1, juce::Colour& line2, juce::Colour& background, juce::Colour& fade);
+    void setColors(juce::Colour line1, juce::Colour line2, juce::Colour background, juce::Colour fade);
 
 private:
     void drawFilterShape(int type);

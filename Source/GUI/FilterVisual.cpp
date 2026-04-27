@@ -20,7 +20,7 @@ FilterVisual::FilterVisual() : cutoffFreq(100.0f), resonance(0.1f), segmentThick
 {}
 
 
-void FilterVisual::setColors(juce::Colour& line1, juce::Colour& line2, juce::Colour& background, juce::Colour& fade)
+void FilterVisual::setColors(juce::Colour line1, juce::Colour line2, juce::Colour background, juce::Colour fade)
 {
     lineColor1 = line1;
     lineColor2 = line2;

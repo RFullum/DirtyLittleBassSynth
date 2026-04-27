@@ -46,7 +46,7 @@ void OscVisual::Update()
     repaint();
 }
 
-void OscVisual::SetColors(juce::Colour &line, juce::Colour &background, juce::Colour &fade)
+void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colour fade)
 {
     lineColor = line;
     bgColor   = background;

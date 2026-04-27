@@ -20,7 +20,7 @@ public:
     OtherLookAndFeel();
     
     /// Sets the dial and tick colors
-    void setColors(juce::Colour& dial, juce::Colour& tick, juce::Colour& back);
+    void setColors(juce::Colour dial, juce::Colour tick, juce::Colour back);
     
     /// Draws rotary slider as round knob
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,

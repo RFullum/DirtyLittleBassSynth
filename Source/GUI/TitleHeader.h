@@ -25,7 +25,7 @@ public:
     void resized() override;
     
     /// Set the colors for the title header
-    void setColors(juce::Colour& light, juce::Colour& dark, juce::Colour& text);
+    void setColors(juce::Colour light, juce::Colour dark, juce::Colour text);
 
 protected:
     juce::Colour lightColor;

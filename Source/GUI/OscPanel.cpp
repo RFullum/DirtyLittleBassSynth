@@ -16,22 +16,26 @@ OscPanel::OscPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, res.magicMint,  res.magicMint,  res.textColor, false);
-    SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, res.magicMint,  res.magicMint,  res.textColor, false);
-    SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   res.orangePeel, res.orangePeel, res.textColor, false);
-    SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   res.orangePeel, res.orangePeel, res.textColor, true);
+    auto accent  = res.theme.primaryAccent;
+    auto thumb   = res.theme.textPrimary;
+    auto txt     = res.theme.textPrimary;
+
+    SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
+    SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
+    SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
+    SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, true);
 
     oscMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
     pitchBendRangeSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    SetupLabel(this, oscMorphLabel,       "OSC",         res.textColor, 18.0f);
-    SetupLabel(this, oscMorphLabel2,      "MORPH",       res.textColor, 15.0f);
-    SetupLabel(this, subMorphLabel,       "SUB",         res.textColor, 18.0f);
-    SetupLabel(this, subMorphLabel2,      "MORPH",       res.textColor, 15.0f);
-    SetupLabel(this, subGainLabel,        "Sub Gain",    res.textColor, 13.0f);
-    SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", res.textColor, 13.0f);
+    SetupLabel(this, oscMorphLabel,       "OSC",         txt, 18.0f);
+    SetupLabel(this, oscMorphLabel2,      "MORPH",       txt, 15.0f);
+    SetupLabel(this, subMorphLabel,       "SUB",         txt, 18.0f);
+    SetupLabel(this, subMorphLabel2,      "MORPH",       txt, 15.0f);
+    SetupLabel(this, subGainLabel,        "Sub Gain",    txt, 13.0f);
+    SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", txt, 13.0f);
 
     SetupComboBox(this, subOctave, juce::StringArray({"0", "-1 Oct", "-2 Oct"}));
 
@@ -41,10 +45,11 @@ OscPanel::OscPanel(GuiResources &res)
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
     subOctaveAtt      = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(*res.apvts, "sub_osc_octave",   subOctave);
 
-    juce::Colour onyxDark = res.onyx.darker().darker();
+    auto bg     = res.theme.background;
+    auto bgFade = res.theme.background.darker();
 
-    oscVisual   .SetColors(res.magicMint, res.onyx, onyxDark);
-    subOscVisual.SetColors(res.magicMint, res.onyx, onyxDark);
+    oscVisual   .SetColors(accent, bg, bgFade);
+    subOscVisual.SetColors(accent, bg, bgFade);
 
     oscVisual   .Init(res.apvts->getRawParameterValue("osc_morph"),     /*useSquare*/ false);
     subOscVisual.Init(res.apvts->getRawParameterValue("sub_osc_morph"), /*useSquare*/ true);
@@ -57,10 +62,10 @@ void OscPanel::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    g.setColour(resources.magicMint);
+    g.setColour(resources.theme.structure);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
 
-    g.setColour(resources.onyx);
+    g.setColour(resources.theme.background);
     g.fillRoundedRectangle(mainOscBg, cornerRound);
     g.fillRoundedRectangle(subOscBg,  cornerRound);
 }

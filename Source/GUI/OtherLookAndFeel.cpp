@@ -19,7 +19,7 @@ OtherLookAndFeel::OtherLookAndFeel() :
 {}
 
 /// Sets the dial and tick colors
-void OtherLookAndFeel::setColors(juce::Colour& dial, juce::Colour& tick, juce::Colour& back)
+void OtherLookAndFeel::setColors(juce::Colour dial, juce::Colour tick, juce::Colour back)
 {
     dialColor = dial;
     tickColor = tick;

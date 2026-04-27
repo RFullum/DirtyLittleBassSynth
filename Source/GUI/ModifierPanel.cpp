@@ -16,13 +16,18 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
-    SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, res.fieryRose, res.fieryRose, res.textColor, false);
+    auto pink   = res.theme.pinkAccent;
+    auto orange = res.theme.orangeAccent;
+    auto thumb  = res.theme.textPrimary;
+    auto txt    = res.theme.textPrimary;
+
+    SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
+    SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
+    SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
+    SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
+    SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
+    SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
+    SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
 
     ringToneSlider     .setLookAndFeel(res.dialLookAndFeel);
     ringPitchSlider    .setLookAndFeel(res.dialLookAndFeel);
@@ -32,12 +37,12 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
 
-    SetupLabel(this, ringLabel,    "Ring Mod",      res.textColor, 14.0f);
-    SetupLabel(this, frqShftLabel, "Freq Shift",    res.textColor, 14.0f);
-    SetupLabel(this, sHLabel,      "Sample & Hold", res.textColor, 14.0f);
-    SetupLabel(this, toneLabel,    "Tone",          res.onyx,      16.0f);
-    SetupLabel(this, pitchLabel,   "Pitch",         res.onyx,      16.0f);
-    SetupLabel(this, dryWetLabel,  "Dry/Wet",       res.onyx,      16.0f);
+    SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
+    SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
+    SetupLabel(this, sHLabel,      "Sample & Hold", txt, 14.0f);
+    SetupLabel(this, toneLabel,    "Tone",          txt, 16.0f);
+    SetupLabel(this, pitchLabel,   "Pitch",         txt, 16.0f);
+    SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 16.0f);
 
     ringToneAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "ring_tone",        ringToneSlider);
     ringPitchAtt     = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "ring_mod_pitch",   ringPitchSlider);
@@ -52,10 +57,10 @@ void ModifierPanel::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    g.setColour(resources.magicMint);
+    g.setColour(resources.theme.structure);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
 
-    g.setColour(resources.onyx);
+    g.setColour(resources.theme.background);
     g.fillRoundedRectangle(ringRowBg,    cornerRound);
     g.fillRoundedRectangle(frqShftRowBg, cornerRound);
     g.fillRoundedRectangle(sAndHRowBg,   cornerRound);

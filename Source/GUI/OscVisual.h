@@ -35,7 +35,7 @@ public:
     void Update();
 
     /// Sets the colours of the wave line and background gradient.
-    void SetColors(juce::Colour &line, juce::Colour &background, juce::Colour &fade);
+    void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
 
     void paint(juce::Graphics &) override;
     void resized() override;

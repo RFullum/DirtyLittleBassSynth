@@ -28,7 +28,7 @@ public:
     
     
     /// Sets the colors of the level and clipping meter
-    void setColors(juce::Colour& levelColor, juce::Colour& clipColor);
+    void setColors(juce::Colour levelColor, juce::Colour clipColor);
 
 private:
     void heightMultiplier(float mult);

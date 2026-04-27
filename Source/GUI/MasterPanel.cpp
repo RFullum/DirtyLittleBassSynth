@@ -16,14 +16,18 @@ MasterPanel::MasterPanel(GuiResources &res)
 {
     using namespace dlbs;
 
-    SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, res.orangePeel, res.orangePeel, res.textColor, true);
-    SetupLabel (this, masterGainLabel,  "Out Gain", res.textColor, 16.0f);
+    auto accent = res.theme.primaryAccent;
+    auto thumb  = res.theme.textPrimary;
+    auto txt    = res.theme.textPrimary;
+
+    SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, accent, thumb, txt, true);
+    SetupLabel (this, masterGainLabel,  "Out Gain", txt, 16.0f);
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
 
     gainAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "master_gain", masterGainSlider);
 
-    outMeter.setColors(res.magicMint, res.fieryRose);
+    outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);
 }
 
@@ -33,8 +37,8 @@ void MasterPanel::paint(juce::Graphics &g)
 
     auto area = getLocalBounds().toFloat();
 
-    g.setGradientFill(juce::ColourGradient::vertical(resources.onyx,      area.getHeight() * 0.59f
-                                                     , resources.magicMint, area.getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(resources.theme.structure,     area.getHeight() * 0.59f
+                                                     , resources.theme.primaryAccent, area.getHeight()));
     g.fillRoundedRectangle(area, cornerRound);
 }
 
