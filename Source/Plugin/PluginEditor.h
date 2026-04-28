@@ -31,6 +31,9 @@ private:
 
     DirtyLittleBassSynthAudioProcessor &processor;
 
+    // Section divider rectangles, computed in resized() and drawn in paint().
+    std::vector<juce::Rectangle<int>> dividers;
+
     OtherLookAndFeel dialLookAndFeel;
     OtherLookAndFeel dryWetLookAndFeel;
 

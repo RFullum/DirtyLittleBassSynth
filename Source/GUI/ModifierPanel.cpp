@@ -21,13 +21,13 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
-    SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
-    SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt, false);
-    SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
-    SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
-    SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
-    SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt, false);
+    SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
 
     ringToneSlider     .setLookAndFeel(res.dialLookAndFeel);
     ringPitchSlider    .setLookAndFeel(res.dialLookAndFeel);
@@ -36,6 +36,8 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     frqShftDryWetSlider.setLookAndFeel(res.dryWetLookAndFeel);
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
+
+    SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
 
     SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
     SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
@@ -53,19 +55,6 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHDryWetAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sandh_mix",        sHDryWetSlider);
 }
 
-void ModifierPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(ringRowBg,    cornerRound);
-    g.fillRoundedRectangle(frqShftRowBg, cornerRound);
-    g.fillRoundedRectangle(sAndHRowBg,   cornerRound);
-}
-
 void ModifierPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
@@ -73,6 +62,8 @@ void ModifierPanel::resized()
 
     auto area              = getLocalBounds().reduced(sectionSpacerSize);
     int  modSectionGridWidth = area.getWidth() / 4;
+
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
 
     // Top header row: shared column labels (Tone / Pitch / Dry-Wet).
     auto headingsSpace = area.removeFromTop(modHeadingHeight);
@@ -85,15 +76,6 @@ void ModifierPanel::resized()
     dryWetLabel.setBounds(headingsSpace);
 
     int rowHeight = area.getHeight() / 3;
-
-    auto subsections = area.reduced(sectionSpacerSize);
-    auto ringRow    = subsections.removeFromTop(rowHeight).reduced(sectionSpacerSize);
-    auto frqShftRow = subsections.removeFromTop(rowHeight).reduced(sectionSpacerSize);
-    auto sAndHRow   = subsections                          .reduced(sectionSpacerSize);
-
-    ringRowBg    = ringRow   .toFloat();
-    frqShftRowBg = frqShftRow.toFloat();
-    sAndHRowBg   = sAndHRow  .toFloat();
 
     // Row-name labels (left column).
     auto modTypeColumn = area.removeFromLeft(modSectionGridWidth);

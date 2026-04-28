@@ -20,7 +20,9 @@ MasterPanel::MasterPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, accent, thumb, txt, true);
+    SetupSectionLabel(this, sectionLabel, "Master", res.theme.textSecondary);
+
+    SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, accent, thumb, txt);
     SetupLabel (this, masterGainLabel,  "Out Gain", txt, 16.0f);
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
@@ -29,17 +31,6 @@ MasterPanel::MasterPanel(GuiResources &res)
 
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);
-}
-
-void MasterPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    auto area = getLocalBounds().toFloat();
-
-    g.setGradientFill(juce::ColourGradient::vertical(resources.theme.structure,     area.getHeight() * 0.59f
-                                                     , resources.theme.primaryAccent, area.getHeight()));
-    g.fillRoundedRectangle(area, cornerRound);
 }
 
 void MasterPanel::Update(float outLevel, float sampleRate)
@@ -53,6 +44,8 @@ void MasterPanel::resized()
     constexpr int mainLabelHeight   = 30;
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
+
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
 
     auto meterArea = area.removeFromBottom(area.getHeight() / 2);
     auto labelArea = area.removeFromTop(mainLabelHeight);

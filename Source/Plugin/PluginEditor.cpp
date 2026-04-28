@@ -61,6 +61,10 @@ DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEdi
 void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
 {
     g.fillAll(resources.theme.background);
+
+    g.setColour(resources.theme.structure);
+    for (const auto &d : dividers)
+        g.fillRect(d);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
@@ -78,31 +82,67 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int headerHeight      = 66;
-    constexpr int footerHeight      = 17;
-    constexpr int mainOutWidth      = 100;
+    constexpr int headerHeight  = 66;
+    constexpr int footerHeight  = 17;
+    constexpr int masterWidth   = 100;
+    constexpr int dividerThick  = 1;
 
-    auto totalArea = getLocalBounds();
+    const int W = getWidth();
+    const int H = getHeight();
 
-    titleHeader.setBounds(totalArea.removeFromTop   (headerHeight).reduced(sectionSpacerSize));
-    titleFooter.setBounds(totalArea.removeFromBottom(footerHeight));
+    titleHeader.setBounds(0, 0,                     W, headerHeight);
+    titleFooter.setBounds(0, H - footerHeight,      W, footerHeight);
 
-    masterPanel.setBounds(totalArea.removeFromRight(mainOutWidth).reduced(sectionSpacerSize));
+    const int bodyTop    = headerHeight;
+    const int bodyBottom = H - footerHeight;
+    const int bodyHeight = bodyBottom - bodyTop;
 
-    int topRowHeight = (int)(getHeight() * 0.66f);
-    auto topRow      = totalArea.removeFromTop(topRowHeight);
+    const int masterLeft = W - masterWidth;
+    masterPanel.setBounds(masterLeft, bodyTop, masterWidth, bodyHeight);
 
-    int oscWidth     = (int)(topRow.getWidth() * 0.40f);
-    int adsrWidth    = (int)(topRow.getWidth() * 0.33f);
+    const int mainLeft   = 0;
+    const int mainRight  = masterLeft;
+    const int mainWidth  = mainRight - mainLeft;
 
-    oscPanel     .setBounds(topRow.removeFromLeft(oscWidth) .reduced(sectionSpacerSize));
-    ampAdsrPanel .setBounds(topRow.removeFromLeft(adsrWidth).reduced(sectionSpacerSize));
-    modifierPanel.setBounds(topRow                          .reduced(sectionSpacerSize));
+    const int topRowHeight = (int)(bodyHeight * 0.66f);
+    const int rowSplitY    = bodyTop + topRowHeight;
 
-    int bottomColumnWidth = (int)(totalArea.getWidth() * 0.33f);
+    const int oscWidth     = (int)(mainWidth * 0.40f);
+    const int adsrWidth    = (int)(mainWidth * 0.33f);
+    const int oscRight     = mainLeft + oscWidth;
+    const int adsrRight    = oscRight + adsrWidth;
 
-    filterPanel    .setBounds(totalArea.removeFromLeft(bottomColumnWidth).reduced(sectionSpacerSize));
-    filterAdsrPanel.setBounds(totalArea.removeFromLeft(bottomColumnWidth).reduced(sectionSpacerSize));
-    lfoPanel       .setBounds(totalArea                                   .reduced(sectionSpacerSize));
+    oscPanel     .setBounds(mainLeft,  bodyTop,    oscWidth,             topRowHeight);
+    ampAdsrPanel .setBounds(oscRight,  bodyTop,    adsrWidth,            topRowHeight);
+    modifierPanel.setBounds(adsrRight, bodyTop,    mainRight - adsrRight, topRowHeight);
+
+    const int bottomCol     = (int)(mainWidth * 0.33f);
+    const int filterRight   = mainLeft + bottomCol;
+    const int fltAdsrRight  = filterRight + bottomCol;
+    const int bottomHeight  = bodyBottom - rowSplitY;
+
+    filterPanel    .setBounds(mainLeft,      rowSplitY, bottomCol,                  bottomHeight);
+    filterAdsrPanel.setBounds(filterRight,   rowSplitY, bottomCol,                  bottomHeight);
+    lfoPanel       .setBounds(fltAdsrRight,  rowSplitY, mainRight - fltAdsrRight,   bottomHeight);
+
+    // Section dividers: thin lines between adjacent panels.
+    dividers.clear();
+
+    // Horizontal: under header (full width); above footer (full width).
+    dividers.emplace_back(0, headerHeight,            W, dividerThick);
+    dividers.emplace_back(0, bodyBottom,              W, dividerThick);
+
+    // Horizontal: between top row and bottom row, only across the main area.
+    dividers.emplace_back(0, rowSplitY,               masterLeft, dividerThick);
+
+    // Vertical: between main area and master column (full body height).
+    dividers.emplace_back(masterLeft - dividerThick,  bodyTop, dividerThick, bodyHeight);
+
+    // Vertical: between top-row panels.
+    dividers.emplace_back(oscRight  - dividerThick,   bodyTop,    dividerThick, topRowHeight);
+    dividers.emplace_back(adsrRight - dividerThick,   bodyTop,    dividerThick, topRowHeight);
+
+    // Vertical: between bottom-row panels.
+    dividers.emplace_back(filterRight  - dividerThick, rowSplitY, dividerThick, bottomHeight);
+    dividers.emplace_back(fltAdsrRight - dividerThick, rowSplitY, dividerThick, bottomHeight);
 }

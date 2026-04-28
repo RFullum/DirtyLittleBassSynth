@@ -21,12 +21,12 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
-    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
-    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
-    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt, true);
-    SetupSlider(this, portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt, false);
-    SetupSlider(this, foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt, false);
+    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
+    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
+    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
+    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
+    SetupSlider(this, portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
+    SetupSlider(this, foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
 
     oscAttackSlider .setLookAndFeel(res.dialLookAndFeel);
     oscDecaySlider  .setLookAndFeel(res.dialLookAndFeel);
@@ -34,6 +34,9 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     oscReleaseSlider.setLookAndFeel(res.dialLookAndFeel);
     portaSlider     .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider  .setLookAndFeel(res.dialLookAndFeel);
+
+    // TODO: change dash to a dot?
+    SetupSectionLabel(this, sectionLabel, "Amp - Drive", res.theme.textSecondary);
 
     SetupLabel(this, oscAttackLabel,  "A",                    txt, 18.0f);
     SetupLabel(this, oscDecayLabel,   "D",                    txt, 18.0f);
@@ -50,18 +53,6 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     foldbackAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "foldback_dist", foldbackSlider);
 }
 
-void AmpAdsrPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(rotaryBg,  cornerRound);
-    g.fillRoundedRectangle(slidersBg, cornerRound);
-}
-
 void AmpAdsrPanel::resized()
 {
     constexpr int sectionSpacerSize  = 2;
@@ -70,9 +61,10 @@ void AmpAdsrPanel::resized()
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
 
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+
     // Bottom third: portamento + foldback knobs.
     auto rotarySpace = area.removeFromBottom(area.getHeight() / 3).reduced(sectionSpacerSize * 2);
-    rotaryBg = rotarySpace.toFloat();
 
     auto portaSpace      = rotarySpace.removeFromLeft(rotarySpace.getWidth() / 2);
     auto portaLabelSpace = portaSpace.removeFromTop(rotaryLabelHeight);
@@ -86,7 +78,6 @@ void AmpAdsrPanel::resized()
 
     // Top two-thirds: ADSR sliders.
     auto slidersArea = area.reduced(sectionSpacerSize * 2);
-    slidersBg = slidersArea.toFloat();
 
     int sliderWidth = slidersArea.getWidth() / 4;
     auto aSpace = slidersArea.removeFromLeft(sliderWidth);

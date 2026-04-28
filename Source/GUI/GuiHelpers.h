@@ -14,27 +14,28 @@
 
 namespace dlbs
 {
-    /// Configures a slider's style, colors, optional textbox; adds to parent.
+    /// Configures a slider's style, colors, and an always-visible value text box.
+    /// Text box is placed to the right of horizontal sliders, below vertical and rotary.
     inline void SetupSlider(juce::Component             *parent
                             , juce::Slider              &slider
                             , juce::Slider::SliderStyle  style
                             , juce::Colour               fillColor
                             , juce::Colour               thumbColor
-                            , juce::Colour               textColor
-                            , bool                       showTextBox)
+                            , juce::Colour               textColor)
     {
         slider.setSliderStyle(style);
 
-        if (showTextBox)
-        {
-            slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 40, 20);
-            slider.setColour      (juce::Slider::textBoxOutlineColourId, juce::Colour((juce::uint8)0, (juce::uint8)0, (juce::uint8)0, (juce::uint8)0));
-            slider.setColour      (juce::Slider::textBoxTextColourId,    textColor);
-        }
-        else
-        {
-            slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-        }
+        const auto tbPos = (style == juce::Slider::SliderStyle::LinearHorizontal)
+                              ? juce::Slider::TextBoxRight
+                              : juce::Slider::TextBoxBelow;
+
+        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 38 : 44;
+        const int tbH = 14;
+
+        slider.setTextBoxStyle(tbPos, false, tbW, tbH);
+        slider.setColour      (juce::Slider::textBoxOutlineColourId,    juce::Colours::transparentBlack);
+        slider.setColour      (juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
+        slider.setColour      (juce::Slider::textBoxTextColourId,       textColor);
 
         if (style == juce::Slider::SliderStyle::LinearHorizontal
          || style == juce::Slider::SliderStyle::LinearVertical)
@@ -57,6 +58,23 @@ namespace dlbs
         label.setFont             (juce::FontOptions("helvetica", fontSize, 1));
         label.setText             (labelText, juce::dontSendNotification);
         label.setJustificationType(juce::Justification::centred);
+        label.setColour           (juce::Label::textColourId, color);
+
+        parent->addAndMakeVisible(label);
+    }
+
+    /// Configures a small uppercase letter-spaced section header label and adds to parent.
+    inline void SetupSectionLabel(juce::Component *parent
+                                  , juce::Label   &label
+                                  , juce::String   text
+                                  , juce::Colour   color)
+    {
+        auto font = juce::Font(juce::FontOptions("helvetica", 10.0f, juce::Font::bold))
+                       .withExtraKerningFactor(0.18f);
+
+        label.setFont             (font);
+        label.setText             (text.toUpperCase(), juce::dontSendNotification);
+        label.setJustificationType(juce::Justification::centredLeft);
         label.setColour           (juce::Label::textColourId, color);
 
         parent->addAndMakeVisible(label);

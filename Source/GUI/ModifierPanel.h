@@ -21,7 +21,6 @@ class ModifierPanel
 public:
     ModifierPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
 private:
@@ -35,6 +34,7 @@ private:
     juce::Slider sHPitchSlider;
     juce::Slider sHDryWetSlider;
 
+    juce::Label sectionLabel;
     juce::Label ringLabel;
     juce::Label frqShftLabel;
     juce::Label sHLabel;
@@ -49,10 +49,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> frqShftDryWetAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sHPitchAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sHDryWetAtt;
-
-    juce::Rectangle<float> ringRowBg;
-    juce::Rectangle<float> frqShftRowBg;
-    juce::Rectangle<float> sAndHRowBg;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModifierPanel)
 };

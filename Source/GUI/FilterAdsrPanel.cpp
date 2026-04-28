@@ -20,12 +20,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
-    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
-    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
-    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt, true);
-    SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt, false);
-    SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt, false);
+    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
+    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
+    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
+    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
+    SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
+    SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
 
     fltAttackSlider   .setLookAndFeel(res.dialLookAndFeel);
     fltDecaySlider    .setLookAndFeel(res.dialLookAndFeel);
@@ -33,6 +33,8 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     fltReleaseSlider  .setLookAndFeel(res.dialLookAndFeel);
     adsrToCutoffSlider.setLookAndFeel(res.dryWetLookAndFeel);
     adsrToResSlider   .setLookAndFeel(res.dryWetLookAndFeel);
+
+    SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
 
     SetupLabel(this, fltAttackLabel,    "A",         txt, 17.0f);
     SetupLabel(this, fltDecayLabel,     "D",         txt, 17.0f);
@@ -49,25 +51,16 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     toResAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
 }
 
-void FilterAdsrPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(innerBg, cornerRound);
-}
-
 void FilterAdsrPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
     constexpr int filtLabelHeight   = 30;
 
-    auto area    = getLocalBounds().reduced(sectionSpacerSize);
+    auto area = getLocalBounds().reduced(sectionSpacerSize);
+
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+
     auto reduced = area;
-    innerBg = reduced.toFloat();
 
     auto rotaryArea     = reduced.removeFromRight(reduced.getWidth() / 3);
     auto toResArea      = rotaryArea.removeFromBottom(rotaryArea.getHeight() / 2);

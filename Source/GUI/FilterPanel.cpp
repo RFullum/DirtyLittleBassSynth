@@ -20,11 +20,13 @@ FilterPanel::FilterPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
-    SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
+    SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     cutoffSlider.setLookAndFeel(res.dialLookAndFeel);
     resSlider   .setLookAndFeel(res.dialLookAndFeel);
+
+    SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
 
     SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
     SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
@@ -42,17 +44,6 @@ FilterPanel::FilterPanel(GuiResources &res)
     addAndMakeVisible(filterVisual);
 }
 
-void FilterPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(innerBg, cornerRound);
-}
-
 void FilterPanel::Update()
 {
     filterVisual.drawFilterShape(filterType.getSelectedId()
@@ -67,9 +58,11 @@ void FilterPanel::resized()
     constexpr int morphLabelWidth   = 50;
     constexpr int filterTypeWidth   = 75;
 
-    auto area    = getLocalBounds().reduced(sectionSpacerSize);
+    auto area = getLocalBounds().reduced(sectionSpacerSize);
+
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+
     auto reduced = area.reduced(sectionSpacerSize);
-    innerBg = reduced.toFloat();
 
     int resWidth = reduced.getWidth() / 8;
 

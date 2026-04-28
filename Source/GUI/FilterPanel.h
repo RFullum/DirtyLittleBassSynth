@@ -21,7 +21,6 @@ class FilterPanel
 public:
     FilterPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
     /// Called from the editor's timer to redraw the filter response curve from
@@ -37,14 +36,13 @@ private:
     juce::Slider   resSlider;
     juce::ComboBox filterType;
 
+    juce::Label sectionLabel;
     juce::Label cutoffLabel;
     juce::Label resLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   cutoffAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   resAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeAtt;
-
-    juce::Rectangle<float> innerBg;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterPanel)
 };

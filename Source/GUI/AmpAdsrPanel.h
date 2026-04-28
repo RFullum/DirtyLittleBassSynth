@@ -20,7 +20,6 @@ class AmpAdsrPanel
 public:
     AmpAdsrPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
 private:
@@ -33,6 +32,7 @@ private:
     juce::Slider portaSlider;
     juce::Slider foldbackSlider;
 
+    juce::Label sectionLabel;
     juce::Label oscAttackLabel;
     juce::Label oscDecayLabel;
     juce::Label oscSustainLabel;
@@ -46,9 +46,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> portaAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldbackAtt;
-
-    juce::Rectangle<float> rotaryBg;
-    juce::Rectangle<float> slidersBg;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AmpAdsrPanel)
 };

@@ -20,15 +20,17 @@ OscPanel::OscPanel(GuiResources &res)
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
-    SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
-    SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
-    SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, true);
+    SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     oscMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
     pitchBendRangeSlider.setLookAndFeel(res.dialLookAndFeel);
+
+    SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
 
     SetupLabel(this, oscMorphLabel,       "OSC",         txt, 18.0f);
     SetupLabel(this, oscMorphLabel2,      "MORPH",       txt, 15.0f);
@@ -58,18 +60,6 @@ OscPanel::OscPanel(GuiResources &res)
     addAndMakeVisible(subOscVisual);
 }
 
-void OscPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(mainOscBg, cornerRound);
-    g.fillRoundedRectangle(subOscBg,  cornerRound);
-}
-
 void OscPanel::Update()
 {
     oscVisual   .Update();
@@ -86,10 +76,11 @@ void OscPanel::resized()
 
     auto oscArea = getLocalBounds().reduced(sectionSpacerSize);
 
+    sectionLabel.setBounds(oscArea.removeFromTop(16).reduced(8, 0));
+
     // Main osc (top half)
     auto mainOscArea        = oscArea.removeFromTop(oscArea.getHeight() / 2);
     auto mainOscAreaReduced = mainOscArea.reduced(sectionSpacerSize * 2);
-    mainOscBg = mainOscAreaReduced.toFloat();
 
     auto oscGainSpace         = mainOscAreaReduced.removeFromRight (oscGainWidth);
     auto morphLabelSpace      = mainOscAreaReduced.removeFromLeft  (morphLabelWidth);
@@ -108,7 +99,6 @@ void OscPanel::resized()
 
     // Sub osc (bottom half)
     auto subOscAreaReduced = oscArea.reduced(sectionSpacerSize * 2);
-    subOscBg = subOscAreaReduced.toFloat();
 
     auto subGainSpace            = subOscAreaReduced.removeFromRight  (oscGainWidth);
     auto subOctaveSpace          = subGainSpace.removeFromBottom      (subOctaveHeight);

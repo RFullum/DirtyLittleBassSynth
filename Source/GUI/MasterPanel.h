@@ -21,7 +21,6 @@ class MasterPanel
 public:
     MasterPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
     /// Pushes the latest output magnitude into the meter. Called from the editor's timer.
@@ -30,6 +29,7 @@ public:
 private:
     GuiResources &resources;
 
+    juce::Label  sectionLabel;
     juce::Slider masterGainSlider;
     juce::Label  masterGainLabel;
     OutMeter     outMeter;

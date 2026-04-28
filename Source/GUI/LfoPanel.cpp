@@ -20,13 +20,15 @@ LfoPanel::LfoPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt, false);
-    SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
-    SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt, false);
+    SetupSlider(this, lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     lfoShapeSlider .setLookAndFeel(res.dialLookAndFeel);
     lfoFreqSlider  .setLookAndFeel(res.dialLookAndFeel);
     lfoAmountSlider.setLookAndFeel(res.dialLookAndFeel);
+
+    SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
 
     SetupLabel(this, lfoShapeLabel,  "LFO Shape", txt, 17.0f);
     SetupLabel(this, lfoFreqLabel,   "Freq",      txt, 16.0f);
@@ -44,17 +46,6 @@ LfoPanel::LfoPanel(GuiResources &res)
     addAndMakeVisible(lfoVisual);
 }
 
-void LfoPanel::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setColour(resources.theme.structure);
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), cornerRound);
-
-    g.setColour(resources.theme.background);
-    g.fillRoundedRectangle(innerBg, cornerRound);
-}
-
 void LfoPanel::Update()
 {
     lfoVisual.Update();
@@ -65,9 +56,11 @@ void LfoPanel::resized()
     constexpr int sectionSpacerSize = 2;
     constexpr int filtLabelHeight   = 30;
 
-    auto area    = getLocalBounds().reduced(sectionSpacerSize);
+    auto area = getLocalBounds().reduced(sectionSpacerSize);
+
+    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+
     auto reduced = area;
-    innerBg = reduced.toFloat();
 
     auto vertSliderArea  = reduced.removeFromRight(reduced.getWidth() / 3);
     auto vertLabelFooter = vertSliderArea.removeFromTop(filtLabelHeight);

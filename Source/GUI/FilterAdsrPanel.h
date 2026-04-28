@@ -21,7 +21,6 @@ class FilterAdsrPanel
 public:
     FilterAdsrPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
 private:
@@ -34,6 +33,7 @@ private:
     juce::Slider adsrToCutoffSlider;
     juce::Slider adsrToResSlider;
 
+    juce::Label sectionLabel;
     juce::Label fltAttackLabel;
     juce::Label fltDecayLabel;
     juce::Label fltSustainLabel;
@@ -47,8 +47,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> toCutoffAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> toResAtt;
-
-    juce::Rectangle<float> innerBg;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterAdsrPanel)
 };

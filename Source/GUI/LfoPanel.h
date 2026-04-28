@@ -21,7 +21,6 @@ class LfoPanel
 public:
     LfoPanel(GuiResources &res);
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
     /// Called from the editor's timer so the LFO shape visual rebuilds its path.
@@ -36,6 +35,7 @@ private:
     juce::Slider lfoFreqSlider;
     juce::Slider lfoAmountSlider;
 
+    juce::Label sectionLabel;
     juce::Label lfoShapeLabel;
     juce::Label lfoFreqLabel;
     juce::Label lfoAmountLabel;
@@ -43,8 +43,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> shapeAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> amountAtt;
-
-    juce::Rectangle<float> innerBg;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LfoPanel)
 };
