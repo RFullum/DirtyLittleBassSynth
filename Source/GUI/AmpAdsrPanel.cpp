@@ -35,7 +35,7 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     portaSlider     .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider  .setLookAndFeel(res.dialLookAndFeel);
 
-    // TODO: change dash to a dot?
+    // TODO: change dash to a dot? \xc2\xb7
     SetupSectionLabel(this, sectionLabel, "Amp - Drive", res.theme.textSecondary);
 
     SetupLabel(this, oscAttackLabel,  "A",                    txt, 18.0f);

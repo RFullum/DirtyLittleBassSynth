@@ -13,42 +13,37 @@
 #include <JuceHeader.h>
 
 //==============================================================================
-/*
-*/
-class FilterVisual  : public juce::Component
+
+class FilterVisual
+    : public juce::Component
 {
 public:
     FilterVisual();
     ~FilterVisual() override = default;
 
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics &) override;
     void resized() override;
-    
-    /**
-     Draws the shape of the selected filter. Use filterType.getSelectedID()
-     to find the filtType: 1 = -12dB LPF, 4 = Notch. 
-     */
+
+    /// Rebuilds the displayed shape from the current filter type / cutoff / resonance.
+    /// filtType: 1 = -12dB LPF, 2 = -24dB LPF, 3 = -48dB LPF, 4 = Notch.
     void drawFilterShape(int filtType, float cutoff, float res);
-    
-    void setColors(juce::Colour line1, juce::Colour line2, juce::Colour background, juce::Colour fade);
+
+    void setColors(juce::Colour line, juce::Colour background, juce::Colour fade);
 
 private:
-    void drawFilterShape(int type);
-    
+    void buildPaths(int type);
+
     juce::Rectangle<float> visualBox;
-    
-    juce::Path filterShape;
-    
-    float cutoffFreq;
-    float resonance;
-    float segmentThickness;
-    float order;
-    
-    juce::Colour lineColor1;
-    juce::Colour lineColor2;
+
+    juce::Path filterShape;     // open line for stroke
+    juce::Path filterArea;      // closed shape for the area fill below the line
+
+    float cutoffFreq = 100.0f;
+    float resonance  = 0.1f;
+
+    juce::Colour lineColor;
     juce::Colour bgColor;
-    juce::Colour bgFade;
-    
-    
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterVisual)
+    juce::Colour fadeColor;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterVisual)
 };

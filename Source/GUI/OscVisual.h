@@ -55,8 +55,6 @@ private:
 
     OscParamControl morphControl;
 
-    float segmentThickness;
-
     juce::Colour lineColor;
     juce::Colour bgColor;
     juce::Colour fadeColor;
@@ -64,6 +62,7 @@ private:
     juce::Rectangle<float> visualBox;
 
     juce::Path oscShape;
+    juce::Path oscArea;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscVisual)
 };

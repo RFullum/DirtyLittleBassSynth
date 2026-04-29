@@ -39,7 +39,7 @@ FilterPanel::FilterPanel(GuiResources &res)
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
-    filterVisual.setColors(accent, res.theme.structure, bg, bgFade);
+    filterVisual.setColors(accent, bg, bgFade);
 
     addAndMakeVisible(filterVisual);
 }
