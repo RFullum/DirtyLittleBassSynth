@@ -33,9 +33,9 @@ MasterPanel::MasterPanel(GuiResources &res)
     addAndMakeVisible(outMeter);
 }
 
-void MasterPanel::Update(float outLevel, float sampleRate)
+void MasterPanel::Update(float leftLevel, float rightLevel, float sampleRate)
 {
-    outMeter.outMeterLevel(outLevel, sampleRate);
+    outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
 }
 
 void MasterPanel::resized()

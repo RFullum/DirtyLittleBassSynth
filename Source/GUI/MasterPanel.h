@@ -23,8 +23,8 @@ public:
 
     void resized() override;
 
-    /// Pushes the latest output magnitude into the meter. Called from the editor's timer.
-    void Update(float outLevel, float sampleRate);
+    /// Pushes the latest L/R output magnitudes into the meter. Called from the editor's timer.
+    void Update(float leftLevel, float rightLevel, float sampleRate);
 
 private:
     GuiResources &resources;

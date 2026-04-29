@@ -8,95 +8,113 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "OutMeter.h"
 
 //==============================================================================
-OutMeter::OutMeter() : outLevel(0.0f), levelClipping(false), heightMult(0.0f),
-                       SR(44100), decayRateRise(0.0005f), decayRateFall(0.001f),
-                       decayFactorRise(decayRateRise * SR), decayFactorFall(decayRateFall * SR),
-                       clippingRed(juce::Colour( (juce::uint8)255, (juce::uint8)10, (juce::uint8)27, (juce::uint8)255 ) )
+
+OutMeter::OutMeter()
+: clipLitColor  (juce::Colour((juce::uint8)255, (juce::uint8)10, (juce::uint8)27))
+, clipDimColor  (juce::Colour((juce::uint8)50,  (juce::uint8)10, (juce::uint8)15))
+, levelColor    (juce::Colour((juce::uint8)0,   (juce::uint8)200,(juce::uint8)180))
+, levelBackColor(juce::Colour((juce::uint8)20,  (juce::uint8)25, (juce::uint8)35))
 {}
 
-void OutMeter::setColors(juce::Colour levelColor, juce::Colour clipColor)
+void OutMeter::setColors(juce::Colour level, juce::Colour clip)
 {
-    clipBackRed    = clipColor.darker().darker();
-    clippingRed    = clipColor;
-    levelBackGreen = levelColor.darker().darker();
-    levelGreen     = levelColor.brighter().brighter();
+    levelColor     = level;
+    levelBackColor = level.darker().darker();
+    clipLitColor   = clip;
+    clipDimColor   = clip.darker().darker();
 }
 
-void OutMeter::paint(juce::Graphics& g)
+void OutMeter::paint(juce::Graphics &g)
 {
-    g.setColour(levelClipping ? clippingRed : clipBackRed);
-    g.fillRect(leftChannelClipBack);
-    g.fillRect(rightChannelClipBack);
+    constexpr float corner = 1.5f;
 
-    g.setColour(levelBackGreen);
-    g.fillRect(leftChannelBack);
-    g.fillRect(rightChannelBack);
+    // Per-channel clip strips (top)
+    g.setColour(leftClipping ? clipLitColor : clipDimColor);
+    g.fillRoundedRectangle(leftClipRect.toFloat(), corner);
 
-    g.setColour(levelGreen);
-    g.fillRect(leftChannelLevel);
-    g.fillRect(rightChannelLevel);
+    g.setColour(rightClipping ? clipLitColor : clipDimColor);
+    g.fillRoundedRectangle(rightClipRect.toFloat(), corner);
+
+    // Per-channel level meter backgrounds
+    g.setColour(levelBackColor);
+    g.fillRoundedRectangle(leftMeterBack .toFloat(), corner);
+    g.fillRoundedRectangle(rightMeterBack.toFloat(), corner);
+
+    // Level fills
+    g.setColour(levelColor);
+    g.fillRoundedRectangle(leftMeterLevel .toFloat(), corner);
+    g.fillRoundedRectangle(rightMeterLevel.toFloat(), corner);
 }
 
 void OutMeter::resized()
 {
-    int reducer = 2;
-    auto totalArea = getLocalBounds();
-    
-    juce::Rectangle<int> reducedArea   = totalArea.reduced         ( reducer );
-    juce::Rectangle<int> clipArea      = reducedArea.removeFromTop ( reducedArea.getHeight() * 0.2f );
-    juce::Rectangle<int> clipLeftArea  = clipArea.removeFromLeft   ( clipArea.getWidth() * 0.5f ).reduced( reducer );
-    juce::Rectangle<int> clipRightArea = clipArea.reduced          ( reducer );
-    
-    leftChannelClipBack.setBounds  ( clipLeftArea.getX(), clipLeftArea.getY(),
-                                     clipLeftArea.getWidth(), clipLeftArea.getHeight() );
-    rightChannelClipBack.setBounds ( clipRightArea.getX(), clipRightArea.getY(),
-                                     clipRightArea.getWidth(), clipRightArea.getHeight() );
-    
-    
-    juce::Rectangle<int> meterLeftArea  = reducedArea.removeFromLeft( reducedArea.getWidth() * 0.5f ).reduced( reducer );
-    juce::Rectangle<int> meterRightArea = reducedArea.reduced( reducer );
-    
-    leftChannelBack.setBounds   ( meterLeftArea.getX(), meterLeftArea.getY(),
-                                  meterLeftArea.getWidth(), meterLeftArea.getHeight() );
-    
-    leftChannelLevel.setBounds  ( meterLeftArea.getX(), meterLeftArea.getY() + meterLeftArea.getHeight(),
-                                  meterLeftArea.getWidth(), -meterLeftArea.getHeight() * heightMult );
-    
-    rightChannelBack.setBounds  ( meterRightArea.getX(), meterRightArea.getY(),
-                                  meterRightArea.getWidth(), meterRightArea.getHeight() );
-    
-    rightChannelLevel.setBounds ( meterRightArea.getX(), meterRightArea.getY() + meterRightArea.getHeight(),
-                                  meterRightArea.getWidth(), -meterRightArea.getHeight() * heightMult );
+    constexpr int reducer        = 2;
+    constexpr int clipStripHeight = 5;
+    constexpr int clipGap         = 2;
+
+    auto totalArea   = getLocalBounds();
+    auto reducedArea = totalArea.reduced(reducer);
+
+    auto clipArea = reducedArea.removeFromTop(clipStripHeight);
+    reducedArea.removeFromTop(clipGap);
+
+    auto clipLeft  = clipArea.removeFromLeft(clipArea.getWidth() / 2).reduced(reducer, 0);
+    auto clipRight = clipArea                                         .reduced(reducer, 0);
+
+    leftClipRect  = clipLeft;
+    rightClipRect = clipRight;
+
+    auto meterLeftArea  = reducedArea.removeFromLeft(reducedArea.getWidth() / 2).reduced(reducer, 0);
+    auto meterRightArea = reducedArea                                            .reduced(reducer, 0);
+
+    leftMeterBack  = meterLeftArea;
+    rightMeterBack = meterRightArea;
+
+    const int leftMeterH  = meterLeftArea .getHeight();
+    const int rightMeterH = meterRightArea.getHeight();
+    const int leftFillH   = (int) (leftMeterH  * juce::jlimit(0.0f, 1.0f, leftHeightMult));
+    const int rightFillH  = (int) (rightMeterH * juce::jlimit(0.0f, 1.0f, rightHeightMult));
+
+    leftMeterLevel.setBounds (meterLeftArea.getX(),
+                              meterLeftArea.getY()  + leftMeterH  - leftFillH,
+                              meterLeftArea.getWidth(),
+                              leftFillH);
+
+    rightMeterLevel.setBounds(meterRightArea.getX(),
+                              meterRightArea.getY() + rightMeterH - rightFillH,
+                              meterRightArea.getWidth(),
+                              rightFillH);
 }
 
-
-void OutMeter::outMeterLevel(float level, float sampleRate)
+void OutMeter::outMeterLevel(float leftLevel, float rightLevel, float sampleRate)
 {
-    float multiplier = (level < 1.0f) ? level : 1.0f;
+    if (sampleRate > 0.0f && SR != sampleRate)
+    {
+        SR              = sampleRate;
+        decayFactorRise = decayRateRise * SR;
+        decayFactorFall = decayRateFall * SR;
+    }
 
-    // TODO: should also recompute decayFactorRise/decayFactorFall when SR changes
-    SR = (SR != sampleRate) ? sampleRate : SR;
-    
-    heightMultiplier(multiplier);
-    
-    levelClipping  = (level < 1.0f) ? false : true;
-    
+    leftClipping  = leftLevel  >= 1.0f;
+    rightClipping = rightLevel >= 1.0f;
+
+    updateHeight(leftHeightMult,  juce::jmin(leftLevel,  1.0f));
+    updateHeight(rightHeightMult, juce::jmin(rightLevel, 1.0f));
+
     resized();
     repaint();
 }
 
-
-void OutMeter::heightMultiplier(float mult)
+void OutMeter::updateHeight(float &heightMult, float magnitude)
 {
-    if (mult > heightMult)
-        heightMult = mult * ( 1.0f - (1.0f / decayFactorRise) );
+    if (magnitude > heightMult)
+        heightMult = magnitude * (1.0f - (1.0f / decayFactorRise));
     else
         heightMult *= 1.0f - (1.0f / decayFactorFall);
-    
-    if (mult == 1.0f)
+
+    if (magnitude == 1.0f)
         heightMult = 1.0f;
 }

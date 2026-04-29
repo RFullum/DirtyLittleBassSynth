@@ -37,8 +37,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dialLookAndFeel  .setTrackBackground(resources.theme.structure);
     dryWetLookAndFeel.setTrackBackground(resources.theme.structure);
 
-    titleHeader.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
-    titleFooter.setColors(resources.theme.primaryAccent, resources.theme.background, resources.theme.textPrimary);
+    titleHeader.setTheme(resources.theme);
+    titleFooter.setTheme(resources.theme);
 
     addAndMakeVisible(titleHeader);
     addAndMakeVisible(titleFooter);
@@ -73,11 +73,17 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     lfoPanel   .Update();
     filterPanel.Update();
 
-    auto &lvl     = processor.outputLevelBuffer;
-    float magnitude = lvl.getMagnitude(0, lvl.getNumSamples());
-    float outLevel  = magnitude < 0.001f ? 0.0f : magnitude;
+    auto      &lvl       = processor.outputLevelBuffer;
+    const int  n         = lvl.getNumSamples();
+    const int  numChans  = lvl.getNumChannels();
 
-    masterPanel.Update(outLevel, (float) processor.getSampleRate());
+    float leftMag  = (numChans > 0 && n > 0) ? lvl.getMagnitude(0, 0, n) : 0.0f;
+    float rightMag = (numChans > 1 && n > 0) ? lvl.getMagnitude(1, 0, n) : leftMag;
+
+    if (leftMag  < 0.001f) leftMag  = 0.0f;
+    if (rightMag < 0.001f) rightMag = 0.0f;
+
+    masterPanel.Update(leftMag, rightMag, (float) processor.getSampleRate());
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
