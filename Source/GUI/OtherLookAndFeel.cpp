@@ -22,61 +22,41 @@ void OtherLookAndFeel::setTrackBackground(juce::Colour color)
 
 //============================================================
 
-/// Arc-based knob: dim arc background + accent-filled arc + small accent dot at center.
-/// Each slider's accent + thumb colors come from its own Colour ids.
-void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height,
-                                        float sliderPos,
-                                        float rotaryStartAngle, float rotaryEndAngle,
-                                        juce::Slider &slider)
+void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height
+                                        , float sliderPos, float rotaryStartAngle, float rotaryEndAngle
+                                        , juce::Slider &slider)
 {
     const float boundsSize = (float) juce::jmin(width, height);
     const float cx         = (float) x + (float) width  * 0.5f;
     const float cy         = (float) y + (float) height * 0.5f;
 
     const float arcRadius  = boundsSize * 0.42f;
-    const float ringRadius = boundsSize * 0.32f;
     const float arcThick   = juce::jmax(2.0f, boundsSize * 0.06f);
-    const float dotRadius  = juce::jmax(1.5f, boundsSize * 0.05f);
 
-    const float curAngle = juce::jmap(sliderPos, 0.0f, 1.0f, rotaryStartAngle, rotaryEndAngle);
+    const float curAngle   = juce::jmap(sliderPos, 0.0f, 1.0f, rotaryStartAngle, rotaryEndAngle);
 
-    const auto fillColor  = slider.findColour(juce::Slider::rotarySliderFillColourId);
+    const auto fillColor   = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
-    // Inner ring: dark fill with subtle border (slightly darker than the panel background)
-    g.setColour(juce::Colours::black.withAlpha(0.35f));
-    g.fillEllipse(cx - ringRadius, cy - ringRadius, ringRadius * 2.0f, ringRadius * 2.0f);
-
-    g.setColour(trackBackground);
-    g.drawEllipse(cx - ringRadius, cy - ringRadius, ringRadius * 2.0f, ringRadius * 2.0f, 1.0f);
-
-    // Background arc (dim, full sweep)
+    // Background arc
     juce::Path bgArc;
-    bgArc.addCentredArc(cx, cy, arcRadius, arcRadius, 0.0f,
-                        rotaryStartAngle, rotaryEndAngle, true);
+    bgArc.addCentredArc(cx, cy, arcRadius, arcRadius, 0.0f, rotaryStartAngle, rotaryEndAngle, true);
     g.setColour(trackBackground);
-    g.strokePath(bgArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved,
-                                                       juce::PathStrokeType::rounded));
+    g.strokePath(bgArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 
-    // Value arc (accent, from start to current)
+    // Value arc
     juce::Path valueArc;
-    valueArc.addCentredArc(cx, cy, arcRadius, arcRadius, 0.0f,
-                           rotaryStartAngle, curAngle, true);
+    valueArc.addCentredArc(cx, cy, arcRadius, arcRadius, 0.0f, rotaryStartAngle, curAngle, true);
     g.setColour(fillColor);
-    g.strokePath(valueArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved,
-                                                          juce::PathStrokeType::rounded));
-
-    // Center dot in accent color
-    g.setColour(fillColor);
-    g.fillEllipse(cx - dotRadius, cy - dotRadius, dotRadius * 2.0f, dotRadius * 2.0f);
+    g.strokePath(valueArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 
 //============================================================
 
 /// Thin-track linear slider with a small round thumb. Filled portion uses the slider's
 /// trackColourId; thumb uses thumbColourId; unfilled track uses trackBackground.
-void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int width, int height,
-                                        float sliderPos, float minSliderPos, float maxSliderPos,
-                                        const juce::Slider::SliderStyle style, juce::Slider &slider)
+void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int width, int height
+                                        , float sliderPos, float minSliderPos, float maxSliderPos
+                                        , const juce::Slider::SliderStyle style, juce::Slider &slider)
 {
     juce::ignoreUnused(minSliderPos, maxSliderPos);
 
