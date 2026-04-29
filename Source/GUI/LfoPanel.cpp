@@ -51,10 +51,40 @@ void LfoPanel::Update()
     lfoVisual.Update();
 }
 
+void LfoPanel::paint(juce::Graphics &g)
+{
+    // Decorative ms / sync pill toggle and time display. Non-interactive placeholder
+    // for the future tempo-sync feature.
+    constexpr float corner = 2.0f;
+
+    // "MS" segment (active / on-state)
+    g.setColour(resources.theme.secondaryAccent.withAlpha(0.15f));
+    g.fillRoundedRectangle(syncMsRect.toFloat(), corner);
+    g.setColour(resources.theme.secondaryAccent);
+    g.drawRoundedRectangle(syncMsRect.toFloat().reduced(0.5f), corner, 1.0f);
+
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 8.0f, juce::Font::bold))
+                 .withExtraKerningFactor(0.10f));
+    g.drawText("MS", syncMsRect, juce::Justification::centred);
+
+    // "SYNC" segment (inactive / dim)
+    g.setColour(resources.theme.structure);
+    g.drawRoundedRectangle(syncSyncRect.toFloat().reduced(0.5f), corner, 1.0f);
+    g.setColour(resources.theme.textSecondary);
+    g.drawText("SYNC", syncSyncRect, juce::Justification::centred);
+
+    // Time display placeholder
+    g.setColour(resources.theme.textSecondary.withAlpha(0.5f));
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0)));
+    g.drawText(juce::String::fromUTF8("\xe2\x80\x94 ms"), syncDisplayRect, juce::Justification::centredRight);
+}
+
 void LfoPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
     constexpr int filtLabelHeight   = 30;
+    constexpr int syncRowHeight     = 24;
+    constexpr int pillWidth         = 80;
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
 
@@ -75,8 +105,16 @@ void LfoPanel::resized()
 
     auto shapeLabelArea  = reduced.removeFromBottom(filtLabelHeight);
     auto shapeSliderArea = reduced.removeFromBottom(filtLabelHeight);
+    auto syncRow         = reduced.removeFromBottom(syncRowHeight).reduced(8, 4);
 
     lfoShapeLabel .setBounds(shapeLabelArea);
     lfoShapeSlider.setBounds(shapeSliderArea);
+
+    // Sync pill (left) + time display (right) within syncRow.
+    auto pillArea     = syncRow.removeFromLeft(pillWidth);
+    syncMsRect        = pillArea.removeFromLeft(pillArea.getWidth() / 2);
+    syncSyncRect      = pillArea;
+    syncDisplayRect   = syncRow;
+
     lfoVisual     .setBounds(reduced);
 }

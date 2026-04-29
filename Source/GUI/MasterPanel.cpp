@@ -38,19 +38,43 @@ void MasterPanel::Update(float leftLevel, float rightLevel, float sampleRate)
     outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
 }
 
+void MasterPanel::paint(juce::Graphics &g)
+{
+    // Decorative outlined placeholder for the future output scope.
+    g.setColour(resources.theme.structure);
+    g.drawRoundedRectangle(scopeRect.toFloat().reduced(0.5f), 2.0f, 1.0f);
+
+    g.setColour(resources.theme.textSecondary.withAlpha(0.4f));
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 8.0f, 0))
+                 .withExtraKerningFactor(0.12f));
+    g.drawText("SCOPE", scopeRect, juce::Justification::centred);
+}
+
 void MasterPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
     constexpr int mainLabelHeight   = 30;
+    constexpr int scopeHeight       = 40;
+    constexpr int scopeGap          = 6;
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
 
     sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
 
-    auto meterArea = area.removeFromBottom(area.getHeight() / 2);
     auto labelArea = area.removeFromTop(mainLabelHeight);
+    masterGainLabel.setBounds(labelArea);
 
-    masterGainLabel .setBounds(labelArea);
+    // Reserve the meter area at the very bottom and the scope just above it.
+    const int meterHeight = (area.getHeight() - scopeHeight - scopeGap * 2) / 2;
+    auto meterArea = area.removeFromBottom(juce::jmax(60, meterHeight));
+    outMeter.setBounds(meterArea);
+
+    area.removeFromBottom(scopeGap);
+
+    auto scopeArea = area.removeFromBottom(scopeHeight);
+    scopeRect = scopeArea.reduced(4, 0);
+
+    area.removeFromBottom(scopeGap);
+
     masterGainSlider.setBounds(area);
-    outMeter        .setBounds(meterArea);
 }

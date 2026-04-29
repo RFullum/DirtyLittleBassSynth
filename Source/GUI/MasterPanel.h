@@ -21,6 +21,7 @@ class MasterPanel
 public:
     MasterPanel(GuiResources &res);
 
+    void paint(juce::Graphics &) override;
     void resized() override;
 
     /// Pushes the latest L/R output magnitudes into the meter. Called from the editor's timer.
@@ -35,6 +36,10 @@ private:
     OutMeter     outMeter;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAtt;
+
+    // Reserved space for the future output scope (audio thread -> UI ring buffer).
+    // Drawn as a decorative outlined rectangle for now.
+    juce::Rectangle<int> scopeRect;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterPanel)
 };
