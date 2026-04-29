@@ -141,6 +141,60 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     }
 }
 
+void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+{
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+
+    for (auto* v : typedVoices)
+        v->Init(sampleRate, samplesPerBlock);
+}
+
+void DirtyLittleBassSynthAudioProcessor::releaseResources() {}
+
+#ifndef JucePlugin_PreferredChannelConfigurations
+bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+{
+  #if JucePlugin_IsMidiEffect
+    juce::ignoreUnused(layouts);
+    return true;
+  #else
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+        return false;
+
+   #if ! JucePlugin_IsSynth
+    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+        return false;
+   #endif
+
+    return true;
+  #endif
+}
+#endif
+
+void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+    juce::ScopedNoDenormals noDenormals;
+
+    synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+
+    for (auto* v : typedVoices)
+        v->updatePitchBendRange(*pitchBendParameter);
+
+    outputLevelBuffer.clear();
+    outputLevelBuffer = buffer;
+}
+
+juce::AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
+{
+    return new DirtyLittleBassSynthAudioProcessorEditor(*this);
+}
+
+bool DirtyLittleBassSynthAudioProcessor::hasEditor() const
+{
+    return true;
+}
+
 const juce::String DirtyLittleBassSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -197,60 +251,6 @@ const juce::String DirtyLittleBassSynthAudioProcessor::getProgramName(int /*inde
 }
 
 void DirtyLittleBassSynthAudioProcessor::changeProgramName(int /*index*/, const juce::String& /*newName*/) {}
-
-void DirtyLittleBassSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
-{
-    synth.setCurrentPlaybackSampleRate(sampleRate);
-
-    for (auto* v : typedVoices)
-        v->Init(sampleRate, samplesPerBlock);
-}
-
-void DirtyLittleBassSynthAudioProcessor::releaseResources() {}
-
-#ifndef JucePlugin_PreferredChannelConfigurations
-bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
-{
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused(layouts);
-    return true;
-  #else
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
-        return false;
-
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
-
-    return true;
-  #endif
-}
-#endif
-
-void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
-{
-    juce::ScopedNoDenormals noDenormals;
-
-    synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-
-    for (auto* v : typedVoices)
-        v->updatePitchBendRange(*pitchBendParameter);
-
-    outputLevelBuffer.clear();
-    outputLevelBuffer = buffer;
-}
-
-bool DirtyLittleBassSynthAudioProcessor::hasEditor() const
-{
-    return true;
-}
-
-juce::AudioProcessorEditor* DirtyLittleBassSynthAudioProcessor::createEditor()
-{
-    return new DirtyLittleBassSynthAudioProcessorEditor(*this);
-}
 
 void DirtyLittleBassSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {

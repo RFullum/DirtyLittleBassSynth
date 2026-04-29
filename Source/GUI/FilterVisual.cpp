@@ -18,13 +18,6 @@ FilterVisual::FilterVisual()
 , fadeColor(juce::Colour((juce::uint8)100, (juce::uint8)36, (juce::uint8)0))
 {}
 
-void FilterVisual::setColors(juce::Colour line, juce::Colour background, juce::Colour fade)
-{
-    lineColor = line;
-    bgColor   = background;
-    fadeColor = fade;
-}
-
 void FilterVisual::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
@@ -71,6 +64,13 @@ void FilterVisual::drawFilterShape(int filtType, float cutoff, float res)
     buildPaths(filtType);
 
     repaint();
+}
+
+void FilterVisual::setColors(juce::Colour line, juce::Colour background, juce::Colour fade)
+{
+    lineColor = line;
+    bgColor   = background;
+    fadeColor = fade;
 }
 
 void FilterVisual::buildPaths(int type)

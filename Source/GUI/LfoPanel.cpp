@@ -46,11 +46,6 @@ LfoPanel::LfoPanel(GuiResources &res)
     addAndMakeVisible(lfoVisual);
 }
 
-void LfoPanel::Update()
-{
-    lfoVisual.Update();
-}
-
 void LfoPanel::paint(juce::Graphics &g)
 {
     // Decorative ms / sync pill toggle and time display. Non-interactive placeholder
@@ -117,4 +112,9 @@ void LfoPanel::resized()
     syncDisplayRect   = syncRow;
 
     lfoVisual     .setBounds(reduced);
+}
+
+void LfoPanel::Update()
+{
+    lfoVisual.Update();
 }

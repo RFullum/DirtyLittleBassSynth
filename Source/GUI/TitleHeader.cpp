@@ -14,59 +14,6 @@
 
 TitleHeader::TitleHeader() {}
 
-void TitleHeader::setTheme(const Palette::Theme &t)
-{
-    theme = &t;
-    repaint();
-}
-
-void TitleHeader::resized()
-{
-    constexpr int padding   = 14;
-    constexpr int btnSize   = 18;
-    constexpr int btnGap    = 4;
-    constexpr int afterBtns = 12;
-    constexpr int initGap   = 10;
-    constexpr int textPad   = 4;
-
-    auto bounds = getLocalBounds();
-
-    // Measure right-side text widths using their actual fonts so nothing clips.
-    const auto brandingFont = juce::Font(juce::FontOptions("Helvetica", 11.0f, juce::Font::bold))
-                                  .withExtraKerningFactor(0.18f);
-    const auto initFont     = juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
-                                  .withExtraKerningFactor(0.10f);
-
-    const int brandingWidth = juce::GlyphArrangement::getStringWidthInt(brandingFont, "FULLUMMUSIC") + textPad;
-    const int initWidth     = juce::GlyphArrangement::getStringWidthInt(initFont,     "INIT PATCH")  + textPad;
-
-    // Right: lay out from the right edge inward (branding -> next -> prev -> init label).
-    int rightX = bounds.getRight() - padding;
-    int btnY   = bounds.getY() + (bounds.getHeight() - btnSize) / 2;
-
-    brandingRect = juce::Rectangle<int>(rightX - brandingWidth,
-                                        bounds.getY() + (bounds.getHeight() - 16) / 2,
-                                        brandingWidth, 16);
-    rightX -= brandingWidth + afterBtns;
-
-    nextBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
-    rightX -= btnSize + btnGap;
-
-    prevBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
-    rightX -= btnSize + initGap;
-
-    initPatchRect = juce::Rectangle<int>(rightX - initWidth,
-                                         bounds.getY() + (bounds.getHeight() - 14) / 2,
-                                         initWidth, 14);
-
-    // Left: plugin name + tagline. Right edge is the left edge of the right-side cluster.
-    int leftX     = bounds.getX() + padding;
-    int leftRight = initPatchRect.getX() - 8;
-
-    pluginNameRect = juce::Rectangle<int>(leftX, bounds.getY() + 12, leftRight - leftX, 18);
-    taglineRect    = juce::Rectangle<int>(leftX, bounds.getY() + 32, leftRight - leftX, 14);
-}
-
 void TitleHeader::paint(juce::Graphics &g)
 {
     if (theme == nullptr)
@@ -128,15 +75,62 @@ void TitleHeader::paint(juce::Graphics &g)
     g.drawText("FULLUMMUSIC", brandingRect, juce::Justification::centredRight);
 }
 
-//==============================================================================
+void TitleHeader::resized()
+{
+    constexpr int padding   = 14;
+    constexpr int btnSize   = 18;
+    constexpr int btnGap    = 4;
+    constexpr int afterBtns = 12;
+    constexpr int initGap   = 10;
+    constexpr int textPad   = 4;
 
-TitleFooter::TitleFooter() {}
+    auto bounds = getLocalBounds();
 
-void TitleFooter::setTheme(const Palette::Theme &t)
+    // Measure right-side text widths using their actual fonts so nothing clips.
+    const auto brandingFont = juce::Font(juce::FontOptions("Helvetica", 11.0f, juce::Font::bold))
+                                  .withExtraKerningFactor(0.18f);
+    const auto initFont     = juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
+                                  .withExtraKerningFactor(0.10f);
+
+    const int brandingWidth = juce::GlyphArrangement::getStringWidthInt(brandingFont, "FULLUMMUSIC") + textPad;
+    const int initWidth     = juce::GlyphArrangement::getStringWidthInt(initFont,     "INIT PATCH")  + textPad;
+
+    // Right: lay out from the right edge inward (branding -> next -> prev -> init label).
+    int rightX = bounds.getRight() - padding;
+    int btnY   = bounds.getY() + (bounds.getHeight() - btnSize) / 2;
+
+    brandingRect = juce::Rectangle<int>(rightX - brandingWidth,
+                                        bounds.getY() + (bounds.getHeight() - 16) / 2,
+                                        brandingWidth, 16);
+    rightX -= brandingWidth + afterBtns;
+
+    nextBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
+    rightX -= btnSize + btnGap;
+
+    prevBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
+    rightX -= btnSize + initGap;
+
+    initPatchRect = juce::Rectangle<int>(rightX - initWidth,
+                                         bounds.getY() + (bounds.getHeight() - 14) / 2,
+                                         initWidth, 14);
+
+    // Left: plugin name + tagline. Right edge is the left edge of the right-side cluster.
+    int leftX     = bounds.getX() + padding;
+    int leftRight = initPatchRect.getX() - 8;
+
+    pluginNameRect = juce::Rectangle<int>(leftX, bounds.getY() + 12, leftRight - leftX, 18);
+    taglineRect    = juce::Rectangle<int>(leftX, bounds.getY() + 32, leftRight - leftX, 14);
+}
+
+void TitleHeader::setTheme(const Palette::Theme &t)
 {
     theme = &t;
     repaint();
 }
+
+//==============================================================================
+
+TitleFooter::TitleFooter() {}
 
 void TitleFooter::resized()
 {
@@ -160,4 +154,10 @@ void TitleFooter::paint(juce::Graphics &g)
     g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
                  .withExtraKerningFactor(0.06f));
     g.drawText("FULLUMMUSIC.COM", urlRect, juce::Justification::centredRight);
+}
+
+void TitleFooter::setTheme(const Palette::Theme &t)
+{
+    theme = &t;
+    repaint();
 }

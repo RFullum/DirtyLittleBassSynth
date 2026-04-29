@@ -44,13 +44,6 @@ FilterPanel::FilterPanel(GuiResources &res)
     addAndMakeVisible(filterVisual);
 }
 
-void FilterPanel::Update()
-{
-    filterVisual.drawFilterShape(filterType.getSelectedId()
-                                 , (float) cutoffSlider.getValue()
-                                 , (float) resSlider   .getValue());
-}
-
 void FilterPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
@@ -78,4 +71,11 @@ void FilterPanel::resized()
     cutoffLabel .setBounds(coLabelArea.removeFromBottom(coLabelArea.getHeight() / 2));
     cutoffSlider.setBounds(fltCOSliderArea);
     filterVisual.setBounds(reduced);
+}
+
+void FilterPanel::Update()
+{
+    filterVisual.drawFilterShape(filterType.getSelectedId()
+                                 , (float) cutoffSlider.getValue()
+                                 , (float) resSlider   .getValue());
 }

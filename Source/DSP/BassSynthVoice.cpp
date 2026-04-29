@@ -173,43 +173,6 @@ void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
     masterGainControl = gainAmt;
 }
 
-void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
-{
-    if (previousPitchWheelValue != newPitchWheelValue)
-    {
-        previousPitchWheelValue = newPitchWheelValue;
-        SetPitchBend(newPitchWheelValue);
-        shiftHz = CalcShiftHz(PitchBendCents());
-    }
-}
-
-void BassSynthVoice::SetPitchBend(int pitchWheelPos)
-{
-    if (pitchWheelPos > 8192)
-        pitchBend = float(pitchWheelPos - 8192) / (16383 - 8192);
-    else
-        pitchBend = float(8192 - pitchWheelPos) / -8192;
-}
-
-float BassSynthVoice::CalcShiftHz(float centsOffset)
-{
-    return std::pow(2.0f, centsOffset / 1200.0f);
-}
-
-float BassSynthVoice::PitchBendCents()
-{
-    if (pitchBend >= 0.0f)
-        return pitchBend * pitchBendUpSemitones * 100;
-    else
-        return pitchBend * pitchBendDownSemitones * 100;
-}
-
-void BassSynthVoice::updatePitchBendRange(float newRange)
-{
-    pitchBendUpSemitones   = newRange;
-    pitchBendDownSemitones = newRange;
-}
-
 void BassSynthVoice::SetAmpADSRValues()
 {
     envParams.attack  = *ampAttack;     // sec
@@ -371,6 +334,27 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
     }
 }
 
+void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
+{
+    if (previousPitchWheelValue != newPitchWheelValue)
+    {
+        previousPitchWheelValue = newPitchWheelValue;
+        SetPitchBend(newPitchWheelValue);
+        shiftHz = CalcShiftHz(PitchBendCents());
+    }
+}
+
+void BassSynthVoice::updatePitchBendRange(float newRange)
+{
+    pitchBendUpSemitones   = newRange;
+    pitchBendDownSemitones = newRange;
+}
+
+bool BassSynthVoice::canPlaySound(juce::SynthesiserSound* sound)
+{
+    return dynamic_cast<BassSynthSound*>(sound) != nullptr;
+}
+
 BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 {
     return {
@@ -471,8 +455,24 @@ float BassSynthVoice::ProcessFilterChain(float input, float filtEnvVal, float fi
                                        , filtLFOAmtVal);
 }
 
-bool BassSynthVoice::canPlaySound(juce::SynthesiserSound* sound)
+float BassSynthVoice::PitchBendCents()
 {
-    return dynamic_cast<BassSynthSound*>(sound) != nullptr;
+    if (pitchBend >= 0.0f)
+        return pitchBend * pitchBendUpSemitones * 100;
+    else
+        return pitchBend * pitchBendDownSemitones * 100;
+}
+
+float BassSynthVoice::CalcShiftHz(float centsOffset)
+{
+    return std::pow(2.0f, centsOffset / 1200.0f);
+}
+
+void BassSynthVoice::SetPitchBend(int pitchWheelPos)
+{
+    if (pitchWheelPos > 8192)
+        pitchBend = float(pitchWheelPos - 8192) / (16383 - 8192);
+    else
+        pitchBend = float(8192 - pitchWheelPos) / -8192;
 }
 

@@ -67,25 +67,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
         g.fillRect(d);
 }
 
-void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
-{
-    oscPanel   .Update();
-    lfoPanel   .Update();
-    filterPanel.Update();
-
-    auto      &lvl       = processor.outputLevelBuffer;
-    const int  n         = lvl.getNumSamples();
-    const int  numChans  = lvl.getNumChannels();
-
-    float leftMag  = (numChans > 0 && n > 0) ? lvl.getMagnitude(0, 0, n) : 0.0f;
-    float rightMag = (numChans > 1 && n > 0) ? lvl.getMagnitude(1, 0, n) : leftMag;
-
-    if (leftMag  < 0.001f) leftMag  = 0.0f;
-    if (rightMag < 0.001f) rightMag = 0.0f;
-
-    masterPanel.Update(leftMag, rightMag, (float) processor.getSampleRate());
-}
-
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {
     constexpr int headerHeight  = 66;
@@ -151,4 +132,23 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // Vertical: between bottom-row panels.
     dividers.emplace_back(filterRight  - dividerThick, rowSplitY, dividerThick, bottomHeight);
     dividers.emplace_back(fltAdsrRight - dividerThick, rowSplitY, dividerThick, bottomHeight);
+}
+
+void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
+{
+    oscPanel   .Update();
+    lfoPanel   .Update();
+    filterPanel.Update();
+
+    auto      &lvl       = processor.outputLevelBuffer;
+    const int  n         = lvl.getNumSamples();
+    const int  numChans  = lvl.getNumChannels();
+
+    float leftMag  = (numChans > 0 && n > 0) ? lvl.getMagnitude(0, 0, n) : 0.0f;
+    float rightMag = (numChans > 1 && n > 0) ? lvl.getMagnitude(1, 0, n) : leftMag;
+
+    if (leftMag  < 0.001f) leftMag  = 0.0f;
+    if (rightMag < 0.001f) rightMag = 0.0f;
+
+    masterPanel.Update(leftMag, rightMag, (float) processor.getSampleRate());
 }

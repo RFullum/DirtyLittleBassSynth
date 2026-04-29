@@ -60,12 +60,6 @@ OscPanel::OscPanel(GuiResources &res)
     addAndMakeVisible(subOscVisual);
 }
 
-void OscPanel::Update()
-{
-    oscVisual   .Update();
-    subOscVisual.Update();
-}
-
 void OscPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
@@ -116,4 +110,10 @@ void OscPanel::resized()
     subGainSlider .setBounds(subGainSpace);
     subMorphSlider.setBounds(subMorphSliderSpace);
     subOscVisual  .setBounds(subOscAreaReduced.reduced(sectionSpacerSize));
+}
+
+void OscPanel::Update()
+{
+    oscVisual   .Update();
+    subOscVisual.Update();
 }

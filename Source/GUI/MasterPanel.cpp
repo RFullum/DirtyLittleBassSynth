@@ -33,11 +33,6 @@ MasterPanel::MasterPanel(GuiResources &res)
     addAndMakeVisible(outMeter);
 }
 
-void MasterPanel::Update(float leftLevel, float rightLevel, float sampleRate)
-{
-    outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
-}
-
 void MasterPanel::paint(juce::Graphics &g)
 {
     // Decorative outlined placeholder for the future output scope.
@@ -77,4 +72,9 @@ void MasterPanel::resized()
     area.removeFromBottom(scopeGap);
 
     masterGainSlider.setBounds(area);
+}
+
+void MasterPanel::Update(float leftLevel, float rightLevel, float sampleRate)
+{
+    outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
 }

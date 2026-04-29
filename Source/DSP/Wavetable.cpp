@@ -42,15 +42,6 @@ void Wavetable::PopulateWavetable()
     }
 }
 
-void Wavetable::BuildLevel(int level)
-{
-    sinOsc.setFrequency(sampleRate / (float) waveTableSize);
-
-    auto &table = waveTable[level];
-    for (int i = 0; i < waveTableSize; ++i)
-        table[i] = sinOsc.process();
-}
-
 float Wavetable::Process()
 {
     const float low  = SampleAt(levelLow,  readHeadPos);
@@ -93,6 +84,15 @@ void Wavetable::SetIncrement(float noteFreq)
 float Wavetable::GetWavetableSampleValue(int index)
 {
     return waveTable[0][index];
+}
+
+void Wavetable::BuildLevel(int level)
+{
+    sinOsc.setFrequency(sampleRate / (float) waveTableSize);
+
+    auto &table = waveTable[level];
+    for (int i = 0; i < waveTableSize; ++i)
+        table[i] = sinOsc.process();
 }
 
 int Wavetable::HarmonicCapForLevel(int level) const

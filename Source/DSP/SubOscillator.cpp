@@ -35,18 +35,18 @@ void SubOsc::SetIncrement(float noteFreq, int denom)
     sawSub.SetIncrement   (subFreq);
 }
 
-float SubOsc::GetSquareWavetableValue(int index)
-{
-    return squareSub.GetWavetableSampleValue(index);
-}
-
 float SubOsc::Process(float sinGain, float squareGain, float sawGain)
 {
     float sinVal    = sinSub   .Process() * sinGain;
     float squareVal = squareSub.Process() * squareGain;
     float sawVal    = sawSub   .Process() * sawGain;
-    
+
     float outVal = (sinVal + squareVal + sawVal) * 0.5f;
-    
+
     return outVal;
+}
+
+float SubOsc::GetSquareWavetableValue(int index)
+{
+    return squareSub.GetWavetableSampleValue(index);
 }

@@ -19,14 +19,6 @@ OutMeter::OutMeter()
 , levelBackColor(juce::Colour((juce::uint8)20,  (juce::uint8)25, (juce::uint8)35))
 {}
 
-void OutMeter::setColors(juce::Colour level, juce::Colour clip)
-{
-    levelColor     = level;
-    levelBackColor = level.darker().darker();
-    clipLitColor   = clip;
-    clipDimColor   = clip.darker().darker();
-}
-
 void OutMeter::paint(juce::Graphics &g)
 {
     constexpr float corner = 1.5f;
@@ -106,6 +98,14 @@ void OutMeter::outMeterLevel(float leftLevel, float rightLevel, float sampleRate
 
     resized();
     repaint();
+}
+
+void OutMeter::setColors(juce::Colour level, juce::Colour clip)
+{
+    levelColor     = level;
+    levelBackColor = level.darker().darker();
+    clipLitColor   = clip;
+    clipDimColor   = clip.darker().darker();
 }
 
 void OutMeter::updateHeight(float &heightMult, float magnitude)
