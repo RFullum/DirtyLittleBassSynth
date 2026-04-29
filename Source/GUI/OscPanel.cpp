@@ -44,13 +44,15 @@ OscPanel::OscPanel(GuiResources &res)
     SetupLabel(this, subGainLabel,        "Sub Gain",    txt, 13.0f);
     SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", txt, 13.0f);
 
-    SetupComboBox(this, subOctave, juce::StringArray({"0", "-1 Oct", "-2 Oct"}));
+    subOctave.Setup(*res.apvts, "sub_osc_octave",
+                    juce::StringArray({"0", "-1", "-2"}),
+                    accent, res.theme.structure, res.theme.textSecondary);
+    addAndMakeVisible(subOctave);
 
-    oscMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "osc_morph",        oscMorphSlider);
-    subMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "sub_osc_morph",    subMorphSlider);
-    subGainAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "sub_osc_gain",     subGainSlider);
-    pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
-    subOctaveAtt      = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(*res.apvts, "sub_osc_octave",   subOctave);
+    oscMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "osc_morph",        oscMorphSlider);
+    subMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_morph",    subMorphSlider);
+    subGainAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_gain",     subGainSlider);
+    pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();

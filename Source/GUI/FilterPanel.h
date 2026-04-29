@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "FilterVisual.h"
+#include "SegmentedControl.h"
 
 //============================================================
 
@@ -32,17 +33,16 @@ private:
 
     FilterVisual filterVisual;
 
-    juce::Slider   cutoffSlider;
-    juce::Slider   resSlider;
-    juce::ComboBox filterType;
+    juce::Slider     cutoffSlider;
+    juce::Slider     resSlider;
+    SegmentedControl filterType;
 
     juce::Label sectionLabel;
     juce::Label cutoffLabel;
     juce::Label resLabel;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   cutoffAtt;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   resAtt;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> cutoffAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> resAtt;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterPanel)
 };

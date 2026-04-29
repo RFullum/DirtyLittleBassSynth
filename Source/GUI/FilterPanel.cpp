@@ -31,11 +31,13 @@ FilterPanel::FilterPanel(GuiResources &res)
     SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
     SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
-    SetupComboBox(this, filterType, juce::StringArray({"-12LPF", "-24LPF", "-48LPF", "Notch"}));
+    filterType.Setup(*res.apvts, "filter_type",
+                     juce::StringArray({"-12", "-24", "-48", "Notch"}),
+                     accent, res.theme.structure, res.theme.textSecondary);
+    addAndMakeVisible(filterType);
 
-    cutoffAtt     = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "filter_cutoff", cutoffSlider);
-    resAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>  (*res.apvts, "filter_res",    resSlider);
-    filterTypeAtt = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(*res.apvts, "filter_type",   filterType);
+    cutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_cutoff", cutoffSlider);
+    resAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_res",    resSlider);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
@@ -75,7 +77,7 @@ void FilterPanel::resized()
 
 void FilterPanel::Update()
 {
-    filterVisual.drawFilterShape(filterType.getSelectedId()
+    filterVisual.drawFilterShape(filterType.GetSelectedIndex() + 1
                                  , (float) cutoffSlider.getValue()
                                  , (float) resSlider   .getValue());
 }

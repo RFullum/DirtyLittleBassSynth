@@ -73,6 +73,10 @@
         <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
               file="Source/GUI/FilterVisual.cpp"/>
         <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/GUI/FilterVisual.h"/>
+        <FILE id="GR000017" name="SegmentedControl.cpp" compile="1" resource="0"
+              file="Source/GUI/SegmentedControl.cpp"/>
+        <FILE id="GR000018" name="SegmentedControl.h" compile="0" resource="0"
+              file="Source/GUI/SegmentedControl.h"/>
         <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/GUI/OutMeter.cpp"/>
         <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/GUI/OutMeter.h"/>
         <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/TitleHeader.cpp"/>

@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "OscVisual.h"
+#include "SegmentedControl.h"
 
 //============================================================
 
@@ -36,8 +37,8 @@ private:
     juce::Slider   oscMorphSlider;
     juce::Slider   subMorphSlider;
     juce::Slider   subGainSlider;
-    juce::Slider   pitchBendRangeSlider;
-    juce::ComboBox subOctave;
+    juce::Slider     pitchBendRangeSlider;
+    SegmentedControl subOctave;
 
     juce::Label sectionLabel;
     juce::Label oscMorphLabel;
@@ -51,7 +52,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   subMorphAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   subGainAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>   pitchBendRangeAtt;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> subOctaveAtt;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscPanel)
 };
