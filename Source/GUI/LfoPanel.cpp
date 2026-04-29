@@ -24,6 +24,10 @@ LfoPanel::LfoPanel(GuiResources &res)
     SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
+    // LFO shape slider sits directly under the LFO visual; suppress its value textbox
+    // so the slider track spans the full width of the visual above it.
+    lfoShapeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+
     lfoShapeSlider .setLookAndFeel(res.dialLookAndFeel);
     lfoFreqSlider  .setLookAndFeel(res.dialLookAndFeel);
     lfoAmountSlider.setLookAndFeel(res.dialLookAndFeel);

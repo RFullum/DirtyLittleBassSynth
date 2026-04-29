@@ -25,6 +25,11 @@ OscPanel::OscPanel(GuiResources &res)
     SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
+    // Morph sliders sit directly under their wave visuals; suppress the value textbox
+    // so the slider track spans the full width of the visual above it.
+    oscMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    subMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+
     oscMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
