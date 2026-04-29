@@ -59,7 +59,8 @@ OscPanel::OscPanel(GuiResources &res)
     subOscVisual.SetColors(accent, bg, bgFade);
 
     oscVisual   .Init(res.apvts->getRawParameterValue("osc_morph"),     /*useSquare*/ false);
-    subOscVisual.Init(res.apvts->getRawParameterValue("sub_osc_morph"), /*useSquare*/ true);
+    subOscVisual.Init(res.apvts->getRawParameterValue("sub_osc_morph"), /*useSquare*/ true,
+                      res.apvts->getRawParameterValue("sub_osc_gain"));
 
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);

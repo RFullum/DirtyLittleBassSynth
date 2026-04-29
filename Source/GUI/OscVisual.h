@@ -27,8 +27,10 @@ public:
     ~OscVisual() override = default;
 
     /// One-time setup: which morph parameter to follow and whether the centre wavetable
-    /// is the main-osc spike (false) or the sub/LFO square (true). Call once after construction.
-    void Init(std::atomic<float> *morphParamIn, bool useSquareIn);
+    /// is the main-osc spike (false) or the sub/LFO square (true). Optionally pass a
+    /// gain parameter (0..1) to scale the displayed wave amplitude — used for the sub
+    /// visual so it reflects the Sub Gain knob. Call once after construction.
+    void Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn = nullptr);
 
     /// Reads the morph parameter, rebuilds the displayed path, repaints. Call from the
     /// editor's timer.
@@ -46,6 +48,7 @@ private:
     static constexpr int waveTableSize = 1024;
 
     std::atomic<float> *morphParam = nullptr;
+    std::atomic<float> *gainParam  = nullptr;     // optional; scales displayed amplitude (0..1)
     bool                useSquare  = false;
 
     Wavetable       wtSine;

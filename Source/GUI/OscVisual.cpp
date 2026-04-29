@@ -28,9 +28,10 @@ OscVisual::OscVisual()
     wtSaw   .PopulateWavetable();
 }
 
-void OscVisual::Init(std::atomic<float> *morphParamIn, bool useSquareIn)
+void OscVisual::Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn)
 {
     morphParam = morphParamIn;
+    gainParam  = gainParamIn;
     useSquare  = useSquareIn;
 }
 
@@ -101,15 +102,19 @@ void OscVisual::RebuildPath()
     const float halfHeight   = (float) getHeight() * 0.5f;
     const float bottomY      = (float) getHeight();
 
+    const float gainScale = (gainParam != nullptr) ? juce::jlimit(0.0f, 1.0f, gainParam->load()) : 1.0f;
+
     auto sampleAt = [&](int i)
     {
         const float center = useSquare
                                 ? centerLevel * wtSquare.GetWavetableSampleValue(i)
                                 : centerLevel * wtSpike .GetWavetableSampleValue(i);
 
-        return sinLevel * wtSine.GetWavetableSampleValue(i)
-             + center
-             + sawLevel * wtSaw .GetWavetableSampleValue(i);
+        const float sample = sinLevel * wtSine.GetWavetableSampleValue(i)
+                           + center
+                           + sawLevel * wtSaw .GetWavetableSampleValue(i);
+
+        return sample * gainScale;
     };
 
     auto sampleX = [&](int i)
