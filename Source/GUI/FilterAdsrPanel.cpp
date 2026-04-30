@@ -20,10 +20,10 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
-    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
-    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
-    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearVertical,               accent, thumb, txt);
+    SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
     SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
     SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
 
@@ -36,10 +36,10 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 
     SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
 
-    SetupLabel(this, fltAttackLabel,    "A",         txt, 17.0f);
-    SetupLabel(this, fltDecayLabel,     "D",         txt, 17.0f);
-    SetupLabel(this, fltSustainLabel,   "S",         txt, 17.0f);
-    SetupLabel(this, fltReleaseLabel,   "R",         txt, 17.0f);
+    SetupLabel(this, fltAttackLabel,    "A",         txt, 16.0f);
+    SetupLabel(this, fltDecayLabel,     "D",         txt, 16.0f);
+    SetupLabel(this, fltSustainLabel,   "S",         txt, 16.0f);
+    SetupLabel(this, fltReleaseLabel,   "R",         txt, 16.0f);
     SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 15.0f);
     SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 15.0f);
 
@@ -60,6 +60,7 @@ void FilterAdsrPanel::resized()
 {
     constexpr int sectionSpacerSize = 2;
     constexpr int filtLabelHeight   = 30;
+    constexpr int adsrLabelWidth    = 18;
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
 
@@ -67,6 +68,7 @@ void FilterAdsrPanel::resized()
 
     auto reduced = area;
 
+    // Right third: To Cutoff / To Res rotary knobs (unchanged).
     auto rotaryArea     = reduced.removeFromRight(reduced.getWidth() / 3);
     auto toResArea      = rotaryArea.removeFromBottom(rotaryArea.getHeight() / 2);
     auto toResLabelArea = toResArea.removeFromTop(filtLabelHeight - 9);
@@ -77,23 +79,22 @@ void FilterAdsrPanel::resized()
     adsrToCutoffLabel .setBounds(toCOLabelArea);
     adsrToCutoffSlider.setBounds(rotaryArea);
 
-    int sliderWidth = reduced.getWidth() / 4;
-    auto headerRow  = reduced.removeFromTop(filtLabelHeight);
-    auto aLabelArea = headerRow.removeFromLeft(sliderWidth);
-    auto dLabelArea = headerRow.removeFromLeft(sliderWidth);
-    auto sLabelArea = headerRow.removeFromLeft(sliderWidth);
+    // Left two-thirds: 4 stacked horizontal ADSR rows, each with letter label
+    // on the left and the slider filling the rest.
+    auto slidersArea = reduced.reduced(sectionSpacerSize);
+    const int rowHeight = slidersArea.getHeight() / 4;
 
-    fltAttackLabel .setBounds(aLabelArea);
-    fltDecayLabel  .setBounds(dLabelArea);
-    fltSustainLabel.setBounds(sLabelArea);
-    fltReleaseLabel.setBounds(headerRow);
+    auto layoutRow = [&](juce::Slider &slider, juce::Label &label)
+    {
+        auto row     = slidersArea.removeFromTop(rowHeight);
+        auto labelBx = row.removeFromLeft(adsrLabelWidth);
 
-    auto aSliderArea = reduced.removeFromLeft(sliderWidth);
-    auto dSliderArea = reduced.removeFromLeft(sliderWidth);
-    auto sSliderArea = reduced.removeFromLeft(sliderWidth);
+        label .setBounds(labelBx);
+        slider.setBounds(row);
+    };
 
-    fltAttackSlider .setBounds(aSliderArea);
-    fltDecaySlider  .setBounds(dSliderArea);
-    fltSustainSlider.setBounds(sSliderArea);
-    fltReleaseSlider.setBounds(reduced);
+    layoutRow(fltAttackSlider,  fltAttackLabel);
+    layoutRow(fltDecaySlider,   fltDecayLabel);
+    layoutRow(fltSustainSlider, fltSustainLabel);
+    layoutRow(fltReleaseSlider, fltReleaseLabel);
 }

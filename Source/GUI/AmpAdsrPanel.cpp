@@ -21,10 +21,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
-    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
-    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
-    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearVertical,               primary, thumb, txt);
+    SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearHorizontal,             primary, thumb, txt);
+    SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearHorizontal,             primary, thumb, txt);
+    SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearHorizontal,             primary, thumb, txt);
+    SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearHorizontal,             primary, thumb, txt);
     SetupSlider(this, portaSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
     SetupSlider(this, foldbackSlider,   juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
 
@@ -38,10 +38,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     // TODO: change dash to a dot? \xc2\xb7
     SetupSectionLabel(this, sectionLabel, "Amp - Drive", res.theme.textSecondary);
 
-    SetupLabel(this, oscAttackLabel,  "A",                    txt, 18.0f);
-    SetupLabel(this, oscDecayLabel,   "D",                    txt, 18.0f);
-    SetupLabel(this, oscSustainLabel, "S",                    txt, 18.0f);
-    SetupLabel(this, oscReleaseLabel, "R",                    txt, 18.0f);
+    SetupLabel(this, oscAttackLabel,  "A",                    txt, 16.0f);
+    SetupLabel(this, oscDecayLabel,   "D",                    txt, 16.0f);
+    SetupLabel(this, oscSustainLabel, "S",                    txt, 16.0f);
+    SetupLabel(this, oscReleaseLabel, "R",                    txt, 16.0f);
     SetupLabel(this, portaLabel,      "Portamento",           txt, 17.0f);
     SetupLabel(this, foldbackLabel,   "Foldback\nDistortion", txt, 17.0f);
 
@@ -60,9 +60,9 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 
 void AmpAdsrPanel::resized()
 {
-    constexpr int sectionSpacerSize  = 2;
-    constexpr int rotaryLabelHeight  = 60;
-    constexpr int oscADSRLabelHeight = 30;
+    constexpr int sectionSpacerSize = 2;
+    constexpr int rotaryLabelHeight = 60;
+    constexpr int adsrLabelWidth    = 18;
 
     auto area = getLocalBounds().reduced(sectionSpacerSize);
 
@@ -81,27 +81,23 @@ void AmpAdsrPanel::resized()
     foldbackSlider.setBounds(rotarySpace);
     foldbackLabel .setBounds(foldbackLabelSpace);
 
-    // Top two-thirds: ADSR sliders.
+    // Top two-thirds: 4 stacked horizontal ADSR rows, each with letter label
+    // on the left and the slider filling the rest.
     auto slidersArea = area.reduced(sectionSpacerSize * 2);
 
-    int sliderWidth = slidersArea.getWidth() / 4;
-    auto aSpace = slidersArea.removeFromLeft(sliderWidth);
-    auto dSpace = slidersArea.removeFromLeft(sliderWidth);
-    auto sSpace = slidersArea.removeFromLeft(sliderWidth);
-    auto rSpace = slidersArea.removeFromLeft(sliderWidth);
+    const int rowHeight = slidersArea.getHeight() / 4;
 
-    auto aLabelSpace = aSpace.removeFromTop(oscADSRLabelHeight);
-    auto dLabelSpace = dSpace.removeFromTop(oscADSRLabelHeight);
-    auto sLabelSpace = sSpace.removeFromTop(oscADSRLabelHeight);
-    auto rLabelSpace = rSpace.removeFromTop(oscADSRLabelHeight);
+    auto layoutRow = [&](juce::Slider &slider, juce::Label &label)
+    {
+        auto row     = slidersArea.removeFromTop(rowHeight);
+        auto labelBx = row.removeFromLeft(adsrLabelWidth);
 
-    oscAttackSlider .setBounds(aSpace);
-    oscDecaySlider  .setBounds(dSpace);
-    oscSustainSlider.setBounds(sSpace);
-    oscReleaseSlider.setBounds(rSpace);
+        label .setBounds(labelBx);
+        slider.setBounds(row);
+    };
 
-    oscAttackLabel .setBounds(aLabelSpace);
-    oscDecayLabel  .setBounds(dLabelSpace);
-    oscSustainLabel.setBounds(sLabelSpace);
-    oscReleaseLabel.setBounds(rLabelSpace);
+    layoutRow(oscAttackSlider,  oscAttackLabel);
+    layoutRow(oscDecaySlider,   oscDecayLabel);
+    layoutRow(oscSustainSlider, oscSustainLabel);
+    layoutRow(oscReleaseSlider, oscReleaseLabel);
 }
