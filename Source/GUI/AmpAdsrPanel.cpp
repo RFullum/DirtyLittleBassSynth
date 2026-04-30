@@ -51,6 +51,11 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     releaseAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_release",   oscReleaseSlider);
     portaAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "porta_time",    portaSlider);
     foldbackAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "foldback_dist", foldbackSlider);
+
+    SetSliderTextFormat(oscAttackSlider,  FormatTime);
+    SetSliderTextFormat(oscDecaySlider,   FormatTime);
+    SetSliderTextFormat(oscSustainSlider, FormatPercent);
+    SetSliderTextFormat(oscReleaseSlider, FormatTime);
 }
 
 void AmpAdsrPanel::resized()

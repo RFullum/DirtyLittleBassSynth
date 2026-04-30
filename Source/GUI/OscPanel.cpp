@@ -54,6 +54,8 @@ OscPanel::OscPanel(GuiResources &res)
     subGainAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_gain",     subGainSlider);
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
+    SetSliderTextFormat(subGainSlider, FormatGainDb);
+
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
 

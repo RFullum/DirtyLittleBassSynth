@@ -29,6 +29,8 @@ MasterPanel::MasterPanel(GuiResources &res)
 
     gainAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "master_gain", masterGainSlider);
 
+    SetSliderTextFormat(masterGainSlider, FormatGainDb);
+
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);
 }

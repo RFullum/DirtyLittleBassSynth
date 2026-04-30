@@ -39,6 +39,8 @@ FilterPanel::FilterPanel(GuiResources &res)
     cutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_cutoff", cutoffSlider);
     resAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_res",    resSlider);
 
+    SetSliderTextFormat(cutoffSlider, FormatCutoffHz);
+
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
     filterVisual.setColors(accent, bg, bgFade);

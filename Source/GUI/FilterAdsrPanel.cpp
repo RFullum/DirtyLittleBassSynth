@@ -49,6 +49,11 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     releaseAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_release", fltReleaseSlider);
     toCutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
     toResAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
+
+    SetSliderTextFormat(fltAttackSlider,  FormatTime);
+    SetSliderTextFormat(fltDecaySlider,   FormatTime);
+    SetSliderTextFormat(fltSustainSlider, FormatPercent);
+    SetSliderTextFormat(fltReleaseSlider, FormatTime);
 }
 
 void FilterAdsrPanel::resized()
