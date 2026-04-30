@@ -148,9 +148,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
-    oscPanel   .Update();
-    lfoPanel   .Update();
-    filterPanel.Update();
+    oscPanel       .Update();
+    ampAdsrPanel   .Update();
+    filterPanel    .Update();
+    filterAdsrPanel.Update();
+    lfoPanel       .Update();
 
     auto      &lvl       = processor.outputLevelBuffer;
     const int  n         = lvl.getNumSamples();

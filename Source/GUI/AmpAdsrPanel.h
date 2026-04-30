@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
+#include "AdsrVisual.h"
 
 //============================================================
 
@@ -22,8 +23,13 @@ public:
 
     void resized() override;
 
+    /// Called from the editor's timer so the envelope visual rebuilds its path.
+    void Update();
+
 private:
     GuiResources &resources;
+
+    AdsrVisual adsrVisual;
 
     juce::Slider oscAttackSlider;
     juce::Slider oscDecaySlider;

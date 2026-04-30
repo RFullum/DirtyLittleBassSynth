@@ -54,6 +54,16 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     SetSliderTextFormat(fltDecaySlider,   FormatTime);
     SetSliderTextFormat(fltSustainSlider, FormatPercent);
     SetSliderTextFormat(fltReleaseSlider, FormatTime);
+
+    auto bg     = res.theme.background;
+    auto bgFade = res.theme.background.darker();
+    adsrVisual.SetColors(accent, bg, bgFade);
+    adsrVisual.Init(res.apvts->getRawParameterValue("filtEnv_attack"),
+                    res.apvts->getRawParameterValue("filtEnv_decay"),
+                    res.apvts->getRawParameterValue("filtEnv_sustain"),
+                    res.apvts->getRawParameterValue("filtEnv_release"));
+
+    addAndMakeVisible(adsrVisual);
 }
 
 void FilterAdsrPanel::resized()
@@ -79,9 +89,14 @@ void FilterAdsrPanel::resized()
     adsrToCutoffLabel .setBounds(toCOLabelArea);
     adsrToCutoffSlider.setBounds(rotaryArea);
 
-    // Left two-thirds: 4 stacked horizontal ADSR rows, each with letter label
-    // on the left and the slider filling the rest.
+    // Left two-thirds: envelope visual on top, then 4 stacked horizontal ADSR
+    // rows, each with letter label on the left and the slider filling the rest.
     auto slidersArea = reduced.reduced(sectionSpacerSize);
+
+    const int visualHeight = slidersArea.getHeight() / 3;
+    auto      visualArea   = slidersArea.removeFromTop(visualHeight);
+    adsrVisual.setBounds(visualArea);
+
     const int rowHeight = slidersArea.getHeight() / 4;
 
     auto layoutRow = [&](juce::Slider &slider, juce::Label &label)
@@ -97,4 +112,9 @@ void FilterAdsrPanel::resized()
     layoutRow(fltDecaySlider,   fltDecayLabel);
     layoutRow(fltSustainSlider, fltSustainLabel);
     layoutRow(fltReleaseSlider, fltReleaseLabel);
+}
+
+void FilterAdsrPanel::Update()
+{
+    adsrVisual.Update();
 }

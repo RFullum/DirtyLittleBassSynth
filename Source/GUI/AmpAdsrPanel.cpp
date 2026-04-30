@@ -56,6 +56,16 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     SetSliderTextFormat(oscDecaySlider,   FormatTime);
     SetSliderTextFormat(oscSustainSlider, FormatPercent);
     SetSliderTextFormat(oscReleaseSlider, FormatTime);
+
+    auto bg     = res.theme.background;
+    auto bgFade = res.theme.background.darker();
+    adsrVisual.SetColors(primary, bg, bgFade);
+    adsrVisual.Init(res.apvts->getRawParameterValue("amp_attack"),
+                    res.apvts->getRawParameterValue("amp_decay"),
+                    res.apvts->getRawParameterValue("amp_sustain"),
+                    res.apvts->getRawParameterValue("amp_release"));
+
+    addAndMakeVisible(adsrVisual);
 }
 
 void AmpAdsrPanel::resized()
@@ -81,9 +91,13 @@ void AmpAdsrPanel::resized()
     foldbackSlider.setBounds(rotarySpace);
     foldbackLabel .setBounds(foldbackLabelSpace);
 
-    // Top two-thirds: 4 stacked horizontal ADSR rows, each with letter label
-    // on the left and the slider filling the rest.
+    // Top two-thirds: envelope visual on top, then 4 stacked horizontal ADSR
+    // rows, each with letter label on the left and the slider filling the rest.
     auto slidersArea = area.reduced(sectionSpacerSize * 2);
+
+    const int visualHeight = slidersArea.getHeight() / 3;
+    auto      visualArea   = slidersArea.removeFromTop(visualHeight);
+    adsrVisual.setBounds(visualArea);
 
     const int rowHeight = slidersArea.getHeight() / 4;
 
@@ -100,4 +114,9 @@ void AmpAdsrPanel::resized()
     layoutRow(oscDecaySlider,   oscDecayLabel);
     layoutRow(oscSustainSlider, oscSustainLabel);
     layoutRow(oscReleaseSlider, oscReleaseLabel);
+}
+
+void AmpAdsrPanel::Update()
+{
+    adsrVisual.Update();
 }
