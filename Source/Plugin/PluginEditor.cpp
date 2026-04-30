@@ -112,7 +112,11 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     filterAdsrPanel.setBounds(filterRight,   rowSplitY, bottomCol,                  bottomHeight);
     lfoPanel       .setBounds(fltAdsrRight,  rowSplitY, mainRight - fltAdsrRight,   bottomHeight);
 
-    // Section dividers: thin lines between adjacent panels.
+    // Section dividers: thin lines between adjacent panels. Verticals are inset
+    // from horizontal dividers so the lines never meet at a vertex — keeps each
+    // intersection a clean break instead of a + or T.
+    constexpr int dividerInset = 8;
+
     dividers.clear();
 
     // Horizontal: under header (full width); above footer (full width).
@@ -122,16 +126,24 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     // Horizontal: between top row and bottom row, only across the main area.
     dividers.emplace_back(0, rowSplitY,               masterLeft, dividerThick);
 
-    // Vertical: between main area and master column (full body height).
-    dividers.emplace_back(masterLeft - dividerThick,  bodyTop, dividerThick, bodyHeight);
+    // Vertical: between main area and master column. Inset from the header /
+    // footer / row-split horizontals.
+    dividers.emplace_back(masterLeft - dividerThick,  bodyTop + dividerInset,
+                          dividerThick, bodyHeight - dividerInset * 2);
 
-    // Vertical: between top-row panels.
-    dividers.emplace_back(oscRight  - dividerThick,   bodyTop,    dividerThick, topRowHeight);
-    dividers.emplace_back(adsrRight - dividerThick,   bodyTop,    dividerThick, topRowHeight);
+    // Vertical: between top-row panels. Inset from header divider above and
+    // row-split divider below.
+    dividers.emplace_back(oscRight  - dividerThick,   bodyTop + dividerInset,
+                          dividerThick, topRowHeight - dividerInset * 2);
+    dividers.emplace_back(adsrRight - dividerThick,   bodyTop + dividerInset,
+                          dividerThick, topRowHeight - dividerInset * 2);
 
-    // Vertical: between bottom-row panels.
-    dividers.emplace_back(filterRight  - dividerThick, rowSplitY, dividerThick, bottomHeight);
-    dividers.emplace_back(fltAdsrRight - dividerThick, rowSplitY, dividerThick, bottomHeight);
+    // Vertical: between bottom-row panels. Inset from row-split above and
+    // footer divider below.
+    dividers.emplace_back(filterRight  - dividerThick, rowSplitY + dividerInset,
+                          dividerThick, bottomHeight - dividerInset * 2);
+    dividers.emplace_back(fltAdsrRight - dividerThick, rowSplitY + dividerInset,
+                          dividerThick, bottomHeight - dividerInset * 2);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
