@@ -14,7 +14,7 @@
 
 //============================================================
 
-/// Top-middle section: amp ADSR sliders plus portamento and foldback distortion knobs.
+/// Lower half of the Sources column: amp ADSR sliders + envelope visual.
 class AmpAdsrPanel
     : public juce::Component
 {
@@ -35,23 +35,17 @@ private:
     juce::Slider oscDecaySlider;
     juce::Slider oscSustainSlider;
     juce::Slider oscReleaseSlider;
-    juce::Slider portaSlider;
-    juce::Slider foldbackSlider;
 
     juce::Label sectionLabel;
     juce::Label oscAttackLabel;
     juce::Label oscDecayLabel;
     juce::Label oscSustainLabel;
     juce::Label oscReleaseLabel;
-    juce::Label portaLabel;
-    juce::Label foldbackLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decayAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sustainAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseAtt;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> portaAtt;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldbackAtt;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AmpAdsrPanel)
 };

@@ -1,17 +1,17 @@
 /*
   ==============================================================================
 
-    MasterPanel.cpp
+    MasterColumn.cpp
 
   ==============================================================================
 */
 
-#include "MasterPanel.h"
+#include "MasterColumn.h"
 #include "GuiHelpers.h"
 
 //============================================================
 
-MasterPanel::MasterPanel(GuiResources &res)
+MasterColumn::MasterColumn(GuiResources &res)
 : resources(res)
 {
     using namespace dlbs;
@@ -35,7 +35,7 @@ MasterPanel::MasterPanel(GuiResources &res)
     addAndMakeVisible(outMeter);
 }
 
-void MasterPanel::paint(juce::Graphics &g)
+void MasterColumn::paint(juce::Graphics &g)
 {
     // Decorative outlined placeholder for the future output scope.
     g.setColour(resources.theme.structure);
@@ -47,7 +47,7 @@ void MasterPanel::paint(juce::Graphics &g)
     g.drawText("SCOPE", scopeRect, juce::Justification::centred);
 }
 
-void MasterPanel::resized()
+void MasterColumn::resized()
 {
     constexpr int sectionSpacerSize = 2;
     constexpr int mainLabelHeight   = 30;
@@ -76,7 +76,7 @@ void MasterPanel::resized()
     masterGainSlider.setBounds(area);
 }
 
-void MasterPanel::Update(float leftLevel, float rightLevel, float sampleRate)
+void MasterColumn::Update(float leftLevel, float rightLevel, float sampleRate)
 {
     outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
 }

@@ -38,65 +38,102 @@
         <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
-        <FILE id="ZurqKQ" name="ColorPalette.h" compile="0" resource="0" file="Source/GUI/ColorPalette.h"/>
-        <FILE id="GR000001" name="GuiResources.h" compile="0" resource="0"
-              file="Source/GUI/GuiResources.h"/>
-        <FILE id="GR000002" name="GuiHelpers.h" compile="0" resource="0" file="Source/GUI/GuiHelpers.h"/>
-        <FILE id="GR000004" name="OscPanel.cpp" compile="1" resource="0" file="Source/GUI/OscPanel.cpp"/>
-        <FILE id="GR000003" name="OscPanel.h" compile="0" resource="0" file="Source/GUI/OscPanel.h"/>
-        <FILE id="GR000006" name="AmpAdsrPanel.cpp" compile="1" resource="0"
-              file="Source/GUI/AmpAdsrPanel.cpp"/>
-        <FILE id="GR000005" name="AmpAdsrPanel.h" compile="0" resource="0"
-              file="Source/GUI/AmpAdsrPanel.h"/>
-        <FILE id="GR000008" name="ModifierPanel.cpp" compile="1" resource="0"
-              file="Source/GUI/ModifierPanel.cpp"/>
-        <FILE id="GR000007" name="ModifierPanel.h" compile="0" resource="0"
-              file="Source/GUI/ModifierPanel.h"/>
-        <FILE id="GR000010" name="FilterPanel.cpp" compile="1" resource="0"
-              file="Source/GUI/FilterPanel.cpp"/>
-        <FILE id="GR000009" name="FilterPanel.h" compile="0" resource="0" file="Source/GUI/FilterPanel.h"/>
-        <FILE id="GR000012" name="FilterAdsrPanel.cpp" compile="1" resource="0"
-              file="Source/GUI/FilterAdsrPanel.cpp"/>
-        <FILE id="GR000011" name="FilterAdsrPanel.h" compile="0" resource="0"
-              file="Source/GUI/FilterAdsrPanel.h"/>
-        <FILE id="GR000014" name="LfoPanel.cpp" compile="1" resource="0" file="Source/GUI/LfoPanel.cpp"/>
-        <FILE id="GR000013" name="LfoPanel.h" compile="0" resource="0" file="Source/GUI/LfoPanel.h"/>
-        <FILE id="GR000016" name="MasterPanel.cpp" compile="1" resource="0"
-              file="Source/GUI/MasterPanel.cpp"/>
-        <FILE id="GR000015" name="MasterPanel.h" compile="0" resource="0" file="Source/GUI/MasterPanel.h"/>
-        <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
-              resource="0" file="Source/GUI/OscillatorParameterControls.cpp"/>
-        <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
-              resource="0" file="Source/GUI/OscillatorParameterControls.h"/>
-        <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/GUI/OscVisual.cpp"/>
-        <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/GUI/OscVisual.h"/>
-        <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
-              file="Source/GUI/FilterVisual.cpp"/>
-        <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/GUI/FilterVisual.h"/>
-        <FILE id="GR000019" name="AdsrVisual.cpp" compile="1" resource="0"
-              file="Source/GUI/AdsrVisual.cpp"/>
-        <FILE id="GR000020" name="AdsrVisual.h" compile="0" resource="0"
-              file="Source/GUI/AdsrVisual.h"/>
-        <FILE id="GR000017" name="SegmentedControl.cpp" compile="1" resource="0"
-              file="Source/GUI/SegmentedControl.cpp"/>
-        <FILE id="GR000018" name="SegmentedControl.h" compile="0" resource="0"
-              file="Source/GUI/SegmentedControl.h"/>
-        <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/GUI/OutMeter.cpp"/>
-        <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/GUI/OutMeter.h"/>
-        <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/TitleHeader.cpp"/>
-        <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/TitleHeader.h"/>
-        <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
-              file="Source/GUI/OtherLookAndFeel.cpp"/>
-        <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
-              file="Source/GUI/OtherLookAndFeel.h"/>
+        <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
+          <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
+                file="Source/GUI/Sources/SourcesColumn.cpp"/>
+          <FILE id="GR000102" name="SourcesColumn.h" compile="0" resource="0"
+                file="Source/GUI/Sources/SourcesColumn.h"/>
+          <FILE id="GR000004" name="OscPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Sources/OscPanel.cpp"/>
+          <FILE id="GR000003" name="OscPanel.h" compile="0" resource="0"
+                file="Source/GUI/Sources/OscPanel.h"/>
+          <FILE id="GR000006" name="AmpAdsrPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Sources/AmpAdsrPanel.cpp"/>
+          <FILE id="GR000005" name="AmpAdsrPanel.h" compile="0" resource="0"
+                file="Source/GUI/Sources/AmpAdsrPanel.h"/>
+        </GROUP>
+        <GROUP id="{C306D126-5F59-D50B-3776-EE1CB173821B}" name="Filter">
+          <FILE id="GR000103" name="FilterColumn.cpp" compile="1" resource="0"
+                file="Source/GUI/Filter/FilterColumn.cpp"/>
+          <FILE id="GR000104" name="FilterColumn.h" compile="0" resource="0"
+                file="Source/GUI/Filter/FilterColumn.h"/>
+          <FILE id="GR000010" name="FilterPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Filter/FilterPanel.cpp"/>
+          <FILE id="GR000009" name="FilterPanel.h" compile="0" resource="0"
+                file="Source/GUI/Filter/FilterPanel.h"/>
+          <FILE id="GR000012" name="FilterAdsrPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Filter/FilterAdsrPanel.cpp"/>
+          <FILE id="GR000011" name="FilterAdsrPanel.h" compile="0" resource="0"
+                file="Source/GUI/Filter/FilterAdsrPanel.h"/>
+          <FILE id="GR000014" name="LfoPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Filter/LfoPanel.cpp"/>
+          <FILE id="GR000013" name="LfoPanel.h" compile="0" resource="0"
+                file="Source/GUI/Filter/LfoPanel.h"/>
+          <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
+                file="Source/GUI/Filter/FilterVisual.cpp"/>
+          <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0"
+                file="Source/GUI/Filter/FilterVisual.h"/>
+        </GROUP>
+        <GROUP id="{2222BC85-A277-E905-35E8-C467432B0CCD}" name="Modifiers">
+          <FILE id="GR000105" name="ModifiersColumn.cpp" compile="1" resource="0"
+                file="Source/GUI/Modifiers/ModifiersColumn.cpp"/>
+          <FILE id="GR000106" name="ModifiersColumn.h" compile="0" resource="0"
+                file="Source/GUI/Modifiers/ModifiersColumn.h"/>
+          <FILE id="GR000008" name="ModifierPanel.cpp" compile="1" resource="0"
+                file="Source/GUI/Modifiers/ModifierPanel.cpp"/>
+          <FILE id="GR000007" name="ModifierPanel.h" compile="0" resource="0"
+                file="Source/GUI/Modifiers/ModifierPanel.h"/>
+        </GROUP>
+        <GROUP id="{68904ADC-AA4D-3013-FC8A-446895BDE097}" name="Master">
+          <FILE id="GR000016" name="MasterColumn.cpp" compile="1" resource="0"
+                file="Source/GUI/Master/MasterColumn.cpp"/>
+          <FILE id="GR000015" name="MasterColumn.h" compile="0" resource="0"
+                file="Source/GUI/Master/MasterColumn.h"/>
+          <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0"
+                file="Source/GUI/Master/OutMeter.cpp"/>
+          <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0"
+                file="Source/GUI/Master/OutMeter.h"/>
+        </GROUP>
+        <GROUP id="{9FCD5BD7-4884-24AA-8663-59E4DC80134C}" name="GUIUtils">
+          <FILE id="ZurqKQ" name="ColorPalette.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/ColorPalette.h"/>
+          <FILE id="GR000001" name="GuiResources.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/GuiResources.h"/>
+          <FILE id="GR000002" name="GuiHelpers.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/GuiHelpers.h"/>
+          <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
+                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.cpp"/>
+          <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
+                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.h"/>
+          <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/OscVisual.cpp"/>
+          <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/OscVisual.h"/>
+          <FILE id="GR000019" name="AdsrVisual.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/AdsrVisual.cpp"/>
+          <FILE id="GR000020" name="AdsrVisual.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/AdsrVisual.h"/>
+          <FILE id="GR000017" name="SegmentedControl.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/SegmentedControl.cpp"/>
+          <FILE id="GR000018" name="SegmentedControl.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/SegmentedControl.h"/>
+          <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/TitleHeader.cpp"/>
+          <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/TitleHeader.h"/>
+          <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/OtherLookAndFeel.cpp"/>
+          <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/OtherLookAndFeel.h"/>
+        </GROUP>
       </GROUP>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>

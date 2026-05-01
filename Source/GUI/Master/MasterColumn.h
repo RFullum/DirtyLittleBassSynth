@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    MasterPanel.h
+    MasterColumn.h
 
   ==============================================================================
 */
@@ -15,11 +15,11 @@
 //============================================================
 
 /// Right-column section: master gain slider + output meter.
-class MasterPanel
+class MasterColumn
     : public juce::Component
 {
 public:
-    MasterPanel(GuiResources &res);
+    MasterColumn(GuiResources &res);
 
     void paint(juce::Graphics &) override;
     void resized() override;
@@ -41,5 +41,5 @@ private:
     // Drawn as a decorative outlined rectangle for now.
     juce::Rectangle<int> scopeRect;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterPanel)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterColumn)
 };

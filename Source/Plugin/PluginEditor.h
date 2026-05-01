@@ -5,13 +5,10 @@
 #include "GuiResources.h"
 #include "OtherLookAndFeel.h"
 #include "TitleHeader.h"
-#include "OscPanel.h"
-#include "AmpAdsrPanel.h"
-#include "ModifierPanel.h"
-#include "FilterPanel.h"
-#include "FilterAdsrPanel.h"
-#include "LfoPanel.h"
-#include "MasterPanel.h"
+#include "SourcesColumn.h"
+#include "FilterColumn.h"
+#include "ModifiersColumn.h"
+#include "MasterColumn.h"
 
 //==============================================================================
 
@@ -42,13 +39,10 @@ private:
     TitleHeader titleHeader;
     TitleFooter titleFooter;
 
-    OscPanel        oscPanel;
-    AmpAdsrPanel    ampAdsrPanel;
-    ModifierPanel   modifierPanel;
-    FilterPanel     filterPanel;
-    FilterAdsrPanel filterAdsrPanel;
-    LfoPanel        lfoPanel;
-    MasterPanel     masterPanel;
+    SourcesColumn   sourcesColumn;
+    FilterColumn    filterColumn;
+    ModifiersColumn modifiersColumn;
+    MasterColumn    masterColumn;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirtyLittleBassSynthAudioProcessorEditor)
 };

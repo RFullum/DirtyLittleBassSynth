@@ -26,6 +26,8 @@ public:
 private:
     GuiResources &resources;
 
+    juce::Slider portaSlider;
+    juce::Slider foldbackSlider;
     juce::Slider ringToneSlider;
     juce::Slider ringPitchSlider;
     juce::Slider ringDryWetSlider;
@@ -35,6 +37,8 @@ private:
     juce::Slider sHDryWetSlider;
 
     juce::Label sectionLabel;
+    juce::Label portaLabel;
+    juce::Label foldbackLabel;
     juce::Label ringLabel;
     juce::Label frqShftLabel;
     juce::Label sHLabel;
@@ -42,6 +46,8 @@ private:
     juce::Label pitchLabel;
     juce::Label dryWetLabel;
 
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> portaAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> foldbackAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ringToneAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ringPitchAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ringDryWetAtt;
