@@ -34,12 +34,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, fltAttackLabel,    "A",         txt, 16.0f);
-    DLBS::SetupLabel(this, fltDecayLabel,     "D",         txt, 16.0f);
-    DLBS::SetupLabel(this, fltSustainLabel,   "S",         txt, 16.0f);
-    DLBS::SetupLabel(this, fltReleaseLabel,   "R",         txt, 16.0f);
-    DLBS::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 15.0f);
-    DLBS::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 15.0f);
+    DLBS::SetupLabel(this, fltAttackLabel,    "A",         txt, 14.0f);
+    DLBS::SetupLabel(this, fltDecayLabel,     "D",         txt, 14.0f);
+    DLBS::SetupLabel(this, fltSustainLabel,   "S",         txt, 14.0f);
+    DLBS::SetupLabel(this, fltReleaseLabel,   "R",         txt, 14.0f);
+    DLBS::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 14.0f);
+    DLBS::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 14.0f);
 
     attackAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_attack",  fltAttackSlider);
     decayAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_decay",   fltDecaySlider);
@@ -56,60 +56,47 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
     adsrVisual.SetColors(accent, bg, bgFade);
-    adsrVisual.Init(res.apvts->getRawParameterValue("filtEnv_attack"),
-                    res.apvts->getRawParameterValue("filtEnv_decay"),
-                    res.apvts->getRawParameterValue("filtEnv_sustain"),
-                    res.apvts->getRawParameterValue("filtEnv_release"));
+    adsrVisual.Init(res.apvts->getRawParameterValue("filtEnv_attack")
+                    , res.apvts->getRawParameterValue("filtEnv_decay")
+                    , res.apvts->getRawParameterValue("filtEnv_sustain")
+                    , res.apvts->getRawParameterValue("filtEnv_release"));
 
     addAndMakeVisible(adsrVisual);
 }
 
 void FilterAdsrPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int filtLabelHeight   = 30;
-    constexpr int adsrLabelWidth    = 18;
-
-    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
-
-    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
-
-    auto reduced = bounds;
-
-    // Right third: To Cutoff / To Res rotary knobs (unchanged).
-    auto rotaryArea     = reduced.removeFromRight(reduced.getWidth() / 3);
-    auto toResArea      = rotaryArea.removeFromBottom(rotaryArea.getHeight() / 2);
-    auto toResLabelArea = toResArea.removeFromTop(filtLabelHeight - 9);
-    auto toCOLabelArea  = rotaryArea.removeFromTop(filtLabelHeight - 9);
-
-    adsrToResLabel    .setBounds(toResLabelArea);
-    adsrToResSlider   .setBounds(toResArea);
-    adsrToCutoffLabel .setBounds(toCOLabelArea);
-    adsrToCutoffSlider.setBounds(rotaryArea);
-
-    // Left two-thirds: envelope visual on top, then 4 stacked horizontal ADSR
-    // rows, each with letter label on the left and the slider filling the rest.
-    auto slidersArea = reduced.reduced(sectionSpacerSize);
-
-    const int visualHeight = slidersArea.getHeight() / 3;
-    auto      visualArea   = slidersArea.removeFromTop(visualHeight);
-    adsrVisual.setBounds(visualArea);
-
-    const int rowHeight = slidersArea.getHeight() / 4;
-
-    auto layoutRow = [&](juce::Slider &slider, juce::Label &label)
+    auto bounds = getLocalBounds().reduced(2);
+    sectionLabel.setBounds(bounds.removeFromTop(16));
+    
+    auto      amountArea    = bounds.removeFromRight(70);
+    const int amountSliceH  = amountArea.getHeight() / 9;
+    const int amountSliderH = amountSliceH * 3;
+    adsrToCutoffLabel .setBounds(amountArea.removeFromTop(amountSliceH));
+    adsrToCutoffSlider.setBounds(amountArea.removeFromTop(amountSliderH).withSizeKeepingCentre(70, amountSliderH));
+    
+    amountArea     .removeFromTop(amountSliceH);
+    adsrToResLabel .setBounds(amountArea.removeFromTop(amountSliceH));
+    adsrToResSlider.setBounds(amountArea.removeFromTop(amountSliderH)
+                                        .withSizeKeepingCentre(50, amountSliderH));
+    
+    auto      sliderArea = bounds.removeFromBottom(bounds.proportionOfHeight(0.5f));
+    const int rowH       = sliderArea.getHeight() / 4;
+    
+    auto adsrRow = [&](juce::Slider &slider, juce::Label &label)
     {
-        auto row     = slidersArea.removeFromTop(rowHeight);
-        auto labelBx = row.removeFromLeft(adsrLabelWidth);
-
-        label .setBounds(labelBx);
+        auto row = sliderArea.removeFromTop(rowH);
+        label .setBounds(row.removeFromLeft(19));
         slider.setBounds(row);
     };
-
-    layoutRow(fltAttackSlider,  fltAttackLabel);
-    layoutRow(fltDecaySlider,   fltDecayLabel);
-    layoutRow(fltSustainSlider, fltSustainLabel);
-    layoutRow(fltReleaseSlider, fltReleaseLabel);
+    adsrRow(fltAttackSlider,  fltAttackLabel);
+    adsrRow(fltDecaySlider,   fltDecayLabel);
+    adsrRow(fltSustainSlider, fltSustainLabel);
+    adsrRow(fltReleaseSlider, fltReleaseLabel);
+    
+    bounds.removeFromLeft(24);
+    bounds.removeFromRight(45);
+    adsrVisual.setBounds(bounds);
 }
 
 void FilterAdsrPanel::Update()
