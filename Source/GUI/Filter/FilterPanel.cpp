@@ -22,6 +22,7 @@ FilterPanel::FilterPanel(GuiResources &res)
     DLBS::SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     cutoffSlider.setLookAndFeel(res.dialLookAndFeel);
+    cutoffSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     resSlider   .setLookAndFeel(res.dialLookAndFeel);
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
@@ -51,31 +52,26 @@ FilterPanel::FilterPanel(GuiResources &res)
 
 void FilterPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int filtLabelHeight   = 30;
-    constexpr int morphLabelWidth   = 50;
-    constexpr int filterTypeWidth   = 75;
-
+    static constexpr int sectionSpacerSize = 2;
+    static constexpr int rowSize           = 20;
+    static constexpr int leftMargin        = 45;
+    
     auto bounds = getLocalBounds().reduced(sectionSpacerSize);
-
-    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
-
-    auto reduced = bounds.reduced(sectionSpacerSize);
-
-    int resWidth = reduced.getWidth() / 8;
-
-    auto resArea         = reduced.removeFromRight (resWidth);
-    auto resLabelArea    = resArea.removeFromTop   (filtLabelHeight);
-    auto coLabelArea     = reduced.removeFromLeft  (morphLabelWidth);
-    auto fltTypeArea     = reduced.removeFromBottom(filtLabelHeight).removeFromRight(filterTypeWidth);
-    auto fltCOSliderArea = reduced.removeFromBottom(filtLabelHeight);
-
-    resLabel    .setBounds(resLabelArea);
-    resSlider   .setBounds(resArea);
-    filterType  .setBounds(fltTypeArea);
-    cutoffLabel .setBounds(coLabelArea.removeFromBottom(coLabelArea.getHeight() / 2));
-    cutoffSlider.setBounds(fltCOSliderArea);
-    filterVisual.setBounds(reduced);
+    sectionLabel.setBounds(bounds.removeFromTop(16));
+    
+    auto resArea = bounds.removeFromRight(50);
+    resArea   .removeFromBottom(4);
+    resLabel  .setBounds(resArea.removeFromTop(15));
+    resSlider .setBounds(resArea);
+    filterType.setBounds(bounds.removeFromBottom(rowSize)
+                               .reduced(sectionSpacerSize, sectionSpacerSize));
+    
+    auto cutoffArea = bounds.removeFromBottom(rowSize);
+    cutoffLabel .setBounds(cutoffArea.removeFromLeft(leftMargin));
+    cutoffSlider.setBounds(cutoffArea);
+    
+    bounds.removeFromLeft(leftMargin);
+    filterVisual.setBounds(bounds);
 }
 
 void FilterPanel::Update()
