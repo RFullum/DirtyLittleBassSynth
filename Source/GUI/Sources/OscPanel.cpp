@@ -35,12 +35,14 @@ OscPanel::OscPanel(GuiResources &res)
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, oscLabel,            "OSC",         txt, 18.0f);
-    DLBS::SetupLabel(this, morphOscLabel,       "MORPH",       txt, 15.0f);
-    DLBS::SetupLabel(this, subLabel,            "SUB",         txt, 18.0f);
-    DLBS::SetupLabel(this, morphSubLabel,       "MORPH",       txt, 15.0f);
-    DLBS::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, 13.0f);
-    DLBS::SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", txt, 13.0f);
+    static constexpr float fontSizeLarge = 24.0f;
+    static constexpr float fontSizeSmall = 13.0f;
+    DLBS::SetupLabel(this, oscLabel,            "OSC",         txt, fontSizeLarge, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, morphOscLabel,       "MORPH",       txt, fontSizeSmall, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, subLabel,            "SUB",         txt, fontSizeLarge, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, morphSubLabel,       "MORPH",       txt, fontSizeSmall, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, fontSizeSmall);
+    DLBS::SetupLabel(this, pitchBendRangeLabel, "Bend",        txt, fontSizeSmall);
 
     subOctave.Setup(*res.apvts, "sub_osc_octave"
                     , juce::StringArray({"0", "-1", "-2"})
@@ -72,54 +74,38 @@ OscPanel::OscPanel(GuiResources &res)
 
 void OscPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int oscGainWidth      = 75;
-    constexpr int subOctaveHeight   = 30;
-    constexpr int morphLabelWidth   = 50;
-    constexpr int gainLabelHeight   = 30;
-
-    auto oscArea = getLocalBounds().reduced(sectionSpacerSize);
-
-    sectionLabel.setBounds(oscArea.removeFromTop(16).reduced(8, 0));
-
-    // Main osc (top half)
-    auto mainOscArea        = oscArea.removeFromTop(oscArea.getHeight() / 2);
-    auto mainOscAreaReduced = mainOscArea.reduced(sectionSpacerSize * 2);
-
-    auto oscGainSpace         = mainOscAreaReduced.removeFromRight (oscGainWidth);
-    auto morphLabelSpace      = mainOscAreaReduced.removeFromLeft  (morphLabelWidth);
-    auto morphLabelSpace2     = morphLabelSpace.removeFromTop      (morphLabelSpace.getHeight() / 2);
-    auto morphOSCLabelSpace   = morphLabelSpace2.removeFromBottom  ((int)(gainLabelHeight - 10));
-    auto morphMORPHLabelSpace = morphLabelSpace.removeFromTop      ((int)(gainLabelHeight - 10));
-    auto morphSliderSpace     = mainOscAreaReduced.removeFromBottom(gainLabelHeight);
-    auto pitchBendLabelSpace  = oscGainSpace.removeFromTop         (gainLabelHeight);
-
-    oscLabel       .setBounds(morphOSCLabelSpace);
-    morphOscLabel      .setBounds(morphMORPHLabelSpace);
-    oscMorphSlider      .setBounds(morphSliderSpace);
-    oscVisual           .setBounds(mainOscAreaReduced.reduced(sectionSpacerSize));
-    pitchBendRangeSlider.setBounds(oscGainSpace);
-    pitchBendRangeLabel .setBounds(pitchBendLabelSpace);
-
-    // Sub osc (bottom half)
-    auto subOscAreaReduced = oscArea.reduced(sectionSpacerSize * 2);
-
-    auto subGainSpace            = subOscAreaReduced.removeFromRight  (oscGainWidth);
-    auto subOctaveSpace          = subGainSpace.removeFromBottom      (subOctaveHeight);
-    auto subGainLabelSpace       = subGainSpace.removeFromTop         (gainLabelHeight);
-    auto subMorphLabelSpace      = subOscAreaReduced.removeFromLeft   (morphLabelWidth);
-    auto subMorphLabelSpace2     = subMorphLabelSpace.removeFromTop   (subMorphLabelSpace.getHeight() / 2);
-    auto subMorphOSCLabelSpace   = subMorphLabelSpace2.removeFromBottom((int)(gainLabelHeight - 10));
-    auto subMorphMORPHLabelSpace = subMorphLabelSpace.removeFromTop   ((int)(gainLabelHeight - 10));
-    auto subMorphSliderSpace     = subOscAreaReduced.removeFromBottom (gainLabelHeight);
-
-    subGainLabel  .setBounds(subGainLabelSpace);
-    subLabel .setBounds(subMorphOSCLabelSpace);
-    morphSubLabel.setBounds(subMorphMORPHLabelSpace);
-    subOctave     .setBounds(subOctaveSpace);
-    subGainSlider .setBounds(subGainSpace);
-    subMorphSlider.setBounds(subMorphSliderSpace);
-    subOscVisual  .setBounds(subOscAreaReduced.reduced(sectionSpacerSize));
+    static constexpr float morphProp      = 0.2f;
+    static constexpr float rightLabelProp = 0.075f;
+    
+    auto bounds = getLocalBounds();
+    sectionLabel.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.05f)));
+    
+    const int margin = bounds.proportionOfWidth(.15f);
+    auto buttonsArea = bounds.removeFromBottom(bounds.proportionOfHeight(0.1f));
+    auto subArea     = bounds.removeFromBottom(bounds.proportionOfHeight(0.5f));
+    auto oscArea     = bounds;
+    
+    auto oscMargin = oscArea.removeFromLeft(margin);
+    auto rangeArea = oscArea.removeFromRight(margin);
+    morphOscLabel       .setBounds(oscMargin.removeFromBottom(oscMargin.proportionOfHeight(morphProp)));
+    oscLabel            .setBounds(oscMargin);
+    pitchBendRangeLabel .setBounds(rangeArea.removeFromTop(rangeArea.proportionOfHeight(rightLabelProp)));
+    rangeArea           .removeFromBottom(rangeArea.proportionOfHeight(rightLabelProp));
+    pitchBendRangeSlider.setBounds(rangeArea);
+    oscMorphSlider      .setBounds(oscArea.removeFromBottom(oscArea.proportionOfHeight(morphProp)));
+    oscVisual           .setBounds(oscArea);
+    
+    auto subMargin = subArea.removeFromLeft(margin);
+    auto gainArea  = subArea.removeFromRight(margin);
+    morphSubLabel .setBounds(subMargin.removeFromBottom(subMargin.proportionOfHeight(morphProp)));
+    subLabel      .setBounds(subMargin);
+    subGainLabel  .setBounds(gainArea.removeFromTop(gainArea.proportionOfHeight(rightLabelProp)));
+    gainArea      .removeFromBottom(gainArea.proportionOfHeight(rightLabelProp));
+    subGainSlider .setBounds(gainArea);
+    subMorphSlider.setBounds(subArea.removeFromBottom(subArea.proportionOfHeight(morphProp)));
+    subOscVisual  .setBounds(subArea);
+    
+    subOctave.setBounds(buttonsArea.reduced(15, 4));
 }
 
 void OscPanel::Update()

@@ -49,16 +49,18 @@ namespace DLBS
     }
 
     /// Configures a label's font/text/color; adds to parent.
-    inline void SetupLabel(juce::Component  *parent
-                           , juce::Label    &label
-                           , juce::String    labelText
-                           , juce::Colour    color
-                           , float           fontSize)
+    inline void SetupLabel(juce::Component       *parent
+                           , juce::Label         &label
+                           , juce::String         labelText
+                           , juce::Colour         color
+                           , float                fontSize
+                           , juce::Justification  just = juce::Justification::centred)
     {
         label.setFont             (juce::FontOptions("helvetica", fontSize, 1));
         label.setText             (labelText, juce::dontSendNotification);
         label.setJustificationType(juce::Justification::centred);
         label.setColour           (juce::Label::textColourId, color);
+        label.setJustificationType(just);
 
         parent->addAndMakeVisible(label);
     }

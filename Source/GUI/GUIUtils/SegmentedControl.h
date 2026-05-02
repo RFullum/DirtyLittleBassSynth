@@ -36,7 +36,7 @@ public:
                , juce::Colour                      activeFill
                , juce::Colour                      outlineColor
                , juce::Colour                      textColor
-               , float                             fontSize = 10.0f);
+               , float                             fontSize = 12.0f);
 
     /// 0-based index of the currently selected segment.
     int GetSelectedIndex() const noexcept { return selectedIndex; }
@@ -51,7 +51,7 @@ private:
     juce::Colour activeFill;
     juce::Colour outlineColor;
     juce::Colour textColor;
-    float        fontSize = 10.0f;
+    float        fontSize = 12.0f;
 
     juce::RangedAudioParameter *parameter = nullptr;
     std::unique_ptr<juce::ParameterAttachment> attachment;
