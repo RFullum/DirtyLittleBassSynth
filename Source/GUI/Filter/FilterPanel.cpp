@@ -29,9 +29,12 @@ FilterPanel::FilterPanel(GuiResources &res)
     DLBS::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
     DLBS::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
-    filterType.Setup(*res.apvts, "filter_type",
-                     juce::StringArray({"-12", "-24", "-48", "Notch"}),
-                     accent, res.theme.structure, res.theme.textSecondary);
+    filterType.Setup(*res.apvts
+                     , "filter_type"
+                     , juce::StringArray({"-12", "-24", "-48", "Notch"})
+                     , accent
+                     , res.theme.structure
+                     , res.theme.textSecondary);
     addAndMakeVisible(filterType);
 
     cutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_cutoff", cutoffSlider);
