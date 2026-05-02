@@ -72,11 +72,11 @@ void FilterAdsrPanel::resized()
     constexpr int filtLabelHeight   = 30;
     constexpr int adsrLabelWidth    = 18;
 
-    auto area = getLocalBounds().reduced(sectionSpacerSize);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
-    auto reduced = area;
+    auto reduced = bounds;
 
     // Right third: To Cutoff / To Res rotary knobs (unchanged).
     auto rotaryArea     = reduced.removeFromRight(reduced.getWidth() / 3);

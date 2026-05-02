@@ -85,11 +85,11 @@ void LfoPanel::resized()
     constexpr int syncRowHeight     = 24;
     constexpr int pillWidth         = 80;
 
-    auto area = getLocalBounds().reduced(sectionSpacerSize);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
-    auto reduced = area;
+    auto reduced = bounds;
 
     auto vertSliderArea  = reduced.removeFromRight(reduced.getWidth() / 3);
     auto vertLabelFooter = vertSliderArea.removeFromTop(filtLabelHeight);

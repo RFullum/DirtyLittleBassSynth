@@ -33,16 +33,16 @@ void FilterColumn::resized()
     constexpr int dividerThick = 1;
     constexpr int dividerInset = 8;
 
-    auto area = getLocalBounds();
+    auto bounds = getLocalBounds();
 
     // Equal-thirds split: filter / filter-ADSR / LFO.
-    const int rowH    = area.getHeight() / 3;
-    auto      filtArea = area.removeFromTop(rowH);
-    auto      adsrArea = area.removeFromTop(rowH);
+    const int rowH    = bounds.getHeight() / 3;
+    auto      filtArea = bounds.removeFromTop(rowH);
+    auto      adsrArea = bounds.removeFromTop(rowH);
 
     filterPanel    .setBounds(filtArea);
     filterAdsrPanel.setBounds(adsrArea);
-    lfoPanel       .setBounds(area);
+    lfoPanel       .setBounds(bounds);
 
     // Horizontal dividers between rows, inset from the column edges.
     dividerA = juce::Rectangle<int>(dividerInset,

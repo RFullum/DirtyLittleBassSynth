@@ -54,14 +54,14 @@ void SegmentedControl::resized()
     if (segments.isEmpty())
         return;
 
-    auto area   = getLocalBounds();
+    auto bounds = getLocalBounds();
     const int n = segments.size();
-    const int w = area.getWidth() / n;
+    const int w = bounds.getWidth() / n;
 
     for (int i = 0; i < n; ++i)
     {
         const bool last = (i == n - 1);
-        auto cell = last ? area : area.removeFromLeft(w);
+        auto cell = last ? bounds : bounds.removeFromLeft(w);
         segmentBounds.push_back(cell);
     }
 }

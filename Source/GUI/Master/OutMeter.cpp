@@ -47,8 +47,8 @@ void OutMeter::resized()
     constexpr int clipStripHeight = 5;
     constexpr int clipGap         = 2;
 
-    auto totalArea   = getLocalBounds();
-    auto reducedArea = totalArea.reduced(reducer);
+    auto bounds      = getLocalBounds();
+    auto reducedArea = bounds.reduced(reducer);
 
     auto clipArea = reducedArea.removeFromTop(clipStripHeight);
     reducedArea.removeFromTop(clipGap);

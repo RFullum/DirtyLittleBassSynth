@@ -55,11 +55,11 @@ void FilterPanel::resized()
     constexpr int morphLabelWidth   = 50;
     constexpr int filterTypeWidth   = 75;
 
-    auto area = getLocalBounds().reduced(sectionSpacerSize);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
-    auto reduced = area.reduced(sectionSpacerSize);
+    auto reduced = bounds.reduced(sectionSpacerSize);
 
     int resWidth = reduced.getWidth() / 8;
 

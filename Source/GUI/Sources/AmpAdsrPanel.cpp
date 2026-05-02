@@ -63,13 +63,13 @@ void AmpAdsrPanel::resized()
     constexpr int sectionSpacerSize = 2;
     constexpr int adsrLabelWidth    = 18;
 
-    auto area = getLocalBounds().reduced(sectionSpacerSize);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
     // Envelope visual on top, then 4 stacked horizontal ADSR rows, each with
     // letter label on the left and the slider filling the rest.
-    auto slidersArea = area.reduced(sectionSpacerSize * 2);
+    auto slidersArea = bounds.reduced(sectionSpacerSize * 2);
 
     const int visualHeight = slidersArea.getHeight() * 2 / 5;
     auto      visualArea   = slidersArea.removeFromTop(visualHeight);

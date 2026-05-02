@@ -41,8 +41,8 @@ void AdsrVisual::resized()
 {
     static constexpr int reducer = 2;
 
-    auto totalArea   = getLocalBounds();
-    auto reducedArea = totalArea.reduced(reducer);
+    auto bounds      = getLocalBounds();
+    auto reducedArea = bounds.reduced(reducer);
 
     visualBox.setBounds((float)reducedArea.getX()
                         , (float)reducedArea.getY()

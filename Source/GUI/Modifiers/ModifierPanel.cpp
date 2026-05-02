@@ -71,13 +71,13 @@ void ModifierPanel::resized()
     constexpr int driveRowHeight    = 90;
     constexpr int driveLabelHeight  = 26;
 
-    auto area              = getLocalBounds().reduced(sectionSpacerSize);
-    int  modSectionGridWidth = area.getWidth() / 4;
+    auto bounds              = getLocalBounds().reduced(sectionSpacerSize);
+    int  modSectionGridWidth = bounds.getWidth() / 4;
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
     // Top: Portamento + Foldback Distortion knobs side-by-side, label above each.
-    auto driveRow        = area.removeFromTop(driveRowHeight);
+    auto driveRow        = bounds.removeFromTop(driveRowHeight);
     auto portaCell       = driveRow.removeFromLeft(driveRow.getWidth() / 2);
     auto portaLabelArea  = portaCell.removeFromTop(driveLabelHeight);
     auto foldLabelArea   = driveRow.removeFromTop(driveLabelHeight);
@@ -88,7 +88,7 @@ void ModifierPanel::resized()
     foldbackSlider.setBounds(driveRow);
 
     // Top header row: shared column labels (Tone / Pitch / Dry-Wet).
-    auto headingsSpace = area.removeFromTop(modHeadingHeight);
+    auto headingsSpace = bounds.removeFromTop(modHeadingHeight);
     headingsSpace.removeFromLeft(modSectionGridWidth);    // skip the row-name column
     auto toneHeading  = headingsSpace.removeFromLeft(modSectionGridWidth);
     auto pitchHeading = headingsSpace.removeFromLeft(modSectionGridWidth);
@@ -97,10 +97,10 @@ void ModifierPanel::resized()
     pitchLabel .setBounds(pitchHeading);
     dryWetLabel.setBounds(headingsSpace);
 
-    int rowHeight = area.getHeight() / 3;
+    int rowHeight = bounds.getHeight() / 3;
 
     // Row-name labels (left column).
-    auto modTypeColumn = area.removeFromLeft(modSectionGridWidth);
+    auto modTypeColumn = bounds.removeFromLeft(modSectionGridWidth);
     auto ringNameArea  = modTypeColumn.removeFromTop(rowHeight);
     auto frqNameArea   = modTypeColumn.removeFromTop(rowHeight);
 
@@ -109,7 +109,7 @@ void ModifierPanel::resized()
     sHLabel     .setBounds(modTypeColumn);
 
     // Ring Mod row (Tone / Pitch / Dry-Wet).
-    auto ringKnobs   = area.removeFromTop(rowHeight);
+    auto ringKnobs   = bounds.removeFromTop(rowHeight);
     auto ringTonePos = ringKnobs.removeFromLeft(modSectionGridWidth);
     auto ringPitchPos = ringKnobs.removeFromLeft(modSectionGridWidth);
 
@@ -118,7 +118,7 @@ void ModifierPanel::resized()
     ringDryWetSlider.setBounds(ringKnobs);
 
     // Freq Shift row (no Tone, just Pitch / Dry-Wet).
-    auto frqKnobs = area.removeFromTop(rowHeight);
+    auto frqKnobs = bounds.removeFromTop(rowHeight);
     frqKnobs.removeFromLeft(modSectionGridWidth);                       // skip Tone column
     auto frqPitchPos = frqKnobs.removeFromLeft(modSectionGridWidth);
 
@@ -126,9 +126,9 @@ void ModifierPanel::resized()
     frqShftDryWetSlider.setBounds(frqKnobs);
 
     // Sample & Hold row (no Tone, just Pitch / Dry-Wet).
-    area.removeFromLeft(modSectionGridWidth);                            // skip Tone column
-    auto sHPitchPos = area.removeFromLeft(modSectionGridWidth);
+    bounds.removeFromLeft(modSectionGridWidth);                            // skip Tone column
+    auto sHPitchPos = bounds.removeFromLeft(modSectionGridWidth);
 
     sHPitchSlider .setBounds(sHPitchPos);
-    sHDryWetSlider.setBounds(area);
+    sHDryWetSlider.setBounds(bounds);
 }

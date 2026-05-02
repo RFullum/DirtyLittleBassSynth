@@ -54,8 +54,8 @@ void OscVisual::paint(juce::Graphics &g)
 void OscVisual::resized()
 {
     int  reducer     = 2;
-    auto totalArea   = getLocalBounds();
-    auto reducedArea = totalArea.reduced(reducer);
+    auto bounds      = getLocalBounds();
+    auto reducedArea = bounds.reduced(reducer);
 
     visualBox.setBounds(reducedArea.getX(), reducedArea.getY(), reducedArea.getWidth(), reducedArea.getHeight());
 }

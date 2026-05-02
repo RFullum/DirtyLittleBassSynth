@@ -54,26 +54,26 @@ void MasterColumn::resized()
     constexpr int scopeHeight       = 40;
     constexpr int scopeGap          = 6;
 
-    auto area = getLocalBounds().reduced(sectionSpacerSize);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
-    sectionLabel.setBounds(area.removeFromTop(16).reduced(8, 0));
+    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
 
-    auto labelArea = area.removeFromTop(mainLabelHeight);
+    auto labelArea = bounds.removeFromTop(mainLabelHeight);
     masterGainLabel.setBounds(labelArea);
 
     // Reserve the meter area at the very bottom and the scope just above it.
-    const int meterHeight = (area.getHeight() - scopeHeight - scopeGap * 2) / 2;
-    auto meterArea = area.removeFromBottom(juce::jmax(60, meterHeight));
+    const int meterHeight = (bounds.getHeight() - scopeHeight - scopeGap * 2) / 2;
+    auto meterArea = bounds.removeFromBottom(juce::jmax(60, meterHeight));
     outMeter.setBounds(meterArea);
 
-    area.removeFromBottom(scopeGap);
+    bounds.removeFromBottom(scopeGap);
 
-    auto scopeArea = area.removeFromBottom(scopeHeight);
+    auto scopeArea = bounds.removeFromBottom(scopeHeight);
     scopeRect = scopeArea.reduced(4, 0);
 
-    area.removeFromBottom(scopeGap);
+    bounds.removeFromBottom(scopeGap);
 
-    masterGainSlider.setBounds(area);
+    masterGainSlider.setBounds(bounds);
 }
 
 void MasterColumn::Update(float leftLevel, float rightLevel, float sampleRate)
