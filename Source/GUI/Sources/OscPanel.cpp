@@ -78,9 +78,10 @@ void OscPanel::resized()
     static constexpr float rightLabelProp = 0.075f;
     
     auto bounds = getLocalBounds();
-    sectionLabel.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.05f)));
+    sectionLabel.setBounds(bounds.removeFromTop(16));
     
     const int margin = bounds.proportionOfWidth(0.15f);
+    bounds.removeFromBottom(2);
     auto buttonsArea = bounds.removeFromBottom(bounds.proportionOfHeight(0.1f));
     auto subArea     = bounds.removeFromBottom(bounds.proportionOfHeight(0.5f));
     auto oscArea     = bounds;

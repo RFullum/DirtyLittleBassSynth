@@ -59,7 +59,7 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 void AmpAdsrPanel::resized()
 {
     auto bounds = getLocalBounds();
-    sectionLabel.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.08f)));
+    sectionLabel.setBounds(bounds.removeFromTop(16));
     
     const int margin = bounds.proportionOfWidth(0.15f);
     adsrVisual.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.5f))
