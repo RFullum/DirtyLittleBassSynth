@@ -22,22 +22,16 @@ public:
     AdsrVisual();
     ~AdsrVisual() override = default;
 
-    /// One-time setup: which four parameters to follow. All ranges are taken from
-    /// the parameter; the visual uses A/D/R seconds (0..maxTime) and S as 0..1.
-    void Init(std::atomic<float> *attackParamIn
+    void paint(juce::Graphics &) override;
+    void resized() override;
+    
+    void Init(std::atomic<float>   *attackParamIn
               , std::atomic<float> *decayParamIn
               , std::atomic<float> *sustainParamIn
               , std::atomic<float> *releaseParamIn);
-
-    /// Sets the wave-line color, background color, and bottom fade color.
     void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
-
-    /// Reads the four parameters, rebuilds the envelope path, and triggers a repaint.
-    /// Call from the editor's timer.
     void Update();
 
-    void paint(juce::Graphics &) override;
-    void resized() override;
 
 private:
     void RebuildPath();

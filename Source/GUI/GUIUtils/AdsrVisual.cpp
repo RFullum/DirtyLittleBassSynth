@@ -16,7 +16,41 @@ AdsrVisual::AdsrVisual()
 , fadeColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
 {}
 
-void AdsrVisual::Init(std::atomic<float> *attackParamIn
+void AdsrVisual::paint(juce::Graphics &g)
+{
+    constexpr float cornerRound = 2.0f;
+
+    g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
+    g.fillRoundedRectangle(visualBox, cornerRound);
+
+    // Faint baseline at zero
+    const float baseY = visualBox.getBottom() - 1.0f;
+    g.setColour(lineColor.withAlpha(0.15f));
+    g.drawLine(visualBox.getX(), baseY, visualBox.getRight(), baseY, 0.5f);
+
+    // Faint area under the envelope
+    g.setColour(lineColor.withAlpha(0.08f));
+    g.fillPath(envArea);
+
+    // Envelope line
+    g.setColour(lineColor);
+    g.strokePath(envShape, juce::PathStrokeType(1.4f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+}
+
+void AdsrVisual::resized()
+{
+    static constexpr int reducer = 2;
+
+    auto totalArea   = getLocalBounds();
+    auto reducedArea = totalArea.reduced(reducer);
+
+    visualBox.setBounds((float)reducedArea.getX()
+                        , (float)reducedArea.getY()
+                        , (float)reducedArea.getWidth()
+                        , (float)reducedArea.getHeight());
+}
+
+void AdsrVisual::Init(std::atomic<float>   *attackParamIn
                       , std::atomic<float> *decayParamIn
                       , std::atomic<float> *sustainParamIn
                       , std::atomic<float> *releaseParamIn)
@@ -41,41 +75,6 @@ void AdsrVisual::Update()
 
     RebuildPath();
     repaint();
-}
-
-void AdsrVisual::paint(juce::Graphics &g)
-{
-    constexpr float cornerRound = 2.0f;
-
-    g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
-    g.fillRoundedRectangle(visualBox, cornerRound);
-
-    // Faint baseline at zero
-    const float baseY = visualBox.getBottom() - 1.0f;
-    g.setColour(lineColor.withAlpha(0.15f));
-    g.drawLine(visualBox.getX(), baseY, visualBox.getRight(), baseY, 0.5f);
-
-    // Faint area under the envelope
-    g.setColour(lineColor.withAlpha(0.08f));
-    g.fillPath(envArea);
-
-    // Envelope line
-    g.setColour(lineColor);
-    g.strokePath(envShape,
-                 juce::PathStrokeType(1.4f,
-                                      juce::PathStrokeType::curved,
-                                      juce::PathStrokeType::rounded));
-}
-
-void AdsrVisual::resized()
-{
-    constexpr int reducer = 2;
-
-    auto totalArea   = getLocalBounds();
-    auto reducedArea = totalArea.reduced(reducer);
-
-    visualBox.setBounds((float) reducedArea.getX(), (float) reducedArea.getY(),
-                        (float) reducedArea.getWidth(), (float) reducedArea.getHeight());
 }
 
 void AdsrVisual::RebuildPath()
@@ -110,7 +109,7 @@ void AdsrVisual::RebuildPath()
     const float x3 = timeToX(a + d + hold);
     const float x4 = timeToX(a + d + hold + r);
 
-    const float y0 = levelToY(0.0f);
+    const float y0    = levelToY(0.0f);
     const float yPeak = levelToY(1.0f);
     const float yS    = levelToY(s);
 

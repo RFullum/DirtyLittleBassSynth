@@ -15,8 +15,6 @@ OscVisual::OscVisual()
 , bgColor  (juce::Colour((juce::uint8)7,   (juce::uint8)10, (juce::uint8)59))
 , fadeColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
 {
-    // Populate the four shape wavetables once. Sample rate is irrelevant for the
-    // displayed shape; any value just produces one cycle across waveTableSize samples.
     wtSine  .SetSampleRate(44100.0f);
     wtSpike .SetSampleRate(44100.0f);
     wtSquare.SetSampleRate(44100.0f);
@@ -26,29 +24,6 @@ OscVisual::OscVisual()
     wtSpike .PopulateWavetable();
     wtSquare.PopulateWavetable();
     wtSaw   .PopulateWavetable();
-}
-
-void OscVisual::Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn)
-{
-    morphParam = morphParamIn;
-    gainParam  = gainParamIn;
-    useSquare  = useSquareIn;
-}
-
-void OscVisual::Update()
-{
-    if (morphParam == nullptr)
-        return;
-
-    RebuildPath();
-    repaint();
-}
-
-void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colour fade)
-{
-    lineColor = line;
-    bgColor   = background;
-    fadeColor = fade;
 }
 
 void OscVisual::paint(juce::Graphics &g)
@@ -82,8 +57,30 @@ void OscVisual::resized()
     auto totalArea   = getLocalBounds();
     auto reducedArea = totalArea.reduced(reducer);
 
-    visualBox.setBounds(reducedArea.getX(), reducedArea.getY(),
-                        reducedArea.getWidth(), reducedArea.getHeight());
+    visualBox.setBounds(reducedArea.getX(), reducedArea.getY(), reducedArea.getWidth(), reducedArea.getHeight());
+}
+
+void OscVisual::Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn)
+{
+    morphParam = morphParamIn;
+    gainParam  = gainParamIn;
+    useSquare  = useSquareIn;
+}
+
+void OscVisual::Update()
+{
+    if (morphParam == nullptr)
+        return;
+
+    RebuildPath();
+    repaint();
+}
+
+void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colour fade)
+{
+    lineColor = line;
+    bgColor   = background;
+    fadeColor = fade;
 }
 
 void OscVisual::RebuildPath()
@@ -102,7 +99,9 @@ void OscVisual::RebuildPath()
     const float halfHeight   = (float) getHeight() * 0.5f;
     const float bottomY      = (float) getHeight();
 
-    const float gainScale = (gainParam != nullptr) ? juce::jlimit(0.0f, 1.0f, gainParam->load()) : 1.0f;
+    const float gainScale = (gainParam != nullptr)
+                                ? juce::jlimit(0.0f, 1.0f, gainParam->load())
+                                : 1.0f;
 
     auto sampleAt = [&](int i)
     {
@@ -136,6 +135,7 @@ void OscVisual::RebuildPath()
     oscArea.startNewSubPath(sampleX(0), sampleY(0));
     for (int i = 1; i < waveTableSize; ++i)
         oscArea.lineTo(sampleX(i), sampleY(i));
+    
     oscArea.lineTo(sampleX(waveTableSize - 1), bottomY);
     oscArea.lineTo(sampleX(0), bottomY);
     oscArea.closeSubPath();

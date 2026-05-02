@@ -38,7 +38,7 @@ namespace dlbs
         slider.setColour      (juce::Slider::textBoxTextColourId,       textColor);
 
         if (style == juce::Slider::SliderStyle::LinearHorizontal
-         || style == juce::Slider::SliderStyle::LinearVertical)
+            || style == juce::Slider::SliderStyle::LinearVertical)
             slider.setColour(juce::Slider::trackColourId, fillColor);
         else if (style == juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag)
             slider.setColour(juce::Slider::rotarySliderFillColourId, fillColor);
@@ -84,7 +84,7 @@ namespace dlbs
     inline juce::String FormatTime(double seconds)
     {
         if (seconds < 1.0)
-            return juce::String((int) std::round(seconds * 1000.0)) + " ms";
+            return juce::String((int)std::round(seconds * 1000.0)) + " ms";
 
         return juce::String(seconds, 2) + " s";
     }
@@ -95,24 +95,24 @@ namespace dlbs
         if (linear <= 0.0001)
             return juce::String::fromUTF8("\xe2\x88\x92\xe2\x88\x9e dB");
 
-        const auto db = juce::Decibels::gainToDecibels((float) linear);
+        const auto db = juce::Decibels::gainToDecibels((float)linear);
         return juce::String(db, 1) + " dB";
     }
 
     /// Formats a 0..1 value as a percent.
     inline juce::String FormatPercent(double v)
     {
-        return juce::String((int) std::round(v * 100.0)) + "%";
+        return juce::String((int)std::round(v * 100.0)) + "%";
     }
 
     /// Maps the cutoff slider position (1..100, log-tapered) onto Hz/kHz for display.
     /// Mirrors FilterModulation::KeyMapFixed (20Hz..17kHz) — display only.
     inline juce::String FormatCutoffHz(double pos)
     {
-        const float hz = juce::jmap((float) pos, 1.0f, 100.0f, 20.0f, 17000.0f);
+        const float hz = juce::jmap((float)pos, 1.0f, 100.0f, 20.0f, 17000.0f);
 
         if (hz < 1000.0f)
-            return juce::String((int) std::round(hz)) + " Hz";
+            return juce::String((int)std::round(hz)) + " Hz";
 
         return juce::String(hz / 1000.0f, 2) + " kHz";
     }
@@ -131,9 +131,9 @@ namespace dlbs
     }
 
     /// Configures a combobox's items; adds to parent.
-    inline void SetupComboBox(juce::Component    *parent
-                              , juce::ComboBox   &box
-                              , juce::StringArray items)
+    inline void SetupComboBox(juce::Component     *parent
+                              , juce::ComboBox    &box
+                              , juce::StringArray  items)
     {
         box.addItemList         (items, 1);
         box.setJustificationType(juce::Justification::centred);

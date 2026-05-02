@@ -26,22 +26,13 @@ public:
     OscVisual();
     ~OscVisual() override = default;
 
-    /// One-time setup: which morph parameter to follow and whether the centre wavetable
-    /// is the main-osc spike (false) or the sub/LFO square (true). Optionally pass a
-    /// gain parameter (0..1) to scale the displayed wave amplitude — used for the sub
-    /// visual so it reflects the Sub Gain knob. Call once after construction.
-    void Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn = nullptr);
-
-    /// Reads the morph parameter, rebuilds the displayed path, repaints. Call from the
-    /// editor's timer.
-    void Update();
-
-    /// Sets the colours of the wave line and background gradient.
-    void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
-
     void paint(juce::Graphics &) override;
     void resized() override;
-
+    
+    void Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn = nullptr);
+    void Update();  // Reads the morph parameter, rebuilds the displayed path, repaints. Call from the editor's timer.
+    void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
+    
 private:
     void RebuildPath();
 
