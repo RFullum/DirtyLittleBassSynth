@@ -37,7 +37,6 @@ private:
     juce::Slider lfoAmountSlider;
 
     juce::Label sectionLabel;
-    juce::Label lfoShapeLabel;
     juce::Label lfoFreqLabel;
     juce::Label lfoAmountLabel;
 
@@ -47,7 +46,7 @@ private:
 
     // Reserved space for the future ms/sync toggle + time display.
     // Drawn as decorative placeholders for now (no interaction).
-    juce::Rectangle<int> syncMsRect;
+    juce::Rectangle<int> syncFrqRect;
     juce::Rectangle<int> syncSyncRect;
     juce::Rectangle<int> syncDisplayRect;
 

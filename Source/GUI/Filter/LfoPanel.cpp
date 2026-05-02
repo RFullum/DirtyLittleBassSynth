@@ -18,6 +18,7 @@ LfoPanel::LfoPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
+    // TODO: Remove Freq & Amount slider labels. Create a way to display frequency or sync'd subdivision
     DLBS::SetupSlider(this, lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
     DLBS::SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     DLBS::SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
@@ -32,9 +33,8 @@ LfoPanel::LfoPanel(GuiResources &res)
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, lfoShapeLabel,  "LFO Shape", txt, 17.0f);
-    DLBS::SetupLabel(this, lfoFreqLabel,   "Freq",      txt, 16.0f);
-    DLBS::SetupLabel(this, lfoAmountLabel, "Amount",    txt, 16.0f);
+    DLBS::SetupLabel(this, lfoFreqLabel,   "Freq",      txt, 14.0f);
+    DLBS::SetupLabel(this, lfoAmountLabel, "Amount",    txt, 14.0f);
 
     shapeAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_shape", lfoShapeSlider);
     freqAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_freq",  lfoFreqSlider);
@@ -56,13 +56,13 @@ void LfoPanel::paint(juce::Graphics &g)
 
     // "MS" segment (active / on-state)
     g.setColour(resources.theme.secondaryAccent.withAlpha(0.15f));
-    g.fillRoundedRectangle(syncMsRect.toFloat(), corner);
+    g.fillRoundedRectangle(syncFrqRect.toFloat(), corner);
     g.setColour(resources.theme.secondaryAccent);
-    g.drawRoundedRectangle(syncMsRect.toFloat().reduced(0.5f), corner, 1.0f);
+    g.drawRoundedRectangle(syncFrqRect.toFloat().reduced(0.5f), corner, 1.0f);
 
-    g.setFont(juce::Font(juce::FontOptions("Helvetica", 8.0f, juce::Font::bold))
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 10.0f, juce::Font::bold))
                  .withExtraKerningFactor(0.10f));
-    g.drawText("MS", syncMsRect, juce::Justification::centred);
+    g.drawText("FRQ", syncFrqRect, juce::Justification::centred);
 
     // "SYNC" segment (inactive / dim)
     g.setColour(resources.theme.structure);
@@ -72,48 +72,36 @@ void LfoPanel::paint(juce::Graphics &g)
 
     // Time display placeholder
     g.setColour(resources.theme.textSecondary.withAlpha(0.5f));
-    g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0)));
-    g.drawText(juce::String::fromUTF8("\xe2\x80\x94 ms"), syncDisplayRect, juce::Justification::centredRight);
+    g.setFont(juce::Font(juce::FontOptions("Helvetica", 10.0f, 0)));
+    g.drawText(juce::String::fromUTF8("\xe2\x80\x94 Hz"), syncDisplayRect, juce::Justification::centredRight);
 }
 
 void LfoPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int filtLabelHeight   = 30;
-    constexpr int syncRowHeight     = 24;
-    constexpr int pillWidth         = 80;
-
+    static constexpr int sectionSpacerSize = 2;
+    static constexpr int sliderLabelH      = 13;
+    
     auto bounds = getLocalBounds().reduced(sectionSpacerSize);
-
-    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
-
-    auto reduced = bounds;
-
-    auto vertSliderArea  = reduced.removeFromRight(reduced.getWidth() / 3);
-    auto vertLabelFooter = vertSliderArea.removeFromTop(filtLabelHeight);
-    auto freqLabelArea   = vertLabelFooter.removeFromLeft(vertLabelFooter.getWidth() / 2);
-
-    lfoFreqLabel  .setBounds(freqLabelArea);
-    lfoAmountLabel.setBounds(vertLabelFooter);
-
-    auto freqSliderArea = vertSliderArea.removeFromLeft(vertSliderArea.getWidth() / 2);
-    lfoFreqSlider  .setBounds(freqSliderArea);
-    lfoAmountSlider.setBounds(vertSliderArea);
-
-    auto shapeLabelArea  = reduced.removeFromBottom(filtLabelHeight);
-    auto shapeSliderArea = reduced.removeFromBottom(filtLabelHeight);
-    auto syncRow         = reduced.removeFromBottom(syncRowHeight).reduced(8, 4);
-
-    lfoShapeLabel .setBounds(shapeLabelArea);
-    lfoShapeSlider.setBounds(shapeSliderArea);
-
-    // Sync pill (left) + time display (right) within syncRow.
-    auto pillArea     = syncRow.removeFromLeft(pillWidth);
-    syncMsRect        = pillArea.removeFromLeft(pillArea.getWidth() / 2);
-    syncSyncRect      = pillArea;
-    syncDisplayRect   = syncRow;
-
-    lfoVisual     .setBounds(reduced);
+    sectionLabel.setBounds(bounds.removeFromTop(16));
+    bounds.removeFromBottom(sectionSpacerSize);
+    
+    auto slidersArea = bounds.removeFromRight(100);
+    auto amtArea = slidersArea.removeFromRight(slidersArea.proportionOfWidth(0.5f));
+    lfoAmountLabel .setBounds(amtArea.removeFromTop(sliderLabelH));
+    lfoAmountSlider.setBounds(amtArea);
+    lfoFreqLabel   .setBounds(slidersArea.removeFromTop(sliderLabelH));
+    lfoFreqSlider  .setBounds(slidersArea);
+    
+    auto      syncRow      = bounds.removeFromBottom(25).reduced(sectionSpacerSize * 2, sectionSpacerSize);
+    const int syncDivision = (syncRow.getWidth() - (sectionSpacerSize * 2)) / 3;
+    syncFrqRect     = syncRow.removeFromLeft(syncDivision);
+    syncRow         .removeFromLeft(sectionSpacerSize);
+    syncSyncRect    = syncRow.removeFromLeft(syncDivision);
+    syncRow         .removeFromLeft(sectionSpacerSize);
+    syncDisplayRect = syncRow;
+    
+    lfoShapeSlider.setBounds(bounds.removeFromBottom(30));
+    lfoVisual     .setBounds(bounds.reduced(sectionSpacerSize));
 }
 
 void LfoPanel::Update()
