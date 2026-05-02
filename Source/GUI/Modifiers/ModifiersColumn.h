@@ -25,8 +25,6 @@ public:
     void resized() override;
 
 private:
-    GuiResources &resources;
-
     ModifierPanel modifierPanel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModifiersColumn)

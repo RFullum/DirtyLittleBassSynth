@@ -12,7 +12,6 @@
 //============================================================
 
 AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
-: resources(res)
 {
     auto primary = res.theme.primaryAccent;
     auto thumb   = res.theme.textPrimary;

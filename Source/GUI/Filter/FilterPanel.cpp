@@ -12,7 +12,6 @@
 //============================================================
 
 FilterPanel::FilterPanel(GuiResources &res)
-: resources(res)
 {
     auto accent = res.theme.secondaryAccent;
     auto thumb  = res.theme.textPrimary;

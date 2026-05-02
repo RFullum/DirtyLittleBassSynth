@@ -29,8 +29,6 @@ public:
     void Update();
 
 private:
-    GuiResources &resources;
-
     OscVisual oscVisual;
     OscVisual subOscVisual;
 

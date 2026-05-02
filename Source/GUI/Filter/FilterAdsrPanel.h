@@ -28,8 +28,6 @@ public:
     void Update();
 
 private:
-    GuiResources &resources;
-
     AdsrVisual adsrVisual;
 
     juce::Slider fltAttackSlider;

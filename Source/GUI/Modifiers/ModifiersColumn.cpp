@@ -11,8 +11,7 @@
 //============================================================
 
 ModifiersColumn::ModifiersColumn(GuiResources &res)
-: resources    (res)
-, modifierPanel(res)
+: modifierPanel(res)
 {
     addAndMakeVisible(modifierPanel);
 }

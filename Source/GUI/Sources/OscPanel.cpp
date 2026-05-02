@@ -12,7 +12,6 @@
 //============================================================
 
 OscPanel::OscPanel(GuiResources &res)
-: resources(res)
 {
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
