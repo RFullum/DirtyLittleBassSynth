@@ -6,8 +6,8 @@
 namespace
 {
     GuiResources MakeResources(DirtyLittleBassSynthAudioProcessor &processor
-                               , juce::LookAndFeel               &dialLAF
-                               , juce::LookAndFeel               &dryWetLAF)
+                               , juce::LookAndFeel                &dialLAF
+                               , juce::LookAndFeel                &dryWetLAF)
     {
         return GuiResources{
             .apvts             = &processor.parameters,
@@ -63,10 +63,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {
-    constexpr int headerHeight = 66;
-    constexpr int footerHeight = 17;
-    constexpr int dividerThick = 1;
-    constexpr int dividerInset = 8;
+    static constexpr int headerHeight = 66;
+    static constexpr int footerHeight = 17;
+    static constexpr int dividerThick = 1;
+    static constexpr int dividerInset = 8;
 
     const int W = getWidth();
     const int H = getHeight();
@@ -78,7 +78,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     const int bodyBottom = H - footerHeight;
     const int bodyHeight = bodyBottom - bodyTop;
 
-    // Four equal-width columns spanning the full body height.
     const int colCount  = 4;
     const int colWidth  = W / colCount;
     const int col0Left  = 0;
@@ -86,10 +85,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     const int col2Left  = colWidth * 2;
     const int col3Left  = colWidth * 3;
 
-    sourcesColumn  .setBounds(col0Left, bodyTop, colWidth,         bodyHeight);
-    filterColumn   .setBounds(col1Left, bodyTop, colWidth,         bodyHeight);
-    modifiersColumn.setBounds(col2Left, bodyTop, colWidth,         bodyHeight);
-    masterColumn   .setBounds(col3Left, bodyTop, W - col3Left,     bodyHeight);
+    sourcesColumn  .setBounds(col0Left, bodyTop, colWidth,     bodyHeight);
+    filterColumn   .setBounds(col1Left, bodyTop, colWidth,     bodyHeight);
+    modifiersColumn.setBounds(col2Left, bodyTop, colWidth,     bodyHeight);
+    masterColumn   .setBounds(col3Left, bodyTop, W - col3Left, bodyHeight);
 
     dividers.clear();
 
