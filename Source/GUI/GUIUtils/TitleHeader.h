@@ -27,7 +27,7 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    void setTheme(const Palette::Theme &t);
+    void SetTheme(const Palette::Theme &t);
 
 private:
     const Palette::Theme *theme = nullptr;

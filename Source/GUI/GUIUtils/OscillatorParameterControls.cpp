@@ -17,25 +17,25 @@ OscParamControl::OscParamControl()
 : blendCurve(0.2f)
 {}
 
-float OscParamControl::sinMorphGain(std::atomic<float>* oscMorphVal)
+float OscParamControl::SinMorphGain(std::atomic<float>* oscMorphVal)
 {
-    float outVal = levelFormula(oscMorphVal, 0.0f);
+    float outVal = LevelFormula(oscMorphVal, 0.0f);
     return pow(outVal, blendCurve);
 }
 
-float OscParamControl::spikeMorphGain(std::atomic<float>* oscMorphVal)
+float OscParamControl::SpikeMorphGain(std::atomic<float>* oscMorphVal)
 {
-    float outVal = levelFormula(oscMorphVal, 1.0f);
+    float outVal = LevelFormula(oscMorphVal, 1.0f);
     return pow(outVal, blendCurve);
 }
 
-float OscParamControl::sawMorphGain(std::atomic<float>* oscMorphVal)
+float OscParamControl::SawMorphGain(std::atomic<float>* oscMorphVal)
 {
-    float outVal = levelFormula(oscMorphVal, 2.0f);
+    float outVal = LevelFormula(oscMorphVal, 2.0f);
     return pow(outVal, blendCurve);
 }
 
-float OscParamControl::levelFormula(std::atomic<float>* MV, float CV)
+float OscParamControl::LevelFormula(std::atomic<float>* MV, float CV)
 {
     float outVal = 1.0f - fabsf(*MV - CV);
 
@@ -47,11 +47,11 @@ float OscParamControl::levelFormula(std::atomic<float>* MV, float CV)
 
 //=================================================================
 
-float SubOscParamControl::sinSubGain   (std::atomic<float>* subMorphVal) { return sinMorphGain  (subMorphVal); }
-float SubOscParamControl::squareSubGain(std::atomic<float>* subMorphVal) { return spikeMorphGain(subMorphVal); }
-float SubOscParamControl::sawSubGain   (std::atomic<float>* subMorphVal) { return sawMorphGain  (subMorphVal); }
+float SubOscParamControl::SinSubGain   (std::atomic<float>* subMorphVal) { return SinMorphGain  (subMorphVal); }
+float SubOscParamControl::SquareSubGain(std::atomic<float>* subMorphVal) { return SpikeMorphGain(subMorphVal); }
+float SubOscParamControl::SawSubGain   (std::atomic<float>* subMorphVal) { return SawMorphGain  (subMorphVal); }
 
-int SubOscParamControl::subOctaveSelector(std::atomic<float>* subOctVal)
+int SubOscParamControl::SubOctaveSelector(std::atomic<float>* subOctVal)
 {
     if (*subOctVal == 1.0f) return 2;
     if (*subOctVal == 2.0f) return 4;

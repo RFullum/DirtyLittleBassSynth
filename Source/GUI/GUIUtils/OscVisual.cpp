@@ -86,9 +86,9 @@ void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colo
 void OscVisual::RebuildPath()
 {
     // Read the morph parameter and convert to per-shape gain levels.
-    const float sinLevel    = morphControl.sinMorphGain  (morphParam);
-    const float centerLevel = morphControl.spikeMorphGain(morphParam);
-    const float sawLevel    = morphControl.sawMorphGain  (morphParam);
+    const float sinLevel    = morphControl.SinMorphGain  (morphParam);
+    const float centerLevel = morphControl.SpikeMorphGain(morphParam);
+    const float sawLevel    = morphControl.SawMorphGain  (morphParam);
 
     oscShape.clear();
     oscArea .clear();

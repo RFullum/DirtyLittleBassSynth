@@ -74,9 +74,10 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         g.fillRoundedRectangle(trackX, trackY, sliderPos - trackX, trackThick, trackThick * 0.5f);
 
         g.setColour(thumbColor);
-        g.fillEllipse(sliderPos - thumbRadius,
-                      (float)y + (float)height * 0.5f - thumbRadius,
-                      thumbRadius * 2.0f, thumbRadius * 2.0f);
+        g.fillEllipse(sliderPos - thumbRadius
+                      , (float)y + (float)height * 0.5f - thumbRadius
+                      , thumbRadius * 2.0f
+                      , thumbRadius * 2.0f);
     }
     else if (style == juce::Slider::SliderStyle::LinearVertical)
     {
@@ -93,14 +94,23 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
                                (float)(y + height) - sliderPos, trackThick * 0.5f);
 
         g.setColour(thumbColor);
-        g.fillEllipse((float)x + (float)width * 0.5f - thumbRadius,
-                      sliderPos - thumbRadius,
-                      thumbRadius * 2.0f, thumbRadius * 2.0f);
+        g.fillEllipse((float)x + (float)width * 0.5f - thumbRadius
+                      , sliderPos - thumbRadius
+                      , thumbRadius * 2.0f
+                      , thumbRadius * 2.0f);
     }
     else
     {
-        juce::LookAndFeel_V4::drawLinearSlider(g, x, y, width, height, sliderPos,
-                                               minSliderPos, maxSliderPos, style, slider);
+        juce::LookAndFeel_V4::drawLinearSlider(g
+                                               , x
+                                               , y
+                                               , width
+                                               , height
+                                               , sliderPos
+                                               , minSliderPos
+                                               , maxSliderPos
+                                               , style
+                                               , slider);
     }
 }
 

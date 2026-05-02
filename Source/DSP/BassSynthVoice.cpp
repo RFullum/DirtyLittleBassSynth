@@ -38,7 +38,7 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     SetAmpADSRValues();
     SetFilterADSRValues();
 
-    incrementDenominator = subOscParamControl.subOctaveSelector(subOctave);
+    incrementDenominator = subOscParamControl.SubOctaveSelector(subOctave);
 
     // Set the wheel position before the freq is calculated; the actual pitch-bend
     // multiplication happens in renderNextBlock.
@@ -358,15 +358,15 @@ void BassSynthVoice::updatePitchBendRange(float newRange)
 BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 {
     return {
-        oscParamControl.sinMorphGain      (oscillatorMorph),
-        oscParamControl.spikeMorphGain    (oscillatorMorph),
-        oscParamControl.sawMorphGain      (oscillatorMorph),
-        subOscParamControl.sinSubGain     (subOscMorph),
-        subOscParamControl.squareSubGain  (subOscMorph),
-        subOscParamControl.sawSubGain     (subOscMorph),
-        filtLFOShapeControl.sinSubGain    (filtLFOShape),
-        filtLFOShapeControl.squareSubGain (filtLFOShape),
-        filtLFOShapeControl.sawSubGain    (filtLFOShape)
+        oscParamControl.SinMorphGain      (oscillatorMorph),
+        oscParamControl.SpikeMorphGain    (oscillatorMorph),
+        oscParamControl.SawMorphGain      (oscillatorMorph),
+        subOscParamControl.SinSubGain     (subOscMorph),
+        subOscParamControl.SquareSubGain  (subOscMorph),
+        subOscParamControl.SawSubGain     (subOscMorph),
+        filtLFOShapeControl.SinSubGain    (filtLFOShape),
+        filtLFOShapeControl.SquareSubGain (filtLFOShape),
+        filtLFOShapeControl.SawSubGain    (filtLFOShape)
     };
 }
 

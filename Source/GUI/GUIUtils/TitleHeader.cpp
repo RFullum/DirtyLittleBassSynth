@@ -122,7 +122,7 @@ void TitleHeader::resized()
     taglineRect    = juce::Rectangle<int>(leftX, bounds.getY() + 32, leftRight - leftX, 14);
 }
 
-void TitleHeader::setTheme(const Palette::Theme &t)
+void TitleHeader::SetTheme(const Palette::Theme &t)
 {
     theme = &t;
     repaint();

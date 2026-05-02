@@ -34,7 +34,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
     dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
 
-    titleHeader.setTheme(resources.theme);
+    titleHeader.SetTheme(resources.theme);
     titleFooter.setTheme(resources.theme);
 
     addAndMakeVisible(titleHeader);
