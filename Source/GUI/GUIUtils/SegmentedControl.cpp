@@ -54,15 +54,21 @@ void SegmentedControl::resized()
     if (segments.isEmpty())
         return;
 
-    auto bounds = getLocalBounds();
-    const int n = segments.size();
-    const int w = bounds.getWidth() / n;
+    static constexpr int segmentGap = 6;
+
+    auto      bounds = getLocalBounds();
+    const int n      = segments.size();
+    const int totalW = bounds.getWidth() - segmentGap * (n - 1);
+    const int w      = totalW / n;
 
     for (int i = 0; i < n; ++i)
     {
         const bool last = (i == n - 1);
         auto cell = last ? bounds : bounds.removeFromLeft(w);
         segmentBounds.push_back(cell);
+
+        if (!last)
+            bounds.removeFromLeft(segmentGap);
     }
 }
 
