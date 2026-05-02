@@ -48,10 +48,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
     adsrVisual.SetColors(primary, bg, bgFade);
-    adsrVisual.Init(res.apvts->getRawParameterValue("amp_attack"),
-                    res.apvts->getRawParameterValue("amp_decay"),
-                    res.apvts->getRawParameterValue("amp_sustain"),
-                    res.apvts->getRawParameterValue("amp_release"));
+    adsrVisual.Init(res.apvts->getRawParameterValue("amp_attack")
+                    , res.apvts->getRawParameterValue("amp_decay")
+                    , res.apvts->getRawParameterValue("amp_sustain")
+                    , res.apvts->getRawParameterValue("amp_release"));
 
     addAndMakeVisible(adsrVisual);
 }
