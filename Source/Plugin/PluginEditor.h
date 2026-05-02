@@ -13,8 +13,8 @@
 //==============================================================================
 
 class DirtyLittleBassSynthAudioProcessorEditor
-: public  juce::AudioProcessorEditor
-, private juce::Timer
+    : public  juce::AudioProcessorEditor
+    , private juce::Timer
 {
 public:
     DirtyLittleBassSynthAudioProcessorEditor(DirtyLittleBassSynthAudioProcessor &);

@@ -63,47 +63,29 @@ void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
 
 void DirtyLittleBassSynthAudioProcessorEditor::resized()
 {
-    static constexpr int headerHeight = 66;
-    static constexpr int footerHeight = 17;
     static constexpr int dividerThick = 1;
     static constexpr int dividerInset = 8;
-
-    const int W = getWidth();
-    const int H = getHeight();
-
-    titleHeader.setBounds(0, 0,                W, headerHeight);
-    titleFooter.setBounds(0, H - footerHeight, W, footerHeight);
-
-    const int bodyTop    = headerHeight;
-    const int bodyBottom = H - footerHeight;
-    const int bodyHeight = bodyBottom - bodyTop;
-
-    const int colCount  = 4;
-    const int colWidth  = W / colCount;
-    const int col0Left  = 0;
-    const int col1Left  = colWidth;
-    const int col2Left  = colWidth * 2;
-    const int col3Left  = colWidth * 3;
-
-    sourcesColumn  .setBounds(col0Left, bodyTop, colWidth,     bodyHeight);
-    filterColumn   .setBounds(col1Left, bodyTop, colWidth,     bodyHeight);
-    modifiersColumn.setBounds(col2Left, bodyTop, colWidth,     bodyHeight);
-    masterColumn   .setBounds(col3Left, bodyTop, W - col3Left, bodyHeight);
-
     dividers.clear();
+    
+    auto bounds = getLocalBounds();
+    
+    titleHeader.setBounds(bounds.removeFromTop(66));
+    titleFooter.setBounds(bounds.removeFromBottom(17));
+    dividers.emplace_back(bounds.removeFromTop(dividerThick));
+    dividers.emplace_back(bounds.removeFromBottom(dividerThick));
 
-    // Horizontal: under header (full width); above footer (full width).
-    dividers.emplace_back(0, headerHeight, W, dividerThick);
-    dividers.emplace_back(0, bodyBottom,   W, dividerThick);
+    // 12 Slice Design: 4 columns of the synth spaced across the 12 column slices.
+    const int bodyW       = bounds.getWidth();
+    const int columnsSize = bodyW - (dividerThick * 3);
+    const int sliceW      = columnsSize / 12;
 
-    // Vertical dividers between columns. Inset from header / footer so the lines
-    // never meet at a vertex — keeps each intersection a clean break.
-    dividers.emplace_back(col1Left - dividerThick, bodyTop + dividerInset,
-                          dividerThick, bodyHeight - dividerInset * 2);
-    dividers.emplace_back(col2Left - dividerThick, bodyTop + dividerInset,
-                          dividerThick, bodyHeight - dividerInset * 2);
-    dividers.emplace_back(col3Left - dividerThick, bodyTop + dividerInset,
-                          dividerThick, bodyHeight - dividerInset * 2);
+    sourcesColumn  .setBounds   (bounds.removeFromLeft(sliceW * 4));
+    dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
+    filterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
+    dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
+    modifiersColumn.setBounds   (bounds.removeFromLeft(sliceW * 2));
+    dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
+    masterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
