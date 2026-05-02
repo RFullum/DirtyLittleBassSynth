@@ -14,22 +14,20 @@
 FilterPanel::FilterPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace DLBS;
-
     auto accent = res.theme.secondaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    DLBS::SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    DLBS::SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     cutoffSlider.setLookAndFeel(res.dialLookAndFeel);
     resSlider   .setLookAndFeel(res.dialLookAndFeel);
 
-    SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
+    DLBS::SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
 
-    SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
-    SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
+    DLBS::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
+    DLBS::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
     filterType.Setup(*res.apvts, "filter_type",
                      juce::StringArray({"-12", "-24", "-48", "Notch"}),
@@ -39,7 +37,7 @@ FilterPanel::FilterPanel(GuiResources &res)
     cutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_cutoff", cutoffSlider);
     resAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_res",    resSlider);
 
-    SetSliderTextFormat(cutoffSlider, FormatCutoffHz);
+    DLBS::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();

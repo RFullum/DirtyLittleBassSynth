@@ -14,23 +14,21 @@
 ModifierPanel::ModifierPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace DLBS;
-
     auto primary = res.theme.primaryAccent;
     auto pink    = res.theme.pinkAccent;
     auto orange  = res.theme.orangeAccent;
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    SetupSlider(this, portaSlider,         juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
-    SetupSlider(this, foldbackSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    DLBS::SetupSlider(this, portaSlider,         juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
+    DLBS::SetupSlider(this, foldbackSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    DLBS::SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    DLBS::SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    DLBS::SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
+    DLBS::SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    DLBS::SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    DLBS::SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    DLBS::SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
 
     portaSlider        .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider     .setLookAndFeel(res.dialLookAndFeel);
@@ -42,16 +40,16 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
 
-    SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
+    DLBS::SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
 
-    SetupLabel(this, portaLabel,    "Portamento",           txt, 14.0f);
-    SetupLabel(this, foldbackLabel, "Foldback\nDistortion", txt, 14.0f);
-    SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
-    SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
-    SetupLabel(this, sHLabel,      "Sample & Hold", txt, 14.0f);
-    SetupLabel(this, toneLabel,    "Tone",          txt, 16.0f);
-    SetupLabel(this, pitchLabel,   "Pitch",         txt, 16.0f);
-    SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 16.0f);
+    DLBS::SetupLabel(this, portaLabel,    "Portamento",           txt, 14.0f);
+    DLBS::SetupLabel(this, foldbackLabel, "Foldback\nDistortion", txt, 14.0f);
+    DLBS::SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
+    DLBS::SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
+    DLBS::SetupLabel(this, sHLabel,      "Sample & Hold", txt, 14.0f);
+    DLBS::SetupLabel(this, toneLabel,    "Tone",          txt, 16.0f);
+    DLBS::SetupLabel(this, pitchLabel,   "Pitch",         txt, 16.0f);
+    DLBS::SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 16.0f);
 
     portaAtt         = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "porta_time",       portaSlider);
     foldbackAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "foldback_dist",    foldbackSlider);

@@ -14,8 +14,6 @@
 OscPanel::OscPanel(GuiResources &res)
 : resources(res)
 {
-//    using namespace DLBS;
-
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;

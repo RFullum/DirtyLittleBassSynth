@@ -14,22 +14,20 @@
 MasterColumn::MasterColumn(GuiResources &res)
 : resources(res)
 {
-    using namespace DLBS;
-
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSectionLabel(this, sectionLabel, "Master", res.theme.textSecondary);
+    DLBS::SetupSectionLabel(this, sectionLabel, "Master", res.theme.textSecondary);
 
-    SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, accent, thumb, txt);
-    SetupLabel (this, masterGainLabel,  "Out Gain", txt, 16.0f);
+    DLBS::SetupSlider(this, masterGainSlider, juce::Slider::SliderStyle::LinearVertical, accent, thumb, txt);
+    DLBS::SetupLabel (this, masterGainLabel,  "Out Gain", txt, 16.0f);
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
 
     gainAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "master_gain", masterGainSlider);
 
-    SetSliderTextFormat(masterGainSlider, FormatGainDb);
+    DLBS::SetSliderTextFormat(masterGainSlider, DLBS::FormatGainDb);
 
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);

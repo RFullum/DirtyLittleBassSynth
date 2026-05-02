@@ -14,15 +14,13 @@
 LfoPanel::LfoPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace DLBS;
-
     auto accent = res.theme.secondaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-    SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    DLBS::SetupSlider(this, lfoShapeSlider,  juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    DLBS::SetupSlider(this, lfoFreqSlider,   juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    DLBS::SetupSlider(this, lfoAmountSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     // LFO shape slider sits directly under the LFO visual; suppress its value textbox
     // so the slider track spans the full width of the visual above it.
@@ -32,11 +30,11 @@ LfoPanel::LfoPanel(GuiResources &res)
     lfoFreqSlider  .setLookAndFeel(res.dialLookAndFeel);
     lfoAmountSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
+    DLBS::SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
 
-    SetupLabel(this, lfoShapeLabel,  "LFO Shape", txt, 17.0f);
-    SetupLabel(this, lfoFreqLabel,   "Freq",      txt, 16.0f);
-    SetupLabel(this, lfoAmountLabel, "Amount",    txt, 16.0f);
+    DLBS::SetupLabel(this, lfoShapeLabel,  "LFO Shape", txt, 17.0f);
+    DLBS::SetupLabel(this, lfoFreqLabel,   "Freq",      txt, 16.0f);
+    DLBS::SetupLabel(this, lfoAmountLabel, "Amount",    txt, 16.0f);
 
     shapeAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_shape", lfoShapeSlider);
     freqAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_freq",  lfoFreqSlider);
