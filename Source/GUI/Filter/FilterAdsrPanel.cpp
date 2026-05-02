@@ -31,6 +31,8 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     fltReleaseSlider  .setLookAndFeel(res.dialLookAndFeel);
     adsrToCutoffSlider.setLookAndFeel(res.dryWetLookAndFeel);
     adsrToResSlider   .setLookAndFeel(res.dryWetLookAndFeel);
+    
+    // TODO: To CO and To Rez - remove slider value label?
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
 
