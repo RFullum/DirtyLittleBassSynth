@@ -30,10 +30,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Amp", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, oscAttackLabel,  "A", txt, 16.0f);
-    DLBS::SetupLabel(this, oscDecayLabel,   "D", txt, 16.0f);
-    DLBS::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f);
-    DLBS::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f);
+    DLBS::SetupLabel(this, oscAttackLabel,  "A", txt, 16.0f, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, oscDecayLabel,   "D", txt, 16.0f, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f, juce::Justification::centredRight);
+    DLBS::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f, juce::Justification::centredRight);
 
     attackAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_attack",  oscAttackSlider);
     decayAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_decay",   oscDecaySlider);
@@ -58,36 +58,24 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 
 void AmpAdsrPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int adsrLabelWidth    = 18;
-
-    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
-
-    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
-
-    // Envelope visual on top, then 4 stacked horizontal ADSR rows, each with
-    // letter label on the left and the slider filling the rest.
-    auto slidersArea = bounds.reduced(sectionSpacerSize * 2);
-
-    const int visualHeight = slidersArea.getHeight() * 2 / 5;
-    auto      visualArea   = slidersArea.removeFromTop(visualHeight);
-    adsrVisual.setBounds(visualArea);
-
-    const int rowHeight = slidersArea.getHeight() / 4;
-
-    auto layoutRow = [&](juce::Slider &slider, juce::Label &label)
+    auto bounds = getLocalBounds();
+    sectionLabel.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.08f)));
+    
+    const int margin = bounds.proportionOfWidth(0.15f);
+    adsrVisual.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.5f)).reduced(margin, 0));
+    
+    const int rowH = bounds.proportionOfHeight(0.25f);
+    auto adsrRow = [&](juce::Slider &slider, juce::Label &label)
     {
-        auto row     = slidersArea.removeFromTop(rowHeight);
-        auto labelBx = row.removeFromLeft(adsrLabelWidth);
-
-        label .setBounds(labelBx);
+        auto row = bounds.removeFromTop(rowH);
+        label.setBounds(row.removeFromLeft(margin));
         slider.setBounds(row);
     };
 
-    layoutRow(oscAttackSlider,  oscAttackLabel);
-    layoutRow(oscDecaySlider,   oscDecayLabel);
-    layoutRow(oscSustainSlider, oscSustainLabel);
-    layoutRow(oscReleaseSlider, oscReleaseLabel);
+    adsrRow(oscAttackSlider,  oscAttackLabel);
+    adsrRow(oscDecaySlider,   oscDecayLabel);
+    adsrRow(oscSustainSlider, oscSustainLabel);
+    adsrRow(oscReleaseSlider, oscReleaseLabel);
 }
 
 void AmpAdsrPanel::Update()
