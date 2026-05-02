@@ -67,8 +67,8 @@ void OutMeter::resized()
 
     const int leftMeterH  = meterLeftArea .getHeight();
     const int rightMeterH = meterRightArea.getHeight();
-    const int leftFillH   = (int) (leftMeterH  * juce::jlimit(0.0f, 1.0f, leftHeightMult));
-    const int rightFillH  = (int) (rightMeterH * juce::jlimit(0.0f, 1.0f, rightHeightMult));
+    const int leftFillH   = (int)(leftMeterH  * juce::jlimit(0.0f, 1.0f, leftHeightMult));
+    const int rightFillH  = (int)(rightMeterH * juce::jlimit(0.0f, 1.0f, rightHeightMult));
 
     leftMeterLevel.setBounds (meterLeftArea.getX(),
                               meterLeftArea.getY()  + leftMeterH  - leftFillH,

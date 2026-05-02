@@ -23,9 +23,9 @@ void SegmentedControl::paint(juce::Graphics &g)
     g.setFont(juce::Font(juce::FontOptions("Helvetica", fontSize, juce::Font::bold))
                  .withExtraKerningFactor(0.10f));
 
-    for (int i = 0; i < (int) segmentBounds.size() && i < segments.size(); ++i)
+    for (int i = 0; i < (int)segmentBounds.size() && i < segments.size(); ++i)
     {
-        auto rect = segmentBounds[(size_t) i].toFloat();
+        auto rect = segmentBounds[(size_t)i].toFloat();
         const bool active = (i == selectedIndex);
 
         if (active)
@@ -70,10 +70,10 @@ void SegmentedControl::mouseDown(const juce::MouseEvent &e)
 {
     for (int i = 0; i < (int)segmentBounds.size(); ++i)
     {
-        if (segmentBounds[(size_t) i].contains(e.getPosition()))
+        if (segmentBounds[(size_t)i].contains(e.getPosition()))
         {
             if (parameter != nullptr && attachment != nullptr)
-                attachment->setValueAsCompleteGesture((float) i);
+                attachment->setValueAsCompleteGesture((float)i);
 
             return;
         }
@@ -105,7 +105,7 @@ void SegmentedControl::Setup(juce::AudioProcessorValueTreeState &apvts
                 if (auto *choice = dynamic_cast<juce::AudioParameterChoice *>(parameter))
                     selectedIndex = choice->getIndex();
                 else
-                    selectedIndex = (int) newValue;
+                    selectedIndex = (int)newValue;
 
                 repaint();
             });

@@ -15,20 +15,15 @@ OtherLookAndFeel::OtherLookAndFeel()
 : trackBackground(juce::Colour((juce::uint8)30, (juce::uint8)33, (juce::uint8)48))
 {}
 
-void OtherLookAndFeel::setTrackBackground(juce::Colour color)
-{
-    trackBackground = color;
-}
-
 //============================================================
 
 void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height
                                         , float sliderPos, float rotaryStartAngle, float rotaryEndAngle
                                         , juce::Slider &slider)
 {
-    const float boundsSize = (float) juce::jmin(width, height);
-    const float cx         = (float) x + (float) width  * 0.5f;
-    const float cy         = (float) y + (float) height * 0.5f;
+    const float boundsSize = (float)juce::jmin(width, height);
+    const float cx         = (float)x + (float)width  * 0.5f;
+    const float cy         = (float)y + (float)height * 0.5f;
 
     const float arcRadius  = boundsSize * 0.42f;
     const float arcThick   = juce::jmax(2.0f, boundsSize * 0.06f);
@@ -68,9 +63,9 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
 
     if (style == juce::Slider::SliderStyle::LinearHorizontal)
     {
-        const float trackY = (float) y + (float) height * 0.5f - trackThick * 0.5f;
-        const float trackX = (float) x;
-        const float trackW = (float) width;
+        const float trackY = (float)y + (float)height * 0.5f - trackThick * 0.5f;
+        const float trackX = (float)x;
+        const float trackW = (float)width;
 
         g.setColour(trackBackground);
         g.fillRoundedRectangle(trackX, trackY, trackW, trackThick, trackThick * 0.5f);
@@ -80,14 +75,14 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
 
         g.setColour(thumbColor);
         g.fillEllipse(sliderPos - thumbRadius,
-                      (float) y + (float) height * 0.5f - thumbRadius,
+                      (float)y + (float)height * 0.5f - thumbRadius,
                       thumbRadius * 2.0f, thumbRadius * 2.0f);
     }
     else if (style == juce::Slider::SliderStyle::LinearVertical)
     {
-        const float trackX = (float) x + (float) width * 0.5f - trackThick * 0.5f;
-        const float trackY = (float) y;
-        const float trackH = (float) height;
+        const float trackX = (float)x + (float)width * 0.5f - trackThick * 0.5f;
+        const float trackY = (float)y;
+        const float trackH = (float)height;
 
         g.setColour(trackBackground);
         g.fillRoundedRectangle(trackX, trackY, trackThick, trackH, trackThick * 0.5f);
@@ -95,10 +90,10 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         // Fill from bottom (max y) up to thumb position (sliderPos has lower y for higher value).
         g.setColour(fillColor);
         g.fillRoundedRectangle(trackX, sliderPos, trackThick,
-                               (float) (y + height) - sliderPos, trackThick * 0.5f);
+                               (float)(y + height) - sliderPos, trackThick * 0.5f);
 
         g.setColour(thumbColor);
-        g.fillEllipse((float) x + (float) width * 0.5f - thumbRadius,
+        g.fillEllipse((float)x + (float)width * 0.5f - thumbRadius,
                       sliderPos - thumbRadius,
                       thumbRadius * 2.0f, thumbRadius * 2.0f);
     }
@@ -107,4 +102,11 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         juce::LookAndFeel_V4::drawLinearSlider(g, x, y, width, height, sliderPos,
                                                minSliderPos, maxSliderPos, style, slider);
     }
+}
+
+//============================================================
+
+void OtherLookAndFeel::SetTrackBackground(juce::Colour color)
+{
+    trackBackground = color;
 }

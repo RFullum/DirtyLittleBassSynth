@@ -27,9 +27,9 @@ void FilterVisual::paint(juce::Graphics &g)
     g.fillRoundedRectangle(visualBox, cornerRound);
 
     // Center reference line
-    const float cy = (float) getHeight() * 0.5f;
+    const float cy = (float)getHeight() * 0.5f;
     g.setColour(lineColor.withAlpha(0.15f));
-    g.drawLine(0.0f, cy, (float) getWidth(), cy, 0.5f);
+    g.drawLine(0.0f, cy, (float)getWidth(), cy, 0.5f);
 
     // Faint area fill below the curve
     g.setColour(lineColor.withAlpha(0.08f));
@@ -75,7 +75,7 @@ void FilterVisual::setColors(juce::Colour line, juce::Colour background, juce::C
 
 void FilterVisual::buildPaths(int type)
 {
-    const float halfHeight = (float) getHeight() * 0.5f;
+    const float halfHeight = (float)getHeight() * 0.5f;
     const float resMap     = juce::jmap(resonance, 1.0f, 2.0f, 0.0f, halfHeight * 2.5f);
 
     // rolloffControl moves the cubic control points horizontally to shape the
@@ -96,10 +96,10 @@ void FilterVisual::buildPaths(int type)
     const float y1 = halfHeight;
     const float x2 = juce::jmap(powf(cutoffFreq * 0.01f, 0.25f),
                                 0.32f, 1.0f,
-                                15.0f, (float) getWidth() - reducer);
+                                15.0f, (float)getWidth() - reducer);
     const float y2 = halfHeight - resMap;
-    const float bottomY = (float) getHeight() - reducer;
-    const float rightX  = (float) getWidth()  - reducer;
+    const float bottomY = (float)getHeight() - reducer;
+    const float rightX  = (float)getWidth()  - reducer;
 
     juce::Point<float> origin   (x1, y1);
     juce::Point<float> maxFilter(x2, bottomY);

@@ -35,9 +35,9 @@ void OscVisual::paint(juce::Graphics &g)
     g.fillRoundedRectangle(visualBox, cornerRound);
 
     // Center reference line
-    const float cy = (float) getHeight() * 0.5f;
+    const float cy = (float)getHeight() * 0.5f;
     g.setColour(lineColor.withAlpha(0.15f));
-    g.drawLine(0.0f, cy, (float) getWidth(), cy, 0.5f);
+    g.drawLine(0.0f, cy, (float)getWidth(), cy, 0.5f);
 
     // Faint area fill below the wave
     g.setColour(lineColor.withAlpha(0.08f));
@@ -94,10 +94,10 @@ void OscVisual::RebuildPath()
     oscArea .clear();
 
     const float widthOffset  = 5.0f;
-    const float widthReduce  = (float) getWidth() - widthOffset;
-    const float heightReduce = (float) getHeight() * 0.77f;
-    const float halfHeight   = (float) getHeight() * 0.5f;
-    const float bottomY      = (float) getHeight();
+    const float widthReduce  = (float)getWidth() - widthOffset;
+    const float heightReduce = (float)getHeight() * 0.77f;
+    const float halfHeight   = (float)getHeight() * 0.5f;
+    const float bottomY      = (float)getHeight();
 
     const float gainScale = (gainParam != nullptr)
                                 ? juce::jlimit(0.0f, 1.0f, gainParam->load())
@@ -118,7 +118,7 @@ void OscVisual::RebuildPath()
 
     auto sampleX = [&](int i)
     {
-        return juce::jmap((float) i, 0.0f, (float) waveTableSize, widthReduce, widthOffset);
+        return juce::jmap((float)i, 0.0f, (float)waveTableSize, widthReduce, widthOffset);
     };
 
     auto sampleY = [&](int i)

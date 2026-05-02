@@ -73,12 +73,12 @@ void Wavetable::SetIncrement(float noteFreq)
         octavePos = 0.0f;
 
     const int maxLevel = NumLevels() - 1;
-    if (octavePos > (float) maxLevel)
-        octavePos = (float) maxLevel;
+    if (octavePos > (float)maxLevel)
+        octavePos = (float)maxLevel;
 
-    levelLow  = (int) std::floor(octavePos);
+    levelLow  = (int)std::floor(octavePos);
     levelHigh = juce::jmin(levelLow + 1, maxLevel);
-    blendT    = octavePos - (float) levelLow;
+    blendT    = octavePos - (float)levelLow;
 }
 
 float Wavetable::GetWavetableSampleValue(int index)
@@ -88,7 +88,7 @@ float Wavetable::GetWavetableSampleValue(int index)
 
 void Wavetable::BuildLevel(int level)
 {
-    sinOsc.setFrequency(sampleRate / (float) waveTableSize);
+    sinOsc.setFrequency(sampleRate / (float)waveTableSize);
 
     auto &table = waveTable[level];
     for (int i = 0; i < waveTableSize; ++i)
@@ -99,10 +99,10 @@ int Wavetable::HarmonicCapForLevel(int level) const
 {
     // Top of this level's octave; harmonics whose frequency at that fundamental
     // would exceed Nyquist must be excluded.
-    const float topFundamental = lowestFundamental * (float) (1 << (level + 1));
+    const float topFundamental = lowestFundamental * (float)(1 << (level + 1));
     const float nyquist        = sampleRate * 0.5f;
 
-    return (int) std::floor(nyquist / topFundamental);
+    return (int)std::floor(nyquist / topFundamental);
 }
 
 void Wavetable::NormalizeLevel(int level)
@@ -126,7 +126,7 @@ float Wavetable::SampleAt(int level, float readPos) const
 
     for (int i = -2; i < 2; ++i)
     {
-        int idx = (int) std::floor(readPos + (i + 1));
+        int idx = (int)std::floor(readPos + (i + 1));
         idx %= waveTableSize;
         if (idx < 0)
             idx += waveTableSize;
@@ -156,14 +156,14 @@ void SawWavetable::BuildLevel(int level)
 {
     const int harmonicCap = HarmonicCapForLevel(level);
     const int numSummed   = juce::jmin(maxHarmonics, harmonicCap);
-    const float fundamental = sampleRate / (float) waveTableSize;
+    const float fundamental = sampleRate / (float)waveTableSize;
 
     juce::OwnedArray<SinOsc> oscs;
     for (int h = 0; h < numSummed; ++h)
     {
         auto *osc = new SinOsc();
         osc->setSampleRate(sampleRate);
-        osc->setFrequency(fundamental * (float) (h + 1));   // harmonics 1, 2, 3, ...
+        osc->setFrequency(fundamental * (float)(h + 1));   // harmonics 1, 2, 3, ...
         oscs.add(osc);
     }
 
@@ -172,7 +172,7 @@ void SawWavetable::BuildLevel(int level)
     {
         for (int h = 0; h < numSummed; ++h)
         {
-            const float amp = 1.0f / (float) (h + 1);       // 1/n rolloff
+            const float amp = 1.0f / (float)(h + 1);       // 1/n rolloff
             table[i] += oscs[h]->process() * amp;
         }
     }
@@ -187,7 +187,7 @@ void SquareWavetable::BuildLevel(int level)
     // Square uses odd harmonics 1, 3, 5, ...; the (n)th odd harmonic = 2n-1.
     const int aliasOddCap = (harmonicCap + 1) / 2;
     const int numSummed   = juce::jmin(maxHarmonics, aliasOddCap);
-    const float fundamental = sampleRate / (float) waveTableSize;
+    const float fundamental = sampleRate / (float)waveTableSize;
 
     juce::OwnedArray<SinOsc> oscs;
     for (int n = 0; n < numSummed; ++n)
@@ -195,7 +195,7 @@ void SquareWavetable::BuildLevel(int level)
         const int harmonicIndex = 2 * n + 1;                // 1, 3, 5, ...
         auto     *osc           = new SinOsc();
         osc->setSampleRate(sampleRate);
-        osc->setFrequency(fundamental * (float) harmonicIndex);
+        osc->setFrequency(fundamental * (float)harmonicIndex);
         oscs.add(osc);
     }
 
@@ -204,7 +204,7 @@ void SquareWavetable::BuildLevel(int level)
     {
         for (int n = 0; n < numSummed; ++n)
         {
-            const float amp = 1.0f / (float) (2 * n + 1);   // 1/(2n+1)
+            const float amp = 1.0f / (float)(2 * n + 1);   // 1/(2n+1)
             table[i] += oscs[n]->process() * amp;
         }
     }
@@ -219,7 +219,7 @@ void SpikeWavetable::BuildLevel(int level)
 
     // High-pass each level. Cutoff is a fixed multiple of the wavetable's
     // generation fundamental; same shape per level, applied to that level's content.
-    const float fundamental = sampleRate / (float) waveTableSize;
+    const float fundamental = sampleRate / (float)waveTableSize;
     const float cutoffFreq  = fundamental * 10.0f;
 
     juce::IIRFilter highPass;

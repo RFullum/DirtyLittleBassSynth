@@ -29,190 +29,6 @@ BassSynthVoice::BassSynthVoice()
 , samplesPerBlock(0)
 {}
 
-void BassSynthVoice::Init(float SR, int blockSize)
-{
-    sampleRate      = SR;
-    samplesPerBlock = blockSize;
-    
-    wtSine .SetSampleRate(sampleRate);
-    wtSaw  .SetSampleRate(sampleRate);
-    wtSpike.SetSampleRate(sampleRate);
-    subOsc .SetSampleRate(sampleRate);
-    env    .setSampleRate(sampleRate);
-    
-    ringMod  .SetSampleRate(sampleRate);
-    freqShift.SetSampleRate(sampleRate);
-    sAndH    .SetSampleRate(sampleRate);
-    
-    twoPoleLPF        .SetSampleRate(sampleRate);
-    fourPoleLPF       .SetSampleRate(sampleRate);
-    eightPoleLPF      .SetSampleRate(sampleRate);
-    notchFilter       .SetSampleRate(sampleRate);
-    filtEnv           .setSampleRate(sampleRate);
-    filtLFOClickingEnv.setSampleRate(sampleRate);
-    
-    filterLFO.SetSampleRate(sampleRate);
-    
-    wtSine.PopulateWavetable();
-    wtSaw.PopulateWavetable();
-    wtSpike.PopulateWavetable();
-    subOsc.PopulateWavetable();
-    
-    filterLFO.PopulateWavetable();
-    
-    SetPortamentoTime(sampleRate, 0.02f);
-    portamento.setCurrentAndTargetValue(0.0f);
-    
-    subGainSmooth.reset(sampleRate, 0.01f);
-    subGainSmooth.setCurrentAndTargetValue(0.0f);
-    
-    foldbackDistortionSmooth.reset(sampleRate, 0.01f);
-    foldbackDistortionSmooth.setCurrentAndTargetValue(0.0f);
-    
-    ringMixSmooth.reset(sampleRate, 0.01f);
-    ringMixSmooth.setCurrentAndTargetValue(0.0f);
-    
-    freqShiftMixValSmooth.reset(sampleRate, 0.01f);
-    freqShiftMixValSmooth.setCurrentAndTargetValue(0.0f);
-    
-    sAndHMixValSmooth.reset(sampleRate, 0.01f);
-    sAndHMixValSmooth.setCurrentAndTargetValue(0.0f);
-    
-    filterCutoffFreqSmooth.reset(sampleRate, 0.01f);
-    filterCutoffFreqSmooth.setCurrentAndTargetValue(0.0f);
-    
-    masterGainControlSmooth.reset(sampleRate, 0.01f);
-    masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
-    
-    velocitySmooth.reset(sampleRate, 0.01f);
-    velocitySmooth.setCurrentAndTargetValue(1.0f);
-}
-
-void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
-                                       , std::atomic<float> *subOscMorphIn
-                                       , std::atomic<float> *subOscGainIn
-                                       , std::atomic<float> *subOctaveIn)
-{
-    oscillatorMorph = oscMorphIn;
-    subOscMorph     = subOscMorphIn;
-    subGain         = subOscGainIn;
-    subOctave       = subOctaveIn;
-}
-
-void BassSynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
-                                           , std::atomic<float> *decay
-                                           , std::atomic<float> *sustain
-                                           , std::atomic<float> *release)
-{
-    ampAttack  = attack;
-    ampDecay   = decay;
-    ampSustain = sustain;
-    ampRelease = release;
-}
-
-void BassSynthVoice::SetDistParamPointers(std::atomic<float> *foldDistIn)
-{
-    foldbackDistortion = foldDistIn;
-}
-
-void BassSynthVoice::SetRingModParamPointers(std::atomic<float>   *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
-{
-    ringModPitch = ringPitch;
-    ringModTone  = ringTone;
-    ringMix      = mix;
-}
-
-void BassSynthVoice::SetFreqShiftParamPointers(std::atomic<float> *shiftPitch, std::atomic<float> *mix)
-{
-    freqShiftPitch  = shiftPitch;
-    freqShiftMixVal = mix;
-}
-
-void BassSynthVoice::SetSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
-{
-    sAndHPitch  = pitch;
-    sAndHMixVal = mix;
-}
-
-void BassSynthVoice::SetFilterParamPointers(std::atomic<float> *cutoff, std::atomic<float> *res, std::atomic<float> *type)
-{
-    filterCutoffFreq = cutoff;
-    filterResonance  = res;
-    filterSelector   = type;
-}
-
-void BassSynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
-                                              , std::atomic<float> *decay
-                                              , std::atomic<float> *sustain
-                                              , std::atomic<float> *release
-                                              , std::atomic<float> *amtCO
-                                              , std::atomic<float> *amtRes)
-{
-    filterAttack           = attack;
-    filterDecay            = decay;
-    filterSustain          = sustain;
-    filterRelease          = release;
-    filterADSRCutOffAmount = amtCO;
-    filterADSRResAmount    = amtRes;
-}
-
-void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::atomic<float> *amount, std::atomic<float> *shape)
-{
-    filtLFOFreq  = freq;
-    filtLFOAmt   = amount;
-    filtLFOShape = shape;
-}
-
-void BassSynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
-{
-    portamentoAmount = portaTime;
-}
-
-void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
-{
-    masterGainControl = gainAmt;
-}
-
-void BassSynthVoice::SetAmpADSRValues()
-{
-    envParams.attack  = *ampAttack;     // sec
-    envParams.decay   = *ampDecay;      // sec
-    envParams.sustain = *ampSustain;    // amplitude 0..1
-    envParams.release = *ampRelease;    // sec
-
-    env.setParameters(envParams);
-}
-
-void BassSynthVoice::SetFilterADSRValues()
-{
-    juce::ADSR::Parameters filtEnvParams;
-
-    filtEnvParams.attack  = *filterAttack;
-    filtEnvParams.decay   = *filterDecay;
-    filtEnvParams.sustain = *filterSustain;
-    filtEnvParams.release = *filterRelease;
-
-    filtEnv.setParameters(filtEnvParams);
-}
-
-/// Short ADSR applied to the filter LFO so it fades in/out instead of clicking.
-void BassSynthVoice::SetFiltLFOClickValues()
-{
-    juce::ADSR::Parameters filtLFOClickParams;
-
-    filtLFOClickParams.attack  = 0.02f;
-    filtLFOClickParams.decay   = 0.5f;
-    filtLFOClickParams.sustain = 1.0f;
-    filtLFOClickParams.release = 0.02f;
-
-    filtLFOClickingEnv.setParameters(filtLFOClickParams);
-}
-
-void BassSynthVoice::SetPortamentoTime(float SR, float portaTime)
-{
-    portamento.reset(SR, portaTime);
-}
-
 void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound*, int currentPitchWheelPosition)
 {
     playing = true;
@@ -344,15 +160,199 @@ void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
     }
 }
 
+bool BassSynthVoice::canPlaySound(juce::SynthesiserSound* sound)
+{
+    return dynamic_cast<BassSynthSound*>(sound) != nullptr;
+}
+
+void BassSynthVoice::Init(float SR, int blockSize)
+{
+    sampleRate      = SR;
+    samplesPerBlock = blockSize;
+
+    wtSine .SetSampleRate(sampleRate);
+    wtSaw  .SetSampleRate(sampleRate);
+    wtSpike.SetSampleRate(sampleRate);
+    subOsc .SetSampleRate(sampleRate);
+    env    .setSampleRate(sampleRate);
+
+    ringMod  .SetSampleRate(sampleRate);
+    freqShift.SetSampleRate(sampleRate);
+    sAndH    .SetSampleRate(sampleRate);
+
+    twoPoleLPF        .SetSampleRate(sampleRate);
+    fourPoleLPF       .SetSampleRate(sampleRate);
+    eightPoleLPF      .SetSampleRate(sampleRate);
+    notchFilter       .SetSampleRate(sampleRate);
+    filtEnv           .setSampleRate(sampleRate);
+    filtLFOClickingEnv.setSampleRate(sampleRate);
+
+    filterLFO.SetSampleRate(sampleRate);
+
+    wtSine.PopulateWavetable();
+    wtSaw.PopulateWavetable();
+    wtSpike.PopulateWavetable();
+    subOsc.PopulateWavetable();
+
+    filterLFO.PopulateWavetable();
+
+    SetPortamentoTime(sampleRate, 0.02f);
+    portamento.setCurrentAndTargetValue(0.0f);
+
+    subGainSmooth.reset(sampleRate, 0.01f);
+    subGainSmooth.setCurrentAndTargetValue(0.0f);
+
+    foldbackDistortionSmooth.reset(sampleRate, 0.01f);
+    foldbackDistortionSmooth.setCurrentAndTargetValue(0.0f);
+
+    ringMixSmooth.reset(sampleRate, 0.01f);
+    ringMixSmooth.setCurrentAndTargetValue(0.0f);
+
+    freqShiftMixValSmooth.reset(sampleRate, 0.01f);
+    freqShiftMixValSmooth.setCurrentAndTargetValue(0.0f);
+
+    sAndHMixValSmooth.reset(sampleRate, 0.01f);
+    sAndHMixValSmooth.setCurrentAndTargetValue(0.0f);
+
+    filterCutoffFreqSmooth.reset(sampleRate, 0.01f);
+    filterCutoffFreqSmooth.setCurrentAndTargetValue(0.0f);
+
+    masterGainControlSmooth.reset(sampleRate, 0.01f);
+    masterGainControlSmooth.setCurrentAndTargetValue(1.0f);
+
+    velocitySmooth.reset(sampleRate, 0.01f);
+    velocitySmooth.setCurrentAndTargetValue(1.0f);
+}
+
+void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
+                                       , std::atomic<float> *subOscMorphIn
+                                       , std::atomic<float> *subOscGainIn
+                                       , std::atomic<float> *subOctaveIn)
+{
+    oscillatorMorph = oscMorphIn;
+    subOscMorph     = subOscMorphIn;
+    subGain         = subOscGainIn;
+    subOctave       = subOctaveIn;
+}
+
+void BassSynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
+                                           , std::atomic<float> *decay
+                                           , std::atomic<float> *sustain
+                                           , std::atomic<float> *release)
+{
+    ampAttack  = attack;
+    ampDecay   = decay;
+    ampSustain = sustain;
+    ampRelease = release;
+}
+
+void BassSynthVoice::SetDistParamPointers(std::atomic<float> *foldDistIn)
+{
+    foldbackDistortion = foldDistIn;
+}
+
+void BassSynthVoice::SetRingModParamPointers(std::atomic<float>   *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
+{
+    ringModPitch = ringPitch;
+    ringModTone  = ringTone;
+    ringMix      = mix;
+}
+
+void BassSynthVoice::SetFreqShiftParamPointers(std::atomic<float> *shiftPitch, std::atomic<float> *mix)
+{
+    freqShiftPitch  = shiftPitch;
+    freqShiftMixVal = mix;
+}
+
+void BassSynthVoice::SetSampleAndHoldParamPointers(std::atomic<float>* pitch, std::atomic<float>* mix)
+{
+    sAndHPitch  = pitch;
+    sAndHMixVal = mix;
+}
+
+void BassSynthVoice::SetFilterParamPointers(std::atomic<float> *cutoff, std::atomic<float> *res, std::atomic<float> *type)
+{
+    filterCutoffFreq = cutoff;
+    filterResonance  = res;
+    filterSelector   = type;
+}
+
+void BassSynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
+                                              , std::atomic<float> *decay
+                                              , std::atomic<float> *sustain
+                                              , std::atomic<float> *release
+                                              , std::atomic<float> *amtCO
+                                              , std::atomic<float> *amtRes)
+{
+    filterAttack           = attack;
+    filterDecay            = decay;
+    filterSustain          = sustain;
+    filterRelease          = release;
+    filterADSRCutOffAmount = amtCO;
+    filterADSRResAmount    = amtRes;
+}
+
+void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::atomic<float> *amount, std::atomic<float> *shape)
+{
+    filtLFOFreq  = freq;
+    filtLFOAmt   = amount;
+    filtLFOShape = shape;
+}
+
+void BassSynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
+{
+    portamentoAmount = portaTime;
+}
+
+void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
+{
+    masterGainControl = gainAmt;
+}
+
+void BassSynthVoice::SetAmpADSRValues()
+{
+    envParams.attack  = *ampAttack;     // sec
+    envParams.decay   = *ampDecay;      // sec
+    envParams.sustain = *ampSustain;    // amplitude 0..1
+    envParams.release = *ampRelease;    // sec
+
+    env.setParameters(envParams);
+}
+
+void BassSynthVoice::SetFilterADSRValues()
+{
+    juce::ADSR::Parameters filtEnvParams;
+
+    filtEnvParams.attack  = *filterAttack;
+    filtEnvParams.decay   = *filterDecay;
+    filtEnvParams.sustain = *filterSustain;
+    filtEnvParams.release = *filterRelease;
+
+    filtEnv.setParameters(filtEnvParams);
+}
+
+/// Short ADSR applied to the filter LFO so it fades in/out instead of clicking.
+void BassSynthVoice::SetFiltLFOClickValues()
+{
+    juce::ADSR::Parameters filtLFOClickParams;
+
+    filtLFOClickParams.attack  = 0.02f;
+    filtLFOClickParams.decay   = 0.5f;
+    filtLFOClickParams.sustain = 1.0f;
+    filtLFOClickParams.release = 0.02f;
+
+    filtLFOClickingEnv.setParameters(filtLFOClickParams);
+}
+
+void BassSynthVoice::SetPortamentoTime(float SR, float portaTime)
+{
+    portamento.reset(SR, portaTime);
+}
+
 void BassSynthVoice::updatePitchBendRange(float newRange)
 {
     pitchBendUpSemitones   = newRange;
     pitchBendDownSemitones = newRange;
-}
-
-bool BassSynthVoice::canPlaySound(juce::SynthesiserSound* sound)
-{
-    return dynamic_cast<BassSynthSound*>(sound) != nullptr;
 }
 
 BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
@@ -377,7 +377,7 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     ringModPitchVal           = *ringModPitch;
     freqShiftPitchVal         = *freqShiftPitch;
     sAndHPitchVal             = *sAndHPitch;
-    filterSelectorIndex       = (int) *filterSelector;
+    filterSelectorIndex       = (int)*filterSelector;
     filterResonanceVal        = *filterResonance;
     filterADSRCutOffAmountVal = *filterADSRCutOffAmount;
     filterADSRResAmountVal    = *filterADSRResAmount;
@@ -475,4 +475,3 @@ void BassSynthVoice::SetPitchBend(int pitchWheelPos)
     else
         pitchBend = float(8192 - pitchWheelPos) / -8192;
 }
-

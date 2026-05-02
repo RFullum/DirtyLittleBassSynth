@@ -31,8 +31,8 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize(1300, 700);
 
-    dialLookAndFeel  .setTrackBackground(resources.theme.structure);
-    dryWetLookAndFeel.setTrackBackground(resources.theme.structure);
+    dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
+    dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
 
     titleHeader.setTheme(resources.theme);
     titleFooter.setTheme(resources.theme);
@@ -121,5 +121,5 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (leftMag  < 0.001f) leftMag  = 0.0f;
     if (rightMag < 0.001f) rightMag = 0.0f;
 
-    masterColumn.Update(leftMag, rightMag, (float) processor.getSampleRate());
+    masterColumn.Update(leftMag, rightMag, (float)processor.getSampleRate());
 }

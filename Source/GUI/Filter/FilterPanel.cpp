@@ -80,6 +80,6 @@ void FilterPanel::resized()
 void FilterPanel::Update()
 {
     filterVisual.drawFilterShape(filterType.GetSelectedIndex() + 1
-                                 , (float) cutoffSlider.getValue()
-                                 , (float) resSlider   .getValue());
+                                 , (float)cutoffSlider.getValue()
+                                 , (float)resSlider   .getValue());
 }

@@ -46,8 +46,8 @@ void TitleHeader::paint(juce::Graphics &g)
         g.setColour(theme->textSecondary);
         g.drawRoundedRectangle(r.toFloat().reduced(0.5f), 3.0f, 1.0f);
 
-        const float cx = (float) r.getCentreX();
-        const float cy = (float) r.getCentreY();
+        const float cx = (float)r.getCentreX();
+        const float cy = (float)r.getCentreY();
         const float w  = 4.0f;
         const float h  = 6.0f;
 
@@ -132,15 +132,6 @@ void TitleHeader::setTheme(const Palette::Theme &t)
 
 TitleFooter::TitleFooter() {}
 
-void TitleFooter::resized()
-{
-    constexpr int padding = 14;
-    auto bounds = getLocalBounds();
-
-    versionRect = bounds.reduced(padding, 0).withWidth(120);
-    urlRect     = bounds.reduced(padding, 0).withTrimmedLeft(bounds.getWidth() - 200);
-}
-
 void TitleFooter::paint(juce::Graphics &g)
 {
     if (theme == nullptr)
@@ -154,6 +145,15 @@ void TitleFooter::paint(juce::Graphics &g)
     g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
                  .withExtraKerningFactor(0.06f));
     g.drawText("FULLUMMUSIC.COM", urlRect, juce::Justification::centredRight);
+}
+
+void TitleFooter::resized()
+{
+    constexpr int padding = 14;
+    auto bounds = getLocalBounds();
+
+    versionRect = bounds.reduced(padding, 0).withWidth(120);
+    urlRect     = bounds.reduced(padding, 0).withTrimmedLeft(bounds.getWidth() - 200);
 }
 
 void TitleFooter::setTheme(const Palette::Theme &t)
