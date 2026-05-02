@@ -14,7 +14,7 @@
 ModifierPanel::ModifierPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace dlbs;
+    using namespace DLBS;
 
     auto primary = res.theme.primaryAccent;
     auto pink    = res.theme.pinkAccent;

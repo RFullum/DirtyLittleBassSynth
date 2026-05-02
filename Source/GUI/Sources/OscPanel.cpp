@@ -14,16 +14,16 @@
 OscPanel::OscPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace dlbs;
+//    using namespace DLBS;
 
-    auto accent  = res.theme.primaryAccent;
-    auto thumb   = res.theme.textPrimary;
-    auto txt     = res.theme.textPrimary;
+    auto accent = res.theme.primaryAccent;
+    auto thumb  = res.theme.textPrimary;
+    auto txt    = res.theme.textPrimary;
 
-    SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-    SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    DLBS::SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    DLBS::SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    DLBS::SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    DLBS::SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     // Morph sliders sit directly under their wave visuals; suppress the value textbox
     // so the slider track spans the full width of the visual above it.
@@ -35,18 +35,20 @@ OscPanel::OscPanel(GuiResources &res)
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
     pitchBendRangeSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
+    DLBS::SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
 
-    SetupLabel(this, oscMorphLabel,       "OSC",         txt, 18.0f);
-    SetupLabel(this, oscMorphLabel2,      "MORPH",       txt, 15.0f);
-    SetupLabel(this, subMorphLabel,       "SUB",         txt, 18.0f);
-    SetupLabel(this, subMorphLabel2,      "MORPH",       txt, 15.0f);
-    SetupLabel(this, subGainLabel,        "Sub Gain",    txt, 13.0f);
-    SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", txt, 13.0f);
+    DLBS::SetupLabel(this, oscLabel,            "OSC",         txt, 18.0f);
+    DLBS::SetupLabel(this, morphOscLabel,       "MORPH",       txt, 15.0f);
+    DLBS::SetupLabel(this, subLabel,            "SUB",         txt, 18.0f);
+    DLBS::SetupLabel(this, morphSubLabel,       "MORPH",       txt, 15.0f);
+    DLBS::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, 13.0f);
+    DLBS::SetupLabel(this, pitchBendRangeLabel, "Bend\nRange", txt, 13.0f);
 
-    subOctave.Setup(*res.apvts, "sub_osc_octave",
-                    juce::StringArray({"0", "-1", "-2"}),
-                    accent, res.theme.structure, res.theme.textSecondary);
+    subOctave.Setup(*res.apvts, "sub_osc_octave"
+                    , juce::StringArray({"0", "-1", "-2"})
+                    , accent
+                    , res.theme.structure
+                    , res.theme.textSecondary);
     addAndMakeVisible(subOctave);
 
     oscMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "osc_morph",        oscMorphSlider);
@@ -54,7 +56,7 @@ OscPanel::OscPanel(GuiResources &res)
     subGainAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_gain",     subGainSlider);
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
-    SetSliderTextFormat(subGainSlider, FormatGainDb);
+    DLBS::SetSliderTextFormat(subGainSlider, DLBS::FormatGainDb);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
@@ -94,8 +96,8 @@ void OscPanel::resized()
     auto morphSliderSpace     = mainOscAreaReduced.removeFromBottom(gainLabelHeight);
     auto pitchBendLabelSpace  = oscGainSpace.removeFromTop         (gainLabelHeight);
 
-    oscMorphLabel       .setBounds(morphOSCLabelSpace);
-    oscMorphLabel2      .setBounds(morphMORPHLabelSpace);
+    oscLabel       .setBounds(morphOSCLabelSpace);
+    morphOscLabel      .setBounds(morphMORPHLabelSpace);
     oscMorphSlider      .setBounds(morphSliderSpace);
     oscVisual           .setBounds(mainOscAreaReduced.reduced(sectionSpacerSize));
     pitchBendRangeSlider.setBounds(oscGainSpace);
@@ -114,8 +116,8 @@ void OscPanel::resized()
     auto subMorphSliderSpace     = subOscAreaReduced.removeFromBottom (gainLabelHeight);
 
     subGainLabel  .setBounds(subGainLabelSpace);
-    subMorphLabel .setBounds(subMorphOSCLabelSpace);
-    subMorphLabel2.setBounds(subMorphMORPHLabelSpace);
+    subLabel .setBounds(subMorphOSCLabelSpace);
+    morphSubLabel.setBounds(subMorphMORPHLabelSpace);
     subOctave     .setBounds(subOctaveSpace);
     subGainSlider .setBounds(subGainSpace);
     subMorphSlider.setBounds(subMorphSliderSpace);

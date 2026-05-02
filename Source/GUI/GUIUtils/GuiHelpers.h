@@ -12,7 +12,7 @@
 
 //============================================================
 
-namespace dlbs
+namespace DLBS
 {
     /// Configures a slider's style, colors, and an always-visible value text box.
     /// Text box is placed to the right of horizontal sliders, below vertical and rotary.

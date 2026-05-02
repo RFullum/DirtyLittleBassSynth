@@ -14,7 +14,7 @@
 AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace dlbs;
+    using namespace DLBS;
 
     auto primary = res.theme.primaryAccent;
     auto thumb   = res.theme.textPrimary;

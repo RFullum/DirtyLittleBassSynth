@@ -34,17 +34,17 @@ private:
     OscVisual oscVisual;
     OscVisual subOscVisual;
 
-    juce::Slider   oscMorphSlider;
-    juce::Slider   subMorphSlider;
-    juce::Slider   subGainSlider;
+    juce::Slider     oscMorphSlider;
+    juce::Slider     subMorphSlider;
+    juce::Slider     subGainSlider;
     juce::Slider     pitchBendRangeSlider;
     SegmentedControl subOctave;
 
     juce::Label sectionLabel;
-    juce::Label oscMorphLabel;
-    juce::Label oscMorphLabel2;
-    juce::Label subMorphLabel;
-    juce::Label subMorphLabel2;
+    juce::Label oscLabel;
+    juce::Label morphOscLabel;
+    juce::Label subLabel;
+    juce::Label morphSubLabel;
     juce::Label subGainLabel;
     juce::Label pitchBendRangeLabel;
 

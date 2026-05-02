@@ -31,19 +31,9 @@ void SourcesColumn::resized()
     constexpr int dividerInset = 8;
 
     auto bounds = getLocalBounds();
-
-    // Top: OscPanel. Bottom: AmpAdsrPanel. Equal split.
-    const int topHeight = bounds.getHeight() / 2;
-    auto      topArea   = bounds.removeFromTop(topHeight);
-
-    oscPanel    .setBounds(topArea);
+    oscPanel.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.666f)));
+    rowDivider = bounds.removeFromTop(dividerThick).reduced(dividerInset, 0);
     ampAdsrPanel.setBounds(bounds);
-
-    // Horizontal divider between the two panels, inset from the column edges.
-    rowDivider = juce::Rectangle<int>(dividerInset,
-                                      topHeight - dividerThick / 2,
-                                      getWidth() - dividerInset * 2,
-                                      dividerThick);
 }
 
 void SourcesColumn::Update()

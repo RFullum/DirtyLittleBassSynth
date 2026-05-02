@@ -14,7 +14,7 @@
 LfoPanel::LfoPanel(GuiResources &res)
 : resources(res)
 {
-    using namespace dlbs;
+    using namespace DLBS;
 
     auto accent = res.theme.secondaryAccent;
     auto thumb  = res.theme.textPrimary;

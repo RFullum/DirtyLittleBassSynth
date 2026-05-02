@@ -14,7 +14,7 @@
 MasterColumn::MasterColumn(GuiResources &res)
 : resources(res)
 {
-    using namespace dlbs;
+    using namespace DLBS;
 
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
