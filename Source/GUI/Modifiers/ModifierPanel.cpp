@@ -39,6 +39,16 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     frqShftDryWetSlider.setLookAndFeel(res.dryWetLookAndFeel);
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
+    
+    portaSlider        .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    foldbackSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    ringToneSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    ringPitchSlider    .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    ringDryWetSlider   .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    frqShftPitchSlider .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    frqShftDryWetSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    sHPitchSlider      .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    sHDryWetSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
     DLBS::SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
 
@@ -47,9 +57,9 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     DLBS::SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
     DLBS::SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
     DLBS::SetupLabel(this, sHLabel,      "Sample & Hold", txt, 14.0f);
-    DLBS::SetupLabel(this, toneLabel,    "Tone",          txt, 16.0f);
-    DLBS::SetupLabel(this, pitchLabel,   "Pitch",         txt, 16.0f);
-    DLBS::SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 16.0f);
+    DLBS::SetupLabel(this, toneLabel,    "Tone",          txt, 12.0f);
+    DLBS::SetupLabel(this, pitchLabel,   "Pitch",         txt, 12.0f);
+    DLBS::SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 12.0f);
 
     portaAtt         = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "porta_time",       portaSlider);
     foldbackAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "foldback_dist",    foldbackSlider);
@@ -64,69 +74,47 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 
 void ModifierPanel::resized()
 {
-    constexpr int sectionSpacerSize = 2;
-    constexpr int modHeadingHeight  = 30;
-    constexpr int driveRowHeight    = 90;
-    constexpr int driveLabelHeight  = 26;
+    static constexpr int sectionSpacerSize = 2;
+    static constexpr int rowLabelH         = 35;
+    static constexpr int topSliderSize     = 65;
 
-    auto bounds              = getLocalBounds().reduced(sectionSpacerSize);
-    int  modSectionGridWidth = bounds.getWidth() / 4;
-
-    sectionLabel.setBounds(bounds.removeFromTop(16).reduced(8, 0));
-
-    // Top: Portamento + Foldback Distortion knobs side-by-side, label above each.
-    auto driveRow        = bounds.removeFromTop(driveRowHeight);
-    auto portaCell       = driveRow.removeFromLeft(driveRow.getWidth() / 2);
-    auto portaLabelArea  = portaCell.removeFromTop(driveLabelHeight);
-    auto foldLabelArea   = driveRow.removeFromTop(driveLabelHeight);
-
-    portaLabel    .setBounds(portaLabelArea);
-    portaSlider   .setBounds(portaCell);
-    foldbackLabel .setBounds(foldLabelArea);
-    foldbackSlider.setBounds(driveRow);
-
-    // Top header row: shared column labels (Tone / Pitch / Dry-Wet).
-    auto headingsSpace = bounds.removeFromTop(modHeadingHeight);
+    auto bounds = getLocalBounds().reduced(sectionSpacerSize);
+    sectionLabel.setBounds(bounds.removeFromTop(16));
+    bounds.removeFromTop(50);
+    
+    auto      topArea   = bounds .removeFromTop(125);
+    auto      portaArea = topArea.removeFromLeft(topArea.proportionOfWidth(0.5f));
+    portaLabel    .setBounds(portaArea.removeFromTop(rowLabelH));
+    portaSlider   .setBounds(portaArea.withSizeKeepingCentre(topSliderSize, topSliderSize));
+    foldbackLabel .setBounds(topArea.removeFromTop(rowLabelH));
+    foldbackSlider.setBounds(topArea.withSizeKeepingCentre(topSliderSize, topSliderSize));
+    
+    bounds.removeFromTop(25);
+    bounds.removeFromRight(10);
+    const int modSectionGridWidth = bounds.getWidth() / 4;
+    auto      headingsSpace       = bounds.removeFromTop(20);
     headingsSpace.removeFromLeft(modSectionGridWidth);    // skip the row-name column
-    auto toneHeading  = headingsSpace.removeFromLeft(modSectionGridWidth);
-    auto pitchHeading = headingsSpace.removeFromLeft(modSectionGridWidth);
+    toneLabel    .setBounds(headingsSpace.removeFromLeft(modSectionGridWidth));
+    pitchLabel   .setBounds(headingsSpace.removeFromLeft(modSectionGridWidth));
+    dryWetLabel  .setBounds(headingsSpace.removeFromLeft(modSectionGridWidth));
 
-    toneLabel  .setBounds(toneHeading);
-    pitchLabel .setBounds(pitchHeading);
-    dryWetLabel.setBounds(headingsSpace);
+    static constexpr int rowHeight = 65;
 
-    int rowHeight = bounds.getHeight() / 3;
-
-    // Row-name labels (left column).
-    auto modTypeColumn = bounds.removeFromLeft(modSectionGridWidth);
-    auto ringNameArea  = modTypeColumn.removeFromTop(rowHeight);
-    auto frqNameArea   = modTypeColumn.removeFromTop(rowHeight);
-
-    ringLabel   .setBounds(ringNameArea);
-    frqShftLabel.setBounds(frqNameArea);
-    sHLabel     .setBounds(modTypeColumn);
-
-    // Ring Mod row (Tone / Pitch / Dry-Wet).
-    auto ringKnobs   = bounds.removeFromTop(rowHeight);
-    auto ringTonePos = ringKnobs.removeFromLeft(modSectionGridWidth);
-    auto ringPitchPos = ringKnobs.removeFromLeft(modSectionGridWidth);
-
-    ringToneSlider  .setBounds(ringTonePos);
-    ringPitchSlider .setBounds(ringPitchPos);
-    ringDryWetSlider.setBounds(ringKnobs);
-
-    // Freq Shift row (no Tone, just Pitch / Dry-Wet).
-    auto frqKnobs = bounds.removeFromTop(rowHeight);
-    frqKnobs.removeFromLeft(modSectionGridWidth);                       // skip Tone column
-    auto frqPitchPos = frqKnobs.removeFromLeft(modSectionGridWidth);
-
-    frqShftPitchSlider .setBounds(frqPitchPos);
-    frqShftDryWetSlider.setBounds(frqKnobs);
-
-    // Sample & Hold row (no Tone, just Pitch / Dry-Wet).
-    bounds.removeFromLeft(modSectionGridWidth);                            // skip Tone column
-    auto sHPitchPos = bounds.removeFromLeft(modSectionGridWidth);
-
-    sHPitchSlider .setBounds(sHPitchPos);
-    sHDryWetSlider.setBounds(bounds);
+    auto ringModRow  = bounds.removeFromTop(rowHeight);
+    auto freqShftRow = bounds.removeFromTop(rowHeight);
+    auto sAndHRow    = bounds.removeFromTop(rowHeight);
+    ringLabel       .setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
+    ringToneSlider  .setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
+    ringPitchSlider .setBounds(ringModRow.removeFromRight(modSectionGridWidth));
+    ringDryWetSlider.setBounds(ringModRow.removeFromRight(modSectionGridWidth));
+    
+    frqShftLabel       .setBounds(freqShftRow.removeFromLeft(modSectionGridWidth));
+    freqShftRow        .removeFromLeft(modSectionGridWidth);
+    frqShftPitchSlider .setBounds(freqShftRow.removeFromLeft(modSectionGridWidth));
+    frqShftDryWetSlider.setBounds(freqShftRow.removeFromLeft(modSectionGridWidth));
+    
+    sHLabel       .setBounds(sAndHRow.removeFromLeft(modSectionGridWidth));
+    sAndHRow      .removeFromLeft(modSectionGridWidth);
+    sHPitchSlider .setBounds(sAndHRow.removeFromLeft(modSectionGridWidth));
+    sHDryWetSlider.setBounds(sAndHRow.removeFromLeft(modSectionGridWidth));
 }
