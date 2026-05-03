@@ -220,7 +220,7 @@ void SpikeWavetable::BuildLevel(int level)
     // High-pass each level. Cutoff is a fixed multiple of the wavetable's
     // generation fundamental; same shape per level, applied to that level's content.
     const float fundamental = sampleRate / (float)waveTableSize;
-    const float cutoffFreq  = fundamental * 10.0f;
+    const float cutoffFreq  = fundamental * 3.0f;
 
     juce::IIRFilter highPass;
     highPass.setCoefficients(juce::IIRCoefficients::makeHighPass(sampleRate, cutoffFreq, 2.0f));
