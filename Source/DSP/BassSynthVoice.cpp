@@ -399,6 +399,17 @@ void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::at
     filtLFOShape = shape;
 }
 
+void BassSynthVoice::SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, std::atomic<float> *syncDivIndex)
+{
+    filtLFOSyncOn       = syncOn;
+    filtLFOSyncDivIndex = syncDivIndex;
+}
+
+void BassSynthVoice::SetTempoSnapshot(const TempoSnapshot *snapshot)
+{
+    tempoSnapshotPtr = snapshot;
+}
+
 void BassSynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
 {
     portamentoAmount = portaTime;
@@ -495,7 +506,34 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     ringMod  .SetRingToneSlider(*ringModTone);
     freqShift.OscMorph(levels.mainSin, levels.mainSpike, levels.mainSaw);
     freqShift.ModFreq(freq, freqShiftPitchVal);
-    filterLFO.SetIncrement(*filtLFOFreq, 1.0f);
+
+    // === Filter LFO frequency / phase ===
+    // FRQ mode: free-run at the slider's Hz value.
+    // SYNC mode: derive Hz from host BPM × subdivision. When the transport is
+    // playing, lock phase to ppqPosition so the LFO cycles align with the song
+    // grid; when stopped, free-run at the synced equivalent rate.
+    const bool lfoSyncOn = (filtLFOSyncOn != nullptr) && (*filtLFOSyncOn > 0.5f);
+
+    float lfoFreqHz = *filtLFOFreq;
+
+    if (lfoSyncOn && filtLFOSyncDivIndex != nullptr && tempoSnapshotPtr != nullptr)
+    {
+        const auto  tempo            = tempoSnapshotPtr->Read();
+        const int   divIndex         = juce::jlimit(0, 11, (int)*filtLFOSyncDivIndex);
+        const float subdivQuarters   = SubdivisionInQuarters(divIndex);
+        const float beatsPerSecond   = tempo.bpm / 60.0f;
+
+        lfoFreqHz = beatsPerSecond / juce::jmax(0.0001f, subdivQuarters);
+
+        if (tempo.isPlaying)
+        {
+            const float phaseInCycles = tempo.ppqPosition / juce::jmax(0.0001f, subdivQuarters);
+            const float wrapped       = phaseInCycles - std::floor(phaseInCycles);
+            filterLFO.SetPhase(wrapped);
+        }
+    }
+
+    filterLFO.SetIncrement(lfoFreqHz, 1.0f);
 
     foldbackDistortionSmooth.setTargetValue(*foldbackDistortion);
     subGainSmooth           .setTargetValue(*subGain);

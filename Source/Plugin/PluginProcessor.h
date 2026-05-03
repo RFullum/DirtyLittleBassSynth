@@ -98,6 +98,9 @@ private:
     std::atomic<float>* filtLFOFreqParameter;
     std::atomic<float>* filtLFOAmtParameter;
     std::atomic<float>* filtLFOShapeParameter;
+
+    std::atomic<float>* filtLFOSyncOnParameter;
+    std::atomic<float>* filtLFOSyncDivParameter;
     
     std::atomic<float>* portaTimeParameter;
     

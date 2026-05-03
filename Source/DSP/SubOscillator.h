@@ -31,6 +31,11 @@ public:
      */
     float Process(float sinGain, float squareGain, float sawGain);
     float GetSquareWavetableValue(int index);
+
+    /// Sets the read head of all three internal wavetables to a normalised
+    /// phase (0..1, wraps if out of range). Used to lock the filter-LFO to
+    /// host transport position when sync mode is on.
+    void  SetPhase(float phase01);
     
     
 private:

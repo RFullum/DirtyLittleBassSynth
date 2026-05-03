@@ -129,6 +129,9 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     filtLFOFreqParameter  = parameters.getRawParameterValue("filtLFO_freq");
     filtLFOAmtParameter   = parameters.getRawParameterValue("filtLFO_amt");
     filtLFOShapeParameter = parameters.getRawParameterValue("filtLFO_shape");
+
+    filtLFOSyncOnParameter  = parameters.getRawParameterValue("filtLFO_sync");
+    filtLFOSyncDivParameter = parameters.getRawParameterValue("filtLFO_sync_div");
     
     masterGainParameter = parameters.getRawParameterValue("master_gain");
 
@@ -166,6 +169,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
         v->SetFilterParamPointers       (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
         v->SetFilterADSRParamPointers   (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
         v->SetFilterLFOParamPointers    (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->SetFilterLFOSyncParamPointers(filtLFOSyncOnParameter, filtLFOSyncDivParameter);
+        v->SetTempoSnapshot             (&tempoSnapshot);
         v->SetMasterGainParamPointers   (masterGainParameter);
         v->updatePitchBendRange         (*pitchBendParameter);
     }

@@ -50,3 +50,10 @@ float SubOsc::GetSquareWavetableValue(int index)
 {
     return squareSub.GetWavetableSampleValue(index);
 }
+
+void SubOsc::SetPhase(float phase01)
+{
+    sinSub   .SetPhase(phase01);
+    squareSub.SetPhase(phase01);
+    sawSub   .SetPhase(phase01);
+}

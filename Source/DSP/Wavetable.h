@@ -36,6 +36,10 @@ public:
     void  SetIncrement(float noteFreq);
     float GetWavetableSampleValue(int index);   // returns level 0; for visualizer use
 
+    /// Sets the read head to a normalised phase (0..1, wraps if out of range).
+    /// Used by the filter-LFO sync stage to lock the LFO to host transport position.
+    void  SetPhase(float phase01);
+
     static constexpr int   waveTableSize     = 1024;
     static constexpr int   numMipmapLevels   = 10;     // covers ~10 octaves from lowestFundamental
     static constexpr int   maxHarmonics      = 57;     // tonal cap; aliasing cap is computed per level

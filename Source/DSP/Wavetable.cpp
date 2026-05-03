@@ -86,6 +86,12 @@ float Wavetable::GetWavetableSampleValue(int index)
     return waveTable[0][index];
 }
 
+void Wavetable::SetPhase(float phase01)
+{
+    const float wrapped = phase01 - std::floor(phase01);
+    readHeadPos = wrapped * (float) waveTableSize;
+}
+
 void Wavetable::BuildLevel(int level)
 {
     sinOsc.setFrequency(sampleRate / (float)waveTableSize);

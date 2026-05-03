@@ -17,6 +17,7 @@
 #include "DryWet.h"
 #include "Modifiers.h"
 #include "FilterSection.h"
+#include "TempoSnapshot.h"
 
 //======================================================
 
@@ -79,6 +80,11 @@ public:
     void SetFilterLFOParamPointers(std::atomic<float>   *freq
                                    , std::atomic<float> *amount
                                    , std::atomic<float> *shape);
+    /// LFO sync mode + subdivision choice.
+    void SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, std::atomic<float> *syncDivIndex);
+
+    /// One-time setup of the host transport snapshot, used when sync mode is on.
+    void SetTempoSnapshot(const TempoSnapshot *snapshot);
     void SetPortamentoParamPointers(std::atomic<float> *portaTime);
     void SetMasterGainParamPointers(std::atomic<float> *gainAmt);
     void SetFilterSpec(float &sampRate, float &sampleSize);
@@ -260,6 +266,11 @@ private:
     std::atomic<float> *filtLFOAmt;
     std::atomic<float> *filtLFOShape;
     SubOscParamControl  filtLFOShapeControl;
+
+    // Sync mode (filtLFO_sync, filtLFO_sync_div) + host transport snapshot.
+    std::atomic<float>  *filtLFOSyncOn       = nullptr;
+    std::atomic<float>  *filtLFOSyncDivIndex = nullptr;
+    const TempoSnapshot *tempoSnapshotPtr   = nullptr;
     
     // Master Gain
     float masterGain;
