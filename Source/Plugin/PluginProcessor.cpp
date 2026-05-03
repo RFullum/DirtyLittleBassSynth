@@ -21,14 +21,14 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     // Osc Params
                     std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"osc_morph",        1}, "Osc Morph",  juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("Morph")),
                     std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"sub_osc_morph",    1}, "Sub Morph",  juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("Morph")),
-                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"sub_osc_gain",     1}, "Sub Gain",   juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 4.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("gain")),
+                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"sub_osc_gain",     1}, "Sub Gain",   juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("gain")),
                     std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"pitch_bend_range", 1}, "Pitch Bend", juce::NormalisableRange<float>(0.0f, 24.0f, 1.0f, 1.0f, false), 12.0f, juce::AudioParameterFloatAttributes().withLabel("semitones")),
                     std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"sub_osc_octave",   1}, "Sub Octave", juce::StringArray( {"0", "-1 Oct", "-2 Oct"} ), 0 ),
                     
                     // Amp ADSR Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_attack",  1}, "Amp Attack",  juce::NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.1f, juce::AudioParameterFloatAttributes().withLabel("attack")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_decay",   1}, "Amp Decay",   juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f,  0.325f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("decay")),
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_sustain", 1}, "Amp Sustain", juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  4.0f,   false), 0.75f, juce::AudioParameterFloatAttributes().withLabel("sustain level")),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_sustain", 1}, "Amp Sustain", juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  1.0f,   false), 0.75f, juce::AudioParameterFloatAttributes().withLabel("sustain level")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"amp_release", 1}, "Amp Release", juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f,  0.325f, false), 0.1f, juce::AudioParameterFloatAttributes().withLabel("release")),
                     
                     // Portament Params
@@ -58,13 +58,13 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     // Filter Env Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_attack",  1}, "Filter Attack",        juce::NormalisableRange<float>(0.01f, 4.0f, 0.001f, 0.325f, false), 0.01f, juce::AudioParameterFloatAttributes().withLabel("attack")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_decay",   1}, "Filter Decay",         juce::NormalisableRange<float>(0.1f,  4.0f, 0.01f,  0.325f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("decay")),
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_sustain", 1}, "Filter Sustain",       juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  4.0f,   false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("sustain level")),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_sustain", 1}, "Filter Sustain",       juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  1.0f,   false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("sustain level")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_release", 1}, "Filter Release",       juce::NormalisableRange<float>(0.01f, 4.0f, 0.01f,  0.325f, false), 0.1f, juce::AudioParameterFloatAttributes().withLabel("release")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_COAmt",   1}, "Filter Env to Cutoff", juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  1.0f,   false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("env to cutoff")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtEnv_ResAmt",  1}, "Filter Env to Res",    juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f,  1.0f,   false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("env to resonance")),
                     
                     // Filter LFO Params
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_freq",  1}, "Filter LFO Freq",   juce::NormalisableRange<float>(0.01f, 15.0f, 0.01f, 1.0f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("lfo freq")),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_freq",  1}, "Filter LFO Freq",   juce::NormalisableRange<float>(0.01f, 15.0f, 0.01f, 0.6f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("lfo freq")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_amt",   1}, "Filter LFO Amount", juce::NormalisableRange<float>(0.0f,  1.0f,  0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("lfo amt")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_shape", 1}, "Filter LFO Shape",  juce::NormalisableRange<float>(0.0f,  2.0f,  0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("lfo shape")),
                     
