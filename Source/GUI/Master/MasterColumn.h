@@ -60,6 +60,8 @@ private:
     OutMeter outMeter;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wideAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> monoCrossoverAtt;
 
     // Reserved space for the future output scope (audio thread -> UI ring buffer).
     juce::Rectangle<int> scopeRect;

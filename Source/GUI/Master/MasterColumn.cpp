@@ -74,14 +74,14 @@ MasterColumn::MasterColumn(GuiResources &res)
     DLBS::SetupLabel(this, wideLabel, "Wide", txt, 14.0f);
 
     wideSlider.setLookAndFeel           (res.dialLookAndFeel);
-    wideSlider.setRange                 (-1.0, 1.0, 0.001);
-    wideSlider.setValue                 (0.0, juce::dontSendNotification);
     wideSlider.setTextBoxStyle          (juce::Slider::NoTextBox, false, 0, 0);
     wideSlider.setDoubleClickReturnValue(true, 0.0);
 
     // Tells OtherLookAndFeel::drawLinearSlider to fill from the centre of the track
     // to the thumb instead of from the left edge.
     wideSlider.getProperties().set("bipolarFill", true);
+
+    wideAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "master_wide", wideSlider);
 
     // === Bass Mono-izer crossover (placeholder) ===
     DLBS::SetupSlider(this
@@ -93,9 +93,10 @@ MasterColumn::MasterColumn(GuiResources &res)
     DLBS::SetupLabel(this, monoCrossoverLabel, "Mono Below", txt, 14.0f);
 
     monoCrossoverSlider.setLookAndFeel    (res.dialLookAndFeel);
-    monoCrossoverSlider.setRange          (20.0, 300.0, 1.0);
-    monoCrossoverSlider.setValue          (120.0, juce::dontSendNotification);
     monoCrossoverSlider.setTextValueSuffix(" Hz");
+
+    monoCrossoverAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+                          *res.apvts, "mono_below_freq", monoCrossoverSlider);
 
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);

@@ -36,6 +36,10 @@
         <FILE id="LRcUpf" name="Modifiers.cpp" compile="1" resource="0" file="Source/DSP/Modifiers.cpp"/>
         <FILE id="CsBRMr" name="Modifiers.h" compile="0" resource="0" file="Source/DSP/Modifiers.h"/>
         <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
+        <FILE id="GR000201" name="MasterChain.cpp" compile="1" resource="0"
+              file="Source/DSP/MasterChain.cpp"/>
+        <FILE id="GR000202" name="MasterChain.h" compile="0" resource="0"
+              file="Source/DSP/MasterChain.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">

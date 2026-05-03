@@ -69,7 +69,11 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"filtLFO_shape", 1}, "Filter LFO Shape",  juce::NormalisableRange<float>(0.0f,  2.0f,  0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("lfo shape")),
                     
                     // Master Gain
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_gain", 1}, "Master Gain", juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, juce::AudioParameterFloatAttributes().withLabel("master gain") )
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_gain", 1}, "Master Gain", juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, juce::AudioParameterFloatAttributes().withLabel("master gain") ),
+
+                    // Master Stereo (Haas widener + bass mono-izer crossover)
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_wide",     1}, "Stereo Width",    juce::NormalisableRange<float>(-1.0f,    1.0f, 0.001f, 1.0f, false),   0.0f, juce::AudioParameterFloatAttributes().withLabel("widen")),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mono_below_freq", 1}, "Mono Below Freq", juce::NormalisableRange<float>(20.0f, 300.0f, 1.0f,   0.5f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("mono crossover"))
                 })
 {
     oscMorphParameter    = parameters.getRawParameterValue("osc_morph");
@@ -112,7 +116,12 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     filtLFOShapeParameter = parameters.getRawParameterValue("filtLFO_shape");
     
     masterGainParameter = parameters.getRawParameterValue("master_gain");
-    
+
+    masterWideParameter    = parameters.getRawParameterValue("master_wide");
+    monoBelowFreqParameter = parameters.getRawParameterValue("mono_below_freq");
+
+    masterChain.SetParamPointers(masterWideParameter, monoBelowFreqParameter);
+
     // Create voices and cache typed pointers (synth owns them for our lifetime).
     typedVoices.reserve(voiceCount);
     for (int i = 0; i < voiceCount; ++i)
@@ -147,6 +156,9 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int sa
 
     for (auto* v : typedVoices)
         v->Init(sampleRate, samplesPerBlock);
+
+    masterChain.Prepare(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+    masterChain.Reset();
 }
 
 void DirtyLittleBassSynthAudioProcessor::releaseResources() {}
@@ -180,6 +192,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
 
     for (auto* v : typedVoices)
         v->updatePitchBendRange(*pitchBendParameter);
+
+    masterChain.Process(buffer);
 
     outputLevelBuffer.clear();
     outputLevelBuffer = buffer;

@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "BassSynthVoice.h"
+#include "MasterChain.h"
 
 //==============================================================================
 
@@ -88,6 +89,11 @@ private:
     std::atomic<float>* portaTimeParameter;
     
     std::atomic<float>* masterGainParameter;
+
+    std::atomic<float>* masterWideParameter;
+    std::atomic<float>* monoBelowFreqParameter;
+
+    MasterChain masterChain;
 
     juce::Synthesiser synth;
     int voiceCount = 1;
