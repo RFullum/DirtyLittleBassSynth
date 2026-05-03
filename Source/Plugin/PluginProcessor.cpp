@@ -51,8 +51,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_mix",   1}, "S&H Mix",   juce::NormalisableRange<float>(0.0f, 1.0f,   0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("s&h dry/wet")),
                     
                     // Filter Params
-                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"filter_cutoff", 1}, "Filter Cutoff",    juce::NormalisableRange<float>(1.1f, 100.0f, 0.01f, 0.25f, false), 100.0f, juce::AudioParameterFloatAttributes().withLabel("cutoff")),
-                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"filter_res",    1}, "Filter Resonance", juce::NormalisableRange<float>(1.0f, 2.0f,   0.01f, 1.0f,  false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("resonance")),
+                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"filter_cutoff", 1}, "Filter Cutoff",    juce::NormalisableRange<float>(0.0f, 1.0f,   0.001f, 1.0f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("cutoff")),
+                    std::make_unique<juce::AudioParameterFloat> (juce::ParameterID{"filter_res",    1}, "Filter Resonance", juce::NormalisableRange<float>(1.0f, 2.0f,   0.01f,  1.0f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("resonance")),
                     std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"filter_type",   1}, "Filter Type",      juce::StringArray( {"-12LPF", "-24LPF", "-48LPF", "Notch"} ), 0 ),
                     
                     // Filter Env Params

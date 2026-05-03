@@ -14,12 +14,17 @@
 
 void FilterModulation::KeyMapTracked(float noteFreq, float cutoffPos)
 {
-    cutoffFreq = juce::jmap(cutoffPos, 1.0f, 100.0f, noteFreq, maxCutoff);
+    // Floor sits three octaves below the played note Exponential map → uniform octave
+    // coverage per slider unit.
+    const float floor = juce::jmax(minCutoff, noteFreq * 0.125f);
+    const float t     = juce::jlimit(0.0f, 1.0f, cutoffPos);
+    cutoffFreq        = floor * std::pow(maxCutoff / floor, t);
 }
 
 void FilterModulation::KeyMapFixed(float cutoffPos)
 {
-    cutoffFreq = juce::jmap(cutoffPos, 1.0f, 100.0f, 20.0f, maxCutoff);
+    const float t = juce::jlimit(0.0f, 1.0f, cutoffPos);
+    cutoffFreq    = minCutoff * std::pow(maxCutoff / minCutoff, t);
 }
 
 void FilterModulation::ApplyEnvAndLfo(float envVal, float amtToCO, float amtToRes, float lfoVal, float amtToLFO)
@@ -157,9 +162,7 @@ float NotchFilter::ProcessFilter(float   noteFreq
                                  , float lfoVal
                                  , float amtToLFO)
 {
-    juce::ignoreUnused(noteFreq);                       // notch is not key-tracked
-
-    mod.KeyMapFixed(cutoff);
+    mod.KeyMapTracked(noteFreq, cutoff);
     mod.resonance = res;
     mod.ApplyEnvAndLfo(envVal, amtToCO, amtToRes, lfoVal, amtToLFO);
 

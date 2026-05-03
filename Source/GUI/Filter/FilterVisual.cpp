@@ -94,8 +94,11 @@ void FilterVisual::buildPaths(int type)
 
     const float x1 = reducer;
     const float y1 = halfHeight;
-    const float x2 = juce::jmap(powf(cutoffFreq * 0.01f, 0.25f),
-                                0.32f, 1.0f,
+    // cutoffFreq is the normalised slider position (0..1). The DSP applies an
+    // exponential frequency map per-note; for the visual we just lay it out linearly
+    // across the panel width — the slider feel is what carries the perceptual curve.
+    const float x2 = juce::jmap(juce::jlimit(0.0f, 1.0f, cutoffFreq),
+                                0.0f, 1.0f,
                                 15.0f, (float)getWidth() - reducer);
     const float y2 = halfHeight - resMap;
     const float bottomY = (float)getHeight() - reducer;

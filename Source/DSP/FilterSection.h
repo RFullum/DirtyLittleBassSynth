@@ -19,7 +19,7 @@ struct FilterModulation
 {
     // Static config
     float sampleRate    = 44100.0f;
-    float maxCutoff     = 17000.0f;
+    float maxCutoff     = 18000.0f;
     float minCutoff     = 20.0f;
     float maxResonance  = 3.0f;
 
@@ -35,10 +35,13 @@ struct FilterModulation
     float cutoffLFOPrev      = 1000.0f;
     float resonanceScalePrev = 0.1f;
 
-    /// Maps cutoff slider position 1..100 to (noteFreq..maxCutoff). Key-tracked.
+    /// Maps normalised cutoff position (0..1) to a frequency, key-tracked. Floor is
+    /// two octaves below the played note; ceiling is maxCutoff. Mapping is exponential
+    /// so each equal-width slice of the slider covers the same number of octaves.
     void KeyMapTracked(float noteFreq, float cutoffPos);
 
-    /// Maps cutoff slider position 1..100 to (20Hz..maxCutoff). Not key-tracked.
+    /// Maps normalised cutoff position (0..1) to a frequency, not key-tracked.
+    /// Floor is minCutoff (20 Hz), ceiling is maxCutoff. Exponential mapping.
     void KeyMapFixed(float cutoffPos);
 
     /// Combines envelope and LFO modulation onto cutoffLFO and resonanceScale.
