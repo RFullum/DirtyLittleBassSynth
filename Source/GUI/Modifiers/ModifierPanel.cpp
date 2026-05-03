@@ -40,6 +40,12 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
     
+    // Dry/Wet rotaries get a 50% tick + brighter highlight when near centre,
+    // since 50/50 is a meaningful balance point on those controls.
+    ringDryWetSlider   .getProperties().set("snapAt50", true);
+    frqShftDryWetSlider.getProperties().set("snapAt50", true);
+    sHDryWetSlider     .getProperties().set("snapAt50", true);
+
     portaSlider        .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     foldbackSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     ringToneSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);

@@ -43,6 +43,31 @@ void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int wid
     valueArc.addCentredArc(cx, cy, arcRadius, arcRadius, 0.0f, rotaryStartAngle, curAngle, true);
     g.setColour(fillColor);
     g.strokePath(valueArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+
+    // "snapAt50" property: small radial tick at the centre of the rotary range.
+    // Brightens to full thumb-colour when within 1.5% of dead centre. No actual
+    // snapping behaviour — purely a visual cue for finding 50% (e.g. on dry/wet
+    // controls where 50/50 is a meaningful balance point).
+    const bool snapAt50 = (bool) slider.getProperties().getWithDefault("snapAt50", false);
+
+    if (snapAt50)
+    {
+        const float centreAngle = juce::jmap(0.5f, 0.0f, 1.0f, rotaryStartAngle, rotaryEndAngle);
+        const bool  atCentre    = std::abs(sliderPos - 0.5f) < 0.015f;
+
+        const auto  thumbColor  = slider.findColour(juce::Slider::thumbColourId);
+        g.setColour(atCentre ? thumbColor : thumbColor.withAlpha(0.35f));
+
+        const float r1 = arcRadius - arcThick * 0.5f - 1.0f;
+        const float r2 = arcRadius + arcThick * 0.5f + 1.0f;
+
+        const float x1 = cx + std::sin(centreAngle) * r1;
+        const float y1 = cy - std::cos(centreAngle) * r1;
+        const float x2 = cx + std::sin(centreAngle) * r2;
+        const float y2 = cy - std::cos(centreAngle) * r2;
+
+        g.drawLine(x1, y1, x2, y2, 1.5f);
+    }
 }
 
 //============================================================
@@ -60,6 +85,8 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
 
     const auto fillColor  = slider.findColour(juce::Slider::trackColourId);
     const auto thumbColor = slider.findColour(juce::Slider::thumbColourId);
+
+    const bool snapAt50 = (bool) slider.getProperties().getWithDefault("snapAt50", false);
 
     if (style == juce::Slider::SliderStyle::LinearHorizontal)
     {
@@ -94,6 +121,18 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
                       , (float)y + (float)height * 0.5f - thumbRadius
                       , thumbRadius * 2.0f
                       , thumbRadius * 2.0f);
+
+        // 50% snap-marker tick (above + below the track at the centre x).
+        if (snapAt50)
+        {
+            const float norm     = (sliderPos - trackX) / juce::jmax(1.0f, trackW);
+            const bool  atCentre = std::abs(norm - 0.5f) < 0.015f;
+            const float tickX    = trackX + trackW * 0.5f;
+
+            g.setColour(atCentre ? thumbColor : thumbColor.withAlpha(0.35f));
+            g.drawLine(tickX, trackY - 2.0f,
+                       tickX, trackY + trackThick + 2.0f, 1.5f);
+        }
     }
     else if (style == juce::Slider::SliderStyle::LinearVertical)
     {
@@ -114,6 +153,20 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
                       , sliderPos - thumbRadius
                       , thumbRadius * 2.0f
                       , thumbRadius * 2.0f);
+
+        // 50% snap-marker tick (left + right of the track at the centre y).
+        // For vertical sliders, lower y is higher value, so invert when computing
+        // the normalised position from the thumb's pixel coordinate.
+        if (snapAt50)
+        {
+            const float norm     = 1.0f - (sliderPos - trackY) / juce::jmax(1.0f, trackH);
+            const bool  atCentre = std::abs(norm - 0.5f) < 0.015f;
+            const float tickY    = trackY + trackH * 0.5f;
+
+            g.setColour(atCentre ? thumbColor : thumbColor.withAlpha(0.35f));
+            g.drawLine(trackX - 2.0f,                  tickY,
+                       trackX + trackThick + 2.0f,     tickY, 1.5f);
+        }
     }
     else
     {

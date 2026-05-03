@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
+#include "DryWetSlider.h"
 
 //============================================================
 
@@ -40,11 +41,11 @@ private:
     juce::Slider foldbackSlider;
     juce::Slider ringToneSlider;
     juce::Slider ringPitchSlider;
-    juce::Slider ringDryWetSlider;
+    DryWetSlider ringDryWetSlider;
     juce::Slider frqShftPitchSlider;
-    juce::Slider frqShftDryWetSlider;
+    DryWetSlider frqShftDryWetSlider;
     juce::Slider sHPitchSlider;
-    juce::Slider sHDryWetSlider;
+    DryWetSlider sHDryWetSlider;
 
     juce::TextButton portaOnButton;
     juce::TextButton portaLegatoButton;
