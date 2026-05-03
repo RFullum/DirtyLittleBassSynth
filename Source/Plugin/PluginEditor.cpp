@@ -103,5 +103,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (leftMag  < 0.001f) leftMag  = 0.0f;
     if (rightMag < 0.001f) rightMag = 0.0f;
 
-    masterColumn.Update(leftMag, rightMag, (float)processor.getSampleRate());
+    const float grDb = processor.GetMasterGainReductionDb();
+    masterColumn.Update(leftMag, rightMag, grDb, (float)processor.getSampleRate());
 }

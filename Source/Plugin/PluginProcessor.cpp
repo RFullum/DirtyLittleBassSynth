@@ -73,7 +73,11 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
                     // Master Stereo (Haas widener + bass mono-izer crossover)
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_wide",     1}, "Stereo Width",    juce::NormalisableRange<float>(-1.0f,    1.0f, 0.001f, 1.0f, false),   0.0f, juce::AudioParameterFloatAttributes().withLabel("widen")),
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mono_below_freq", 1}, "Mono Below Freq", juce::NormalisableRange<float>(20.0f, 300.0f, 1.0f,   0.5f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("mono crossover"))
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mono_below_freq", 1}, "Mono Below Freq", juce::NormalisableRange<float>(20.0f, 300.0f, 1.0f,   0.5f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("mono crossover")),
+
+                    // Master Limiter
+                    std::make_unique<juce::AudioParameterBool> (juce::ParameterID{"limiter_on",      1}, "Limiter On",     true),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"limiter_ceiling", 1}, "Limiter Ceiling", juce::NormalisableRange<float>(-12.0f, 0.0f, 0.1f, 1.0f, false), -0.1f, juce::AudioParameterFloatAttributes().withLabel("ceiling"))
                 })
 {
     oscMorphParameter    = parameters.getRawParameterValue("osc_morph");
@@ -120,7 +124,11 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     masterWideParameter    = parameters.getRawParameterValue("master_wide");
     monoBelowFreqParameter = parameters.getRawParameterValue("mono_below_freq");
 
-    masterChain.SetParamPointers(masterWideParameter, monoBelowFreqParameter);
+    limiterOnParameter      = parameters.getRawParameterValue("limiter_on");
+    limiterCeilingParameter = parameters.getRawParameterValue("limiter_ceiling");
+
+    masterChain.SetParamPointers       (masterWideParameter, monoBelowFreqParameter);
+    masterChain.SetLimiterParamPointers(limiterOnParameter,  limiterCeilingParameter);
 
     // Create voices and cache typed pointers (synth owns them for our lifetime).
     typedVoices.reserve(voiceCount);

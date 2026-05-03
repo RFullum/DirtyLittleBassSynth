@@ -47,6 +47,17 @@ void MasterChain::Prepare(double sr, int blockSize, int numChannels)
     haasBuffer.setSize(juce::jmax(1, numChannels), haasBufferSize, false, true, true);
     haasBuffer.clear();
     writePos = 0;
+
+    // Limiter envelope coefficients. 2 ms attack snaps the envelope onto peaks
+    // before they cross the ceiling; 80 ms release lets the gain return slowly so
+    // limiting doesn't pump audibly.
+    constexpr float limiterAttackSec  = 0.002f;
+    constexpr float limiterReleaseSec = 0.080f;
+
+    limiterAttackCoeff  = std::exp(-1.0f / (float) (sr * limiterAttackSec));
+    limiterReleaseCoeff = std::exp(-1.0f / (float) (sr * limiterReleaseSec));
+    limiterEnvelope     = 0.0f;
+    currentGRDb.store(0.0f, std::memory_order_relaxed);
 }
 
 void MasterChain::Reset()
@@ -59,6 +70,9 @@ void MasterChain::Reset()
 
     widthSmooth    .setCurrentAndTargetValue(widthSmooth.getCurrentValue());
     crossoverSmooth.setCurrentAndTargetValue(crossoverSmooth.getCurrentValue());
+
+    limiterEnvelope = 0.0f;
+    currentGRDb.store(0.0f, std::memory_order_relaxed);
 }
 
 void MasterChain::Process(juce::AudioBuffer<float> &buffer)
@@ -86,6 +100,14 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
     }
 
     widthSmooth.setTargetValue(*widthParam);
+
+    // Limiter setup (block-rate). When off, signal passes through unmodified and
+    // the GR meter holds at 0 dB.
+    const bool  limiterOn   = (limiterOnParam != nullptr) && (*limiterOnParam > 0.5f);
+    const float ceilingDb   = (limiterCeilingDbParam != nullptr) ? limiterCeilingDbParam->load() : 0.0f;
+    const float ceilingLin  = juce::Decibels::decibelsToGain(ceilingDb);
+
+    float blockMaxGRDb = 0.0f;
 
     auto *bufL = buffer.getWritePointer(0);
     auto *bufR = numChannels > 1 ? buffer.getWritePointer(1) : nullptr;
@@ -133,14 +155,54 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
 
         writePos = (writePos + 1) & bufMask;
 
-        bufL[i] = lowMono + outHighL;
+        float sampL = lowMono + outHighL;
+        float sampR = lowMono + outHighR;
+
+        // === Limiter (post mono+widen) ===
+        if (limiterOn)
+        {
+            const float peak = juce::jmax(std::abs(sampL), std::abs(sampR));
+
+            // Envelope follower: fast attack onto peaks, slow release.
+            if (peak > limiterEnvelope)
+                limiterEnvelope = limiterAttackCoeff  * (limiterEnvelope - peak) + peak;
+            else
+                limiterEnvelope = limiterReleaseCoeff * (limiterEnvelope - peak) + peak;
+
+            const float gain = (limiterEnvelope > ceilingLin)
+                                   ? (ceilingLin / juce::jmax(1.0e-9f, limiterEnvelope))
+                                   : 1.0f;
+
+            sampL *= gain;
+            sampR *= gain;
+
+            const float grDb = (gain < 1.0f)
+                                   ? -juce::Decibels::gainToDecibels(juce::jmax(1.0e-6f, gain))
+                                   : 0.0f;
+
+            blockMaxGRDb = juce::jmax(blockMaxGRDb, grDb);
+        }
+
+        bufL[i] = sampL;
         if (bufR != nullptr)
-            bufR[i] = lowMono + outHighR;
+            bufR[i] = sampR;
     }
+
+    // Publish the block's peak gain reduction for the UI thread.
+    currentGRDb.store(limiterOn
+                        ? blockMaxGRDb
+                        : 0.0f
+                      , std::memory_order_relaxed);
 }
 
 void MasterChain::SetParamPointers(std::atomic<float> *widthAmt, std::atomic<float> *monoCrossover)
 {
     widthParam           = widthAmt;
     monoCrossoverHzParam = monoCrossover;
+}
+
+void MasterChain::SetLimiterParamPointers(std::atomic<float> *limiterOn, std::atomic<float> *ceilingDb)
+{
+    limiterOnParam        = limiterOn;
+    limiterCeilingDbParam = ceilingDb;
 }

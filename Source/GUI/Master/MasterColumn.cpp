@@ -36,20 +36,15 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     DLBS::SetSliderTextFormat(masterGainSlider, DLBS::FormatGainDb);
 
-    // === Limiter Ceiling (placeholder, no APVTS / DSP yet) ===
-    ceilingOnButton.setButtonText          ("ON");
+    // === Limiter Ceiling ===
     ceilingOnButton.setClickingTogglesState(true);
-    ceilingOnButton.setToggleState         (true, juce::dontSendNotification);
     ceilingOnButton.setColour              (juce::TextButton::buttonColourId,   res.theme.structure);
     ceilingOnButton.setColour              (juce::TextButton::buttonOnColourId, res.theme.pinkAccent.withAlpha(0.25f));
     ceilingOnButton.setColour              (juce::TextButton::textColourOnId,   res.theme.pinkAccent);
     ceilingOnButton.setColour              (juce::TextButton::textColourOffId,  res.theme.textSecondary);
-    ceilingOnButton.onClick = [this]()
-    {
-        ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
-        RefreshCeilingEnabledLook();
-    };
     addAndMakeVisible(ceilingOnButton);
+
+    ceilingOnAtt = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "limiter_on", ceilingOnButton);
 
     DLBS::SetupSlider(this
                       , ceilingSlider
@@ -60,9 +55,13 @@ MasterColumn::MasterColumn(GuiResources &res)
     DLBS::SetupLabel(this, ceilingLabel, "Ceiling", txt, 14.0f);
 
     ceilingSlider.setLookAndFeel    (res.dialLookAndFeel);
-    ceilingSlider.setRange          (-12.0, 0.0, 0.1);
-    ceilingSlider.setValue          (-0.1, juce::dontSendNotification);
     ceilingSlider.setTextValueSuffix(" dB");
+
+    ceilingAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "limiter_ceiling", ceilingSlider);
+
+    // Listen for limiter_on changes from any source (UI click, automation, preset
+    // recall). The listener updates the button text + alpha of the ceiling controls.
+    res.apvts->addParameterListener("limiter_on", this);
 
     // === Haas Widener (placeholder). Bipolar slider; center = mono. ===
     DLBS::SetupSlider(this
@@ -101,7 +100,14 @@ MasterColumn::MasterColumn(GuiResources &res)
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);
 
+    // Set initial button text + look from the current parameter value.
+    ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
     RefreshCeilingEnabledLook();
+}
+
+MasterColumn::~MasterColumn()
+{
+    resources.apvts->removeParameterListener("limiter_on", this);
 }
 
 void MasterColumn::paint(juce::Graphics &g)
@@ -115,9 +121,26 @@ void MasterColumn::paint(juce::Graphics &g)
                  .withExtraKerningFactor(0.12f));
     g.drawText("SCOPE", scopeRect, juce::Justification::centred);
 
-    // GR meter placeholder — vertical outlined bar next to the output meter.
+    // GR meter — vertical bar that fills downward from the top as the limiter
+    // pulls gain. Display range: 0..maxGRDb dB.
+    constexpr float maxGRDb = 12.0f;
+
     g.setColour(resources.theme.structure);
-    g.drawRoundedRectangle(grMeterRect.toFloat().reduced(0.5f), 1.5f, 1.0f);
+    g.fillRoundedRectangle(grMeterRect.toFloat(), 1.5f);
+
+    if (gainReductionDb > 0.001f)
+    {
+        const float norm  = juce::jlimit(0.0f, 1.0f, gainReductionDb / maxGRDb);
+        const int   fillH = (int) (grMeterRect.getHeight() * norm);
+
+        const auto fillRect = juce::Rectangle<int>(grMeterRect.getX(),
+                                                   grMeterRect.getY(),
+                                                   grMeterRect.getWidth(),
+                                                   fillH);
+
+        g.setColour(resources.theme.pinkAccent);
+        g.fillRoundedRectangle(fillRect.toFloat().reduced(1.0f), 1.0f);
+    }
 
     g.setColour(resources.theme.textSecondary.withAlpha(0.4f));
     g.setFont(juce::Font(juce::FontOptions("Helvetica", 7.0f, 0)).withExtraKerningFactor(0.10f));
@@ -194,14 +217,42 @@ void MasterColumn::resized()
     scopeRect = bounds.reduced(2, 0);
 }
 
-void MasterColumn::Update(float leftLevel, float rightLevel, float sampleRate)
+void MasterColumn::Update(float leftLevel, float rightLevel, float gainReductionDbIn, float sampleRate)
 {
     outMeter.outMeterLevel(leftLevel, rightLevel, sampleRate);
+
+    if (! juce::approximatelyEqual(gainReductionDb, gainReductionDbIn))
+    {
+        gainReductionDb = gainReductionDbIn;
+        repaint(grMeterRect);
+    }
 }
 
 void MasterColumn::RefreshCeilingEnabledLook()
 {
-    const float a = ceilingOnButton.getToggleState() ? 1.0f : 0.4f;
-    ceilingSlider.setAlpha(a);
-    ceilingLabel .setAlpha(a);
+    const bool  on = ceilingOnButton.getToggleState();
+    const float a  = on ? 1.0f : 0.4f;
+
+    ceilingSlider.setEnabled(on);
+    ceilingSlider.setAlpha  (a);
+    ceilingLabel .setAlpha  (a);
+}
+
+void MasterColumn::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    juce::ignoreUnused(newValue);
+
+    if (parameterID == "limiter_on")
+    {
+        // Listener may fire on the audio thread; bounce to the message thread for UI.
+        juce::Component::SafePointer<MasterColumn> self(this);
+        juce::MessageManager::callAsync([self]()
+        {
+            if (self == nullptr)
+                return;
+
+            self->ceilingOnButton.setButtonText(self->ceilingOnButton.getToggleState() ? "ON" : "OFF");
+            self->RefreshCeilingEnabledLook();
+        });
+    }
 }

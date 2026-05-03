@@ -22,20 +22,26 @@
 /// The widener / ceiling / mono-izer / GR meter are visual placeholders for now —
 /// no APVTS bindings and no DSP yet. Hook them up as the processors land.
 class MasterColumn
-    : public juce::Component
+    : public  juce::Component
+    , private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     MasterColumn(GuiResources &res);
+    ~MasterColumn() override;
 
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Pushes the latest L/R output magnitudes into the meter. Called from the editor's timer.
-    void Update(float leftLevel, float rightLevel, float sampleRate);
+    /// Pushes the latest L/R output magnitudes and limiter gain-reduction value
+    /// into the column's meters. Called from the editor's timer.
+    void Update(float leftLevel, float rightLevel, float gainReductionDb, float sampleRate);
 
 private:
     /// Updates the alpha of the ceiling rotary + label to reflect the on/off state.
     void RefreshCeilingEnabledLook();
+
+    /// Listener callback — fires on user click and on host automation changes.
+    void parameterChanged(const juce::String &parameterID, float newValue) override;
 
     GuiResources &resources;
 
@@ -62,13 +68,18 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wideAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> monoCrossoverAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ceilingAtt;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> ceilingOnAtt;
 
     // Reserved space for the future output scope (audio thread -> UI ring buffer).
     juce::Rectangle<int> scopeRect;
 
-    // Reserved space for the future limiter gain-reduction meter — vertical bar
-    // sitting next to the output meter, fills downward as GR increases.
+    // Vertical gain-reduction meter sitting next to the output meter; fills from
+    // the top down as the limiter pulls the gain.
     juce::Rectangle<int> grMeterRect;
+
+    // Latest GR value from the audio thread (in dB, >= 0). Updated each timer tick.
+    float gainReductionDb = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterColumn)
 };

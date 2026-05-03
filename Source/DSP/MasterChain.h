@@ -34,17 +34,26 @@ public:
     /// transport reset.
     void Reset();
 
-    /// Replaces the buffer in-place with the mono-izer + widener output.
+    /// Replaces the buffer in-place with the mono-izer + widener + limiter output.
     void Process(juce::AudioBuffer<float> &buffer);
 
-    /// One-time setup: APVTS atomic pointers for the two parameters.
+    /// One-time setup: APVTS atomic pointers for widener + bass mono-izer.
     void SetParamPointers(std::atomic<float> *widthAmt, std::atomic<float> *monoCrossoverHz);
+
+    /// One-time setup: APVTS atomic pointers for the limiter on/off + ceiling (dB).
+    void SetLimiterParamPointers(std::atomic<float> *limiterOn, std::atomic<float> *ceilingDb);
+
+    /// Latest gain-reduction value in dB (>= 0). Read by the UI thread to drive the
+    /// GR meter; updated each block by the audio thread via a relaxed atomic store.
+    float GetGainReductionDb() const noexcept { return currentGRDb.load(std::memory_order_relaxed); }
 
 private:
     static constexpr float maxHaasDelaySec = 0.025f;
 
     std::atomic<float> *widthParam           = nullptr;
     std::atomic<float> *monoCrossoverHzParam = nullptr;
+    std::atomic<float> *limiterOnParam       = nullptr;
+    std::atomic<float> *limiterCeilingDbParam = nullptr;
 
     juce::dsp::LinkwitzRileyFilter<float> lowPass;
     juce::dsp::LinkwitzRileyFilter<float> highPass;
@@ -57,7 +66,15 @@ private:
     int writePos       = 0;
     int haasBufferSize = 0;
 
-    double sampleRate     = 44100.0;
+    // Limiter envelope-follower state. Coefficients computed in Prepare().
+    float limiterEnvelope     = 0.0f;
+    float limiterAttackCoeff  = 0.0f;
+    float limiterReleaseCoeff = 0.0f;
+
+    // Most recent gain reduction in dB, polled by the UI thread.
+    std::atomic<float> currentGRDb { 0.0f };
+
+    double sampleRate      = 44100.0;
     float  lastCrossoverHz = 120.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterChain)

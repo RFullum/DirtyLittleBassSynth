@@ -43,6 +43,10 @@ public:
 
     float getOutLevel();
 
+    /// Latest gain reduction in dB from the master limiter (0 when not limiting).
+    /// Polled by the editor's timer to drive the GR meter.
+    float GetMasterGainReductionDb() const noexcept { return masterChain.GetGainReductionDb(); }
+
     juce::AudioProcessorValueTreeState parameters;
 
     juce::AudioBuffer<float> outputLevelBuffer;
@@ -92,6 +96,9 @@ private:
 
     std::atomic<float>* masterWideParameter;
     std::atomic<float>* monoBelowFreqParameter;
+
+    std::atomic<float>* limiterOnParameter;
+    std::atomic<float>* limiterCeilingParameter;
 
     MasterChain masterChain;
 
