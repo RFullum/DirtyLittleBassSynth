@@ -70,6 +70,66 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     frqShftDryWetAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "freq_shift_mix",   frqShftDryWetSlider);
     sHPitchAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sandh_pitch",      sHPitchSlider);
     sHDryWetAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sandh_mix",        sHDryWetSlider);
+
+    // === Portamento mode buttons: ON/OFF + ALWAYS/LEGATO ===
+    auto styleModeButton = [&](juce::TextButton &btn, juce::Colour onTextColor)
+    {
+        btn.setClickingTogglesState(true);
+        btn.setColour(juce::TextButton::buttonColourId,   res.theme.structure);
+        btn.setColour(juce::TextButton::buttonOnColourId, primary.withAlpha(0.25f));
+        btn.setColour(juce::TextButton::textColourOnId,   onTextColor);
+        btn.setColour(juce::TextButton::textColourOffId,  res.theme.textSecondary);
+        addAndMakeVisible(btn);
+    };
+
+    styleModeButton(portaOnButton,     primary);
+    styleModeButton(portaLegatoButton, primary);
+
+    portaOnAtt     = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "porta_on",     portaOnButton);
+    portaLegatoAtt = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "porta_legato", portaLegatoButton);
+
+    res.apvts->addParameterListener("porta_on",     this);
+    res.apvts->addParameterListener("porta_legato", this);
+
+    // Initial button labels + alpha state.
+    RefreshPortaLook();
+}
+
+ModifierPanel::~ModifierPanel()
+{
+    resources.apvts->removeParameterListener("porta_on",     this);
+    resources.apvts->removeParameterListener("porta_legato", this);
+}
+
+void ModifierPanel::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    juce::ignoreUnused(newValue);
+
+    if (parameterID == "porta_on" || parameterID == "porta_legato")
+    {
+        // Listener may fire on the audio thread; bounce to the message thread.
+        juce::Component::SafePointer<ModifierPanel> self(this);
+        juce::MessageManager::callAsync([self]()
+        {
+            if (self != nullptr)
+                self->RefreshPortaLook();
+        });
+    }
+}
+
+void ModifierPanel::RefreshPortaLook()
+{
+    const bool on     = portaOnButton    .getToggleState();
+    const bool legato = portaLegatoButton.getToggleState();
+
+    portaOnButton    .setButtonText(on     ? "ON"     : "OFF");
+    portaLegatoButton.setButtonText(legato ? "LEGATO" : "ALWAYS");
+
+    // Portamento label + slider dim when off; slider stays interactive so the
+    // user can still tweak the time value without flipping the toggle.
+    const float a = on ? 1.0f : 0.5f;
+    portaLabel .setAlpha(a);
+    portaSlider.setAlpha(a);
 }
 
 void ModifierPanel::resized()
@@ -84,8 +144,24 @@ void ModifierPanel::resized()
     
     auto      topArea   = bounds .removeFromTop(125);
     auto      portaArea = topArea.removeFromLeft(topArea.proportionOfWidth(0.5f));
-    portaLabel    .setBounds(portaArea.removeFromTop(rowLabelH));
-    portaSlider   .setBounds(portaArea.withSizeKeepingCentre(topSliderSize, topSliderSize));
+
+    portaLabel.setBounds(portaArea.removeFromTop(rowLabelH));
+
+    // Two mode buttons sit at the bottom of portaArea; the rotary fills the rest.
+    static constexpr int portaBtnRowHeight = 18;
+    static constexpr int portaBtnGap       = 4;
+    static constexpr int portaBtnRowInset  = 12;
+
+    auto portaBtnRow = portaArea.removeFromBottom(portaBtnRowHeight)
+                                .reduced(portaBtnRowInset, 0);
+
+    const int btnWidth = (portaBtnRow.getWidth() - portaBtnGap) / 2;
+    portaOnButton    .setBounds(portaBtnRow.removeFromLeft(btnWidth));
+    portaBtnRow      .removeFromLeft(portaBtnGap);
+    portaLegatoButton.setBounds(portaBtnRow.removeFromLeft(btnWidth));
+
+    portaSlider.setBounds(portaArea.withSizeKeepingCentre(topSliderSize, topSliderSize));
+
     foldbackLabel .setBounds(topArea.removeFromTop(rowLabelH));
     foldbackSlider.setBounds(topArea.withSizeKeepingCentre(topSliderSize, topSliderSize));
     

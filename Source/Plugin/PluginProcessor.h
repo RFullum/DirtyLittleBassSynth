@@ -103,6 +103,8 @@ private:
     std::atomic<float>* filtLFOSyncDivParameter;
     
     std::atomic<float>* portaTimeParameter;
+    std::atomic<float>* portaOnParameter;
+    std::atomic<float>* portaLegatoParameter;
     
     std::atomic<float>* masterGainParameter;
 

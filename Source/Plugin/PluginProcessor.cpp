@@ -33,6 +33,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     
                     // Portament Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"porta_time", 1}, "Portamento Time", juce::NormalisableRange<float>(0.01f, 1.0f, 0.0f, 0.325f, false), 0.02f, juce::AudioParameterFloatAttributes().withLabel("portamento")),
+                    std::make_unique<juce::AudioParameterBool> (juce::ParameterID{"porta_on",     1}, "Portamento On",     false),
+                    std::make_unique<juce::AudioParameterBool> (juce::ParameterID{"porta_legato", 1}, "Portamento Legato", false),
                     
                     // Foldback Distortion Params
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"foldback_dist", 1}, "Foldback Distortion", juce::NormalisableRange<float>(1.0f, 200.0f, 0.00f, 0.325f, false), 1.0f, juce::AudioParameterFloatAttributes().withLabel("foldback")),
@@ -96,6 +98,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     subGainParameter     = parameters.getRawParameterValue("sub_osc_gain");
     subOctaveParameter   = parameters.getRawParameterValue("sub_osc_octave");
     portaTimeParameter   = parameters.getRawParameterValue("porta_time");
+    portaOnParameter     = parameters.getRawParameterValue("porta_on");
+    portaLegatoParameter = parameters.getRawParameterValue("porta_legato");
     pitchBendParameter   = parameters.getRawParameterValue("pitch_bend_range");
     
     ampAttackParameter  = parameters.getRawParameterValue("amp_attack");
@@ -162,6 +166,7 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
         v->SetOscParamPointers          (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
         v->SetAmpADSRParamPointers      (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
         v->SetPortamentoParamPointers   (portaTimeParameter);
+        v->SetPortamentoModeParamPointers(portaOnParameter, portaLegatoParameter);
         v->SetDistParamPointers         (foldbackDistParameter);
         v->SetRingModParamPointers      (ringModPitchParameter, ringToneParameter, ringModMixParameter);
         v->SetFreqShiftParamPointers    (freqShiftPitchParameter, freqShiftMixParameter);

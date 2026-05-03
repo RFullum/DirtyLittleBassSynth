@@ -86,6 +86,13 @@ public:
     /// One-time setup of the host transport snapshot, used when sync mode is on.
     void SetTempoSnapshot(const TempoSnapshot *snapshot);
     void SetPortamentoParamPointers(std::atomic<float> *portaTime);
+
+    /// Mode pointers for portamento. `portaOn` is a bool atomic (0/1) — when off
+    /// every note jumps. `portaLegato` is a bool atomic — when true, glide only
+    /// applies when the new note arrives while the previous note is still held
+    /// (no stopNote in between); when false ("Always" mode), glide applies on
+    /// every note after the first.
+    void SetPortamentoModeParamPointers(std::atomic<float> *portaOn, std::atomic<float> *portaLegato);
     void SetMasterGainParamPointers(std::atomic<float> *gainAmt);
     void SetFilterSpec(float &sampRate, float &sampleSize);
     void SetAmpADSRValues();
@@ -207,6 +214,10 @@ private:
     // Portamento
     juce::SmoothedValue<float> portamento;
     std::atomic<float> *portamentoAmount;
+    std::atomic<float> *portamentoOnParam     = nullptr;
+    std::atomic<float> *portamentoLegatoParam = nullptr;
+    bool                portaEverPlayed       = false;
+    bool                portaNoteWasReleased  = true;
     
     // Foldback Distortion
     juce::SmoothedValue<float> foldbackDistortionSmooth;

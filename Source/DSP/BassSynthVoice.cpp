@@ -45,7 +45,28 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     SetPitchBend(currentPitchWheelPosition);
 
     freq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-    portamento.setTargetValue(freq);
+
+    // === Portamento mode handling ===
+    // Off              → instant jump to the new note's frequency.
+    // On + Always      → glide on every note after the first.
+    // On + Legato      → glide only when the new note arrives while the
+    //                    previous note is still held (no stopNote since).
+    // First-ever note  → always jumps (the smoother's current value is 0,
+    //                    and gliding from 0 produces a silent ramp-up).
+    const bool portaOn     = (portamentoOnParam     != nullptr) && (portamentoOnParam     ->load() > 0.5f);
+    const bool portaLegato = (portamentoLegatoParam != nullptr) && (portamentoLegatoParam ->load() > 0.5f);
+
+    bool shouldGlide = false;
+    if (portaOn && portaEverPlayed)
+        shouldGlide = portaLegato ? ! portaNoteWasReleased : true;
+
+    if (shouldGlide)
+        portamento.setTargetValue(freq);
+    else
+        portamento.setCurrentAndTargetValue(freq);
+
+    portaEverPlayed      = true;
+    portaNoteWasReleased = false;
 
     env.noteOn();
     filtEnv.noteOn();
@@ -56,8 +77,15 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
 
 void BassSynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
+    // Portamento legato detection: only treat a tail-off-allowed stop as a real
+    // note-off. JUCE's Synthesiser calls stopNote(0, false) to hard-stop the
+    // voice when stealing it for an overlapping note — that's the exact case
+    // where legato mode wants to glide, so we leave portaNoteWasReleased false
+    // through that path.
     if (allowTailOff)
     {
+        portaNoteWasReleased = true;
+
         env.noteOff();
         filtEnv.noteOff();
         filtLFOClickingEnv.noteOff();
@@ -413,6 +441,12 @@ void BassSynthVoice::SetTempoSnapshot(const TempoSnapshot *snapshot)
 void BassSynthVoice::SetPortamentoParamPointers(std::atomic<float> *portaTime)
 {
     portamentoAmount = portaTime;
+}
+
+void BassSynthVoice::SetPortamentoModeParamPointers(std::atomic<float> *portaOn, std::atomic<float> *portaLegato)
+{
+    portamentoOnParam     = portaOn;
+    portamentoLegatoParam = portaLegato;
 }
 
 void BassSynthVoice::SetMasterGainParamPointers(std::atomic<float> *gainAmt)
