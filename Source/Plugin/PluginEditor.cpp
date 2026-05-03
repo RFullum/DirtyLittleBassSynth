@@ -14,6 +14,7 @@ namespace
             .dialLookAndFeel   = &dialLAF,
             .dryWetLookAndFeel = &dryWetLAF,
             .theme             = Palette::DefaultTheme,
+            .scopeBuffer       = &processor.GetScopeBuffer(),
         };
     }
 }

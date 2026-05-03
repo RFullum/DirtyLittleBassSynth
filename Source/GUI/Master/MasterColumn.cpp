@@ -100,6 +100,15 @@ MasterColumn::MasterColumn(GuiResources &res)
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);
 
+    if (res.scopeBuffer != nullptr)
+    {
+        scopeVisual = std::make_unique<ScopeVisual>(*res.scopeBuffer);
+        scopeVisual->SetColors(accent
+                               , res.theme.background
+                               , res.theme.background.darker());
+        addAndMakeVisible(*scopeVisual);
+    }
+
     // Set initial button text + look from the current parameter value.
     ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
     RefreshCeilingEnabledLook();
@@ -112,15 +121,6 @@ MasterColumn::~MasterColumn()
 
 void MasterColumn::paint(juce::Graphics &g)
 {
-    // Scope placeholder — outlined rect with "SCOPE" label.
-    g.setColour(resources.theme.structure);
-    g.drawRoundedRectangle(scopeRect.toFloat().reduced(0.5f), 2.0f, 1.0f);
-
-    g.setColour(resources.theme.textSecondary.withAlpha(0.4f));
-    g.setFont(juce::Font(juce::FontOptions("Helvetica", 8.0f, 0))
-                 .withExtraKerningFactor(0.12f));
-    g.drawText("SCOPE", scopeRect, juce::Justification::centred);
-
     // GR meter — vertical bar that fills downward from the top as the limiter
     // pulls gain. Display range: 0..maxGRDb dB.
     constexpr float maxGRDb = 12.0f;
@@ -214,7 +214,8 @@ void MasterColumn::resized()
     bounds.removeFromBottom(gap);
 
     // === Middle: scope fills the remaining space (square-ish in a typical column) ===
-    scopeRect = bounds.reduced(2, 0);
+    if (scopeVisual != nullptr)
+        scopeVisual->setBounds(bounds.reduced(2, 0));
 }
 
 void MasterColumn::Update(float leftLevel, float rightLevel, float gainReductionDbIn, float sampleRate)
@@ -226,6 +227,9 @@ void MasterColumn::Update(float leftLevel, float rightLevel, float gainReduction
         gainReductionDb = gainReductionDbIn;
         repaint(grMeterRect);
     }
+
+    if (scopeVisual != nullptr)
+        scopeVisual->Update();
 }
 
 void MasterColumn::RefreshCeilingEnabledLook()

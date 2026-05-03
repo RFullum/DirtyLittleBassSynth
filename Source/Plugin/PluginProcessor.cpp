@@ -167,6 +167,8 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int sa
 
     masterChain.Prepare(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
     masterChain.Reset();
+
+    scopeBuffer.Clear();
 }
 
 void DirtyLittleBassSynthAudioProcessor::releaseResources() {}
@@ -202,6 +204,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
         v->updatePitchBendRange(*pitchBendParameter);
 
     masterChain.Process(buffer);
+
+    scopeBuffer.PushBlock(buffer);
 
     outputLevelBuffer.clear();
     outputLevelBuffer = buffer;

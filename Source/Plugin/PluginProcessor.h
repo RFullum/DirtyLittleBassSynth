@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "BassSynthVoice.h"
 #include "MasterChain.h"
+#include "ScopeBuffer.h"
 
 //==============================================================================
 
@@ -46,6 +47,9 @@ public:
     /// Latest gain reduction in dB from the master limiter (0 when not limiting).
     /// Polled by the editor's timer to drive the GR meter.
     float GetMasterGainReductionDb() const noexcept { return masterChain.GetGainReductionDb(); }
+
+    /// Read-only handle to the post-limiter sample feed used by the scope display.
+    const ScopeBuffer &GetScopeBuffer() const noexcept { return scopeBuffer; }
 
     juce::AudioProcessorValueTreeState parameters;
 
@@ -101,6 +105,7 @@ private:
     std::atomic<float>* limiterCeilingParameter;
 
     MasterChain masterChain;
+    ScopeBuffer scopeBuffer;
 
     juce::Synthesiser synth;
     int voiceCount = 1;

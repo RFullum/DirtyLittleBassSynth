@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "OutMeter.h"
+#include "ScopeVisual.h"
 
 //============================================================
 
@@ -63,7 +64,8 @@ private:
     juce::Slider monoCrossoverSlider;
     juce::Label  monoCrossoverLabel;
 
-    OutMeter outMeter;
+    OutMeter                       outMeter;
+    std::unique_ptr<ScopeVisual>   scopeVisual;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wideAtt;
@@ -71,8 +73,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ceilingAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> ceilingOnAtt;
 
-    // Reserved space for the future output scope (audio thread -> UI ring buffer).
-    juce::Rectangle<int> scopeRect;
 
     // Vertical gain-reduction meter sitting next to the output meter; fills from
     // the top down as the limiter pulls the gain.
