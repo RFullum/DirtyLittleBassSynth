@@ -72,20 +72,25 @@ void BassSynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 
 void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples)
 {
-    if (!playing)
+    if (! playing)
         return;
 
     const auto levels = ComputeBlockLevels();
     PrepareDspForBlock(levels);
 
-    // Per-sample change-detection state for increment updates.
+    // ===== PASS 1: Base-rate per-sample state =====
+    // Advance the wavetable phasors, env, ADSRs, and parameter smoothers at the
+    // base sample rate. Build the pre-foldback main-osc signal into a scratch
+    // buffer that pass 2 will feed into the oversampling stage.
+    auto *preFoldData = preFoldbackBuf.getWritePointer(0);
+
     float previousFinalFreq      = 0.0f;
     float prevRingModPitch       = 0.0f;
     float prevFreqShiftPitch     = 0.0f;
     float prevSAndHPitch         = 0.0f;
     int   previousIncrementDenom = 1;
 
-    for (int sampleIndex = startSample; sampleIndex < startSample + numSamples; ++sampleIndex)
+    for (int i = 0; i < numSamples; ++i)
     {
         const float portaFreq = portamento.getNextValue();
         const float finalFreq = portaFreq * shiftHz;
@@ -124,12 +129,71 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
             prevSAndHPitch = sAndHPitchVal;
         }
 
-        const float envVal        = env.getNextSample();
-        const float filtEnvVal    = filtEnv.getNextSample();
-        const float filtLFOEnvVal = filtLFOClickingEnv.getNextSample();
+        // Advance envs / smoothers once per base sample, cache for pass 2.
+        envValsCache       [(size_t) i] = env               .getNextSample();
+        filtEnvValsCache   [(size_t) i] = filtEnv           .getNextSample();
+        filtLFOEnvValsCache[(size_t) i] = filtLFOClickingEnv.getNextSample();
+        foldbackCache      [(size_t) i] = foldbackDistortionSmooth.getNextValue();
+        ringMixCache       [(size_t) i] = ringMixSmooth           .getNextValue();
+        freqShiftMixCache  [(size_t) i] = freqShiftMixValSmooth   .getNextValue();
+        sAndHMixCache      [(size_t) i] = sAndHMixValSmooth       .getNextValue();
 
-        const float mainSample     = ProcessMainOscSample(envVal, levels);
-        const float modifiedSample = ProcessModifierChain(mainSample, envVal);
+        // Pre-foldback main osc: mipmap-band-limited shape mix scaled by env.
+        const float envVal      = envValsCache[(size_t) i];
+        const float sinSample   = wtSine .Process() * levels.mainSin   * envVal;
+        const float spikeSample = wtSpike.Process() * levels.mainSpike * envVal;
+        const float sawSample   = wtSaw  .Process() * levels.mainSaw   * envVal;
+
+        // 0.5 prevents two summed shapes from clipping; foldback applied at OSR.
+        preFoldData[i] = (sinSample + spikeSample + sawSample) * 0.5f;
+    }
+
+    // ===== PASS 2: 4× oversampled foldback + modifier chain =====
+    juce::dsp::AudioBlock<float> baseBlock(preFoldbackBuf.getArrayOfWritePointers()
+                                           , 1
+                                           , (size_t)numSamples);
+
+    auto upBlock = oversampling->processSamplesUp(baseBlock);
+
+    auto       *upData     = upBlock.getChannelPointer(0);
+    const int   upSamples  = (int) upBlock.getNumSamples();
+
+    for (int i = 0; i < upSamples; ++i)
+    {
+        const int   baseIdx     = i / oversamplingFactor;
+        const float envVal      = envValsCache    [(size_t) baseIdx];
+        const float foldbackAmt = foldbackCache   [(size_t) baseIdx];
+        const float ringMix     = ringMixCache    [(size_t) baseIdx];
+        const float freqMix     = freqShiftMixCache[(size_t) baseIdx];
+        const float sAndHMix    = sAndHMixCache   [(size_t) baseIdx];
+
+        // Foldback is the most aggressive non-linearity; running it at 4× SR
+        // keeps the harmonics it creates above audible Nyquist.
+        float s = std::sin(upData[i] * foldbackAmt);
+
+        // Modifier chain (ring mod → freq shift → sample-and-hold), each at OSR.
+        const float ringSample = s * ringMod.Process() * envVal;
+        const float oscRing    = DryWetMix(s, ringSample, ringMix);
+
+        const float freqShiftSample = freqShift.Process() * envVal;
+        const float oscShift        = DryWetMix(oscRing, freqShiftSample, freqMix);
+
+        const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
+        upData[i] = DryWetMix(oscShift, sandhSample, sAndHMix);
+    }
+
+    oversampling->processSamplesDown(baseBlock);
+
+    // ===== PASS 3: Base-rate sub osc + filter + master gain =====
+    const auto *postModData = preFoldbackBuf.getReadPointer(0);
+
+    for (int i = 0; i < numSamples; ++i)
+    {
+        const float modifiedSample = postModData[i];
+        const float envVal         = envValsCache       [(size_t) i];
+        const float filtEnvVal     = filtEnvValsCache   [(size_t) i];
+        const float filtLFOEnvVal  = filtLFOEnvValsCache[(size_t) i];
+
         const float subSample      = ProcessSubOscSample(envVal, levels);
         const float mixedSample    = (modifiedSample + subSample) * 0.75f;
         const float filteredSample = ProcessFilterChain(mixedSample, filtEnvVal, filtLFOEnvVal, levels);
@@ -138,12 +202,12 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
                                    * velocitySmooth.getNextValue();
 
         for (int chan = 0; chan < outputBuffer.getNumChannels(); ++chan)
-            outputBuffer.addSample(chan, sampleIndex, outputSample);
+            outputBuffer.addSample(chan, startSample + i, outputSample);
 
         if (ending && envVal < 0.001f)
         {
-            env.reset();
-            filtEnv.reset();
+            env               .reset();
+            filtEnv           .reset();
             filtLFOClickingEnv.reset();
             playing = false;
         }
@@ -176,9 +240,13 @@ void BassSynthVoice::Init(float SR, int blockSize)
     subOsc .SetSampleRate(sampleRate);
     env    .setSampleRate(sampleRate);
 
-    ringMod  .SetSampleRate(sampleRate);
-    freqShift.SetSampleRate(sampleRate);
-    sAndH    .SetSampleRate(sampleRate);
+    // Modifiers run inside the 4× oversampled section, so their internal
+    // oscillators are clocked at 4× base. ModFreq() then computes the right
+    // increment to produce the desired modulator frequency in real time.
+    const float oversampledRate = sampleRate * (float) oversamplingFactor;
+    ringMod  .SetSampleRate(oversampledRate);
+    freqShift.SetSampleRate(oversampledRate);
+    sAndH    .SetSampleRate(oversampledRate);
 
     twoPoleLPF        .SetSampleRate(sampleRate);
     fourPoleLPF       .SetSampleRate(sampleRate);
@@ -222,6 +290,38 @@ void BassSynthVoice::Init(float SR, int blockSize)
 
     velocitySmooth.reset(sampleRate, 0.01f);
     velocitySmooth.setCurrentAndTargetValue(1.0f);
+
+    // === Oversampling stage ===
+    // Polyphase IIR halfband filters: minimum-phase, low latency. Integer-sample
+    // latency makes host compensation clean.
+    oversampling = std::make_unique<juce::dsp::Oversampling<float>>(1   /*numChannels*/
+                                                                    , (size_t)oversamplingFactorLog2    /*factor (log2)*/
+                                                                    , juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR    /*filterType*/
+                                                                    , true  /*isMaxQuality*/
+                                                                    , true);    /*useIntegerLatency */
+
+    oversampling->initProcessing((size_t) blockSize);
+    oversampling->reset();
+
+    // Pre-allocate scratch sized for the host's reported max block size so the
+    // audio thread never reallocates.
+    preFoldbackBuf.setSize(1, blockSize, false, true, true);
+
+    envValsCache       .assign((size_t) blockSize, 0.0f);
+    filtEnvValsCache   .assign((size_t) blockSize, 0.0f);
+    filtLFOEnvValsCache.assign((size_t) blockSize, 0.0f);
+    foldbackCache      .assign((size_t) blockSize, 0.0f);
+    ringMixCache       .assign((size_t) blockSize, 0.0f);
+    freqShiftMixCache  .assign((size_t) blockSize, 0.0f);
+    sAndHMixCache      .assign((size_t) blockSize, 0.0f);
+}
+
+int BassSynthVoice::GetOversamplingLatencyInSamples() const noexcept
+{
+    if (oversampling == nullptr)
+        return 0;
+
+    return (int) std::ceil(oversampling->getLatencyInSamples());
 }
 
 void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
@@ -405,31 +505,6 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
     masterGainControlSmooth .setTargetValue(*masterGainControl);
     velocitySmooth          .setTargetValue(vel);
     filterCutoffFreqSmooth  .setTargetValue(*filterCutoffFreq);
-}
-
-float BassSynthVoice::ProcessMainOscSample(float envVal, const BlockLevels& levels)
-{
-    const float sinSample   = wtSine.Process()  * levels.mainSin   * envVal;
-    const float spikeSample = wtSpike.Process() * levels.mainSpike * envVal;
-    const float sawSample   = wtSaw.Process()   * levels.mainSaw   * envVal;
-
-    // 0.5 prevents two summed shapes from clipping; foldback is sin-based wave folding.
-    const float oscSample = (sinSample + spikeSample + sawSample) * 0.5f;
-    const float foldback  = foldbackDistortionSmooth.getNextValue();
-
-    return std::sin(oscSample * foldback);
-}
-
-float BassSynthVoice::ProcessModifierChain(float input, float envVal)
-{
-    const float ringSample = input * ringMod.Process() * envVal;
-    const float oscRing    = DryWetMix(input, ringSample, ringMixSmooth.getNextValue());
-
-    const float freqShiftSample = freqShift.Process() * envVal;
-    const float oscShift        = DryWetMix(oscRing, freqShiftSample, freqShiftMixValSmooth.getNextValue());
-
-    const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
-    return DryWetMix(oscShift, sandhSample, sAndHMixValSmooth.getNextValue());
 }
 
 float BassSynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &levels)

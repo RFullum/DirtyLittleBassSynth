@@ -169,6 +169,20 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int sa
     masterChain.Reset();
 
     scopeBuffer.Clear();
+
+    // Voices share the same oversampling latency (identical config). Report the
+    // first voice's latency to the host so it can compensate.
+    const int oversamplingLatency = typedVoices.empty() ? 0
+                                                        : typedVoices.front()->GetOversamplingLatencyInSamples();
+
+    setLatencySamples(oversamplingLatency);
+
+    DBG("DLBS: oversampling latency = "
+        << oversamplingLatency
+        << " samples ("
+        << juce::String(1000.0 * (double) oversamplingLatency / sampleRate, 3)
+        << " ms at "
+        << juce::String(sampleRate, 0) << " Hz)");
 }
 
 void DirtyLittleBassSynthAudioProcessor::releaseResources() {}

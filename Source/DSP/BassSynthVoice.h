@@ -88,6 +88,34 @@ public:
     void SetPortamentoTime(float SR, float portaTime);
     void updatePitchBendRange(float newRange);
 
+    /// Latency introduced by the oversampling stage, in *base-rate* samples.
+    /// Reported to the host so it can compensate. Returns 0 before Init has run.
+    int GetOversamplingLatencyInSamples() const noexcept;
+
+private:
+    // === Oversampling ===
+    // Foldback distortion + the modifier chain are run at 4× base sample rate to
+    // suppress the alias distortion their non-linearities would otherwise create.
+    // Wavetable / sub osc / filter / master gain stay at base rate.
+    static constexpr int oversamplingFactorLog2 = 2;                              // 2 → 4×
+    static constexpr int oversamplingFactor     = 1 << oversamplingFactorLog2;    // 4
+
+    std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
+
+    // Block-sized scratch holding pre-foldback main-osc samples on the way in
+    // (will be replaced in-place with post-modifier samples on the way out).
+    juce::AudioBuffer<float> preFoldbackBuf;
+
+    // Per-base-sample state cached during pass 1 so pass 2 (running at OSR)
+    // doesn't try to advance these once per oversampled sample.
+    std::vector<float> envValsCache;
+    std::vector<float> filtEnvValsCache;
+    std::vector<float> filtLFOEnvValsCache;
+    std::vector<float> foldbackCache;
+    std::vector<float> ringMixCache;
+    std::vector<float> freqShiftMixCache;
+    std::vector<float> sAndHMixCache;
+
 private:
     // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
     struct BlockLevels
@@ -101,9 +129,9 @@ private:
     BlockLevels ComputeBlockLevels();
     void        PrepareDspForBlock(const BlockLevels &levels);
 
-    // Per-sample-stage helpers (called once per sample from the render loop).
-    float ProcessMainOscSample(float envVal, const BlockLevels &levels);
-    float ProcessModifierChain(float input, float envVal);
+    // Per-sample-stage helpers. Called from the post-oversampling base-rate loop;
+    // foldback + modifier-chain logic is inlined in renderNextBlock so it can run
+    // inside the oversampled section.
     float ProcessSubOscSample(float envVal, const BlockLevels &levels);
     float ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels);
 
