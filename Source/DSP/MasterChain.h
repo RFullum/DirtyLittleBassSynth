@@ -12,11 +12,12 @@
 
 //==============================================================================
 
-/// Post-voice master DSP block. Splits the stereo signal at a user-set crossover
-/// frequency, forces the low band to mono (bass mono-izer), and applies a Haas
-/// delay to one channel of the high band (stereo widener). The two bands sum back
-/// to a flat response when slope-matched (Linkwitz-Riley LR4: two cascaded
-/// 2nd-order Butterworth → 4th-order, 24 dB/oct).
+/// Post-voice master DSP block. Signal flow:
+///   1. Master HPF (fixed 20 Hz, hidden) — strips DC + sub-audio rumble.
+///   2. Crossover split (Linkwitz-Riley LR4, 24 dB/oct) at user-set frequency.
+///      Low band is forced to mono (bass mono-izer); high band has a Haas delay
+///      applied to one channel (stereo widener). Bands sum back to a flat response.
+///   3. Brick-wall limiter at user-set ceiling (when on). Stereo-linked.
 ///
 /// `widthParam`: -1..+1, where 0 = mono (no Haas delay) and ±1 = max delay
 /// (~25 ms). Sign selects which channel is delayed.
@@ -54,6 +55,11 @@ private:
     std::atomic<float> *monoCrossoverHzParam = nullptr;
     std::atomic<float> *limiterOnParam       = nullptr;
     std::atomic<float> *limiterCeilingDbParam = nullptr;
+
+    /// Hidden cleanup HPF — fixed 20 Hz, runs before the mono-izer to keep DC and
+    /// sub-audio rumble out of the rest of the chain. Not user-controllable.
+    static constexpr float masterHpHz = 20.0f;
+    juce::dsp::LinkwitzRileyFilter<float> masterHighPass;
 
     juce::dsp::LinkwitzRileyFilter<float> lowPass;
     juce::dsp::LinkwitzRileyFilter<float> highPass;

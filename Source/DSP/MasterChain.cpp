@@ -12,8 +12,9 @@
 
 MasterChain::MasterChain()
 {
-    lowPass .setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-    highPass.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
+    masterHighPass.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
+    lowPass       .setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
+    highPass      .setType(juce::dsp::LinkwitzRileyFilterType::highpass);
 }
 
 void MasterChain::Prepare(double sr, int blockSize, int numChannels)
@@ -26,6 +27,9 @@ void MasterChain::Prepare(double sr, int blockSize, int numChannels)
     spec.sampleRate       = sr;
     spec.maximumBlockSize = (juce::uint32) blockSize;
     spec.numChannels      = (juce::uint32) juce::jmax(1, numChannels);
+
+    masterHighPass.prepare(spec);
+    masterHighPass.setCutoffFrequency(masterHpHz);
 
     lowPass .prepare(spec);
     highPass.prepare(spec);
@@ -62,8 +66,9 @@ void MasterChain::Prepare(double sr, int blockSize, int numChannels)
 
 void MasterChain::Reset()
 {
-    lowPass .reset();
-    highPass.reset();
+    masterHighPass.reset();
+    lowPass       .reset();
+    highPass      .reset();
 
     haasBuffer.clear();
     writePos = 0;
@@ -122,8 +127,11 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
     {
         const float width = widthSmooth.getNextValue();
 
-        const float inL = bufL[i];
-        const float inR = (bufR != nullptr) ? bufR[i] : inL;
+        // Strip DC + sub-audio rumble before any further processing.
+        const float inL = masterHighPass.processSample(0, bufL[i]);
+        const float inR = (bufR != nullptr)
+                              ? masterHighPass.processSample(1, bufR[i])
+                              : inL;
 
         // Band-split each channel.
         const float lowL  = lowPass .processSample(0, inL);
