@@ -4,6 +4,7 @@
 #include "BassSynthVoice.h"
 #include "MasterChain.h"
 #include "ScopeBuffer.h"
+#include "TempoSnapshot.h"
 
 //==============================================================================
 
@@ -50,6 +51,10 @@ public:
 
     /// Read-only handle to the post-limiter sample feed used by the scope display.
     const ScopeBuffer &GetScopeBuffer() const noexcept { return scopeBuffer; }
+
+    /// Read-only handle to the tempo snapshot updated each block from the host's
+    /// playhead (or the fallback BPM param when no host transport is reporting).
+    const TempoSnapshot &GetTempoSnapshot() const noexcept { return tempoSnapshot; }
 
     juce::AudioProcessorValueTreeState parameters;
 
@@ -104,8 +109,11 @@ private:
     std::atomic<float>* limiterOnParameter;
     std::atomic<float>* limiterCeilingParameter;
 
-    MasterChain masterChain;
-    ScopeBuffer scopeBuffer;
+    std::atomic<float>* tempoFallbackBpmParameter;
+
+    MasterChain   masterChain;
+    ScopeBuffer   scopeBuffer;
+    TempoSnapshot tempoSnapshot;
 
     juce::Synthesiser synth;
     int voiceCount = 1;

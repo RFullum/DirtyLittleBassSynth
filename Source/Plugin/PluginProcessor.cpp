@@ -77,7 +77,18 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
                     // Master Limiter
                     std::make_unique<juce::AudioParameterBool> (juce::ParameterID{"limiter_on",      1}, "Limiter On",     true),
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"limiter_ceiling", 1}, "Limiter Ceiling", juce::NormalisableRange<float>(-12.0f, 0.0f, 0.1f, 1.0f, false), -0.1f, juce::AudioParameterFloatAttributes().withLabel("ceiling"))
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"limiter_ceiling", 1}, "Limiter Ceiling", juce::NormalisableRange<float>(-12.0f, 0.0f, 0.1f, 1.0f, false), -0.1f, juce::AudioParameterFloatAttributes().withLabel("ceiling")),
+
+                    // Tempo (fallback when no host transport / standalone)
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"tempo_fallback_bpm", 1}, "Tempo (Fallback)", juce::NormalisableRange<float>(30.0f, 300.0f, 0.1f, 1.0f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("BPM")),
+
+                    // LFO sync mode (placeholder — DSP wired in Step 7).
+                    std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{"filtLFO_sync",     1}, "LFO Sync", false),
+                    std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"filtLFO_sync_div", 1}, "LFO Sync Subdivision",
+                                                                 juce::StringArray({"1/1", "1/2", "1/4", "1/4D", "1/4T",
+                                                                                    "1/8", "1/8D", "1/8T",
+                                                                                    "1/16", "1/16D", "1/16T", "1/32"}),
+                                                                 5)   // default index 5 = "1/8"
                 })
 {
     oscMorphParameter    = parameters.getRawParameterValue("osc_morph");
@@ -126,6 +137,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
     limiterOnParameter      = parameters.getRawParameterValue("limiter_on");
     limiterCeilingParameter = parameters.getRawParameterValue("limiter_ceiling");
+
+    tempoFallbackBpmParameter = parameters.getRawParameterValue("tempo_fallback_bpm");
 
     masterChain.SetParamPointers       (masterWideParameter, monoBelowFreqParameter);
     masterChain.SetLimiterParamPointers(limiterOnParameter,  limiterCeilingParameter);
@@ -211,6 +224,45 @@ bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayou
 void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
+
+    // === Pull tempo / transport state from the host's playhead and publish a
+    // ===  block-rate snapshot for the rest of the plugin.
+    {
+        TempoInfo info;
+        info.bpm                = (tempoFallbackBpmParameter != nullptr)
+                                      ? tempoFallbackBpmParameter->load()
+                                      : 120.0f;
+        info.bpmFromHost        = false;
+        info.timeSigNumerator   = 4;
+        info.timeSigDenominator = 4;
+        info.isPlaying          = false;
+        info.ppqPosition        = 0.0f;
+
+        if (auto *playHead = getPlayHead())
+        {
+            if (auto position = playHead->getPosition())
+            {
+                if (auto hostBpm = position->getBpm())
+                {
+                    info.bpm         = (float) *hostBpm;
+                    info.bpmFromHost = true;
+                }
+
+                if (auto ppq = position->getPpqPosition())
+                    info.ppqPosition = (float) *ppq;
+
+                info.isPlaying = position->getIsPlaying();
+
+                if (auto timeSig = position->getTimeSignature())
+                {
+                    info.timeSigNumerator   = timeSig->numerator;
+                    info.timeSigDenominator = timeSig->denominator;
+                }
+            }
+        }
+
+        tempoSnapshot.Update(info);
+    }
 
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 

@@ -44,6 +44,8 @@
               file="Source/DSP/ScopeBuffer.cpp"/>
         <FILE id="GR000204" name="ScopeBuffer.h" compile="0" resource="0"
               file="Source/DSP/ScopeBuffer.h"/>
+        <FILE id="GR000207" name="TempoSnapshot.h" compile="0" resource="0"
+              file="Source/DSP/TempoSnapshot.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">

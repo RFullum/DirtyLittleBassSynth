@@ -15,6 +15,8 @@ namespace
             .dryWetLookAndFeel = &dryWetLAF,
             .theme             = Palette::DefaultTheme,
             .scopeBuffer       = &processor.GetScopeBuffer(),
+            .tempoSnapshot     = &processor.GetTempoSnapshot(),
+            .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
         };
     }
 }
@@ -25,6 +27,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 : juce::AudioProcessorEditor(&p)
 , processor(p)
 , resources(MakeResources(p, dialLookAndFeel, dryWetLookAndFeel))
+, titleHeader   (resources)
 , sourcesColumn  (resources)
 , filterColumn   (resources)
 , modifiersColumn(resources)
@@ -35,7 +38,6 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
     dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
 
-    titleHeader.SetTheme(resources.theme);
     titleFooter.setTheme(resources.theme);
 
     addAndMakeVisible(titleHeader);
@@ -91,6 +93,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
+    titleHeader  .Update();
     sourcesColumn.Update();
     filterColumn .Update();
 
