@@ -70,8 +70,24 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         g.setColour(trackBackground);
         g.fillRoundedRectangle(trackX, trackY, trackW, trackThick, trackThick * 0.5f);
 
+        // "bipolarFill" property: fill spans from the track centre to the thumb,
+        // not from the left edge. Used for bipolar controls like the stereo widener.
+        const bool bipolar = (bool) slider.getProperties().getWithDefault("bipolarFill", false);
+
         g.setColour(fillColor);
-        g.fillRoundedRectangle(trackX, trackY, sliderPos - trackX, trackThick, trackThick * 0.5f);
+
+        if (bipolar)
+        {
+            const float centerX = trackX + trackW * 0.5f;
+            const float fillX   = juce::jmin(centerX, sliderPos);
+            const float fillW   = std::abs(sliderPos - centerX);
+
+            g.fillRoundedRectangle(fillX, trackY, fillW, trackThick, trackThick * 0.5f);
+        }
+        else
+        {
+            g.fillRoundedRectangle(trackX, trackY, sliderPos - trackX, trackThick, trackThick * 0.5f);
+        }
 
         g.setColour(thumbColor);
         g.fillEllipse(sliderPos - thumbRadius
