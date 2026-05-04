@@ -235,6 +235,27 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
 {
     juce::ScopedNoDenormals noDenormals;
 
+    // === Standalone-only MIDI auto-map ===
+    // Map the mod wheel (CC1) onto the Filter LFO Amount — wheel down = 0,
+    // wheel up = full. Skipped in DAW mode so the host's own MIDI mapping /
+    // automation infrastructure stays in charge.
+    if (wrapperType == wrapperType_Standalone)
+    {
+        for (const auto meta : midiMessages)
+        {
+            const auto m = meta.getMessage();
+
+            if (m.isController() && m.getControllerNumber() == 1)
+            {
+                if (auto *lfoAmtParam = parameters.getParameter("filtLFO_amt"))
+                {
+                    const float normalised = (float) m.getControllerValue() / 127.0f;
+                    lfoAmtParam->setValueNotifyingHost(normalised);
+                }
+            }
+        }
+    }
+
     // === Pull tempo / transport state from the host's playhead and publish a
     // ===  block-rate snapshot for the rest of the plugin.
     {
