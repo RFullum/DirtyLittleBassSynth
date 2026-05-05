@@ -219,13 +219,14 @@ void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
     for (const auto &id : learnableIDs)
         midiLearnManager.RegisterParam(parameters, id);
 
-    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Any user
-    // override loaded via LoadMidiLearnMappings() will take priority since it
-    // runs after this default is applied.
+    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Registered
+    // as a default (not a one-shot mapping) so a Clear Maps action restores it
+    // afterwards. Any user override loaded via LoadMidiLearnMappings() takes
+    // priority since RestoreMappings runs after this default is applied.
     if (wrapperType == wrapperType_Standalone)
     {
         const int lfoAmtIdx = midiLearnManager.GetParamIndexById("filtLFO_amt");
-        midiLearnManager.SetMapping(1, lfoAmtIdx);
+        midiLearnManager.RegisterDefaultMapping(1, lfoAmtIdx);
     }
 }
 

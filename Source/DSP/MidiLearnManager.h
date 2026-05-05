@@ -82,9 +82,16 @@ public:
     // Mapping queries / mutations (UI thread).
     //==========================================================================
 
-    /// Sets a CC → param binding directly (used for hardcoded defaults and
-    /// during persistence load). Pass paramIndex = -1 to clear the slot.
+    /// Sets a CC → param binding directly (used during persistence load and
+    /// internally by the default-mapping helpers). Pass paramIndex = -1 to
+    /// clear the slot.
     void SetMapping(int ccNumber, int paramIndex) noexcept;
+
+    /// Registers a fallback CC → param binding and applies it immediately.
+    /// ClearAllMappings re-applies every registered default after wiping the
+    /// table — used by the processor for the standalone-only CC1 → LFO Amount
+    /// default so a Clear Maps action doesn't leave the mod wheel unmapped.
+    void RegisterDefaultMapping(int ccNumber, int paramIndex) noexcept;
 
     /// Removes every CC that points to the given param. No-op if paramIndex
     /// is out of range.
@@ -140,8 +147,15 @@ private:
         juce::String                paramID;
     };
 
+    struct DefaultMapping
+    {
+        int cc;
+        int paramIndex;
+    };
+
     std::vector<Entry>                       params;
     std::array<std::atomic<int>, numCcSlots> ccToParamIndex;   // -1 = unmapped
+    std::vector<DefaultMapping>              defaultMappings;
 
     std::atomic<State> state            { State::Idle };
     std::atomic<int>   armedParamIndex  { -1 };

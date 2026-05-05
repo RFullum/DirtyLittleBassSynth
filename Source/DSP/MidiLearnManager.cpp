@@ -112,6 +112,18 @@ void MidiLearnManager::SetMapping(int ccNumber, int paramIndex) noexcept
     dirty                              .store(true, std::memory_order_release);
 }
 
+void MidiLearnManager::RegisterDefaultMapping(int ccNumber, int paramIndex) noexcept
+{
+    if (ccNumber < 0 || ccNumber >= numCcSlots)
+        return;
+
+    if (paramIndex < 0 || paramIndex >= (int) params.size())
+        return;
+
+    defaultMappings.push_back({ ccNumber, paramIndex });
+    SetMapping(ccNumber, paramIndex);
+}
+
 void MidiLearnManager::UnmapParam(int paramIndex) noexcept
 {
     if (paramIndex < 0 || paramIndex >= (int) params.size())
@@ -136,6 +148,11 @@ void MidiLearnManager::ClearAllMappings() noexcept
 {
     for (auto &slot : ccToParamIndex)
         slot.store(-1, std::memory_order_release);
+
+    // Restore the registered defaults (e.g., standalone CC1 → LFO Amount) so
+    // Clear Maps doesn't leave the mod wheel orphaned.
+    for (const auto &d : defaultMappings)
+        ccToParamIndex[(size_t) d.cc].store(d.paramIndex, std::memory_order_release);
 
     dirty.store(true, std::memory_order_release);
 }
