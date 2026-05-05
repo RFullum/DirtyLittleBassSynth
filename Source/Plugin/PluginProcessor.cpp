@@ -239,6 +239,17 @@ void DirtyLittleBassSynthAudioProcessor::LoadMidiLearnMappings()
     }
 }
 
+void DirtyLittleBassSynthAudioProcessor::SaveMidiLearnMappings()
+{
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        userSettings->setValue("midiLearnMappings", midiLearnManager.SerialiseMappings());
+        userSettings->saveIfNeeded();
+    }
+
+    midiLearnManager.ClearDirtyFlag();
+}
+
 void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     synth.setCurrentPlaybackSampleRate(sampleRate);

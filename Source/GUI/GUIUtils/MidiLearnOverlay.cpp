@@ -49,18 +49,57 @@ void MidiLearnOverlay::mouseDown(const juce::MouseEvent &e)
 {
     const auto editorPos = e.getPosition() + getPosition();
 
-    if (auto *learnable = FindLearnableAt(editorPos))
-    {
-        const auto paramID = learnable->getProperties()["paramID"].toString();
-        const int  idx     = manager.GetParamIndexById(paramID);
+    auto *learnable = FindLearnableAt(editorPos);
+    if (learnable == nullptr)
+        return;
 
-        if (idx >= 0)
-        {
-            manager.ArmParam(idx);
-            armedComp = learnable;
-            repaint();
-        }
+    const auto paramID = learnable->getProperties()["paramID"].toString();
+    const int  idx     = manager.GetParamIndexById(paramID);
+    if (idx < 0)
+        return;
+
+    // Right-click → context menu (unmap). Left-click → arm.
+    if (e.mods.isPopupMenu())
+    {
+        ShowContextMenu(idx);
+        return;
     }
+
+    manager.ArmParam(idx);
+    armedComp = learnable;
+    repaint();
+}
+
+void MidiLearnOverlay::ShowContextMenu(int paramIndex)
+{
+    juce::PopupMenu menu;
+
+    const int cc = manager.GetFirstCcForParam(paramIndex);
+
+    if (cc < 0)
+    {
+        // Disabled placeholder so the user gets visible feedback that there's
+        // nothing to unmap on this param.
+        menu.addItem("(not mapped)", /*isActive*/ false, /*isTicked*/ false, [](){});
+    }
+    else
+    {
+        const juce::String label = "Unmap CC" + juce::String(cc);
+
+        juce::Component::SafePointer<MidiLearnOverlay> self(this);
+        const int idxCopy = paramIndex;
+
+        menu.addItem(label, [self, idxCopy]()
+        {
+            if (self != nullptr)
+            {
+                self->manager.UnmapParam(idxCopy);
+                self->repaint();    // remove the CC# badge immediately
+            }
+        });
+    }
+
+    menu.showMenuAsync(juce::PopupMenu::Options{});
 }
 
 void MidiLearnOverlay::mouseMove(const juce::MouseEvent &e)

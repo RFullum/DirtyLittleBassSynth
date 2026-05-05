@@ -50,6 +50,7 @@ void MidiLearnManager::HandleControllerMessage(int ccNumber, int ccValue)
         if (armed >= 0 && armed < (int) params.size())
         {
             ccToParamIndex[(size_t) ccNumber].store(armed, std::memory_order_release);
+            dirty          .store(true,              std::memory_order_release);
 
             // Drop the armed flag and return to Listening so the user can
             // immediately click another param without re-toggling learn mode.
@@ -108,6 +109,7 @@ void MidiLearnManager::SetMapping(int ccNumber, int paramIndex) noexcept
     // paramIndex out of range collapses to "unmapped" (-1).
     const int idx = (paramIndex >= 0 && paramIndex < (int) params.size()) ? paramIndex : -1;
     ccToParamIndex[(size_t) ccNumber].store(idx, std::memory_order_release);
+    dirty                              .store(true, std::memory_order_release);
 }
 
 void MidiLearnManager::UnmapParam(int paramIndex) noexcept
@@ -115,17 +117,27 @@ void MidiLearnManager::UnmapParam(int paramIndex) noexcept
     if (paramIndex < 0 || paramIndex >= (int) params.size())
         return;
 
+    bool changed = false;
+
     for (auto &slot : ccToParamIndex)
     {
         if (slot.load(std::memory_order_acquire) == paramIndex)
+        {
             slot.store(-1, std::memory_order_release);
+            changed = true;
+        }
     }
+
+    if (changed)
+        dirty.store(true, std::memory_order_release);
 }
 
 void MidiLearnManager::ClearAllMappings() noexcept
 {
     for (auto &slot : ccToParamIndex)
         slot.store(-1, std::memory_order_release);
+
+    dirty.store(true, std::memory_order_release);
 }
 
 //==============================================================================
@@ -217,4 +229,8 @@ void MidiLearnManager::RestoreMappings(const juce::String &serialised)
         if (cc >= 0 && cc < numCcSlots && idx >= 0)
             ccToParamIndex[(size_t) cc].store(idx, std::memory_order_release);
     }
+
+    // Loading from disk shouldn't immediately schedule a save — clear the
+    // dirty flag that ClearAllMappings set above.
+    ClearDirtyFlag();
 }

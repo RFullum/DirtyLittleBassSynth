@@ -131,6 +131,14 @@ private:
     void RegisterMidiLearnableParams();
     void LoadMidiLearnMappings();
 
+public:
+    /// Persists the current MIDI Learn mappings to the user-settings file.
+    /// Called from the editor's timer when the manager's dirty flag is set,
+    /// so file I/O happens on the message thread, not audio.
+    void SaveMidiLearnMappings();
+
+private:
+
     juce::Synthesiser synth;
     int voiceCount = 1;
 

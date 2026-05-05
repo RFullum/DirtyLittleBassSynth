@@ -123,6 +123,14 @@ public:
     /// (e.g., if a param was renamed between plugin versions).
     void RestoreMappings(const juce::String &serialised);
 
+    /// True when the mapping table has changed since the last ClearDirtyFlag().
+    /// Set by every mutator (HandleControllerMessage when binding lands,
+    /// SetMapping, UnmapParam, ClearAllMappings). The UI thread polls this so
+    /// it can persist mappings to disk without doing file I/O on the audio
+    /// thread.
+    bool IsDirty()       const noexcept { return dirty.load (std::memory_order_acquire); }
+    void ClearDirtyFlag()      noexcept { dirty.store(false, std::memory_order_release); }
+
 private:
     static constexpr int numCcSlots = 128;
 
@@ -137,6 +145,7 @@ private:
 
     std::atomic<State> state            { State::Idle };
     std::atomic<int>   armedParamIndex  { -1 };
+    std::atomic<bool>  dirty            { false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLearnManager)
 };

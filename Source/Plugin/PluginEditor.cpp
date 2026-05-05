@@ -118,6 +118,12 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (learning || midiLearnOverlay.isVisible())
         midiLearnOverlay.Update();
 
+    // Persist mappings whenever the manager flags itself dirty (binding landed,
+    // unmap, clear-all). File I/O happens here on the message thread; the
+    // audio thread only flips the atomic flag.
+    if (processor.GetMidiLearnManager().IsDirty())
+        processor.SaveMidiLearnMappings();
+
     titleHeader  .Update();
     sourcesColumn.Update();
     filterColumn .Update();

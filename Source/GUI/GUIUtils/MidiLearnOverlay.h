@@ -45,6 +45,8 @@ private:
     juce::Component *FindLearnableAt(juce::Point<int> editorPos);
     static juce::Component *WalkUpForParamID(juce::Component *start);
 
+    void ShowContextMenu(int paramIndex);
+
     void RebuildLearnableCache();
 
     void PaintBadges     (juce::Graphics &g);
