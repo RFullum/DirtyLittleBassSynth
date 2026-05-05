@@ -9,6 +9,7 @@
 #include "FilterColumn.h"
 #include "ModifiersColumn.h"
 #include "MasterColumn.h"
+#include "MidiLearnOverlay.h"
 
 //==============================================================================
 
@@ -42,6 +43,10 @@ private:
     FilterColumn    filterColumn;
     ModifiersColumn modifiersColumn;
     MasterColumn    masterColumn;
+
+    // Last in the declaration list so it's added on top of every other child
+    // and intercepts clicks first when learn mode is active.
+    MidiLearnOverlay midiLearnOverlay;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirtyLittleBassSynthAudioProcessorEditor)
 };

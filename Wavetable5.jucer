@@ -143,6 +143,10 @@
                 file="Source/GUI/GUIUtils/OtherLookAndFeel.cpp"/>
           <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
                 file="Source/GUI/GUIUtils/OtherLookAndFeel.h"/>
+          <FILE id="GR000301" name="MidiLearnOverlay.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/MidiLearnOverlay.cpp"/>
+          <FILE id="GR000302" name="MidiLearnOverlay.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/MidiLearnOverlay.h"/>
         </GROUP>
       </GROUP>
     </GROUP>

@@ -32,6 +32,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 , filterColumn   (resources)
 , modifiersColumn(resources)
 , masterColumn   (resources)
+, midiLearnOverlay(processor.GetMidiLearnManager(), resources.theme)
 {
     setSize(1300, 700);
 
@@ -46,6 +47,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     addAndMakeVisible(filterColumn);
     addAndMakeVisible(modifiersColumn);
     addAndMakeVisible(masterColumn);
+
+    // Overlay sits on top of the body area; visibility is driven by the
+    // MidiLearnManager state in timerCallback.
+    addChildComponent(midiLearnOverlay);
 
     juce::Timer::startTimerHz(60);
 }
@@ -77,6 +82,12 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     dividers.emplace_back(bounds.removeFromTop(dividerThick));
     dividers.emplace_back(bounds.removeFromBottom(dividerThick));
 
+    // The MIDI Learn overlay covers the entire body region (between header and
+    // footer) so it can intercept clicks on any column-resident control. The
+    // header itself stays uncovered so the LEARN / CLEAR buttons remain
+    // clickable while learn mode is active.
+    midiLearnOverlay.setBounds(bounds);
+
     // 12 Slice Design: 4 columns of the synth spaced across the 12 column slices.
     const int bodyW       = bounds.getWidth();
     const int columnsSize = bodyW - (dividerThick * 3);
@@ -93,6 +104,15 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
+    // Toggle the MIDI Learn overlay's visibility based on the manager's state.
+    // The audio thread can transition Armed → Listening when a CC binds, so
+    // polling here keeps the visual in sync without a dedicated listener.
+    const auto learnState = processor.GetMidiLearnManager().GetState();
+    const bool learning   = (learnState != MidiLearnManager::State::Idle);
+
+    if (midiLearnOverlay.isVisible() != learning)
+        midiLearnOverlay.setVisible(learning);
+
     titleHeader  .Update();
     sourcesColumn.Update();
     filterColumn .Update();
