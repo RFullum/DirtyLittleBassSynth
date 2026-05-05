@@ -179,6 +179,64 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
         v->SetMasterGainParamPointers   (masterGainParameter);
         v->updatePitchBendRange         (*pitchBendParameter);
     }
+
+    // === MIDI Learn ===
+    juce::PropertiesFile::Options propsOptions;
+    propsOptions.applicationName     = "DirtyLittleBassSynth";
+    propsOptions.filenameSuffix      = ".settings";
+    propsOptions.folderName          = "FullumMusic";
+    propsOptions.osxLibrarySubFolder = "Application Support";
+    applicationProperties.setStorageParameters(propsOptions);
+
+    RegisterMidiLearnableParams();
+    LoadMidiLearnMappings();
+}
+
+void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
+{
+    // Order here is the stable param-index order serialised mappings rely on.
+    // Adding params later is fine; renaming or removing one will silently drop
+    // existing mappings that referenced the old paramID (handled in
+    // MidiLearnManager::RestoreMappings).
+    static const juce::StringArray learnableIDs
+    {
+        "osc_morph", "sub_osc_morph", "sub_osc_gain", "sub_osc_octave",
+        "amp_attack", "amp_decay", "amp_sustain", "amp_release",
+        "porta_time", "porta_on", "porta_legato",
+        "foldback_dist",
+        "ring_mod_pitch", "ring_tone", "ring_mod_mix",
+        "freq_shift_pitch", "freq_shift_mix",
+        "sandh_pitch", "sandh_mix",
+        "filter_cutoff", "filter_res", "filter_type",
+        "filtEnv_attack", "filtEnv_decay", "filtEnv_sustain", "filtEnv_release",
+        "filtEnv_COAmt", "filtEnv_ResAmt",
+        "filtLFO_freq", "filtLFO_amt", "filtLFO_shape",
+        "filtLFO_sync", "filtLFO_sync_div",
+        "master_gain", "master_wide", "mono_below_freq",
+        "limiter_on", "limiter_ceiling"
+    };
+
+    for (const auto &id : learnableIDs)
+        midiLearnManager.RegisterParam(parameters, id);
+
+    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Any user
+    // override loaded via LoadMidiLearnMappings() will take priority since it
+    // runs after this default is applied.
+    if (wrapperType == wrapperType_Standalone)
+    {
+        const int lfoAmtIdx = midiLearnManager.GetParamIndexById("filtLFO_amt");
+        midiLearnManager.SetMapping(1, lfoAmtIdx);
+    }
+}
+
+void DirtyLittleBassSynthAudioProcessor::LoadMidiLearnMappings()
+{
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        const auto serialised = userSettings->getValue("midiLearnMappings", juce::String());
+        if (serialised.isNotEmpty())
+            midiLearnManager.RestoreMappings(serialised);
+    }
 }
 
 void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -235,25 +293,16 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
 {
     juce::ScopedNoDenormals noDenormals;
 
-    // === Standalone-only MIDI auto-map ===
-    // Map the mod wheel (CC1) onto the Filter LFO Amount — wheel down = 0,
-    // wheel up = full. Skipped in DAW mode so the host's own MIDI mapping /
-    // automation infrastructure stays in charge.
-    if (wrapperType == wrapperType_Standalone)
+    // === MIDI CC routing (learn mappings + standalone defaults) ===
+    // The manager owns all CC→param dispatch. It also performs the binding when
+    // the user is in Learn mode and a param has been armed.
+    for (const auto meta : midiMessages)
     {
-        for (const auto meta : midiMessages)
-        {
-            const auto m = meta.getMessage();
+        const auto m = meta.getMessage();
 
-            if (m.isController() && m.getControllerNumber() == 1)
-            {
-                if (auto *lfoAmtParam = parameters.getParameter("filtLFO_amt"))
-                {
-                    const float normalised = (float) m.getControllerValue() / 127.0f;
-                    lfoAmtParam->setValueNotifyingHost(normalised);
-                }
-            }
-        }
+        if (m.isController())
+            midiLearnManager.HandleControllerMessage(m.getControllerNumber(),
+                                                     m.getControllerValue());
     }
 
     // === Pull tempo / transport state from the host's playhead and publish a

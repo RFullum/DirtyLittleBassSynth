@@ -5,6 +5,7 @@
 #include "MasterChain.h"
 #include "ScopeBuffer.h"
 #include "TempoSnapshot.h"
+#include "MidiLearnManager.h"
 
 //==============================================================================
 
@@ -55,6 +56,10 @@ public:
     /// Read-only handle to the tempo snapshot updated each block from the host's
     /// playhead (or the fallback BPM param when no host transport is reporting).
     const TempoSnapshot &GetTempoSnapshot() const noexcept { return tempoSnapshot; }
+
+    /// Mutable handle to the MIDI Learn manager. UI uses it to enter/exit
+    /// learn mode, arm params, query mappings, and trigger Clear All.
+    MidiLearnManager &GetMidiLearnManager() noexcept { return midiLearnManager; }
 
     juce::AudioProcessorValueTreeState parameters;
 
@@ -116,9 +121,15 @@ private:
 
     std::atomic<float>* tempoFallbackBpmParameter;
 
-    MasterChain   masterChain;
-    ScopeBuffer   scopeBuffer;
-    TempoSnapshot tempoSnapshot;
+    MasterChain      masterChain;
+    ScopeBuffer      scopeBuffer;
+    TempoSnapshot    tempoSnapshot;
+    MidiLearnManager midiLearnManager;
+
+    juce::ApplicationProperties applicationProperties;
+
+    void RegisterMidiLearnableParams();
+    void LoadMidiLearnMappings();
 
     juce::Synthesiser synth;
     int voiceCount = 1;

@@ -34,10 +34,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     DLBS::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f, juce::Justification::centredRight);
     DLBS::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f, juce::Justification::centredRight);
 
-    attackAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_attack",  oscAttackSlider);
-    decayAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_decay",   oscDecaySlider);
-    sustainAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_sustain", oscSustainSlider);
-    releaseAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "amp_release", oscReleaseSlider);
+    attackAtt  = DLBS::AttachSlider(*res.apvts, "amp_attack",  oscAttackSlider);
+    decayAtt   = DLBS::AttachSlider(*res.apvts, "amp_decay",   oscDecaySlider);
+    sustainAtt = DLBS::AttachSlider(*res.apvts, "amp_sustain", oscSustainSlider);
+    releaseAtt = DLBS::AttachSlider(*res.apvts, "amp_release", oscReleaseSlider);
 
     DLBS::SetSliderTextFormat(oscAttackSlider,  DLBS::FormatTime);
     DLBS::SetSliderTextFormat(oscDecaySlider,   DLBS::FormatTime);

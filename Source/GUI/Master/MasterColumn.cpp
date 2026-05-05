@@ -30,9 +30,7 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    gainAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts
-                                                                                     , "master_gain"
-                                                                                     , masterGainSlider);
+    gainAtt = DLBS::AttachSlider(*res.apvts, "master_gain", masterGainSlider);
 
     DLBS::SetSliderTextFormat(masterGainSlider, DLBS::FormatGainDb);
 
@@ -44,7 +42,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     ceilingOnButton.setColour              (juce::TextButton::textColourOffId,  res.theme.textSecondary);
     addAndMakeVisible(ceilingOnButton);
 
-    ceilingOnAtt = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "limiter_on", ceilingOnButton);
+    ceilingOnAtt = DLBS::AttachButton(*res.apvts, "limiter_on", ceilingOnButton);
 
     DLBS::SetupSlider(this
                       , ceilingSlider
@@ -57,7 +55,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     ceilingSlider.setLookAndFeel    (res.dialLookAndFeel);
     ceilingSlider.setTextValueSuffix(" dB");
 
-    ceilingAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "limiter_ceiling", ceilingSlider);
+    ceilingAtt = DLBS::AttachSlider(*res.apvts, "limiter_ceiling", ceilingSlider);
 
     // Listen for limiter_on changes from any source (UI click, automation, preset
     // recall). The listener updates the button text + alpha of the ceiling controls.
@@ -80,7 +78,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     // to the thumb instead of from the left edge.
     wideSlider.getProperties().set("bipolarFill", true);
 
-    wideAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "master_wide", wideSlider);
+    wideAtt = DLBS::AttachSlider(*res.apvts, "master_wide", wideSlider);
 
     // === Bass Mono-izer crossover (placeholder) ===
     DLBS::SetupSlider(this
@@ -94,8 +92,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     monoCrossoverSlider.setLookAndFeel    (res.dialLookAndFeel);
     monoCrossoverSlider.setTextValueSuffix(" Hz");
 
-    monoCrossoverAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-                          *res.apvts, "mono_below_freq", monoCrossoverSlider);
+    monoCrossoverAtt = DLBS::AttachSlider(*res.apvts, "mono_below_freq", monoCrossoverSlider);
 
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);

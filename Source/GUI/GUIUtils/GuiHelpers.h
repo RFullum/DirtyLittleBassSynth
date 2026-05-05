@@ -143,4 +143,30 @@ namespace DLBS
 
         parent->addAndMakeVisible(box);
     }
+
+    //========================================================================
+    // MIDI-Learn-aware attachment helpers.
+    // These wrap the standard APVTS attachment construction and *also* tag the
+    // component's properties with the parameterID. The MIDI Learn glass-pane
+    // reads that property to figure out which param a clicked component drives.
+    // Use these everywhere a learnable APVTS attachment is created.
+    //========================================================================
+
+    inline std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>
+    AttachSlider(juce::AudioProcessorValueTreeState &apvts,
+                 const juce::String                 &paramID,
+                 juce::Slider                       &slider)
+    {
+        slider.getProperties().set("paramID", paramID);
+        return std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID, slider);
+    }
+
+    inline std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment>
+    AttachButton(juce::AudioProcessorValueTreeState &apvts,
+                 const juce::String                 &paramID,
+                 juce::Button                       &button)
+    {
+        button.getProperties().set("paramID", paramID);
+        return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID, button);
+    }
 }

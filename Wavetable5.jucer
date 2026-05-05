@@ -46,6 +46,10 @@
               file="Source/DSP/ScopeBuffer.h"/>
         <FILE id="GR000207" name="TempoSnapshot.h" compile="0" resource="0"
               file="Source/DSP/TempoSnapshot.h"/>
+        <FILE id="GR000208" name="MidiLearnManager.cpp" compile="1" resource="0"
+              file="Source/DSP/MidiLearnManager.cpp"/>
+        <FILE id="GR000209" name="MidiLearnManager.h" compile="0" resource="0"
+              file="Source/DSP/MidiLearnManager.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">

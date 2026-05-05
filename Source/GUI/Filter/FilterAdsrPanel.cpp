@@ -42,12 +42,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     DLBS::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 14.0f);
     DLBS::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 14.0f);
 
-    attackAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_attack",  fltAttackSlider);
-    decayAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_decay",   fltDecaySlider);
-    sustainAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_sustain", fltSustainSlider);
-    releaseAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_release", fltReleaseSlider);
-    toCutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
-    toResAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
+    attackAtt   = DLBS::AttachSlider(*res.apvts, "filtEnv_attack",  fltAttackSlider);
+    decayAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_decay",   fltDecaySlider);
+    sustainAtt  = DLBS::AttachSlider(*res.apvts, "filtEnv_sustain", fltSustainSlider);
+    releaseAtt  = DLBS::AttachSlider(*res.apvts, "filtEnv_release", fltReleaseSlider);
+    toCutoffAtt = DLBS::AttachSlider(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
+    toResAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
 
     DLBS::SetSliderTextFormat(fltAttackSlider,  DLBS::FormatTime);
     DLBS::SetSliderTextFormat(fltDecaySlider,   DLBS::FormatTime);

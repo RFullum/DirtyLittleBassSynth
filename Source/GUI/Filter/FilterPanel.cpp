@@ -37,8 +37,8 @@ FilterPanel::FilterPanel(GuiResources &res)
                      , res.theme.textSecondary);
     addAndMakeVisible(filterType);
 
-    cutoffAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_cutoff", cutoffSlider);
-    resAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filter_res",    resSlider);
+    cutoffAtt = DLBS::AttachSlider(*res.apvts, "filter_cutoff", cutoffSlider);
+    resAtt    = DLBS::AttachSlider(*res.apvts, "filter_res",    resSlider);
 
     DLBS::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
 

@@ -67,15 +67,15 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     DLBS::SetupLabel(this, pitchLabel,   "Pitch",         txt, 12.0f);
     DLBS::SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 12.0f);
 
-    portaAtt         = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "porta_time",       portaSlider);
-    foldbackAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "foldback_dist",    foldbackSlider);
-    ringToneAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "ring_tone",        ringToneSlider);
-    ringPitchAtt     = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "ring_mod_pitch",   ringPitchSlider);
-    ringDryWetAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "ring_mod_mix",     ringDryWetSlider);
-    frqShftPitchAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "freq_shift_pitch", frqShftPitchSlider);
-    frqShftDryWetAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "freq_shift_mix",   frqShftDryWetSlider);
-    sHPitchAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sandh_pitch",      sHPitchSlider);
-    sHDryWetAtt      = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sandh_mix",        sHDryWetSlider);
+    portaAtt         = DLBS::AttachSlider(*res.apvts, "porta_time",       portaSlider);
+    foldbackAtt      = DLBS::AttachSlider(*res.apvts, "foldback_dist",    foldbackSlider);
+    ringToneAtt      = DLBS::AttachSlider(*res.apvts, "ring_tone",        ringToneSlider);
+    ringPitchAtt     = DLBS::AttachSlider(*res.apvts, "ring_mod_pitch",   ringPitchSlider);
+    ringDryWetAtt    = DLBS::AttachSlider(*res.apvts, "ring_mod_mix",     ringDryWetSlider);
+    frqShftPitchAtt  = DLBS::AttachSlider(*res.apvts, "freq_shift_pitch", frqShftPitchSlider);
+    frqShftDryWetAtt = DLBS::AttachSlider(*res.apvts, "freq_shift_mix",   frqShftDryWetSlider);
+    sHPitchAtt       = DLBS::AttachSlider(*res.apvts, "sandh_pitch",      sHPitchSlider);
+    sHDryWetAtt      = DLBS::AttachSlider(*res.apvts, "sandh_mix",        sHDryWetSlider);
 
     // === Portamento mode buttons: ON/OFF + ALWAYS/LEGATO ===
     auto styleModeButton = [&](juce::TextButton &btn, juce::Colour onTextColor)
@@ -91,8 +91,8 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     styleModeButton(portaOnButton,     primary);
     styleModeButton(portaLegatoButton, primary);
 
-    portaOnAtt     = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "porta_on",     portaOnButton);
-    portaLegatoAtt = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(*res.apvts, "porta_legato", portaLegatoButton);
+    portaOnAtt     = DLBS::AttachButton(*res.apvts, "porta_on",     portaOnButton);
+    portaLegatoAtt = DLBS::AttachButton(*res.apvts, "porta_legato", portaLegatoButton);
 
     res.apvts->addParameterListener("porta_on",     this);
     res.apvts->addParameterListener("porta_legato", this);

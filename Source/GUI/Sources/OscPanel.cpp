@@ -50,9 +50,13 @@ OscPanel::OscPanel(GuiResources &res)
                     , res.theme.textSecondary);
     addAndMakeVisible(subOctave);
 
-    oscMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "osc_morph",        oscMorphSlider);
-    subMorphAtt       = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_morph",    subMorphSlider);
-    subGainAtt        = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "sub_osc_gain",     subGainSlider);
+    oscMorphAtt       = DLBS::AttachSlider(*res.apvts, "osc_morph",     oscMorphSlider);
+    subMorphAtt       = DLBS::AttachSlider(*res.apvts, "sub_osc_morph", subMorphSlider);
+    subGainAtt        = DLBS::AttachSlider(*res.apvts, "sub_osc_gain",  subGainSlider);
+
+    // pitch_bend_range is intentionally NOT registered for MIDI Learn — it's a
+    // setup parameter, not a live-tweak control. Keep the raw attachment so the
+    // slider isn't tagged with a paramID.
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
     DLBS::SetSliderTextFormat(subGainSlider, DLBS::FormatGainDb);

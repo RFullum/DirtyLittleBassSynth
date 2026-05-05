@@ -37,10 +37,10 @@ LfoPanel::LfoPanel(GuiResources &res)
     DLBS::SetupLabel(this, lfoRateLabel,   "Freq",   txt, 14.0f);
     DLBS::SetupLabel(this, lfoAmountLabel, "Amount", txt, 14.0f);
 
-    shapeAtt  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_shape",    lfoShapeSlider);
-    freqAtt   = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_freq",     lfoFreqSlider);
-    divAtt    = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_sync_div", lfoSyncDivSlider);
-    amountAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "filtLFO_amt",      lfoAmountSlider);
+    shapeAtt  = DLBS::AttachSlider(*res.apvts, "filtLFO_shape",    lfoShapeSlider);
+    freqAtt   = DLBS::AttachSlider(*res.apvts, "filtLFO_freq",     lfoFreqSlider);
+    divAtt    = DLBS::AttachSlider(*res.apvts, "filtLFO_sync_div", lfoSyncDivSlider);
+    amountAtt = DLBS::AttachSlider(*res.apvts, "filtLFO_amt",      lfoAmountSlider);
 
     // Display the choice's text label ("1/8", "1/4D", etc.) in the slider's
     // textbox by overriding textFromValueFunction. The slider attachment maps
