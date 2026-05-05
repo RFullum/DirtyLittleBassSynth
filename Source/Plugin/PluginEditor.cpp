@@ -114,6 +114,10 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (midiLearnOverlay.isVisible() != learning)
         midiLearnOverlay.setVisible(learning);
 
+    // Drive overlay animations + state-transition detection while it's visible.
+    if (learning || midiLearnOverlay.isVisible())
+        midiLearnOverlay.Update();
+
     titleHeader  .Update();
     sourcesColumn.Update();
     filterColumn .Update();
