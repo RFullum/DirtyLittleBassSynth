@@ -17,6 +17,7 @@ namespace
             .scopeBuffer       = &processor.GetScopeBuffer(),
             .tempoSnapshot     = &processor.GetTempoSnapshot(),
             .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
+            .midiLearnManager  = &processor.GetMidiLearnManager(),
         };
     }
 }

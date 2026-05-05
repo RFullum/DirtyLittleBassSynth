@@ -40,6 +40,39 @@ TitleHeader::TitleHeader(GuiResources &res)
     bpmEditor.onFocusLost = [this]() { CommitBpmEdit(); };
 
     addChildComponent(bpmEditor);
+
+    // === MIDI Learn buttons ===
+    // LEARN: toggles between Idle and Listening on the manager. Toggle state
+    // mirrors manager.GetState() via Update(), so any source flipping the
+    // state (audio thread, future shortcuts) keeps the button in sync.
+    learnButton.setButtonText            ("LEARN");
+    learnButton.setClickingTogglesState  (true);
+    learnButton.setColour                (juce::TextButton::buttonColourId,   res.theme.structure);
+    learnButton.setColour                (juce::TextButton::buttonOnColourId, res.theme.secondaryAccent.withAlpha(0.25f));
+    learnButton.setColour                (juce::TextButton::textColourOnId,   res.theme.secondaryAccent);
+    learnButton.setColour                (juce::TextButton::textColourOffId,  res.theme.textSecondary);
+    learnButton.onClick = [this]()
+    {
+        if (resources.midiLearnManager == nullptr)
+            return;
+
+        if (learnButton.getToggleState())
+            resources.midiLearnManager->EnterListening();
+        else
+            resources.midiLearnManager->ExitLearn();
+    };
+    addAndMakeVisible(learnButton);
+
+    // CLEAR MAPS: visible only in learn mode. Wipes every CC binding.
+    clearMapsButton.setButtonText("CLEAR MAPS");
+    clearMapsButton.setColour    (juce::TextButton::buttonColourId,  res.theme.structure);
+    clearMapsButton.setColour    (juce::TextButton::textColourOffId, res.theme.orangeAccent);
+    clearMapsButton.onClick = [this]()
+    {
+        if (resources.midiLearnManager != nullptr)
+            resources.midiLearnManager->ClearAllMappings();
+    };
+    addChildComponent(clearMapsButton);   // hidden by default; Update() shows it in learn mode
 }
 
 void TitleHeader::paint(juce::Graphics &g)
@@ -166,6 +199,22 @@ void TitleHeader::resized()
     initPatchRect = juce::Rectangle<int>(rightX - initWidth,
                                          bounds.getY() + (bounds.getHeight() - 14) / 2,
                                          initWidth, 14);
+    rightX -= initWidth + initGap;
+
+    // === MIDI Learn buttons ===
+    // Continue right→left so they sit just left of INIT PATCH.
+    constexpr int learnBtnHeight    = 18;
+    constexpr int learnBtnGap       = 6;
+    constexpr int learnBtnWidth     = 56;
+    constexpr int clearMapsBtnWidth = 88;
+
+    const int learnBtnY = bounds.getY() + (bounds.getHeight() - learnBtnHeight) / 2;
+
+    learnButton.setBounds(rightX - learnBtnWidth, learnBtnY, learnBtnWidth, learnBtnHeight);
+    rightX -= learnBtnWidth + learnBtnGap;
+
+    clearMapsButton.setBounds(rightX - clearMapsBtnWidth, learnBtnY, clearMapsBtnWidth, learnBtnHeight);
+    rightX -= clearMapsBtnWidth + learnBtnGap;
 
     // Centre: BPM display, vertically centred in the header.
     bpmRect = juce::Rectangle<int>((bounds.getWidth() - bpmWidth) / 2,
@@ -276,19 +325,36 @@ void TitleHeader::CancelBpmEdit()
 
 void TitleHeader::Update()
 {
-    if (resources.tempoSnapshot == nullptr)
-        return;
+    // === Tempo display refresh ===
+    if (resources.tempoSnapshot != nullptr)
+    {
+        const auto latest = resources.tempoSnapshot->Read();
 
-    const auto latest = resources.tempoSnapshot->Read();
+        // Only repaint when the displayed values actually change.
+        const bool bpmChanged    = ! juce::approximatelyEqual(latest.bpm, currentTempo.bpm);
+        const bool sourceChanged = latest.bpmFromHost != currentTempo.bpmFromHost;
 
-    // Only repaint when the displayed values actually change.
-    const bool bpmChanged    = ! juce::approximatelyEqual(latest.bpm, currentTempo.bpm);
-    const bool sourceChanged = latest.bpmFromHost != currentTempo.bpmFromHost;
+        currentTempo = latest;
 
-    currentTempo = latest;
+        if (bpmChanged || sourceChanged)
+            repaint(bpmRect);
+    }
 
-    if (bpmChanged || sourceChanged)
-        repaint(bpmRect);
+    // === MIDI Learn button sync ===
+    // Mirror the manager's state into the LEARN button's toggle state. The
+    // audio thread can transition Armed → Listening on its own, but we never
+    // see Idle from anywhere except this button — so this is mostly a guard
+    // against the two getting out of sync (e.g. via future shortcut keys).
+    if (resources.midiLearnManager != nullptr)
+    {
+        const bool learning = (resources.midiLearnManager->GetState() != MidiLearnManager::State::Idle);
+
+        if (learnButton.getToggleState() != learning)
+            learnButton.setToggleState(learning, juce::dontSendNotification);
+
+        if (clearMapsButton.isVisible() != learning)
+            clearMapsButton.setVisible(learning);
+    }
 }
 
 //==============================================================================

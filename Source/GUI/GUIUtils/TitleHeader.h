@@ -58,6 +58,12 @@ private:
     juce::Rectangle<int> nextBtnRect;
     juce::Rectangle<int> brandingRect;
 
+    // MIDI Learn controls. learnButton is always visible and toggles learn
+    // mode on/off; clearMapsButton is visible only while in learn mode and
+    // wipes the manager's mapping table.
+    juce::TextButton     learnButton;
+    juce::TextButton     clearMapsButton;
+
     // BPM drag-edit state. bpmDragging only ever set in standalone mode.
     bool  bpmDragging       = false;
     int   bpmDragStartY     = 0;
