@@ -22,13 +22,13 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 
     DLBS::SetupSlider(this, portaSlider,         juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
     DLBS::SetupSlider(this, foldbackSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    DLBS::SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    DLBS::SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    DLBS::SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,   thumb, txt);
-    DLBS::SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    DLBS::SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    DLBS::SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
-    DLBS::SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange, thumb, txt);
+    DLBS::SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    DLBS::SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    DLBS::SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    DLBS::SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    DLBS::SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    DLBS::SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    DLBS::SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
 
     portaSlider        .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider     .setLookAndFeel(res.dialLookAndFeel);
@@ -60,12 +60,12 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 
     DLBS::SetupLabel(this, portaLabel,    "Portamento",           txt, 14.0f);
     DLBS::SetupLabel(this, foldbackLabel, "Foldback\nDistortion", txt, 14.0f);
-    DLBS::SetupLabel(this, ringLabel,    "Ring Mod",      txt, 14.0f);
-    DLBS::SetupLabel(this, frqShftLabel, "Freq Shift",    txt, 14.0f);
-    DLBS::SetupLabel(this, sHLabel,      "Sample & Hold", txt, 14.0f);
-    DLBS::SetupLabel(this, toneLabel,    "Tone",          txt, 12.0f);
-    DLBS::SetupLabel(this, pitchLabel,   "Pitch",         txt, 12.0f);
-    DLBS::SetupLabel(this, dryWetLabel,  "Dry/Wet",       txt, 12.0f);
+    DLBS::SetupLabel(this, ringLabel,     "Ring Mod",             txt, 14.0f);
+    DLBS::SetupLabel(this, frqShftLabel,  "Freq Shift",           txt, 14.0f);
+    DLBS::SetupLabel(this, sHLabel,       "Sample & Hold",        txt, 14.0f);
+    DLBS::SetupLabel(this, toneLabel,     "Tone",                 txt, 12.0f);
+    DLBS::SetupLabel(this, pitchLabel,    "Pitch",                txt, 12.0f);
+    DLBS::SetupLabel(this, dryWetLabel,   "Dry/Wet",              txt, 12.0f);
 
     portaAtt         = DLBS::AttachSlider(*res.apvts, "porta_time",       portaSlider);
     foldbackAtt      = DLBS::AttachSlider(*res.apvts, "foldback_dist",    foldbackSlider);
@@ -187,8 +187,8 @@ void ModifierPanel::resized()
     auto sAndHRow    = bounds.removeFromTop(rowHeight);
     ringLabel       .setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
     ringToneSlider  .setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
-    ringPitchSlider .setBounds(ringModRow.removeFromRight(modSectionGridWidth));
-    ringDryWetSlider.setBounds(ringModRow.removeFromRight(modSectionGridWidth));
+    ringPitchSlider .setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
+    ringDryWetSlider.setBounds(ringModRow.removeFromLeft(modSectionGridWidth));
     
     frqShftLabel       .setBounds(freqShftRow.removeFromLeft(modSectionGridWidth));
     freqShftRow        .removeFromLeft(modSectionGridWidth);
