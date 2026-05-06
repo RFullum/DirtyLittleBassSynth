@@ -96,9 +96,9 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
 
     sourcesColumn  .setBounds   (bounds.removeFromLeft(sliceW * 4));
     dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
-    filterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
-    dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
     modifiersColumn.setBounds   (bounds.removeFromLeft(sliceW * 2));
+    dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
+    filterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
     dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
     masterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
 }
