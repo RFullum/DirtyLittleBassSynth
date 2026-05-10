@@ -50,9 +50,11 @@
               file="Source/DSP/MidiLearnManager.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
-        <GROUP id="{44EA77C2-D5DD-B1C5-C5DE-F21F15719ADD}" name="TitleHeader">
-          <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/GUIUtils/TitleHeader.cpp"/>
-          <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/GUIUtils/TitleHeader.h"/>
+        <GROUP id="{6D85074D-F0BC-CA89-0351-64452B174DED}" name="TitleHeaderFooter">
+          <FILE id="Op4Cw2" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TitleHeader.cpp"/>
+          <FILE id="P8524z" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleHeader.h"/>
+          <FILE id="BJc1PZ" name="TitleFooter.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.cpp"/>
+          <FILE id="KPcM0O" name="TitleFooter.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.h"/>
         </GROUP>
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
           <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
@@ -106,10 +108,10 @@
           <FILE id="GR000206" name="ScopeVisual.h" compile="0" resource="0" file="Source/GUI/Master/ScopeVisual.h"/>
         </GROUP>
         <GROUP id="{A4FAA1F2-7893-4325-0B86-6B56E131A8EE}" name="MIDI">
-          <FILE id="GR000301" name="MidiLearnOverlay.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/MidiLearnOverlay.cpp"/>
-          <FILE id="GR000302" name="MidiLearnOverlay.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/MidiLearnOverlay.h"/>
+          <FILE id="BWqEnx" name="MidiLearnOverlay.cpp" compile="1" resource="0"
+                file="Source/GUI/MIDI/MidiLearnOverlay.cpp"/>
+          <FILE id="QJZCB3" name="MidiLearnOverlay.h" compile="0" resource="0"
+                file="Source/GUI/MIDI/MidiLearnOverlay.h"/>
         </GROUP>
         <GROUP id="{9FCD5BD7-4884-24AA-8663-59E4DC80134C}" name="GUIUtils">
           <FILE id="ZurqKQ" name="ColorPalette.h" compile="0" resource="0" file="Source/GUI/GUIUtils/ColorPalette.h"/>

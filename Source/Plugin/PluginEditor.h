@@ -4,12 +4,13 @@
 #include "PluginProcessor.h"
 #include "GuiResources.h"
 #include "OtherLookAndFeel.h"
-#include "TitleHeader.h"
 #include "SourcesColumn.h"
 #include "FilterColumn.h"
 #include "ModifiersColumn.h"
 #include "MasterColumn.h"
-#include "MidiLearnOverlay.h"
+#include "TitleHeaderFooter/TitleHeader.h"
+#include "TitleHeaderFooter/TitleFooter.h"
+#include "MIDI/MidiLearnOverlay.h"
 
 //==============================================================================
 
