@@ -55,6 +55,12 @@
           <FILE id="P8524z" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleHeader.h"/>
           <FILE id="BJc1PZ" name="TitleFooter.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.cpp"/>
           <FILE id="KPcM0O" name="TitleFooter.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.h"/>
+          <FILE id="aTempo1" name="TempoControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TempoControls.cpp"/>
+          <FILE id="aTempo2" name="TempoControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TempoControls.h"/>
+          <FILE id="aMidiL1" name="MidiLearnControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/MidiLearnControls.cpp"/>
+          <FILE id="aMidiL2" name="MidiLearnControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/MidiLearnControls.h"/>
+          <FILE id="aPatch1" name="PatchControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/PatchControls.cpp"/>
+          <FILE id="aPatch2" name="PatchControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/PatchControls.h"/>
         </GROUP>
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
           <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
