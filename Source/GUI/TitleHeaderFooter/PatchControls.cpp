@@ -15,7 +15,6 @@ PatchControls::PatchControls(GuiResources &res)
 {
     const auto &theme = res.theme;
 
-    // === Top row: patch name display (transparent, looks like a label) ===
     patchNameButton.setButtonText("Init");
     patchNameButton.setColour(juce::TextButton::buttonColourId,   juce::Colours::transparentBlack);
     patchNameButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentBlack);
@@ -23,7 +22,6 @@ PatchControls::PatchControls(GuiResources &res)
     patchNameButton.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
     addAndMakeVisible(patchNameButton);
 
-    // === Top row: cycle arrows ===
     prevButton.setButtonText("<");
     prevButton.setColour(juce::TextButton::buttonColourId,  theme.structure);
     prevButton.setColour(juce::TextButton::textColourOffId, theme.textSecondary);
@@ -34,10 +32,6 @@ PatchControls::PatchControls(GuiResources &res)
     nextButton.setColour(juce::TextButton::textColourOffId, theme.textSecondary);
     addAndMakeVisible(nextButton);
 
-    // === Bottom row: action buttons ===
-    // Same neutral styling for all five so visual weight stays even; behavior-
-    // specific colour cues (e.g. red-tinted Delete) can come later when the
-    // wiring lands.
     auto styleActionButton = [&theme] (juce::TextButton &b, const juce::String &label)
     {
         b.setButtonText(label);

@@ -31,13 +31,11 @@ public:
 
 private:
     GuiResources &resources;
-
-    // Top row: patch-name display flanked by cycle arrows.
+    
     juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later
     juce::TextButton prevButton;
     juce::TextButton nextButton;
 
-    // Bottom row: action buttons.
     juce::TextButton initButton;
     juce::TextButton saveButton;
     juce::TextButton saveAsButton;
