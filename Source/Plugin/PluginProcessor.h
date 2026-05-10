@@ -6,6 +6,7 @@
 #include "ScopeBuffer.h"
 #include "TempoSnapshot.h"
 #include "MidiLearnManager.h"
+#include "PatchManager.h"
 
 //==============================================================================
 
@@ -60,6 +61,10 @@ public:
     /// Mutable handle to the MIDI Learn manager. UI uses it to enter/exit
     /// learn mode, arm params, query mappings, and trigger Clear All.
     MidiLearnManager &GetMidiLearnManager() noexcept { return midiLearnManager; }
+
+    /// Mutable handle to the patch manager. UI uses it to populate the patch
+    /// list and (later) trigger save / load / delete.
+    PatchManager &GetPatchManager() noexcept { return patchManager; }
 
     juce::AudioProcessorValueTreeState parameters;
 
@@ -125,6 +130,7 @@ private:
     ScopeBuffer      scopeBuffer;
     TempoSnapshot    tempoSnapshot;
     MidiLearnManager midiLearnManager;
+    PatchManager     patchManager { parameters };
 
     juce::ApplicationProperties applicationProperties;
 

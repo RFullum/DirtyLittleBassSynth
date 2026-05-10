@@ -10,17 +10,55 @@
 
 //==============================================================================
 
+PatchNameDisplay::PatchNameDisplay(GuiResources &res)
+: juce::Button("")
+, resources(res)
+{
+    setOpaque(false);
+}
+
+PatchNameDisplay::~PatchNameDisplay() {}
+
+void PatchNameDisplay::paintButton(juce::Graphics &g, bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/)
+{
+    const auto &theme = resources.theme;
+    auto bounds = getLocalBounds();
+    g.setColour(theme.textPrimary);
+    g.setFont(juce::Font(juce::FontOptions("Helvetica"
+                                           , 14.0f
+                                           , juce::Font::bold)));
+              
+    if (isDirty)
+    {
+        auto dirtyArea = bounds.removeFromRight(15);
+        g.drawText("*", dirtyArea, juce::Justification::centred);
+    }
+    
+    g.drawText(curentPatchName, bounds, juce::Justification::centred);
+}
+
+void PatchNameDisplay::SetPatchName(juce::StringRef name)
+{
+    curentPatchName = name;
+    repaint();
+}
+
+//==============================================================================
+
 PatchControls::PatchControls(GuiResources &res)
 : resources(res)
+, nameDisplay(std::make_unique<PatchNameDisplay>(res))
 {
     const auto &theme = res.theme;
 
-    patchNameButton.setButtonText("Init");
-    patchNameButton.setColour(juce::TextButton::buttonColourId,   juce::Colours::transparentBlack);
-    patchNameButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentBlack);
-    patchNameButton.setColour(juce::TextButton::textColourOffId,  theme.textPrimary);
-    patchNameButton.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
-    addAndMakeVisible(patchNameButton);
+//    patchNameButton.setButtonText("Init");
+//    patchNameButton.setColour(juce::TextButton::buttonColourId,   juce::Colours::transparentBlack);
+//    patchNameButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentBlack);
+//    patchNameButton.setColour(juce::TextButton::textColourOffId,  theme.textPrimary);
+//    patchNameButton.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
+//    addAndMakeVisible(patchNameButton);
+    nameDisplay->SetPatchName("Init");
+    addAndMakeVisible(nameDisplay.get());
 
     prevButton.setButtonText("<");
     prevButton.setColour(juce::TextButton::buttonColourId,  theme.structure);
@@ -69,7 +107,7 @@ void PatchControls::resized()
     topRow         .removeFromLeft(btnGap);
     nextButton     .setBounds(topRow.removeFromRight(arrowWidth));
     topRow         .removeFromRight(btnGap);
-    patchNameButton.setBounds(topRow);
+    nameDisplay   ->setBounds(topRow);
 
     static constexpr int numButtons     = 5;
     static constexpr int totalGapsWidth = btnGap * (numButtons - 1);

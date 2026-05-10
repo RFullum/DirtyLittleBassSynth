@@ -13,6 +13,25 @@
 
 //==============================================================================
 
+class PatchNameDisplay
+    : public juce::Button
+{
+public:
+    PatchNameDisplay(GuiResources &res);
+    ~PatchNameDisplay();
+    
+    void paintButton (juce::Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+    
+    void SetPatchName(juce::StringRef name);
+    
+private:
+    GuiResources &resources;
+    juce::String  curentPatchName;
+    bool          isDirty = false;
+};
+
+//==============================================================================
+
 /// Title-header patch cluster. Hosts every visible control for the patch
 /// system: the clickable patch-name display, prev/next cycle arrows, and the
 /// row of action buttons (Init / Save / Save As / Delete / Randomize).
@@ -32,9 +51,10 @@ public:
 private:
     GuiResources &resources;
     
-    juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later
-    juce::TextButton prevButton;
-    juce::TextButton nextButton;
+//    juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later
+    std::unique_ptr<PatchNameDisplay> nameDisplay;
+    juce::TextButton                  prevButton;
+    juce::TextButton                  nextButton;
 
     juce::TextButton initButton;
     juce::TextButton saveButton;

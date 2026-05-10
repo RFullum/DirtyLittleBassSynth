@@ -190,6 +190,8 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
     RegisterMidiLearnableParams();
     LoadMidiLearnMappings();
+
+    patchManager.Init();
 }
 
 void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()

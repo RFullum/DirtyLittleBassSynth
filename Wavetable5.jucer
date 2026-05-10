@@ -10,6 +10,12 @@
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <GROUP id="{A1000001-0000-0000-0000-000000000001}" name="Plugin">
+        <GROUP id="{0A0C807B-B01C-71D7-3A98-A33428FF13E5}" name="PatchEngine">
+          <FILE id="aPatM01" name="PatchManager.cpp" compile="1" resource="0"
+                file="Source/Plugin/PatchEngine/PatchManager.cpp"/>
+          <FILE id="aPatM02" name="PatchManager.h" compile="0" resource="0"
+                file="Source/Plugin/PatchEngine/PatchManager.h"/>
+        </GROUP>
         <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
               file="Source/Plugin/PluginProcessor.cpp"/>
         <FILE id="UTZX9W" name="PluginProcessor.h" compile="0" resource="0"
@@ -55,12 +61,18 @@
           <FILE id="P8524z" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleHeader.h"/>
           <FILE id="BJc1PZ" name="TitleFooter.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.cpp"/>
           <FILE id="KPcM0O" name="TitleFooter.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TitleFooter.h"/>
-          <FILE id="aTempo1" name="TempoControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/TempoControls.cpp"/>
-          <FILE id="aTempo2" name="TempoControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/TempoControls.h"/>
-          <FILE id="aMidiL1" name="MidiLearnControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/MidiLearnControls.cpp"/>
-          <FILE id="aMidiL2" name="MidiLearnControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/MidiLearnControls.h"/>
-          <FILE id="aPatch1" name="PatchControls.cpp" compile="1" resource="0" file="Source/GUI/TitleHeaderFooter/PatchControls.cpp"/>
-          <FILE id="aPatch2" name="PatchControls.h" compile="0" resource="0" file="Source/GUI/TitleHeaderFooter/PatchControls.h"/>
+          <FILE id="aTempo1" name="TempoControls.cpp" compile="1" resource="0"
+                file="Source/GUI/TitleHeaderFooter/TempoControls.cpp"/>
+          <FILE id="aTempo2" name="TempoControls.h" compile="0" resource="0"
+                file="Source/GUI/TitleHeaderFooter/TempoControls.h"/>
+          <FILE id="aMidiL1" name="MidiLearnControls.cpp" compile="1" resource="0"
+                file="Source/GUI/TitleHeaderFooter/MidiLearnControls.cpp"/>
+          <FILE id="aMidiL2" name="MidiLearnControls.h" compile="0" resource="0"
+                file="Source/GUI/TitleHeaderFooter/MidiLearnControls.h"/>
+          <FILE id="aPatch1" name="PatchControls.cpp" compile="1" resource="0"
+                file="Source/GUI/TitleHeaderFooter/PatchControls.cpp"/>
+          <FILE id="aPatch2" name="PatchControls.h" compile="0" resource="0"
+                file="Source/GUI/TitleHeaderFooter/PatchControls.h"/>
         </GROUP>
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
           <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
@@ -148,8 +160,8 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../Source/Plugin&#10;../../Source/Plugin/PatchEngine&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils&#10;../../Source/GUI/TitleHeaderFooter&#10;../../Source/GUI/MIDI"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/Plugin/PatchEngine&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils&#10;../../Source/GUI/TitleHeaderFooter&#10;../../Source/GUI/MIDI"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
