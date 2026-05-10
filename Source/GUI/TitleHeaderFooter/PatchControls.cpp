@@ -13,80 +13,82 @@
 PatchControls::PatchControls(GuiResources &res)
 : resources(res)
 {
-}
+    const auto &theme = res.theme;
 
-void PatchControls::paint(juce::Graphics &g)
-{
-    const auto &theme = resources.theme;
+    // === Top row: patch name display (transparent, looks like a label) ===
+    patchNameButton.setButtonText("Init");
+    patchNameButton.setColour(juce::TextButton::buttonColourId,   juce::Colours::transparentBlack);
+    patchNameButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentBlack);
+    patchNameButton.setColour(juce::TextButton::textColourOffId,  theme.textPrimary);
+    patchNameButton.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
+    addAndMakeVisible(patchNameButton);
 
-    // === "Init Patch" label ===
-    g.setColour(theme.textSecondary);
-    g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0)).withExtraKerningFactor(0.10f));
-    g.drawText("INIT PATCH", initPatchRect, juce::Justification::centredRight);
+    // === Top row: cycle arrows ===
+    prevButton.setButtonText("<");
+    prevButton.setColour(juce::TextButton::buttonColourId,  theme.structure);
+    prevButton.setColour(juce::TextButton::textColourOffId, theme.textSecondary);
+    addAndMakeVisible(prevButton);
 
-    // === prev / next preset placeholder buttons ===
-    auto drawArrowBtn = [&](juce::Rectangle<int> r, bool pointsLeft)
+    nextButton.setButtonText(">");
+    nextButton.setColour(juce::TextButton::buttonColourId,  theme.structure);
+    nextButton.setColour(juce::TextButton::textColourOffId, theme.textSecondary);
+    addAndMakeVisible(nextButton);
+
+    // === Bottom row: action buttons ===
+    // Same neutral styling for all five so visual weight stays even; behavior-
+    // specific colour cues (e.g. red-tinted Delete) can come later when the
+    // wiring lands.
+    auto styleActionButton = [&theme] (juce::TextButton &b, const juce::String &label)
     {
-        g.setColour(theme.structure);
-        g.fillRoundedRectangle(r.toFloat(), 3.0f);
-
-        g.setColour(theme.textSecondary);
-        g.drawRoundedRectangle(r.toFloat().reduced(0.5f), 3.0f, 1.0f);
-
-        const float cx = (float)r.getCentreX();
-        const float cy = (float)r.getCentreY();
-        const float w  = 4.0f;
-        const float h  = 6.0f;
-
-        juce::Path arrow;
-        if (pointsLeft)
-            arrow.addTriangle(cx + w * 0.5f
-                              , cy - h * 0.5f
-                              , cx + w * 0.5f
-                              , cy + h * 0.5f
-                              , cx - w * 0.5f
-                              , cy);
-        else
-            arrow.addTriangle(cx - w * 0.5f
-                              , cy - h * 0.5f
-                              , cx - w * 0.5f
-                              , cy + h * 0.5f
-                              , cx + w * 0.5f
-                              , cy);
-
-        g.setColour(theme.textSecondary);
-        g.fillPath(arrow);
+        b.setButtonText(label);
+        b.setColour(juce::TextButton::buttonColourId,  theme.structure);
+        b.setColour(juce::TextButton::textColourOffId, theme.textSecondary);
     };
 
-    drawArrowBtn(prevBtnRect, /*pointsLeft*/ true);
-    drawArrowBtn(nextBtnRect, /*pointsLeft*/ false);
+    styleActionButton(initButton,      "INIT");
+    styleActionButton(saveButton,      "SAVE");
+    styleActionButton(saveAsButton,    "SAVE AS");
+    styleActionButton(deleteButton,    "DELETE");
+    styleActionButton(randomizeButton, "RANDOM");
+
+    addAndMakeVisible(initButton);
+    addAndMakeVisible(saveButton);
+    addAndMakeVisible(saveAsButton);
+    addAndMakeVisible(deleteButton);
+    addAndMakeVisible(randomizeButton);
 }
 
 void PatchControls::resized()
 {
-    // Layout matches the original TitleHeader right-to-left placement:
-    // next arrow, prev arrow, INIT PATCH label, all vertically centred.
-    constexpr int btnSize  = 18;
-    constexpr int btnGap   = 4;
-    constexpr int initGap  = 10;
-    constexpr int textPad  = 4;
-
-    const auto initFont = juce::Font(juce::FontOptions("Helvetica", 9.0f, 0)).withExtraKerningFactor(0.10f);
-    const int initWidth = juce::GlyphArrangement::getStringWidthInt(initFont, "INIT PATCH") + textPad;
+    static constexpr int rowGap     = 4;
+    static constexpr int btnGap     = 4;
+    static constexpr int arrowWidth = 28;
 
     auto bounds = getLocalBounds();
+    const int rowHeight = (bounds.getHeight() - rowGap) / 2;
 
-    int rightX = bounds.getRight();
-    int btnY   = bounds.getY() + (bounds.getHeight() - btnSize) / 2;
+    auto topRow    = bounds.removeFromTop(rowHeight);
+    bounds.removeFromTop(rowGap);
+    auto bottomRow = bounds.removeFromTop(rowHeight);
 
-    nextBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
-    rightX -= btnSize + btnGap;
+    prevButton     .setBounds(topRow.removeFromLeft(arrowWidth));
+    topRow         .removeFromLeft(btnGap);
+    nextButton     .setBounds(topRow.removeFromRight(arrowWidth));
+    topRow         .removeFromRight(btnGap);
+    patchNameButton.setBounds(topRow);
 
-    prevBtnRect = juce::Rectangle<int>(rightX - btnSize, btnY, btnSize, btnSize);
-    rightX -= btnSize + initGap;
+    static constexpr int numButtons     = 5;
+    static constexpr int totalGapsWidth = btnGap * (numButtons - 1);
 
-    initPatchRect = juce::Rectangle<int>(rightX - initWidth
-                                         , bounds.getY() + (bounds.getHeight() - 14) / 2
-                                         , initWidth
-                                         , 14);
+    const int actionBtnWidth = (bottomRow.getWidth() - totalGapsWidth) / numButtons;
+
+    initButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    saveButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    saveAsButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    deleteButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    randomizeButton.setBounds(bottomRow);
 }

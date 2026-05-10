@@ -13,9 +13,13 @@
 
 //==============================================================================
 
-/// Title-header patch cluster: the "INIT PATCH" label + prev/next arrow
-/// placeholders that will eventually drive patch save/recall. Currently
-/// paint-only; behavior will be added when the patch system is implemented.
+/// Title-header patch cluster. Hosts every visible control for the patch
+/// system: the clickable patch-name display, prev/next cycle arrows, and the
+/// row of action buttons (Init / Save / Save As / Delete / Randomize).
+///
+/// This is a layout-only stage: the components are placed and styled but no
+/// behavior is wired yet. Click handlers, popups, drag-and-drop, and the
+/// dirty `*` indicator land in a follow-up pass.
 class PatchControls
     : public juce::Component
 {
@@ -23,15 +27,22 @@ public:
     PatchControls(GuiResources &resources);
     ~PatchControls() override = default;
 
-    void paint  (juce::Graphics &) override;
-    void resized()                  override;
+    void resized() override;
 
 private:
     GuiResources &resources;
 
-    juce::Rectangle<int> initPatchRect;
-    juce::Rectangle<int> prevBtnRect;
-    juce::Rectangle<int> nextBtnRect;
+    // Top row: patch-name display flanked by cycle arrows.
+    juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later
+    juce::TextButton prevButton;
+    juce::TextButton nextButton;
+
+    // Bottom row: action buttons.
+    juce::TextButton initButton;
+    juce::TextButton saveButton;
+    juce::TextButton saveAsButton;
+    juce::TextButton deleteButton;
+    juce::TextButton randomizeButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchControls)
 };

@@ -56,7 +56,7 @@ void TitleHeader::paint(juce::Graphics &g)
 }
 
 void TitleHeader::resized()
-{   
+{
     static constexpr int sectionGap = 20;
     
     auto bounds = getLocalBounds();
@@ -72,8 +72,9 @@ void TitleHeader::resized()
     bounds.removeFromLeft(sectionGap);
     midiLearnControls.setBounds(bounds.removeFromLeft(200).reduced(0, 20));
     
+    bounds.removeFromLeft(sectionGap);
     bounds.removeFromRight(sectionGap);
-    patchControls.setBounds(bounds);
+    patchControls.setBounds(bounds.reduced(0, 5));
     
 }
 
