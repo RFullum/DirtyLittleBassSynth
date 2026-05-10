@@ -38,12 +38,10 @@
         <FILE id="CqWi0e" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
         <FILE id="GR000201" name="MasterChain.cpp" compile="1" resource="0"
               file="Source/DSP/MasterChain.cpp"/>
-        <FILE id="GR000202" name="MasterChain.h" compile="0" resource="0"
-              file="Source/DSP/MasterChain.h"/>
+        <FILE id="GR000202" name="MasterChain.h" compile="0" resource="0" file="Source/DSP/MasterChain.h"/>
         <FILE id="GR000203" name="ScopeBuffer.cpp" compile="1" resource="0"
               file="Source/DSP/ScopeBuffer.cpp"/>
-        <FILE id="GR000204" name="ScopeBuffer.h" compile="0" resource="0"
-              file="Source/DSP/ScopeBuffer.h"/>
+        <FILE id="GR000204" name="ScopeBuffer.h" compile="0" resource="0" file="Source/DSP/ScopeBuffer.h"/>
         <FILE id="GR000207" name="TempoSnapshot.h" compile="0" resource="0"
               file="Source/DSP/TempoSnapshot.h"/>
         <FILE id="GR000208" name="MidiLearnManager.cpp" compile="1" resource="0"
@@ -52,15 +50,17 @@
               file="Source/DSP/MidiLearnManager.h"/>
       </GROUP>
       <GROUP id="{A1000003-0000-0000-0000-000000000003}" name="GUI">
+        <GROUP id="{44EA77C2-D5DD-B1C5-C5DE-F21F15719ADD}" name="TitleHeader">
+          <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0" file="Source/GUI/GUIUtils/TitleHeader.cpp"/>
+          <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0" file="Source/GUI/GUIUtils/TitleHeader.h"/>
+        </GROUP>
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
           <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
                 file="Source/GUI/Sources/SourcesColumn.cpp"/>
           <FILE id="GR000102" name="SourcesColumn.h" compile="0" resource="0"
                 file="Source/GUI/Sources/SourcesColumn.h"/>
-          <FILE id="GR000004" name="OscPanel.cpp" compile="1" resource="0"
-                file="Source/GUI/Sources/OscPanel.cpp"/>
-          <FILE id="GR000003" name="OscPanel.h" compile="0" resource="0"
-                file="Source/GUI/Sources/OscPanel.h"/>
+          <FILE id="GR000004" name="OscPanel.cpp" compile="1" resource="0" file="Source/GUI/Sources/OscPanel.cpp"/>
+          <FILE id="GR000003" name="OscPanel.h" compile="0" resource="0" file="Source/GUI/Sources/OscPanel.h"/>
           <FILE id="GR000006" name="AmpAdsrPanel.cpp" compile="1" resource="0"
                 file="Source/GUI/Sources/AmpAdsrPanel.cpp"/>
           <FILE id="GR000005" name="AmpAdsrPanel.h" compile="0" resource="0"
@@ -73,20 +73,16 @@
                 file="Source/GUI/Filter/FilterColumn.h"/>
           <FILE id="GR000010" name="FilterPanel.cpp" compile="1" resource="0"
                 file="Source/GUI/Filter/FilterPanel.cpp"/>
-          <FILE id="GR000009" name="FilterPanel.h" compile="0" resource="0"
-                file="Source/GUI/Filter/FilterPanel.h"/>
+          <FILE id="GR000009" name="FilterPanel.h" compile="0" resource="0" file="Source/GUI/Filter/FilterPanel.h"/>
           <FILE id="GR000012" name="FilterAdsrPanel.cpp" compile="1" resource="0"
                 file="Source/GUI/Filter/FilterAdsrPanel.cpp"/>
           <FILE id="GR000011" name="FilterAdsrPanel.h" compile="0" resource="0"
                 file="Source/GUI/Filter/FilterAdsrPanel.h"/>
-          <FILE id="GR000014" name="LfoPanel.cpp" compile="1" resource="0"
-                file="Source/GUI/Filter/LfoPanel.cpp"/>
-          <FILE id="GR000013" name="LfoPanel.h" compile="0" resource="0"
-                file="Source/GUI/Filter/LfoPanel.h"/>
+          <FILE id="GR000014" name="LfoPanel.cpp" compile="1" resource="0" file="Source/GUI/Filter/LfoPanel.cpp"/>
+          <FILE id="GR000013" name="LfoPanel.h" compile="0" resource="0" file="Source/GUI/Filter/LfoPanel.h"/>
           <FILE id="pRhPhc" name="FilterVisual.cpp" compile="1" resource="0"
                 file="Source/GUI/Filter/FilterVisual.cpp"/>
-          <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0"
-                file="Source/GUI/Filter/FilterVisual.h"/>
+          <FILE id="vDYevs" name="FilterVisual.h" compile="0" resource="0" file="Source/GUI/Filter/FilterVisual.h"/>
         </GROUP>
         <GROUP id="{2222BC85-A277-E905-35E8-C467432B0CCD}" name="Modifiers">
           <FILE id="GR000105" name="ModifiersColumn.cpp" compile="1" resource="0"
@@ -103,50 +99,40 @@
                 file="Source/GUI/Master/MasterColumn.cpp"/>
           <FILE id="GR000015" name="MasterColumn.h" compile="0" resource="0"
                 file="Source/GUI/Master/MasterColumn.h"/>
-          <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0"
-                file="Source/GUI/Master/OutMeter.cpp"/>
-          <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0"
-                file="Source/GUI/Master/OutMeter.h"/>
+          <FILE id="o8Vjnt" name="OutMeter.cpp" compile="1" resource="0" file="Source/GUI/Master/OutMeter.cpp"/>
+          <FILE id="bh8D3A" name="OutMeter.h" compile="0" resource="0" file="Source/GUI/Master/OutMeter.h"/>
           <FILE id="GR000205" name="ScopeVisual.cpp" compile="1" resource="0"
                 file="Source/GUI/Master/ScopeVisual.cpp"/>
-          <FILE id="GR000206" name="ScopeVisual.h" compile="0" resource="0"
-                file="Source/GUI/Master/ScopeVisual.h"/>
+          <FILE id="GR000206" name="ScopeVisual.h" compile="0" resource="0" file="Source/GUI/Master/ScopeVisual.h"/>
         </GROUP>
-        <GROUP id="{9FCD5BD7-4884-24AA-8663-59E4DC80134C}" name="GUIUtils">
-          <FILE id="ZurqKQ" name="ColorPalette.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/ColorPalette.h"/>
-          <FILE id="GR000001" name="GuiResources.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/GuiResources.h"/>
-          <FILE id="GR000002" name="GuiHelpers.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/GuiHelpers.h"/>
-          <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
-                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.cpp"/>
-          <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
-                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.h"/>
-          <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/OscVisual.cpp"/>
-          <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/OscVisual.h"/>
-          <FILE id="GR000019" name="AdsrVisual.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/AdsrVisual.cpp"/>
-          <FILE id="GR000020" name="AdsrVisual.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/AdsrVisual.h"/>
-          <FILE id="GR000017" name="SegmentedControl.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/SegmentedControl.cpp"/>
-          <FILE id="GR000018" name="SegmentedControl.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/SegmentedControl.h"/>
-          <FILE id="QpFt6h" name="TitleHeader.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/TitleHeader.cpp"/>
-          <FILE id="iHy5H8" name="TitleHeader.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/TitleHeader.h"/>
-          <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
-                file="Source/GUI/GUIUtils/OtherLookAndFeel.cpp"/>
-          <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
-                file="Source/GUI/GUIUtils/OtherLookAndFeel.h"/>
+        <GROUP id="{A4FAA1F2-7893-4325-0B86-6B56E131A8EE}" name="MIDI">
           <FILE id="GR000301" name="MidiLearnOverlay.cpp" compile="1" resource="0"
                 file="Source/GUI/GUIUtils/MidiLearnOverlay.cpp"/>
           <FILE id="GR000302" name="MidiLearnOverlay.h" compile="0" resource="0"
                 file="Source/GUI/GUIUtils/MidiLearnOverlay.h"/>
+        </GROUP>
+        <GROUP id="{9FCD5BD7-4884-24AA-8663-59E4DC80134C}" name="GUIUtils">
+          <FILE id="ZurqKQ" name="ColorPalette.h" compile="0" resource="0" file="Source/GUI/GUIUtils/ColorPalette.h"/>
+          <FILE id="GR000001" name="GuiResources.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/GuiResources.h"/>
+          <FILE id="GR000002" name="GuiHelpers.h" compile="0" resource="0" file="Source/GUI/GUIUtils/GuiHelpers.h"/>
+          <FILE id="uE0Xmb" name="OscillatorParameterControls.cpp" compile="1"
+                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.cpp"/>
+          <FILE id="wf7tLN" name="OscillatorParameterControls.h" compile="0"
+                resource="0" file="Source/GUI/GUIUtils/OscillatorParameterControls.h"/>
+          <FILE id="GstU80" name="OscVisual.cpp" compile="1" resource="0" file="Source/GUI/GUIUtils/OscVisual.cpp"/>
+          <FILE id="WRpPyx" name="OscVisual.h" compile="0" resource="0" file="Source/GUI/GUIUtils/OscVisual.h"/>
+          <FILE id="GR000019" name="AdsrVisual.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/AdsrVisual.cpp"/>
+          <FILE id="GR000020" name="AdsrVisual.h" compile="0" resource="0" file="Source/GUI/GUIUtils/AdsrVisual.h"/>
+          <FILE id="GR000017" name="SegmentedControl.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/SegmentedControl.cpp"/>
+          <FILE id="GR000018" name="SegmentedControl.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/SegmentedControl.h"/>
+          <FILE id="KJHCpJ" name="OtherLookAndFeel.cpp" compile="1" resource="0"
+                file="Source/GUI/GUIUtils/OtherLookAndFeel.cpp"/>
+          <FILE id="CpfLQ9" name="OtherLookAndFeel.h" compile="0" resource="0"
+                file="Source/GUI/GUIUtils/OtherLookAndFeel.h"/>
         </GROUP>
       </GROUP>
     </GROUP>
