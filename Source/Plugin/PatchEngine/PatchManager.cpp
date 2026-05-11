@@ -16,6 +16,11 @@ PatchManager::PatchManager(juce::AudioProcessorValueTreeState &apvtsToManage)
 , factoryPatchesDir(ResolveFactoryPatchesDirectory())
 {}
 
+PatchManager::~PatchManager()
+{
+    UnregisterParameterListeners();
+}
+
 void PatchManager::Init()
 {
     // Create the user patches directory on first run. createDirectory walks the
@@ -27,6 +32,7 @@ void PatchManager::Init()
         userPatchesDir.createDirectory();
 
     RefreshPatchList();
+    RegisterParameterListeners();
 }
 
 
@@ -191,9 +197,11 @@ std::optional<juce::ValueTree> PatchManager::ValidatePatchTree(const juce::Value
 
 void PatchManager::ApplyPatchTree(const juce::ValueTree &sanitizedRoot)
 {
-    // Dirty-flag suppression around this driver lands in Phase A4. For now
-    // every setValueNotifyingHost call below would mark the patch dirty, but
-    // there's no listener yet so the side effect is harmless.
+    // Programmatic param storm — gate the dirty flag so parameterChanged
+    // ignores our writes. Callers (LoadPatch) are responsible for the final
+    // ClearDirty() once the apply completes.
+    suppressDirty.store(true, std::memory_order_release);
+
     const auto apvtsTree = sanitizedRoot.getChild(0);
 
     for (int i = 0; i < apvtsTree.getNumChildren(); ++i)
@@ -209,6 +217,8 @@ void PatchManager::ApplyPatchTree(const juce::ValueTree &sanitizedRoot)
             param->setValueNotifyingHost(param->convertTo0to1(rawValue));
         }
     }
+
+    suppressDirty.store(false, std::memory_order_release);
 }
 
 //==============================================================================
@@ -219,6 +229,8 @@ void PatchManager::LoadInit()
     // Iterating the live state tree gives us the IDs as registered with APVTS;
     // setValueNotifyingHost ensures attached UI controls and the host's
     // automation lane see the change (replaceState would bypass listeners).
+    suppressDirty.store(true, std::memory_order_release);
+
     auto state = apvts.copyState();
 
     for (int i = 0; i < state.getNumChildren(); ++i)
@@ -234,6 +246,9 @@ void PatchManager::LoadInit()
     }
 
     SetCurrent(CurrentSource::Init, juce::File{}, "Init");
+
+    suppressDirty.store(false, std::memory_order_release);
+    ClearDirty();
 }
 
 //==============================================================================
@@ -270,6 +285,7 @@ bool PatchManager::LoadPatch(const juce::File &file)
         name = file.getFileNameWithoutExtension();
 
     SetCurrent(source, file, name);
+    ClearDirty();
     return true;
 }
 
@@ -295,6 +311,7 @@ bool PatchManager::SavePatch()
         return false;
 
     RefreshPatchList();
+    ClearDirty();
     return true;
 }
 
@@ -316,6 +333,7 @@ bool PatchManager::SavePatchAs(const juce::String &requestedName)
 
     SetCurrent(CurrentSource::User, destination, finalName);
     RefreshPatchList();
+    ClearDirty();
     return true;
 }
 
@@ -381,4 +399,53 @@ void PatchManager::SetCurrent(CurrentSource source, const juce::File &file, cons
     currentSource    = source;
     currentPatchFile = file;
     currentPatchName = name;
+}
+
+//==============================================================================
+
+void PatchManager::RegisterParameterListeners()
+{
+    // Walk the APVTS state to enumerate every registered paramID and subscribe
+    // to all the non-excluded ones. APVTS holds listeners by raw pointer keyed
+    // on paramID, so re-registering for the same (id, listener) is a no-op
+    // risk we avoid by only calling this once from Init().
+    const auto state = apvts.copyState();
+
+    for (int i = 0; i < state.getNumChildren(); ++i)
+    {
+        const auto id = state.getChild(i).getProperty("id").toString();
+
+        if (IsExcludedFromPatch(id))
+            continue;
+
+        apvts.addParameterListener(id, this);
+    }
+}
+
+void PatchManager::UnregisterParameterListeners()
+{
+    const auto state = apvts.copyState();
+
+    for (int i = 0; i < state.getNumChildren(); ++i)
+    {
+        const auto id = state.getChild(i).getProperty("id").toString();
+
+        if (IsExcludedFromPatch(id))
+            continue;
+
+        apvts.removeParameterListener(id, this);
+    }
+}
+
+//==============================================================================
+
+void PatchManager::parameterChanged(const juce::String & /*paramID*/, float /*newValue*/)
+{
+    // Programmatic load paths set suppressDirty so this callback ignores their
+    // setValueNotifyingHost storm. Genuine user / host edits land here with
+    // the flag cleared and flip dirty true.
+    if (suppressDirty.load(std::memory_order_acquire))
+        return;
+
+    isDirty.store(true, std::memory_order_release);
 }

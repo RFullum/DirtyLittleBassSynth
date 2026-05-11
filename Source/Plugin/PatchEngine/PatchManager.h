@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <atomic>
 #include <optional>
 #include <vector>
 
@@ -27,7 +28,7 @@
 /// are added in follow-up steps as the GUI components are wired up.
 ///
 /// All operations are message-thread only.
-class PatchManager
+class PatchManager  : private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     /// Distinguishes a user patch (writable, deletable) from a factory one
@@ -58,15 +59,16 @@ public:
     };
 
     explicit PatchManager(juce::AudioProcessorValueTreeState &apvtsToManage);
-    ~PatchManager() = default;
+    ~PatchManager() override;
 
     //==========================================================================
     // Setup.
     //==========================================================================
 
-    /// Creates the user patches directory if absent and populates the patch
-    /// list cache. Safe to call once from the processor's constructor — does
-    /// no audio-thread work and no APVTS mutation.
+    /// Creates the user patches directory if absent, populates the patch list
+    /// cache, and registers parameter listeners for dirty tracking. Safe to
+    /// call once from the processor's constructor — does no audio-thread work
+    /// and no APVTS mutation.
     void Init();
 
     //==========================================================================
@@ -180,7 +182,22 @@ public:
     /// gate Delete and to colour the patch-name display.
     bool IsCurrentPatchFactory() const noexcept { return currentSource == CurrentSource::Factory; }
 
+    //==========================================================================
+    // Dirty tracking.
+    //==========================================================================
+
+    /// True when any non-excluded APVTS param has changed since the last
+    /// successful Save / Load / Init. The title-header reads this to render
+    /// the trailing `*` next to the patch name.
+    bool IsDirty() const noexcept { return isDirty.load(std::memory_order_acquire); }
+
 private:
+    /// APVTS::Listener override. Fires on whichever thread changed the
+    /// param — audio thread for host automation, message thread for GUI
+    /// edits — so the dirty flag has to be atomic. Short-circuits while
+    /// `suppressDirty` is set so programmatic loads don't trip themselves.
+    void parameterChanged(const juce::String &paramID, float newValue) override;
+
     static constexpr const char *patchFileExtension = ".dlbs";
     static constexpr const char *patchRootTagName   = "DLBSPatch";
 
@@ -209,6 +226,17 @@ private:
     /// helper used by every load / save / delete path.
     void SetCurrent(CurrentSource source, const juce::File &file, const juce::String &name);
 
+    /// Registers / unregisters this object as a listener on every non-excluded
+    /// APVTS param. RegisterParameterListeners is called once from Init();
+    /// the destructor unregisters.
+    void RegisterParameterListeners();
+    void UnregisterParameterListeners();
+
+    /// Forces the dirty flag back to clean. Called at the end of every Load /
+    /// Save path so the listener callbacks fired during the operation don't
+    /// leave the patch in a falsely-dirty state.
+    void ClearDirty() noexcept { isDirty.store(false, std::memory_order_release); }
+
     juce::AudioProcessorValueTreeState &apvts;
 
     juce::File userPatchesDir;
@@ -219,6 +247,17 @@ private:
     CurrentSource currentSource    { CurrentSource::Init };
     juce::File    currentPatchFile {};
     juce::String  currentPatchName { "Init" };
+
+    /// Atomic because APVTS listener callbacks can fire from the audio thread
+    /// when the host drives a parameter via automation.
+    std::atomic<bool> isDirty { false };
+
+    /// True during programmatic patch application (LoadInit / ApplyPatchTree).
+    /// Each setValueNotifyingHost call we make would otherwise fire
+    /// parameterChanged and falsely mark the patch dirty. The flag lets the
+    /// listener short-circuit during loads while still catching genuine user
+    /// or host edits afterward.
+    std::atomic<bool> suppressDirty { false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchManager)
 };
