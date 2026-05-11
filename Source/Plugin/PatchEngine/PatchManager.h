@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <optional>
 #include <vector>
 
 //==============================================================================
@@ -80,8 +81,39 @@ public:
     /// Cached snapshot of all known patches. Populated by RefreshPatchList().
     const std::vector<PatchInfo> &GetPatchList() const noexcept { return patchList; }
 
+    //==========================================================================
+    // Patch tree construction / validation / application.
+    //==========================================================================
+
+    /// Builds a `<DLBSPatch>` ValueTree wrapping a filtered copy of the current
+    /// APVTS state, tagged with the supplied patch name and the running plugin
+    /// version. Used by every save path. Excludes `tempo_fallback_bpm` (a
+    /// per-session setup param that shouldn't ride with the sound design).
+    juce::ValueTree BuildPatchTree(const juce::String &patchName) const;
+
+    /// Validates and sanitizes a `<DLBSPatch>` ValueTree from any source
+    /// (file load, clipboard paste, dropped file). Returns:
+    ///   - std::nullopt on hard failure: missing root tag or no APVTS payload.
+    ///   - A sanitized copy on success: unknown paramIDs are dropped silently
+    ///     (forward compat for older patches saved before a param existed),
+    ///     out-of-range values are clamped to the declared range, and the
+    ///     excluded paramID set is stripped.
+    /// The returned tree is safe to pass directly to ApplyPatchTree.
+    std::optional<juce::ValueTree> ValidatePatchTree(const juce::ValueTree &patchRoot) const;
+
+    /// Applies a sanitized DLBSPatch ValueTree to the live APVTS via
+    /// setValueNotifyingHost so UI attachments and the host's automation lane
+    /// see every change. Caller must run ValidatePatchTree first; this method
+    /// trusts that the input is already filtered and clamped.
+    void ApplyPatchTree(const juce::ValueTree &sanitizedRoot);
+
 private:
     static constexpr const char *patchFileExtension = ".dlbs";
+    static constexpr const char *patchRootTagName   = "DLBSPatch";
+
+    /// True for paramIDs excluded from patch save / load. Currently just
+    /// `tempo_fallback_bpm` — a per-session setup param.
+    static bool IsExcludedFromPatch(const juce::String &paramID) noexcept;
 
     /// Resolves the user patches directory path. Pure path computation, no I/O.
     static juce::File ResolveUserPatchesDirectory();
