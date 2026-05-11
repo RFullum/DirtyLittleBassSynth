@@ -19,11 +19,16 @@ class PatchNameDisplay
 public:
     PatchNameDisplay(GuiResources &res);
     ~PatchNameDisplay();
-    
+
     void paintButton (juce::Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
-    
+
     void SetPatchName(juce::StringRef name);
-    
+
+    /// Pulls the current patch name and dirty flag from PatchManager and
+    /// repaints only when something visible changed. Call from the editor's
+    /// 60Hz timer via PatchControls::Update().
+    void Update();
+
 private:
     GuiResources &resources;
     juce::String  curentPatchName;
@@ -35,10 +40,6 @@ private:
 /// Title-header patch cluster. Hosts every visible control for the patch
 /// system: the clickable patch-name display, prev/next cycle arrows, and the
 /// row of action buttons (Init / Save / Save As / Delete / Randomize).
-///
-/// This is a layout-only stage: the components are placed and styled but no
-/// behavior is wired yet. Click handlers, popups, drag-and-drop, and the
-/// dirty `*` indicator land in a follow-up pass.
 class PatchControls
     : public juce::Component
 {
@@ -47,6 +48,11 @@ public:
     ~PatchControls() override = default;
 
     void resized() override;
+
+    /// Drives the timer-fed children (currently just the patch name display's
+    /// dirty + name refresh). Call from the editor's 60Hz timer via
+    /// TitleHeader::Update().
+    void Update();
 
 private:
     GuiResources &resources;

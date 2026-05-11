@@ -43,6 +43,24 @@ void PatchNameDisplay::SetPatchName(juce::StringRef name)
     repaint();
 }
 
+void PatchNameDisplay::Update()
+{
+    if (resources.patchManager == nullptr)
+        return;
+
+    // Pull both fields together so we don't repaint twice when both changed
+    // (e.g. loading a different patch flips dirty false and name simultaneously).
+    const auto latestName  = resources.patchManager->GetCurrentPatchName();
+    const bool latestDirty = resources.patchManager->IsDirty();
+
+    if (latestName != curentPatchName || latestDirty != isDirty)
+    {
+        curentPatchName = latestName;
+        isDirty         = latestDirty;
+        repaint();
+    }
+}
+
 //==============================================================================
 
 PatchControls::PatchControls(GuiResources &res)
@@ -51,12 +69,6 @@ PatchControls::PatchControls(GuiResources &res)
 {
     const auto &theme = res.theme;
 
-//    patchNameButton.setButtonText("Init");
-//    patchNameButton.setColour(juce::TextButton::buttonColourId,   juce::Colours::transparentBlack);
-//    patchNameButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentBlack);
-//    patchNameButton.setColour(juce::TextButton::textColourOffId,  theme.textPrimary);
-//    patchNameButton.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
-//    addAndMakeVisible(patchNameButton);
     nameDisplay->SetPatchName("Init");
     addAndMakeVisible(nameDisplay.get());
 
@@ -88,6 +100,60 @@ PatchControls::PatchControls(GuiResources &res)
     addAndMakeVisible(saveAsButton);
     addAndMakeVisible(deleteButton);
     addAndMakeVisible(randomizeButton);
+
+    // === Click handlers ===
+
+    // INIT: drop the current state back to defaults. Patch name display will
+    // start reading "Init" from PatchManager once Update() wiring lands in B5.
+    initButton.onClick = [this]()
+    {
+        if (resources.patchManager != nullptr)
+            resources.patchManager->LoadInit();
+    };
+
+    // SAVE: overwrite the current user patch in place. On Init/Factory state,
+    // SavePatch() returns false and the GUI is expected to open the Save As
+    // dialog — that dialog wiring lands in C2. Until then the fall-through is
+    // a silent no-op.
+    saveButton.onClick = [this]()
+    {
+        if (resources.patchManager == nullptr)
+            return;
+
+        if (! resources.patchManager->SavePatch())
+        {
+            // TODO (C2): open Save As dialog here when current is Init/Factory.
+        }
+    };
+
+    // RANDOMIZE: roll all sound-design params and force the master safety
+    // params to known-safe values. Leaves the user on the same patch name
+    // with unsaved changes (dirty *).
+    randomizeButton.onClick = [this]()
+    {
+        if (resources.patchManager != nullptr)
+            resources.patchManager->RandomizeAll();
+    };
+
+    // PREV / NEXT: cycle through the sorted patch list, wrapping at the ends.
+    // From Init, prev lands on the last patch; next lands on the first.
+    prevButton.onClick = [this]()
+    {
+        if (resources.patchManager != nullptr)
+            resources.patchManager->StepPatch(-1);
+    };
+
+    nextButton.onClick = [this]()
+    {
+        if (resources.patchManager != nullptr)
+            resources.patchManager->StepPatch(+1);
+    };
+}
+
+void PatchControls::Update()
+{
+    if (nameDisplay != nullptr)
+        nameDisplay->Update();
 }
 
 void PatchControls::resized()

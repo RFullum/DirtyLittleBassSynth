@@ -82,4 +82,5 @@ void TitleHeader::Update()
 {
     tempoControls    .Update();
     midiLearnControls.Update();
+    patchControls    .Update();
 }

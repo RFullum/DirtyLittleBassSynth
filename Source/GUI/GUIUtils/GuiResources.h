@@ -13,6 +13,7 @@
 #include "ScopeBuffer.h"
 #include "TempoSnapshot.h"
 #include "MidiLearnManager.h"
+#include "PatchManager.h"
 
 //============================================================
 
@@ -35,4 +36,9 @@ struct GuiResources
     /// MIDI Learn manager owned by the processor. Used by the title header for
     /// the LEARN / CLEAR MAPS buttons and by the glass-pane overlay for arming.
     MidiLearnManager                   *midiLearnManager = nullptr;
+
+    /// Patch manager owned by the processor. Used by PatchControls to drive
+    /// the patch name display, prev/next arrows, and the action buttons
+    /// (Init / Save / Save As / Delete / Randomize).
+    PatchManager                       *patchManager     = nullptr;
 };

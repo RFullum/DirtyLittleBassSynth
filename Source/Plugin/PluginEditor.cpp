@@ -18,6 +18,7 @@ namespace
             .tempoSnapshot     = &processor.GetTempoSnapshot(),
             .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
             .midiLearnManager  = &processor.GetMidiLearnManager(),
+            .patchManager      = &processor.GetPatchManager(),
         };
     }
 }
