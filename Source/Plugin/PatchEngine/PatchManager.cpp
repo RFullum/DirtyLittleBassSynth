@@ -7,6 +7,7 @@
 */
 
 #include "PatchManager.h"
+#include <algorithm>
 
 //==============================================================================
 
@@ -38,12 +39,30 @@ void PatchManager::Init()
 
 void PatchManager::RefreshPatchList()
 {
-    std::vector<PatchInfo> next;
+    // Scan each source into its own block so we can sort the two halves
+    // independently before concatenating. Factory always comes first in the
+    // final order regardless of how they sort against user names.
+    std::vector<PatchInfo> factoryBlock;
+    std::vector<PatchInfo> userBlock;
 
-    // Factory first so they sort to the top of the menu when the UI iterates
-    // the list in order.
-    ScanDirectoryInto(factoryPatchesDir, Source::Factory, next);
-    ScanDirectoryInto(userPatchesDir,    Source::User,    next);
+    ScanDirectoryInto(factoryPatchesDir, Source::Factory, factoryBlock);
+    ScanDirectoryInto(userPatchesDir,    Source::User,    userBlock);
+
+    // compareNatural gives us "0-9 then A-Z" with sane number ordering inside
+    // names ("Patch 2" before "Patch 10"). Stable across macOS / Win / Linux,
+    // unlike findChildFiles which is OS-dependent.
+    const auto byNameNatural = [] (const PatchInfo &a, const PatchInfo &b)
+    {
+        return a.name.compareNatural(b.name) < 0;
+    };
+
+    std::sort(factoryBlock.begin(), factoryBlock.end(), byNameNatural);
+    std::sort(userBlock   .begin(), userBlock   .end(), byNameNatural);
+
+    std::vector<PatchInfo> next;
+    next.reserve(factoryBlock.size() + userBlock.size());
+    next.insert(next.end(), factoryBlock.begin(), factoryBlock.end());
+    next.insert(next.end(), userBlock   .begin(), userBlock   .end());
 
     patchList = std::move(next);
 }
@@ -381,6 +400,47 @@ bool PatchManager::DeletePatch(const juce::File &file)
 
     RefreshPatchList();
     return true;
+}
+
+//==============================================================================
+
+void PatchManager::StepPatch(int delta)
+{
+    // Empty list: nowhere to go.
+    if (patchList.empty() || delta == 0)
+        return;
+
+    // Locate the current file in the list. Init's empty File never matches a
+    // real patch entry, so coming from Init falls through to the "not found"
+    // branch below — exactly what we want (Init isn't a list member).
+    int currentIndex = -1;
+
+    for (size_t i = 0; i < patchList.size(); ++i)
+    {
+        if (patchList[i].file == currentPatchFile)
+        {
+            currentIndex = (int) i;
+            break;
+        }
+    }
+
+    const int listSize = (int) patchList.size();
+    int       nextIndex;
+
+    if (currentIndex < 0)
+    {
+        // No anchor — treat the step as the user's first navigation:
+        // forward → first patch, backward → last patch.
+        nextIndex = (delta > 0) ? 0 : listSize - 1;
+    }
+    else
+    {
+        // Wrap modulo listSize, using the positive-modulo idiom so negative
+        // deltas don't yield a negative index.
+        nextIndex = ((currentIndex + delta) % listSize + listSize) % listSize;
+    }
+
+    LoadPatch(patchList[(size_t) nextIndex].file);
 }
 
 //==============================================================================

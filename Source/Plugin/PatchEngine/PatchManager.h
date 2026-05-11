@@ -158,6 +158,20 @@ public:
     bool DeletePatch(const juce::File &file);
 
     //==========================================================================
+    // Navigation.
+    //==========================================================================
+
+    /// Steps to the previous (-1) or next (+1) patch in the sorted list,
+    /// wrapping at the ends. Used by the title-header prev/next arrows.
+    /// Behavior:
+    ///   - Empty patch list: no-op.
+    ///   - Current is in the list: step by delta, wrap modulo list size.
+    ///   - Current is Init (or a deleted-file ghost): delta > 0 lands on the
+    ///     first patch, delta < 0 lands on the last. Init isn't a member of
+    ///     the list so it never appears mid-cycle.
+    void StepPatch(int delta);
+
+    //==========================================================================
     // Randomize.
     //==========================================================================
 
