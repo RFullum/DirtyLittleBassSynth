@@ -487,14 +487,72 @@ void PatchManager::RandomizeAll()
 
 //==============================================================================
 
+void PatchManager::GenerateTestPatches(int count)
+{
+    if (count <= 0)
+        return;
+
+    // Snapshot what's loaded right now so we can put everything back when
+    // we're done. BuildPatchTree wraps current state minus excluded params
+    // (tempo_fallback_bpm), which is fine — RandomizeAll doesn't touch those
+    // anyway, so no restore is needed for them.
+    const auto stateSnapshot = BuildPatchTree("__snapshot__");
+
+    const auto originalSource = currentSource;
+    const auto originalFile   = currentPatchFile;
+    const auto originalName   = currentPatchName;
+    const bool originalDirty  = isDirty.load(std::memory_order_acquire);
+
+    // Generate the patches. Each iteration randomises and saves; SavePatchAs
+    // auto-increments "Test Preset" → "Test Preset 2" → … so collisions with
+    // existing files (e.g. on second debug run) are handled transparently.
+    for (int i = 0; i < count; ++i)
+    {
+        RandomizeAll();
+        SavePatchAs("Test Preset");
+    }
+
+    // Restore APVTS state. ValidatePatchTree round-trips the snapshot through
+    // the same sanitiser the public load path uses; ApplyPatchTree drives
+    // setValueNotifyingHost with suppressDirty engaged so the listener
+    // doesn't mark the patch dirty during restore.
+    if (auto sanitized = ValidatePatchTree(stateSnapshot))
+        ApplyPatchTree(*sanitized);
+
+    // Restore current-patch tracking. The save loop above moved currentSource
+    // to User and currentPatchFile to the last saved file; this puts it back.
+    SetCurrent(originalSource, originalFile, originalName);
+
+    // Restore dirty exactly as it was — the loop's SavePatchAs calls cleared
+    // it, so we have to explicitly re-set if the caller was dirty.
+    if (originalDirty)
+        isDirty.store(true, std::memory_order_release);
+    else
+        ClearDirty();
+}
+
+//==============================================================================
+
+juce::String PatchManager::SanitizeFilename(const juce::String &requestedName)
+{
+    // createLegalFileName strips any character the host OS would reject for a
+    // filename. We trim afterward so leading/trailing whitespace doesn't
+    // become part of the on-disk name (looks identical in UI, confuses Finder).
+    auto sanitized = juce::File::createLegalFileName(requestedName).trim();
+
+    // Empty input (or input made entirely of stripped chars) falls back to
+    // "Untitled" so SavePatchAs always has something writeable. The
+    // auto-increment in MakeUniqueUserPatchFile will turn this into
+    // "Untitled 2", "Untitled 3", … as needed.
+    if (sanitized.isEmpty())
+        sanitized = "Untitled";
+
+    return sanitized;
+}
+
 juce::File PatchManager::MakeUniqueUserPatchFile(const juce::String &requestedName) const
 {
-    // Strip filesystem-illegal characters and ensure we always have *something*
-    // to work with, even if the user typed only whitespace or symbols.
-    auto baseName = juce::File::createLegalFileName(requestedName).trim();
-
-    if (baseName.isEmpty())
-        baseName = "Untitled";
+    const auto baseName = SanitizeFilename(requestedName);
 
     // Predicate: does any patch already exist with this name, in either dir?
     // Checking both factory and user dirs prevents the popup from later

@@ -194,6 +194,21 @@ public:
     void RandomizeAll();
 
     //==========================================================================
+    // Dev / testing utilities.
+    //==========================================================================
+
+    /// Generates `count` random patches named "Test Preset" (auto-incremented
+    /// to "Test Preset 2", "Test Preset 3", …) under the user dir, then
+    /// restores the APVTS state and current-patch tracking to whatever they
+    /// were before the call. Used by the JUCE_DEBUG-only first-run seed in
+    /// PluginProcessor so the patch system has something to navigate and
+    /// browse against without manual patch creation.
+    ///
+    /// Safe to call at any time — the snapshot/restore makes it transparent.
+    /// No-op when `count <= 0`.
+    void GenerateTestPatches(int count = 5);
+
+    //==========================================================================
     // Current-patch state (read-only accessors).
     //==========================================================================
 
@@ -217,6 +232,16 @@ public:
     /// True when the current patch was loaded from the factory bank. Used to
     /// gate Delete and to colour the patch-name display.
     bool IsCurrentPatchFactory() const noexcept { return currentSource == CurrentSource::Factory; }
+
+    //==========================================================================
+    // Name helpers.
+    //==========================================================================
+
+    /// Strips filesystem-illegal characters from `requestedName`, trims
+    /// whitespace, and falls back to "Untitled" if the result is empty.
+    /// Exposed so the Save As dialog can live-preview the sanitized name as
+    /// the user types. Pure — no I/O.
+    static juce::String SanitizeFilename(const juce::String &requestedName);
 
     //==========================================================================
     // Dirty tracking.
