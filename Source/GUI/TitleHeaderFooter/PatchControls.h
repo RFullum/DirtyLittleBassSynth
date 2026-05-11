@@ -55,6 +55,20 @@ public:
     void Update();
 
 private:
+    /// Opens the async modal Save As dialog: text-input AlertWindow pre-filled
+    /// with the current patch name. Submitting hands the typed string to
+    /// PatchManager::SavePatchAs, which sanitises and auto-increments. Used
+    /// by both the SAVE AS button and the SAVE button's fall-through path
+    /// when the current state is Init or Factory.
+    void ShowSaveAsDialog();
+
+    /// Opens the async modal "Are you sure?" prompt before deleting the
+    /// currently-loaded user patch. Confirm hands the file to
+    /// PatchManager::DeletePatch, which drops the live state to Init.
+    /// No-op if the current patch isn't user-owned (button should be
+    /// disabled in that case, but the guard is defensive).
+    void ShowDeleteConfirmationDialog();
+
     GuiResources &resources;
     
 //    juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later

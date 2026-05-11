@@ -101,6 +101,11 @@ PatchControls::PatchControls(GuiResources &res)
     addAndMakeVisible(deleteButton);
     addAndMakeVisible(randomizeButton);
 
+    // Initial Delete state: we start on Init, which isn't deletable. Update()
+    // syncs this on every timer tick from IsCurrentPatchUserOwned(); setting
+    // it here avoids a one-tick flicker on first launch.
+    deleteButton.setEnabled(false);
+
     // === Click handlers ===
 
     // INIT: drop the current state back to defaults. Patch name display will
@@ -111,19 +116,31 @@ PatchControls::PatchControls(GuiResources &res)
             resources.patchManager->LoadInit();
     };
 
-    // SAVE: overwrite the current user patch in place. On Init/Factory state,
-    // SavePatch() returns false and the GUI is expected to open the Save As
-    // dialog — that dialog wiring lands in C2. Until then the fall-through is
-    // a silent no-op.
+    // SAVE: overwrite the current user patch in place. On Init/Factory state
+    // SavePatch() returns false and we fall through to the Save As dialog so
+    // the user is never left wondering why SAVE did nothing.
     saveButton.onClick = [this]()
     {
         if (resources.patchManager == nullptr)
             return;
 
         if (! resources.patchManager->SavePatch())
-        {
-            // TODO (C2): open Save As dialog here when current is Init/Factory.
-        }
+            ShowSaveAsDialog();
+    };
+
+    // SAVE AS: always opens the dialog, regardless of current source. Pre-fill
+    // and auto-increment behaviour live inside ShowSaveAsDialog / SavePatchAs.
+    saveAsButton.onClick = [this]()
+    {
+        ShowSaveAsDialog();
+    };
+
+    // DELETE: confirm-then-delete. The button itself is disabled when the
+    // current patch isn't user-owned, so by the time we get here the
+    // confirmation dialog should always have a real file to act on.
+    deleteButton.onClick = [this]()
+    {
+        ShowDeleteConfirmationDialog();
     };
 
     // RANDOMIZE: roll all sound-design params and force the master safety
@@ -154,6 +171,104 @@ void PatchControls::Update()
 {
     if (nameDisplay != nullptr)
         nameDisplay->Update();
+
+    // Sync the Delete button's enabled state with PatchManager — only user
+    // patches are deletable. Factory and Init disable + dim Delete via JUCE's
+    // default disabled appearance.
+    if (resources.patchManager != nullptr)
+    {
+        const bool deletable = resources.patchManager->IsCurrentPatchUserOwned();
+
+        if (deleteButton.isEnabled() != deletable)
+            deleteButton.setEnabled(deletable);
+    }
+}
+
+void PatchControls::ShowSaveAsDialog()
+{
+    if (resources.patchManager == nullptr)
+        return;
+
+    // shared_ptr keeps the AlertWindow alive until the modal callback fires.
+    // Parenting to `this` lets JUCE dismiss it cleanly if PatchControls dies.
+    auto window = std::make_shared<juce::AlertWindow>("Save Patch As"
+                                                      , "Patch name:"
+                                                      , juce::AlertWindow::NoIcon
+                                                      , this);
+
+    // Pre-fill with the current name. From a User patch this lets the user
+    // duplicate by editing one character; from Init/Factory it gives them a
+    // sensible starting point (e.g. SAVE-from-Factory means "make my own copy
+    // of this factory preset"). SavePatchAs auto-increments on collision so
+    // accepting the prefilled name is always safe — never overwrites.
+    window->addTextEditor("name", resources.patchManager->GetCurrentPatchName(), {});
+
+    window->addButton("Save"
+                      , 1
+                      , juce::KeyPress(juce::KeyPress::returnKey));
+    window->addButton("Cancel"
+                      , 0
+                      , juce::KeyPress(juce::KeyPress::escapeKey));
+
+    // Capture the PatchManager pointer + window by value rather than `this`
+    // so the callback is insulated from PatchControls being destroyed during
+    // the modal (window itself is parented to `this`, so it would be dismissed
+    // first anyway — the capture is defensive).
+    window->enterModalState(true
+                            , juce::ModalCallbackFunction::create(
+                                [pm = resources.patchManager, window] (int result)
+                                {
+                                    if (result == 1)
+                                    {
+                                        const auto typed = window->getTextEditorContents("name");
+                                        pm->SavePatchAs(typed);
+                                    }
+                                })
+                            , false);
+}
+
+void PatchControls::ShowDeleteConfirmationDialog()
+{
+    if (resources.patchManager == nullptr)
+        return;
+
+    // Defensive: the button should be disabled when there's nothing to delete,
+    // but never trust the GUI gate alone. Refusing here also handles the
+    // pathological case where the current source changed between the click
+    // and this method running (e.g. via a future keyboard shortcut).
+    if (! resources.patchManager->IsCurrentPatchUserOwned())
+        return;
+
+    const auto patchName = resources.patchManager->GetCurrentPatchName();
+    const auto patchFile = resources.patchManager->GetCurrentPatchFile();
+
+    auto window = std::make_shared<juce::AlertWindow>("Delete Patch?"
+                                                      , "Are you sure you want to delete \""
+                                                          + patchName
+                                                          + "\"? This cannot be undone."
+                                                      , juce::AlertWindow::QuestionIcon
+                                                      , this);
+
+    window->addButton("Cancel"
+                      , 0
+                      , juce::KeyPress(juce::KeyPress::escapeKey));
+    window->addButton("Delete"
+                      , 1
+                      , juce::KeyPress(juce::KeyPress::returnKey));
+
+    // Capture the file by value at dialog-open time so the callback acts on
+    // the patch the user was looking at when they confirmed, not whatever's
+    // current after the modal closes. (Modal blocks input so the current patch
+    // can't actually change during the dialog, but the explicit capture makes
+    // the contract obvious.)
+    window->enterModalState(true
+                            , juce::ModalCallbackFunction::create(
+                                [pm = resources.patchManager, patchFile, window] (int result)
+                                {
+                                    if (result == 1)
+                                        pm->DeletePatch(patchFile);
+                                })
+                            , false);
 }
 
 void PatchControls::resized()
