@@ -66,11 +66,18 @@ void PatchNameDisplay::Update()
 PatchControls::PatchControls(GuiResources &res)
 : resources(res)
 , nameDisplay(std::make_unique<PatchNameDisplay>(res))
+, selectionPopup(res)
 {
     const auto &theme = res.theme;
 
     nameDisplay->SetPatchName("Init");
     addAndMakeVisible(nameDisplay.get());
+
+    // Clicking the patch name opens the selection popup anchored below it.
+    nameDisplay->onClick = [this]()
+    {
+        selectionPopup.Show(nameDisplay.get());
+    };
 
     prevButton.setButtonText("<");
     prevButton.setColour(juce::TextButton::buttonColourId,  theme.structure);

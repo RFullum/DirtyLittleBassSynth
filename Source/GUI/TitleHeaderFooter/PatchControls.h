@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
+#include "PatchSelectionPopup.h"
 
 //==============================================================================
 
@@ -73,6 +74,7 @@ private:
     
 //    juce::TextButton patchNameButton;   // styled as a label; clickable -> popup later
     std::unique_ptr<PatchNameDisplay> nameDisplay;
+    PatchSelectionPopup               selectionPopup;
     juce::TextButton                  prevButton;
     juce::TextButton                  nextButton;
 

@@ -73,6 +73,10 @@
                 file="Source/GUI/TitleHeaderFooter/PatchControls.cpp"/>
           <FILE id="aPatch2" name="PatchControls.h" compile="0" resource="0"
                 file="Source/GUI/TitleHeaderFooter/PatchControls.h"/>
+          <FILE id="aPatPop1" name="PatchSelectionPopup.cpp" compile="1" resource="0"
+                file="Source/GUI/TitleHeaderFooter/PatchSelectionPopup.cpp"/>
+          <FILE id="aPatPop2" name="PatchSelectionPopup.h" compile="0" resource="0"
+                file="Source/GUI/TitleHeaderFooter/PatchSelectionPopup.h"/>
         </GROUP>
         <GROUP id="{693F47BA-AFDC-5002-A233-012C508DA918}" name="Sources">
           <FILE id="GR000101" name="SourcesColumn.cpp" compile="1" resource="0"
