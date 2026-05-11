@@ -204,10 +204,181 @@ void PatchManager::ApplyPatchTree(const juce::ValueTree &sanitizedRoot)
         if (auto *param = apvts.getParameter(id))
         {
             // PARAM children store the non-normalised raw value. Convert to
-            // [0, 1] for setValueNotifyingHost, which then notifies attached
-            // UI controls and the host's automation lane.
+            // [0, 1] for setValueNotifyingHost.
             const float rawValue = (float) child.getProperty("value");
             param->setValueNotifyingHost(param->convertTo0to1(rawValue));
         }
     }
+}
+
+//==============================================================================
+
+void PatchManager::LoadInit()
+{
+    // Reset every non-excluded param to its declared normalised default.
+    // Iterating the live state tree gives us the IDs as registered with APVTS;
+    // setValueNotifyingHost ensures attached UI controls and the host's
+    // automation lane see the change (replaceState would bypass listeners).
+    auto state = apvts.copyState();
+
+    for (int i = 0; i < state.getNumChildren(); ++i)
+    {
+        const auto child = state.getChild(i);
+        const auto id    = child.getProperty("id").toString();
+
+        if (IsExcludedFromPatch(id))
+            continue;
+
+        if (auto *param = apvts.getParameter(id))
+            param->setValueNotifyingHost(param->getDefaultValue());
+    }
+
+    SetCurrent(CurrentSource::Init, juce::File{}, "Init");
+}
+
+//==============================================================================
+
+bool PatchManager::LoadPatch(const juce::File &file)
+{
+    if (! file.existsAsFile())
+        return false;
+
+    auto xml = juce::XmlDocument::parse(file);
+    if (xml == nullptr)
+        return false;
+
+    const auto root      = juce::ValueTree::fromXml(*xml);
+    auto       sanitized = ValidatePatchTree(root);
+
+    if (! sanitized.has_value())
+        return false;
+
+    ApplyPatchTree(*sanitized);
+
+    // Determine source by location. Files outside both managed directories
+    // (e.g. a one-off shared patch sitting on the Desktop) are treated as
+    // User loads — they'll be copied into the user dir later when we wire
+    // drag-and-drop import.
+    const auto source = file.isAChildOf(factoryPatchesDir)
+                            ? CurrentSource::Factory
+                            : CurrentSource::User;
+
+    // Prefer the patch's stored name; fall back to the filename stem if the
+    // file pre-dates name metadata or has an empty `name` property.
+    auto name = root.getProperty("name").toString();
+    if (name.isEmpty())
+        name = file.getFileNameWithoutExtension();
+
+    SetCurrent(source, file, name);
+    return true;
+}
+
+//==============================================================================
+
+bool PatchManager::SavePatch()
+{
+    // Init has no backing file and factory patches are read-only by contract.
+    // GUI is expected to open the Save As dialog when this returns false.
+    if (currentSource != CurrentSource::User)
+        return false;
+
+    if (! currentPatchFile.getParentDirectory().isDirectory())
+        return false;
+
+    const auto tree = BuildPatchTree(currentPatchName);
+    const auto xml  = tree.createXml();
+
+    if (xml == nullptr)
+        return false;
+
+    if (! xml->writeTo(currentPatchFile))
+        return false;
+
+    RefreshPatchList();
+    return true;
+}
+
+//==============================================================================
+
+bool PatchManager::SavePatchAs(const juce::String &requestedName)
+{
+    const auto destination = MakeUniqueUserPatchFile(requestedName);
+    const auto finalName   = destination.getFileNameWithoutExtension();
+
+    const auto tree = BuildPatchTree(finalName);
+    const auto xml  = tree.createXml();
+
+    if (xml == nullptr)
+        return false;
+
+    if (! xml->writeTo(destination))
+        return false;
+
+    SetCurrent(CurrentSource::User, destination, finalName);
+    RefreshPatchList();
+    return true;
+}
+
+//==============================================================================
+
+bool PatchManager::DeletePatch(const juce::File &file)
+{
+    // Factory patches are read-only by contract. Even if they're sitting on a
+    // writable volume (e.g. during dev), the manager refuses to touch them.
+    if (file.isAChildOf(factoryPatchesDir))
+        return false;
+
+    if (! file.existsAsFile())
+        return false;
+
+    if (! file.deleteFile())
+        return false;
+
+    // Per the UX spec: deleting the currently-loaded patch drops to Init so
+    // the user is never left looking at a ghost name. Live params reset to
+    // defaults as part of LoadInit().
+    if (file == currentPatchFile)
+        LoadInit();
+
+    RefreshPatchList();
+    return true;
+}
+
+//==============================================================================
+
+juce::File PatchManager::MakeUniqueUserPatchFile(const juce::String &requestedName) const
+{
+    // Strip filesystem-illegal characters and ensure we always have *something*
+    // to work with, even if the user typed only whitespace or symbols.
+    auto baseName = juce::File::createLegalFileName(requestedName).trim();
+
+    if (baseName.isEmpty())
+        baseName = "Untitled";
+
+    // Predicate: does any patch already exist with this name, in either dir?
+    // Checking both factory and user dirs prevents the popup from later
+    // showing two entries with the same display name.
+    const auto nameClashes = [this] (const juce::String &candidate)
+    {
+        if (userPatchesDir   .getChildFile(candidate + patchFileExtension).existsAsFile()) return true;
+        if (factoryPatchesDir.getChildFile(candidate + patchFileExtension).existsAsFile()) return true;
+        return false;
+    };
+
+    auto candidate = baseName;
+    int  suffix    = 2;
+
+    while (nameClashes(candidate))
+        candidate = baseName + " " + juce::String(suffix++);
+
+    return userPatchesDir.getChildFile(candidate + patchFileExtension);
+}
+
+//==============================================================================
+
+void PatchManager::SetCurrent(CurrentSource source, const juce::File &file, const juce::String &name)
+{
+    currentSource    = source;
+    currentPatchFile = file;
+    currentPatchName = name;
 }

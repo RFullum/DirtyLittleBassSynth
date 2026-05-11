@@ -39,6 +39,17 @@ public:
         Factory
     };
 
+    /// State of the currently-loaded patch. Init = no file backing the current
+    /// param state (defaults or freshly randomised). Factory/User = loaded
+    /// from disk. Drives the UI's "Save behaves as Save As" rule and the
+    /// Delete-button enable gate.
+    enum class CurrentSource
+    {
+        Init,
+        Factory,
+        User
+    };
+
     struct PatchInfo
     {
         juce::File   file;
@@ -107,6 +118,43 @@ public:
     /// trusts that the input is already filtered and clamped.
     void ApplyPatchTree(const juce::ValueTree &sanitizedRoot);
 
+    //==========================================================================
+    // Save / Load / Delete.
+    //==========================================================================
+
+    /// Resets every non-excluded APVTS param to its declared default value and
+    /// marks the current state as Init (no backing file). `tempo_fallback_bpm`
+    /// is preserved (it's a per-session setup param, not sound design).
+    void LoadInit();
+
+    /// Reads a .dlbs file, validates it via ValidatePatchTree, and applies the
+    /// result. Returns false if the file is missing, malformed, or has no
+    /// usable payload — in that case the live state is left untouched. On
+    /// success, updates current-patch tracking based on which directory the
+    /// file lives in.
+    bool LoadPatch(const juce::File &file);
+
+    /// Overwrites the currently-loaded user patch on disk with the live APVTS
+    /// state. Returns false when the current state isn't user-owned (Init or
+    /// Factory) or the write fails — the GUI is expected to open the Save As
+    /// dialog when this returns false.
+    bool SavePatch();
+
+    /// Writes the live APVTS state to a new .dlbs file under the user dir
+    /// using `requestedName` as the starting point. Filesystem-illegal chars
+    /// are stripped, and the name is auto-incremented (" 2", " 3", …) if a
+    /// patch with that name already exists in either the user or factory
+    /// directory. Updates current-patch tracking on success.
+    /// Returns false if writing fails.
+    bool SavePatchAs(const juce::String &requestedName);
+
+    /// Deletes a user patch from disk. Refuses to delete factory patches
+    /// (returns false). If the deleted file was the currently-loaded patch,
+    /// drops to Init so the UI doesn't keep showing a ghost. Refreshes the
+    /// patch list on success.
+    /// Returns false if the file is factory-owned, missing, or deletion fails.
+    bool DeletePatch(const juce::File &file);
+
 private:
     static constexpr const char *patchFileExtension = ".dlbs";
     static constexpr const char *patchRootTagName   = "DLBSPatch";
@@ -126,12 +174,26 @@ private:
     /// given source. No-op if `dir` doesn't exist.
     void ScanDirectoryInto(const juce::File &dir, Source source, std::vector<PatchInfo> &out) const;
 
+    /// Computes a unique, filesystem-safe destination File under the user
+    /// directory for `requestedName`. Strips illegal chars, falls back to
+    /// "Untitled" on empty input, and appends " 2", " 3", … until the name
+    /// doesn't clash with any existing user or factory patch.
+    juce::File MakeUniqueUserPatchFile(const juce::String &requestedName) const;
+
+    /// Updates the cached "currently loaded" trio in a single call. Internal
+    /// helper used by every load / save / delete path.
+    void SetCurrent(CurrentSource source, const juce::File &file, const juce::String &name);
+
     juce::AudioProcessorValueTreeState &apvts;
 
     juce::File userPatchesDir;
     juce::File factoryPatchesDir;
 
     std::vector<PatchInfo> patchList;
+
+    CurrentSource currentSource    { CurrentSource::Init };
+    juce::File    currentPatchFile {};
+    juce::String  currentPatchName { "Init" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchManager)
 };
