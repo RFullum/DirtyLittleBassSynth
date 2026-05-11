@@ -22,6 +22,7 @@ public:
     ~PatchNameDisplay();
 
     void paintButton (juce::Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+    void mouseDown   (const juce::MouseEvent &e) override;
 
     void SetPatchName(juce::StringRef name);
 
@@ -29,6 +30,11 @@ public:
     /// repaints only when something visible changed. Call from the editor's
     /// 60Hz timer via PatchControls::Update().
     void Update();
+
+    /// Fired on right-click (and cmd-click on macOS, ctrl-click on
+    /// Win/Linux — anything `MouseEvent::mods::isPopupMenu()` matches).
+    /// Mirrors juce::Button::onClick for left-clicks. Empty by default.
+    std::function<void()> onAltClick;
 
 private:
     GuiResources &resources;
@@ -69,6 +75,13 @@ private:
     /// No-op if the current patch isn't user-owned (button should be
     /// disabled in that case, but the guard is defensive).
     void ShowDeleteConfirmationDialog();
+
+    /// Opens the async right-click alt-popup anchored to `targetComponent`'s
+    /// screen area. Items: Copy / Paste / Reveal Patches Folder / Show
+    /// Current Patch File. Paste is disabled when the clipboard doesn't
+    /// contain a plausible DLBSPatch; Show Current Patch File is disabled
+    /// when the current state is Init or Factory.
+    void ShowAltPopupMenu(juce::Component *targetComponent);
 
     GuiResources &resources;
     

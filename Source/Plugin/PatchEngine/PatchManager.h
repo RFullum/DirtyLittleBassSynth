@@ -158,6 +158,27 @@ public:
     bool DeletePatch(const juce::File &file);
 
     //==========================================================================
+    // Clipboard.
+    //==========================================================================
+
+    /// Serialises the current APVTS state (filtered through BuildPatchTree)
+    /// to the system clipboard as DLBSPatch XML. Lets users share patches via
+    /// any text channel — Discord, email, etc. — without an explicit export
+    /// step. Const because it only reads state.
+    void SerializeToClipboard() const;
+
+    /// Reads the system clipboard, parses it as DLBSPatch XML, runs the
+    /// content through ValidatePatchTree, and applies the result. Returns
+    /// false if the clipboard contains no parseable + valid patch — the live
+    /// state is left untouched in that case.
+    ///
+    /// Leaves the current-patch name/source unchanged: paste means "apply
+    /// these values to my current patch context", not "switch to a new patch
+    /// named X". The dirty flag is explicitly set true since the live state
+    /// no longer matches the saved file (if any).
+    bool ApplyFromClipboard();
+
+    //==========================================================================
     // Navigation.
     //==========================================================================
 

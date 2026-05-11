@@ -404,6 +404,49 @@ bool PatchManager::DeletePatch(const juce::File &file)
 
 //==============================================================================
 
+void PatchManager::SerializeToClipboard() const
+{
+    const auto tree = BuildPatchTree(currentPatchName);
+    const auto xml  = tree.createXml();
+
+    if (xml == nullptr)
+        return;
+
+    juce::SystemClipboard::copyTextToClipboard(xml->toString());
+}
+
+bool PatchManager::ApplyFromClipboard()
+{
+    const auto clipboardText = juce::SystemClipboard::getTextFromClipboard();
+
+    if (clipboardText.isEmpty())
+        return false;
+
+    const auto xml = juce::parseXML(clipboardText);
+
+    if (xml == nullptr)
+        return false;
+
+    const auto root      = juce::ValueTree::fromXml(*xml);
+    auto       sanitized = ValidatePatchTree(root);
+
+    if (! sanitized.has_value())
+        return false;
+
+    ApplyPatchTree(*sanitized);
+
+    // ApplyPatchTree suppresses the listener during its writes, so dirty
+    // wouldn't have been flipped even though the live state has clearly
+    // diverged from the saved file (if any). Mark it explicitly here —
+    // pasting is a user-initiated state change, semantically equivalent to
+    // a long stream of param edits.
+    isDirty.store(true, std::memory_order_release);
+
+    return true;
+}
+
+//==============================================================================
+
 void PatchManager::StepPatch(int delta)
 {
     // Empty list: nowhere to go.

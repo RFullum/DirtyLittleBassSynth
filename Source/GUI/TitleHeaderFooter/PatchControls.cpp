@@ -37,6 +37,23 @@ void PatchNameDisplay::paintButton(juce::Graphics &g, bool /*shouldDrawButtonAsH
     g.drawText(curentPatchName, bounds, juce::Justification::centred);
 }
 
+void PatchNameDisplay::mouseDown(const juce::MouseEvent &e)
+{
+    // isPopupMenu unifies right-click (Win/Linux) and cmd/ctrl-click (macOS)
+    // into a single "user wants the alt menu" signal. Anything else falls
+    // through to juce::Button's default mouseDown so left-clicks still
+    // trigger the normal onClick path.
+    if (e.mods.isPopupMenu())
+    {
+        if (onAltClick != nullptr)
+            onAltClick();
+
+        return;
+    }
+
+    juce::Button::mouseDown(e);
+}
+
 void PatchNameDisplay::SetPatchName(juce::StringRef name)
 {
     curentPatchName = name;
@@ -73,10 +90,17 @@ PatchControls::PatchControls(GuiResources &res)
     nameDisplay->SetPatchName("Init");
     addAndMakeVisible(nameDisplay.get());
 
-    // Clicking the patch name opens the selection popup anchored below it.
+    // Left-click on the patch name opens the selection popup.
     nameDisplay->onClick = [this]()
     {
         selectionPopup.Show(nameDisplay.get());
+    };
+
+    // Right-click (or cmd/ctrl-click) opens the alt-popup: Copy / Paste /
+    // Reveal Folder / Show Current Patch File.
+    nameDisplay->onAltClick = [this]()
+    {
+        ShowAltPopupMenu(nameDisplay.get());
     };
 
     prevButton.setButtonText("<");
@@ -276,6 +300,64 @@ void PatchControls::ShowDeleteConfirmationDialog()
                                         pm->DeletePatch(patchFile);
                                 })
                             , false);
+}
+
+void PatchControls::ShowAltPopupMenu(juce::Component *targetComponent)
+{
+    if (resources.patchManager == nullptr || targetComponent == nullptr)
+        return;
+
+    auto *pm = resources.patchManager;
+
+    enum AltMenuId : int
+    {
+        Copy = 1,
+        Paste,
+        RevealFolder,
+        ShowCurrentFile
+    };
+
+    // Cheap clipboard pre-check: does the clipboard text plausibly contain a
+    // DLBSPatch root? Full validation runs inside ApplyFromClipboard if the
+    // user picks Paste, so this is just a UX gate — we want Paste to look
+    // disabled when there's clearly nothing to paste.
+    const auto clipboardText      = juce::SystemClipboard::getTextFromClipboard();
+    const bool clipboardLooksValid = clipboardText.contains("<DLBSPatch");
+
+    // Show Current Patch File only makes sense for user patches: factory
+    // files live inside the bundle (revealing them dumps Finder into the
+    // app's Contents/Resources/), Init has no file at all.
+    const bool canShowCurrentFile = pm->IsCurrentPatchUserOwned();
+
+    juce::PopupMenu menu;
+    menu.addItem(Copy,            "Copy");
+    menu.addItem(Paste,           "Paste",                    clipboardLooksValid);
+    menu.addSeparator();
+    menu.addItem(RevealFolder,    "Reveal Patches Folder");
+    menu.addItem(ShowCurrentFile, "Show Current Patch File",  canShowCurrentFile);
+
+    const auto options = juce::PopupMenu::Options()
+                             .withTargetComponent(targetComponent)
+                             .withTargetScreenArea(targetComponent->getScreenBounds());
+
+    // Capture file paths by value at menu-open time so the callback isn't
+    // sensitive to state changes between showing the menu and the user
+    // selecting an item (none should happen in practice, but the snapshots
+    // are free).
+    const auto currentFile = pm->GetCurrentPatchFile();
+    const auto userDir     = pm->GetUserPatchesDirectory();
+
+    menu.showMenuAsync(options, [pm, currentFile, userDir] (int chosen)
+    {
+        switch (chosen)
+        {
+            case Copy:            pm->SerializeToClipboard();   break;
+            case Paste:           pm->ApplyFromClipboard();     break;
+            case RevealFolder:    userDir.revealToUser();       break;
+            case ShowCurrentFile: currentFile.revealToUser();   break;
+            default:                                            break;   // 0 = dismissed
+        }
+    });
 }
 
 void PatchControls::resized()
