@@ -110,6 +110,27 @@ bool PatchManager::IsExcludedFromPatch(const juce::String &paramID) noexcept
     return paramID == "tempo_fallback_bpm";
 }
 
+bool PatchManager::IsExcludedFromRandomize(const juce::String &paramID) noexcept
+{
+    // Patch exclusions are also randomise exclusions (no point randomising
+    // something that doesn't live in patches).
+    if (IsExcludedFromPatch(paramID))    return true;
+
+    // Pitch bend range is a controller-config preference per the user spec —
+    // same reasoning as why patches don't reset it.
+    if (paramID == "pitch_bend_range")   return true;
+
+    // Master-section safety params are written to known-safe values by
+    // RandomizeAll itself; randomising them first would just be wasted work.
+    if (paramID == "master_gain")        return true;
+    if (paramID == "master_wide")        return true;
+    if (paramID == "mono_below_freq")    return true;
+    if (paramID == "limiter_on")         return true;
+    if (paramID == "limiter_ceiling")    return true;
+
+    return false;
+}
+
 juce::ValueTree PatchManager::BuildPatchTree(const juce::String &patchName) const
 {
     // Deep copy so pruning excluded params doesn't disturb the live state.
@@ -360,6 +381,48 @@ bool PatchManager::DeletePatch(const juce::File &file)
 
     RefreshPatchList();
     return true;
+}
+
+//==============================================================================
+
+void PatchManager::RandomizeAll()
+{
+    auto       &rng   = juce::Random::getSystemRandom();
+    const auto  state = apvts.copyState();
+
+    // 1. Random-roll every non-excluded param to a fresh [0, 1] value.
+    //    Listener fires on each call (suppressDirty stays false) so the patch
+    //    correctly ends up dirty after the storm.
+    for (int i = 0; i < state.getNumChildren(); ++i)
+    {
+        const auto id = state.getChild(i).getProperty("id").toString();
+
+        if (IsExcludedFromRandomize(id))
+            continue;
+
+        if (auto *param = apvts.getParameter(id))
+            param->setValueNotifyingHost(rng.nextFloat());
+    }
+
+    // 2. Force the master-section safety params to known-safe raw values.
+    //    Done after the random pass so we don't waste cycles randomising
+    //    something that's about to be overwritten anyway, and so the order
+    //    matches the user's mental model ("randomise, then make it safe").
+    const auto setRaw = [this] (const char *id, float raw)
+    {
+        if (auto *param = apvts.getParameter(id))
+            param->setValueNotifyingHost(param->convertTo0to1(raw));
+    };
+
+    setRaw("master_gain",     1.0f);     // unity (0 dB)
+    setRaw("master_wide",     0.0f);     // centred — no widening, plays as mono
+    setRaw("mono_below_freq", 120.0f);   // default crossover
+    setRaw("limiter_on",      0.0f);     // off
+    setRaw("limiter_ceiling", -0.1f);    // default ceiling (harmless while limiter off)
+
+    // No SetCurrent, no ClearDirty: randomise leaves the user on the same
+    // patch name with unsaved changes (every setValueNotifyingHost above
+    // flipped isDirty via the listener).
 }
 
 //==============================================================================

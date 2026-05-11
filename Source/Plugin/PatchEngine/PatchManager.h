@@ -158,6 +158,28 @@ public:
     bool DeletePatch(const juce::File &file);
 
     //==========================================================================
+    // Randomize.
+    //==========================================================================
+
+    /// Rolls every non-excluded, non-safety param to a random normalised value
+    /// and forces the five master-section "safety" params to known-safe
+    /// values (unity output gain, no widening, mono crossover at default,
+    /// limiter off, ceiling default). This prevents the first randomise from
+    /// destroying the user's ears or pinning the limiter.
+    ///
+    /// Excluded entirely (untouched by randomise):
+    ///   - tempo_fallback_bpm  (per-session setup)
+    ///   - pitch_bend_range    (controller config, not sound design)
+    ///
+    /// Forced to safety values:
+    ///   - master_gain, master_wide, mono_below_freq,
+    ///     limiter_on, limiter_ceiling
+    ///
+    /// Doesn't change patch name or source — randomise from any patch leaves
+    /// the user on that patch with unsaved changes (dirty `*`).
+    void RandomizeAll();
+
+    //==========================================================================
     // Current-patch state (read-only accessors).
     //==========================================================================
 
@@ -204,6 +226,12 @@ private:
     /// True for paramIDs excluded from patch save / load. Currently just
     /// `tempo_fallback_bpm` — a per-session setup param.
     static bool IsExcludedFromPatch(const juce::String &paramID) noexcept;
+
+    /// True for paramIDs that RandomizeAll() leaves untouched (separate from
+    /// the patch-exclusion list because RandomizeAll also skips
+    /// pitch_bend_range and the five master-section safety params, which
+    /// are forced to safe values rather than randomised).
+    static bool IsExcludedFromRandomize(const juce::String &paramID) noexcept;
 
     /// Resolves the user patches directory path. Pure path computation, no I/O.
     static juce::File ResolveUserPatchesDirectory();
