@@ -155,6 +155,31 @@ public:
     /// Returns false if the file is factory-owned, missing, or deletion fails.
     bool DeletePatch(const juce::File &file);
 
+    //==========================================================================
+    // Current-patch state (read-only accessors).
+    //==========================================================================
+
+    /// Display name of the currently-loaded patch. "Init" when no patch is
+    /// loaded; otherwise the name stored in the .dlbs file (or the filename
+    /// stem if the file pre-dates name metadata).
+    juce::String GetCurrentPatchName() const noexcept { return currentPatchName; }
+
+    /// Backing file for the current patch. Empty `juce::File{}` when the
+    /// current state is Init.
+    juce::File GetCurrentPatchFile() const noexcept { return currentPatchFile; }
+
+    /// Init / Factory / User. Drives UI gating for the action buttons.
+    CurrentSource GetCurrentSource() const noexcept { return currentSource; }
+
+    /// True only when the current patch is a writable user-owned file on disk.
+    /// The UI uses this to enable the Delete button and decide whether Save
+    /// can overwrite in place (vs. falling through to Save As).
+    bool IsCurrentPatchUserOwned() const noexcept { return currentSource == CurrentSource::User; }
+
+    /// True when the current patch was loaded from the factory bank. Used to
+    /// gate Delete and to colour the patch-name display.
+    bool IsCurrentPatchFactory() const noexcept { return currentSource == CurrentSource::Factory; }
+
 private:
     static constexpr const char *patchFileExtension = ".dlbs";
     static constexpr const char *patchRootTagName   = "DLBSPatch";
