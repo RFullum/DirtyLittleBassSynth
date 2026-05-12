@@ -9,17 +9,18 @@ namespace
                                , juce::LookAndFeel                &dialLAF
                                , juce::LookAndFeel                &dryWetLAF)
     {
-        return GuiResources{
-            .apvts             = &processor.parameters,
-            .dialLookAndFeel   = &dialLAF,
-            .dryWetLookAndFeel = &dryWetLAF,
-            .theme             = Palette::DefaultTheme,
-            .scopeBuffer       = &processor.GetScopeBuffer(),
-            .tempoSnapshot     = &processor.GetTempoSnapshot(),
-            .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
-            .midiLearnManager  = &processor.GetMidiLearnManager(),
-            .patchManager      = &processor.GetPatchManager(),
-        };
+        return GuiResources
+                {
+                    .apvts             = &processor.parameters,
+                    .dialLookAndFeel   = &dialLAF,
+                    .dryWetLookAndFeel = &dryWetLAF,
+                    .theme             = Palette::DefaultTheme,
+                    .scopeBuffer       = &processor.GetScopeBuffer(),
+                    .tempoSnapshot     = &processor.GetTempoSnapshot(),
+                    .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
+                    .midiLearnManager  = &processor.GetMidiLearnManager(),
+                    .patchManager      = &processor.GetPatchManager(),
+                };
     }
 }
 
@@ -29,7 +30,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 : juce::AudioProcessorEditor(&p)
 , processor(p)
 , resources(MakeResources(p, dialLookAndFeel, dryWetLookAndFeel))
-, titleHeader   (resources)
+, titleHeader    (resources)
 , sourcesColumn  (resources)
 , filterColumn   (resources)
 , modifiersColumn(resources)
@@ -49,14 +50,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     addAndMakeVisible(filterColumn);
     addAndMakeVisible(modifiersColumn);
     addAndMakeVisible(masterColumn);
-
-    // Overlay sits on top of the body area; visibility is driven by the
-    // MidiLearnManager state in timerCallback.
+    
     addChildComponent(midiLearnOverlay);
-
-    // Register ourselves as a key listener so Cmd+S / Cmd+Shift+S work in
-    // standalone regardless of which child has focus. Wanting keyboard focus
-    // lets the editor receive key events when nothing else is focused.
+    
     addKeyListener(this);
     setWantsKeyboardFocus(true);
 
@@ -90,10 +86,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     dividers.emplace_back(bounds.removeFromTop(dividerThick));
     dividers.emplace_back(bounds.removeFromBottom(dividerThick));
 
-    // The MIDI Learn overlay covers the entire body region (between header and
-    // footer) so it can intercept clicks on any column-resident control. The
-    // header itself stays uncovered so the LEARN / CLEAR buttons remain
-    // clickable while learn mode is active.
     midiLearnOverlay.setBounds(bounds);
 
     // 12 Slice Design: 4 columns of the synth spaced across the 12 column slices.
@@ -110,15 +102,13 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     masterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
 }
 
-bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &key, juce::Component * /*originator*/)
+bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &key, juce::Component *)
 {
-    // Standalone-only: in a DAW the host intercepts Cmd+S for project save,
-    // and we don't want to compete.
+    // Standalone-only: in a DAW the host intercepts
     if (! resources.isStandalone)
         return false;
 
-    // commandModifier maps to Cmd on macOS and Ctrl on Windows/Linux, so the
-    // same shortcuts work cross-platform.
+    // commandModifier maps to Cmd on macOS and Ctrl on Windows/Linux
     static const juce::KeyPress cmdS      ('s'
                                            , juce::ModifierKeys::commandModifier
                                            , 0);
@@ -127,8 +117,6 @@ bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &
                                                 | juce::ModifierKeys::shiftModifier
                                            , 0);
 
-    // Match Cmd+Shift+S first — the more specific combo. Strict modifier
-    // equality means it won't be mis-matched by the plain Cmd+S below.
     if (key == cmdShiftS)
     {
         titleHeader.TriggerPatchSaveAs();
@@ -155,7 +143,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (midiLearnOverlay.isVisible() != learning)
         midiLearnOverlay.setVisible(learning);
 
-    // Drive overlay animations + state-transition detection while it's visible.
     if (learning || midiLearnOverlay.isVisible())
         midiLearnOverlay.Update();
 

@@ -20,9 +20,9 @@ public:
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
+#ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
+#endif
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
@@ -45,32 +45,22 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
-    float getOutLevel();
+    float                GetMasterGainReductionDb() const noexcept { return masterChain.GetGainReductionDb(); }
+    const ScopeBuffer   &GetScopeBuffer()           const noexcept { return scopeBuffer; }
+    const TempoSnapshot &GetTempoSnapshot()         const noexcept { return tempoSnapshot; }
+    MidiLearnManager    &GetMidiLearnManager()            noexcept { return midiLearnManager; }
+    PatchManager        &GetPatchManager()                noexcept { return patchManager; }
 
-    /// Latest gain reduction in dB from the master limiter (0 when not limiting).
-    /// Polled by the editor's timer to drive the GR meter.
-    float GetMasterGainReductionDb() const noexcept { return masterChain.GetGainReductionDb(); }
-
-    /// Read-only handle to the post-limiter sample feed used by the scope display.
-    const ScopeBuffer &GetScopeBuffer() const noexcept { return scopeBuffer; }
-
-    /// Read-only handle to the tempo snapshot updated each block from the host's
-    /// playhead (or the fallback BPM param when no host transport is reporting).
-    const TempoSnapshot &GetTempoSnapshot() const noexcept { return tempoSnapshot; }
-
-    /// Mutable handle to the MIDI Learn manager. UI uses it to enter/exit
-    /// learn mode, arm params, query mappings, and trigger Clear All.
-    MidiLearnManager &GetMidiLearnManager() noexcept { return midiLearnManager; }
-
-    /// Mutable handle to the patch manager. UI uses it to populate the patch
-    /// list and (later) trigger save / load / delete.
-    PatchManager &GetPatchManager() noexcept { return patchManager; }
-
+    void SaveMidiLearnMappings();
+    
     juce::AudioProcessorValueTreeState parameters;
 
     juce::AudioBuffer<float> outputLevelBuffer;
 
 private:
+    void RegisterMidiLearnableParams();
+    void LoadMidiLearnMappings();
+    
     std::atomic<float>* oscMorphParameter;
     std::atomic<float>* subOscMorphParameter;
     std::atomic<float>* subGainParameter;
@@ -133,15 +123,6 @@ private:
     PatchManager     patchManager { parameters };
 
     juce::ApplicationProperties applicationProperties;
-
-    void RegisterMidiLearnableParams();
-    void LoadMidiLearnMappings();
-
-public:
-    /// Persists the current MIDI Learn mappings to the user-settings file.
-    /// Called from the editor's timer when the manager's dirty flag is set,
-    /// so file I/O happens on the message thread, not audio.
-    void SaveMidiLearnMappings();
 
 private:
 

@@ -29,9 +29,7 @@ public:
 private:
     void timerCallback() override;
 
-    /// Standalone-only Cmd+S / Cmd+Shift+S handling. In DAW contexts the host
-    /// intercepts Cmd+S for project save, so we gate on isStandalone and
-    /// return false otherwise (letting the host see the event).
+    // Standalone-only Cmd+S / Cmd+Shift+S handling.
     bool keyPressed(const juce::KeyPress &key, juce::Component *originator) override;
 
     DirtyLittleBassSynthAudioProcessor &processor;

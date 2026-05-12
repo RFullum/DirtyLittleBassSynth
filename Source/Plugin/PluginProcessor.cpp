@@ -163,21 +163,21 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
     for (auto* v : typedVoices)
     {
-        v->SetOscParamPointers          (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
-        v->SetAmpADSRParamPointers      (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
-        v->SetPortamentoParamPointers   (portaTimeParameter);
+        v->SetOscParamPointers           (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
+        v->SetAmpADSRParamPointers       (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
+        v->SetPortamentoParamPointers    (portaTimeParameter);
         v->SetPortamentoModeParamPointers(portaOnParameter, portaLegatoParameter);
-        v->SetDistParamPointers         (foldbackDistParameter);
-        v->SetRingModParamPointers      (ringModPitchParameter, ringToneParameter, ringModMixParameter);
-        v->SetFreqShiftParamPointers    (freqShiftPitchParameter, freqShiftMixParameter);
-        v->SetSampleAndHoldParamPointers(sAndHPitchParameter, sAndHMixParameter);
-        v->SetFilterParamPointers       (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
-        v->SetFilterADSRParamPointers   (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
-        v->SetFilterLFOParamPointers    (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
-        v->SetFilterLFOSyncParamPointers(filtLFOSyncOnParameter, filtLFOSyncDivParameter);
-        v->SetTempoSnapshot             (&tempoSnapshot);
-        v->SetMasterGainParamPointers   (masterGainParameter);
-        v->updatePitchBendRange         (*pitchBendParameter);
+        v->SetDistParamPointers          (foldbackDistParameter);
+        v->SetRingModParamPointers       (ringModPitchParameter, ringToneParameter, ringModMixParameter);
+        v->SetFreqShiftParamPointers     (freqShiftPitchParameter, freqShiftMixParameter);
+        v->SetSampleAndHoldParamPointers (sAndHPitchParameter, sAndHMixParameter);
+        v->SetFilterParamPointers        (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
+        v->SetFilterADSRParamPointers    (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
+        v->SetFilterLFOParamPointers     (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->SetFilterLFOSyncParamPointers (filtLFOSyncOnParameter, filtLFOSyncDivParameter);
+        v->SetTempoSnapshot              (&tempoSnapshot);
+        v->SetMasterGainParamPointers    (masterGainParameter);
+        v->updatePitchBendRange          (*pitchBendParameter);
     }
 
     // === MIDI Learn ===
@@ -193,72 +193,13 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
     patchManager.Init();
 
-   #if JUCE_DEBUG
+#if JUCE_DEBUG
     // First-run dev seed: only when the user patches folder is empty (so we
     // don't pile up "Test Preset" duplicates on every debug launch).
     // Delete the files from Finder to regenerate a fresh batch.
     if (patchManager.GetPatchList().empty())
         patchManager.GenerateTestPatches(5);
-   #endif
-}
-
-void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
-{
-    // Order here is the stable param-index order serialised mappings rely on.
-    // Adding params later is fine; renaming or removing one will silently drop
-    // existing mappings that referenced the old paramID (handled in
-    // MidiLearnManager::RestoreMappings).
-    static const juce::StringArray learnableIDs
-    {
-        "osc_morph", "sub_osc_morph", "sub_osc_gain", "sub_osc_octave",
-        "amp_attack", "amp_decay", "amp_sustain", "amp_release",
-        "porta_time", "porta_on", "porta_legato",
-        "foldback_dist",
-        "ring_mod_pitch", "ring_tone", "ring_mod_mix",
-        "freq_shift_pitch", "freq_shift_mix",
-        "sandh_pitch", "sandh_mix",
-        "filter_cutoff", "filter_res", "filter_type",
-        "filtEnv_attack", "filtEnv_decay", "filtEnv_sustain", "filtEnv_release",
-        "filtEnv_COAmt", "filtEnv_ResAmt",
-        "filtLFO_freq", "filtLFO_amt", "filtLFO_shape",
-        "filtLFO_sync", "filtLFO_sync_div",
-        "master_gain", "master_wide", "mono_below_freq",
-        "limiter_on", "limiter_ceiling"
-    };
-
-    for (const auto &id : learnableIDs)
-        midiLearnManager.RegisterParam(parameters, id);
-
-    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Registered
-    // as a default (not a one-shot mapping) so a Clear Maps action restores it
-    // afterwards. Any user override loaded via LoadMidiLearnMappings() takes
-    // priority since RestoreMappings runs after this default is applied.
-    if (wrapperType == wrapperType_Standalone)
-    {
-        const int lfoAmtIdx = midiLearnManager.GetParamIndexById("filtLFO_amt");
-        midiLearnManager.RegisterDefaultMapping(1, lfoAmtIdx);
-    }
-}
-
-void DirtyLittleBassSynthAudioProcessor::LoadMidiLearnMappings()
-{
-    if (auto *userSettings = applicationProperties.getUserSettings())
-    {
-        const auto serialised = userSettings->getValue("midiLearnMappings", juce::String());
-        if (serialised.isNotEmpty())
-            midiLearnManager.RestoreMappings(serialised);
-    }
-}
-
-void DirtyLittleBassSynthAudioProcessor::SaveMidiLearnMappings()
-{
-    if (auto *userSettings = applicationProperties.getUserSettings())
-    {
-        userSettings->setValue("midiLearnMappings", midiLearnManager.SerialiseMappings());
-        userSettings->saveIfNeeded();
-    }
-
-    midiLearnManager.ClearDirtyFlag();
+#endif
 }
 
 void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -298,7 +239,7 @@ bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayou
     return true;
   #else
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+        && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
    #if ! JucePlugin_IsSynth
@@ -323,8 +264,8 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
         const auto m = meta.getMessage();
 
         if (m.isController())
-            midiLearnManager.HandleControllerMessage(m.getControllerNumber(),
-                                                     m.getControllerValue());
+            midiLearnManager.HandleControllerMessage(m.getControllerNumber()
+                                                     , m.getControllerValue());
     }
 
     // === Pull tempo / transport state from the host's playhead and publish a
@@ -405,20 +346,20 @@ bool DirtyLittleBassSynthAudioProcessor::acceptsMidi() const
 
 bool DirtyLittleBassSynthAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
+#if JucePlugin_ProducesMidiOutput
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 bool DirtyLittleBassSynthAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
+#if JucePlugin_IsMidiEffect
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 double DirtyLittleBassSynthAudioProcessor::getTailLengthSeconds() const
@@ -471,7 +412,7 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, i
     // state as a child. Read both halves.
     if (xmlState->hasTagName("DLBSPluginState"))
     {
-        const auto root      = juce::ValueTree::fromXml(*xmlState);
+        const auto root       = juce::ValueTree::fromXml(*xmlState);
         const auto apvtsChild = root.getChildWithName(parameters.state.getType());
 
         if (apvtsChild.isValid())
@@ -490,6 +431,65 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, i
     // sessions saved before the wrapper landed.
     if (xmlState->hasTagName(parameters.state.getType()))
         parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+void DirtyLittleBassSynthAudioProcessor::SaveMidiLearnMappings()
+{
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        userSettings->setValue("midiLearnMappings", midiLearnManager.SerialiseMappings());
+        userSettings->saveIfNeeded();
+    }
+
+    midiLearnManager.ClearDirtyFlag();
+}
+
+void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
+{
+    // Order here is the stable param-index order serialised mappings rely on.
+    // Adding params later is fine; renaming or removing one will silently drop
+    // existing mappings that referenced the old paramID (handled in
+    // MidiLearnManager::RestoreMappings).
+    static const juce::StringArray learnableIDs
+    {
+        "osc_morph", "sub_osc_morph", "sub_osc_gain", "sub_osc_octave",
+        "amp_attack", "amp_decay", "amp_sustain", "amp_release",
+        "porta_time", "porta_on", "porta_legato",
+        "foldback_dist",
+        "ring_mod_pitch", "ring_tone", "ring_mod_mix",
+        "freq_shift_pitch", "freq_shift_mix",
+        "sandh_pitch", "sandh_mix",
+        "filter_cutoff", "filter_res", "filter_type",
+        "filtEnv_attack", "filtEnv_decay", "filtEnv_sustain", "filtEnv_release",
+        "filtEnv_COAmt", "filtEnv_ResAmt",
+        "filtLFO_freq", "filtLFO_amt", "filtLFO_shape",
+        "filtLFO_sync", "filtLFO_sync_div",
+        "master_gain", "master_wide", "mono_below_freq",
+        "limiter_on", "limiter_ceiling"
+    };
+
+    for (const auto &id : learnableIDs)
+        midiLearnManager.RegisterParam(parameters, id);
+
+    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Registered
+    // as a default (not a one-shot mapping) so a Clear Maps action restores it
+    // afterwards. Any user override loaded via LoadMidiLearnMappings() takes
+    // priority since RestoreMappings runs after this default is applied.
+    if (wrapperType == wrapperType_Standalone)
+    {
+        const int lfoAmtIdx = midiLearnManager.GetParamIndexById("filtLFO_amt");
+        midiLearnManager.RegisterDefaultMapping(1, lfoAmtIdx);
+    }
+}
+
+void DirtyLittleBassSynthAudioProcessor::LoadMidiLearnMappings()
+{
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        const auto serialised = userSettings->getValue("midiLearnMappings", juce::String());
+        if (serialised.isNotEmpty())
+            midiLearnManager.RestoreMappings(serialised);
+    }
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
