@@ -158,6 +158,22 @@ public:
     bool DeletePatch(const juce::File &file);
 
     //==========================================================================
+    // Import.
+    //==========================================================================
+
+    /// Validates a .dlbs source file and writes a sanitized copy into the
+    /// user patches directory under a unique name (auto-increments on
+    /// collision with existing user or factory patches). The on-disk patch's
+    /// `name` property is updated to match its final filename so the popup,
+    /// title-header display, and filesystem all agree.
+    ///
+    /// Doesn't change the live patch state or refresh the patch list — the
+    /// caller is expected to refresh after a batch of imports and optionally
+    /// LoadPatch the result. Returns the destination File on success,
+    /// std::nullopt on parse / validation / write failure.
+    std::optional<juce::File> ImportPatchFile(const juce::File &source);
+
+    //==========================================================================
     // Clipboard.
     //==========================================================================
 

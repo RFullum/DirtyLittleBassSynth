@@ -404,6 +404,48 @@ bool PatchManager::DeletePatch(const juce::File &file)
 
 //==============================================================================
 
+std::optional<juce::File> PatchManager::ImportPatchFile(const juce::File &source)
+{
+    if (! source.existsAsFile())
+        return std::nullopt;
+
+    const auto xml = juce::XmlDocument::parse(source);
+
+    if (xml == nullptr)
+        return std::nullopt;
+
+    const auto root      = juce::ValueTree::fromXml(*xml);
+    auto       sanitized = ValidatePatchTree(root);
+
+    if (! sanitized.has_value())
+        return std::nullopt;
+
+    // Resolve a unique destination using the source filename stem as the
+    // starting name. MakeUniqueUserPatchFile handles sanitization and
+    // " 2"/" 3"/… suffixing if the name collides with an existing patch
+    // in either dir.
+    const auto destination = MakeUniqueUserPatchFile(source.getFileNameWithoutExtension());
+    const auto finalName   = destination.getFileNameWithoutExtension();
+
+    // Re-stamp the sanitized tree's `name` property to match the final
+    // filename. Without this, an auto-incremented import would show the
+    // *original* name in the title-header display while sitting under a
+    // different filename in the popup — confusing.
+    sanitized->setProperty("name", finalName, nullptr);
+
+    const auto outXml = sanitized->createXml();
+
+    if (outXml == nullptr)
+        return std::nullopt;
+
+    if (! outXml->writeTo(destination))
+        return std::nullopt;
+
+    return destination;
+}
+
+//==============================================================================
+
 void PatchManager::SerializeToClipboard() const
 {
     const auto tree = BuildPatchTree(currentPatchName);

@@ -21,20 +21,31 @@ PatchNameDisplay::~PatchNameDisplay() {}
 
 void PatchNameDisplay::paintButton(juce::Graphics &g, bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/)
 {
-    const auto &theme = resources.theme;
-    auto bounds = getLocalBounds();
-    g.setColour(theme.textPrimary);
+    const auto &theme  = resources.theme;
+    auto        bounds = getLocalBounds();
+
     g.setFont(juce::Font(juce::FontOptions("Helvetica"
                                            , 14.0f
                                            , juce::Font::bold)));
-              
+
+    // Pick the name colour by source. Reserves the right 15px for the dirty
+    // asterisk first so the name truncates to fit the *remaining* space,
+    // never colliding with the `*`.
     if (isDirty)
     {
-        auto dirtyArea = bounds.removeFromRight(15);
+        const auto dirtyArea = bounds.removeFromRight(15);
+        g.setColour(theme.orangeAccent);
         g.drawText("*", dirtyArea, juce::Justification::centred);
     }
-    
-    g.drawText(curentPatchName, bounds, juce::Justification::centred);
+
+    const auto nameColour = (cachedSource == PatchManager::CurrentSource::Factory) ? theme.primaryAccent
+                          : (cachedSource == PatchManager::CurrentSource::User)    ? theme.secondaryAccent
+                          :                                                          theme.textPrimary;
+
+    g.setColour(nameColour);
+
+    // useEllipsesIfTooBig = true → name truncates with "…" when too long.
+    g.drawText(curentPatchName, bounds, juce::Justification::centred, /*useEllipsesIfTooBig*/ true);
 }
 
 void PatchNameDisplay::mouseDown(const juce::MouseEvent &e)
@@ -65,15 +76,18 @@ void PatchNameDisplay::Update()
     if (resources.patchManager == nullptr)
         return;
 
-    // Pull both fields together so we don't repaint twice when both changed
-    // (e.g. loading a different patch flips dirty false and name simultaneously).
-    const auto latestName  = resources.patchManager->GetCurrentPatchName();
-    const bool latestDirty = resources.patchManager->IsDirty();
+    // Pull all three fields together so we don't repaint multiple times when
+    // they change in lockstep (e.g. loading a different patch flips name,
+    // source, and dirty simultaneously).
+    const auto latestName   = resources.patchManager->GetCurrentPatchName();
+    const bool latestDirty  = resources.patchManager->IsDirty();
+    const auto latestSource = resources.patchManager->GetCurrentSource();
 
-    if (latestName != curentPatchName || latestDirty != isDirty)
+    if (latestName != curentPatchName || latestDirty != isDirty || latestSource != cachedSource)
     {
         curentPatchName = latestName;
         isDirty         = latestDirty;
+        cachedSource    = latestSource;
         repaint();
     }
 }
@@ -203,16 +217,118 @@ void PatchControls::Update()
     if (nameDisplay != nullptr)
         nameDisplay->Update();
 
-    // Sync the Delete button's enabled state with PatchManager — only user
-    // patches are deletable. Factory and Init disable + dim Delete via JUCE's
-    // default disabled appearance.
-    if (resources.patchManager != nullptr)
-    {
-        const bool deletable = resources.patchManager->IsCurrentPatchUserOwned();
+    if (resources.patchManager == nullptr)
+        return;
 
-        if (deleteButton.isEnabled() != deletable)
-            deleteButton.setEnabled(deletable);
+    auto *pm = resources.patchManager;
+
+    // Delete: only user patches are deletable. Factory and Init dim DELETE via
+    // JUCE's default disabled appearance.
+    const bool deletable = pm->IsCurrentPatchUserOwned();
+    if (deleteButton.isEnabled() != deletable)
+        deleteButton.setEnabled(deletable);
+
+    // SAVE stays full-opacity in every state — it's always functional (falls
+    // through to Save As on Init/Factory), so dimming would falsely imply
+    // it's disabled.
+
+    // Arrows: disable when there's nothing to cycle through. Skips an awkward
+    // "click does nothing" state on a fresh install with an empty patch dir.
+    const bool hasPatches = ! pm->GetPatchList().empty();
+    if (prevButton.isEnabled() != hasPatches) prevButton.setEnabled(hasPatches);
+    if (nextButton.isEnabled() != hasPatches) nextButton.setEnabled(hasPatches);
+}
+
+void PatchControls::paintOverChildren(juce::Graphics &g)
+{
+    // Tint the whole cluster while a .dlbs drag is hovering. paintOverChildren
+    // runs after children so the tint sits on top of the buttons (which fill
+    // most of our bounds — without this they'd hide a regular paint() tint).
+    if (! isFileDragOver)
+        return;
+
+    const auto &theme  = resources.theme;
+    const auto  bounds = getLocalBounds().toFloat();
+
+    g.setColour(theme.secondaryAccent.withAlpha(0.15f));
+    g.fillRoundedRectangle(bounds, 4.0f);
+
+    g.setColour(theme.secondaryAccent.withAlpha(0.65f));
+    g.drawRoundedRectangle(bounds.reduced(0.5f), 4.0f, 1.5f);
+}
+
+//==============================================================================
+// FileDragAndDropTarget
+
+bool PatchControls::isInterestedInFileDrag(const juce::StringArray &files)
+{
+    // Accept the drag if any file in the bundle ends in .dlbs. Non-matching
+    // files in a mixed-extension drop are silently ignored on drop (F3).
+    for (const auto &path : files)
+        if (path.endsWithIgnoreCase(".dlbs"))
+            return true;
+
+    return false;
+}
+
+void PatchControls::fileDragEnter(const juce::StringArray & /*files*/, int /*x*/, int /*y*/)
+{
+    if (! isFileDragOver)
+    {
+        isFileDragOver = true;
+        repaint();
     }
+}
+
+void PatchControls::fileDragExit(const juce::StringArray & /*files*/)
+{
+    if (isFileDragOver)
+    {
+        isFileDragOver = false;
+        repaint();
+    }
+}
+
+void PatchControls::filesDropped(const juce::StringArray &files, int /*x*/, int /*y*/)
+{
+    // Clear the highlight first so the visual confirms the drop landed
+    // regardless of how validation goes.
+    if (isFileDragOver)
+    {
+        isFileDragOver = false;
+        repaint();
+    }
+
+    if (resources.patchManager == nullptr)
+        return;
+
+    auto *pm = resources.patchManager;
+
+    // Validate + copy each file. Non-.dlbs entries in mixed drops are skipped
+    // silently; invalid .dlbs files (corrupt XML, wrong root tag) are also
+    // skipped silently so one bad file doesn't bomb a bulk import.
+    std::vector<juce::File> imported;
+
+    for (const auto &path : files)
+    {
+        if (! path.endsWithIgnoreCase(".dlbs"))
+            continue;
+
+        if (auto destination = pm->ImportPatchFile(juce::File(path)))
+            imported.push_back(*destination);
+    }
+
+    if (imported.empty())
+        return;
+
+    // Refresh once after the batch so the popup picks up the new arrivals.
+    pm->RefreshPatchList();
+
+    // Drop-to-load convenience: if exactly one file came in valid, auto-load
+    // it. For bulk imports we leave the user on whatever was current so they
+    // can browse the new patches via the popup at their own pace.
+    if (imported.size() == 1)
+        pm->LoadPatch(imported.front());
 }
 
 void PatchControls::ShowSaveAsDialog()
