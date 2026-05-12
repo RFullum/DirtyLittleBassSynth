@@ -129,6 +129,14 @@ bool PatchManager::IsExcludedFromPatch(const juce::String &paramID) noexcept
     return paramID == "tempo_fallback_bpm";
 }
 
+bool PatchManager::IsReservedPatchName(const juce::String &name) noexcept
+{
+    // "Init" is the label for the no-patch-loaded state and the INIT button.
+    // Allowing a user patch with this name would cause the popup, title-header
+    // colouring, and INIT button to disagree about what "Init" means.
+    return name.equalsIgnoreCase("Init");
+}
+
 bool PatchManager::IsExcludedFromRandomize(const juce::String &paramID) noexcept
 {
     // Patch exclusions are also randomise exclusions (no point randomising
@@ -639,11 +647,15 @@ juce::File PatchManager::MakeUniqueUserPatchFile(const juce::String &requestedNa
 {
     const auto baseName = SanitizeFilename(requestedName);
 
-    // Predicate: does any patch already exist with this name, in either dir?
-    // Checking both factory and user dirs prevents the popup from later
-    // showing two entries with the same display name.
+    // Predicate: does any patch already exist with this name, in either dir,
+    // OR is it a reserved system name? Both cases bump the candidate to
+    // "<name> 2", "<name> 3", … until clean. Reserved-name handling sits
+    // here (not in SanitizeFilename) so the Save As dialog can still echo
+    // the user's typed name in its live preview — they only see the bump
+    // appended after they commit.
     const auto nameClashes = [this] (const juce::String &candidate)
     {
+        if (IsReservedPatchName(candidate))                                                return true;
         if (userPatchesDir   .getChildFile(candidate + patchFileExtension).existsAsFile()) return true;
         if (factoryPatchesDir.getChildFile(candidate + patchFileExtension).existsAsFile()) return true;
         return false;

@@ -309,6 +309,13 @@ private:
     /// are forced to safe values rather than randomised).
     static bool IsExcludedFromRandomize(const juce::String &paramID) noexcept;
 
+    /// True for patch names reserved by the system. Currently just "Init"
+    /// (case-insensitive) — collides with the Init state label and the INIT
+    /// button. Treated the same as a filename collision in
+    /// MakeUniqueUserPatchFile: auto-incremented to "Init 2", "Init 3", …
+    /// rather than rejected outright, so the user sees what happened.
+    static bool IsReservedPatchName(const juce::String &name) noexcept;
+
     /// Resolves the user patches directory path. Pure path computation, no I/O.
     static juce::File ResolveUserPatchesDirectory();
 
