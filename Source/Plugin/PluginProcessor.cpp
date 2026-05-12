@@ -448,19 +448,48 @@ void DirtyLittleBassSynthAudioProcessor::changeProgramName(int /*index*/, const 
 
 void DirtyLittleBassSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
-    auto state = parameters.copyState();
-    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    // Wrap the APVTS state in a DLBSPluginState root so we can also stash the
+    // currently-loaded patch path. Reopening a host project restores both the
+    // exact param values AND the patch name shown in the title header.
+    juce::ValueTree root { "DLBSPluginState" };
+    root.setProperty("currentPatchPath"
+                     , patchManager.GetCurrentPatchFile().getFullPathName()
+                     , nullptr);
+    root.appendChild(parameters.copyState(), nullptr);
+
+    std::unique_ptr<juce::XmlElement> xml(root.createXml());
     copyXmlToBinary(*xml, destData);
 }
 
 void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
-    if (xmlState.get() != nullptr)
+    if (xmlState == nullptr)
+        return;
+
+    // New format: <DLBSPluginState currentPatchPath="…"> wrapping the APVTS
+    // state as a child. Read both halves.
+    if (xmlState->hasTagName("DLBSPluginState"))
     {
-        if (xmlState->hasTagName(parameters.state.getType()))
-            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+        const auto root      = juce::ValueTree::fromXml(*xmlState);
+        const auto apvtsChild = root.getChildWithName(parameters.state.getType());
+
+        if (apvtsChild.isValid())
+            parameters.replaceState(apvtsChild);
+
+        // Patch path is best-effort — missing file or empty string just leaves
+        // current-patch tracking on Init (per SetCurrentFromRestoredPath).
+        const auto pathString = root.getProperty("currentPatchPath").toString();
+        if (pathString.isNotEmpty())
+            patchManager.SetCurrentFromRestoredPath(juce::File(pathString));
+
+        return;
     }
+
+    // Old format: bare <ParameterTree>…</> — restore as before for any
+    // sessions saved before the wrapper landed.
+    if (xmlState->hasTagName(parameters.state.getType()))
+        parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

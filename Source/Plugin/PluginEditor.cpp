@@ -54,6 +54,12 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     // MidiLearnManager state in timerCallback.
     addChildComponent(midiLearnOverlay);
 
+    // Register ourselves as a key listener so Cmd+S / Cmd+Shift+S work in
+    // standalone regardless of which child has focus. Wanting keyboard focus
+    // lets the editor receive key events when nothing else is focused.
+    addKeyListener(this);
+    setWantsKeyboardFocus(true);
+
     juce::Timer::startTimerHz(60);
 }
 
@@ -102,6 +108,40 @@ void DirtyLittleBassSynthAudioProcessorEditor::resized()
     filterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
     dividers       .emplace_back(bounds.removeFromLeft(dividerThick).reduced(0, dividerInset));
     masterColumn   .setBounds   (bounds.removeFromLeft(sliceW * 3));
+}
+
+bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &key, juce::Component * /*originator*/)
+{
+    // Standalone-only: in a DAW the host intercepts Cmd+S for project save,
+    // and we don't want to compete.
+    if (! resources.isStandalone)
+        return false;
+
+    // commandModifier maps to Cmd on macOS and Ctrl on Windows/Linux, so the
+    // same shortcuts work cross-platform.
+    static const juce::KeyPress cmdS      ('s'
+                                           , juce::ModifierKeys::commandModifier
+                                           , 0);
+    static const juce::KeyPress cmdShiftS ('s'
+                                           , juce::ModifierKeys::commandModifier
+                                                | juce::ModifierKeys::shiftModifier
+                                           , 0);
+
+    // Match Cmd+Shift+S first — the more specific combo. Strict modifier
+    // equality means it won't be mis-matched by the plain Cmd+S below.
+    if (key == cmdShiftS)
+    {
+        titleHeader.TriggerPatchSaveAs();
+        return true;
+    }
+
+    if (key == cmdS)
+    {
+        titleHeader.TriggerPatchSave();
+        return true;
+    }
+
+    return false;
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()

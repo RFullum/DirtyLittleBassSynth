@@ -38,6 +38,12 @@ public:
     /// Call from the editor's timer.
     void Update();
 
+    /// Thin delegators so the editor's keyboard-shortcut path doesn't have
+    /// to reach through to PatchControls directly. Both forward to the
+    /// matching PatchControls method.
+    void TriggerPatchSave();
+    void TriggerPatchSaveAs();
+
 private:
     GuiResources &resources;
 

@@ -209,6 +209,24 @@ public:
     void StepPatch(int delta);
 
     //==========================================================================
+    // Project / session restore.
+    //==========================================================================
+
+    /// Sets the current-patch tracking to reflect a previously-loaded patch
+    /// without re-reading the file's parameters. Used by
+    /// PluginProcessor::setStateInformation to restore *which* patch the DAW
+    /// session was on when saved — the live APVTS values come from the
+    /// project (authoritative), this just restores the visible label and
+    /// source colour.
+    ///
+    /// If the path is empty or the file no longer exists, the live state
+    /// stays as-is and current-patch tracking remains on Init. Clears dirty
+    /// so the just-restored state reads clean (the user can still tell if
+    /// the project diverged from the on-disk patch — the moment they touch
+    /// a param, dirty flips true).
+    void SetCurrentFromRestoredPath(const juce::File &path);
+
+    //==========================================================================
     // Randomize.
     //==========================================================================
 

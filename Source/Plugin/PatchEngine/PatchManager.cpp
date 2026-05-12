@@ -497,6 +497,33 @@ bool PatchManager::ApplyFromClipboard()
 
 //==============================================================================
 
+void PatchManager::SetCurrentFromRestoredPath(const juce::File &path)
+{
+    // Empty path or missing file → stay on Init. The live APVTS values from
+    // setStateInformation are authoritative regardless of what we display.
+    if (path == juce::File{} || ! path.existsAsFile())
+        return;
+
+    const auto source = path.isAChildOf(factoryPatchesDir) ? CurrentSource::Factory
+                                                            : CurrentSource::User;
+
+    // Prefer the patch's stored name; fall back to filename stem if the
+    // file pre-dates name metadata or has an empty `name` property.
+    juce::String name;
+    if (auto xml = juce::XmlDocument::parse(path))
+    {
+        const auto root = juce::ValueTree::fromXml(*xml);
+        name = root.getProperty("name").toString();
+    }
+    if (name.isEmpty())
+        name = path.getFileNameWithoutExtension();
+
+    SetCurrent(source, path, name);
+    ClearDirty();
+}
+
+//==============================================================================
+
 void PatchManager::StepPatch(int delta)
 {
     // Empty list: nowhere to go.

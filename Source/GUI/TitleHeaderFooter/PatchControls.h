@@ -78,6 +78,17 @@ public:
     /// TitleHeader::Update().
     void Update();
 
+    /// Performs the SAVE action: overwrites the current user patch on disk
+    /// in place, or falls through to the Save As dialog when the current
+    /// state is Init / Factory. Same behavior as clicking the SAVE button —
+    /// exposed publicly so the editor's keyboard-shortcut handler can drive
+    /// the same flow.
+    void TriggerSave();
+
+    /// Opens the Save As dialog directly, identical to clicking the SAVE AS
+    /// button.
+    void TriggerSaveAs();
+
 private:
     /// Opens the async modal Save As dialog: text-input AlertWindow pre-filled
     /// with the current patch name. Submitting hands the typed string to

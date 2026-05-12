@@ -84,3 +84,6 @@ void TitleHeader::Update()
     midiLearnControls.Update();
     patchControls    .Update();
 }
+
+void TitleHeader::TriggerPatchSave()    { patchControls.TriggerSave();   }
+void TitleHeader::TriggerPatchSaveAs()  { patchControls.TriggerSaveAs(); }

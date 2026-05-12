@@ -161,24 +161,10 @@ PatchControls::PatchControls(GuiResources &res)
             resources.patchManager->LoadInit();
     };
 
-    // SAVE: overwrite the current user patch in place. On Init/Factory state
-    // SavePatch() returns false and we fall through to the Save As dialog so
-    // the user is never left wondering why SAVE did nothing.
-    saveButton.onClick = [this]()
-    {
-        if (resources.patchManager == nullptr)
-            return;
-
-        if (! resources.patchManager->SavePatch())
-            ShowSaveAsDialog();
-    };
-
-    // SAVE AS: always opens the dialog, regardless of current source. Pre-fill
-    // and auto-increment behaviour live inside ShowSaveAsDialog / SavePatchAs.
-    saveAsButton.onClick = [this]()
-    {
-        ShowSaveAsDialog();
-    };
+    // SAVE / SAVE AS — both delegate to public methods so the editor's
+    // keyboard-shortcut path can reuse the same flow.
+    saveButton  .onClick = [this]() { TriggerSave();   };
+    saveAsButton.onClick = [this]() { TriggerSaveAs(); };
 
     // DELETE: confirm-then-delete. The button itself is disabled when the
     // current patch isn't user-owned, so by the time we get here the
@@ -210,6 +196,22 @@ PatchControls::PatchControls(GuiResources &res)
         if (resources.patchManager != nullptr)
             resources.patchManager->StepPatch(+1);
     };
+}
+
+void PatchControls::TriggerSave()
+{
+    if (resources.patchManager == nullptr)
+        return;
+
+    // SavePatch returns false on Init/Factory — fall through to the dialog
+    // so the user is never left wondering why nothing happened.
+    if (! resources.patchManager->SavePatch())
+        ShowSaveAsDialog();
+}
+
+void PatchControls::TriggerSaveAs()
+{
+    ShowSaveAsDialog();
 }
 
 void PatchControls::Update()
