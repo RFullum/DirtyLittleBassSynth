@@ -41,4 +41,8 @@ struct GuiResources
     /// the patch name display, prev/next arrows, and the action buttons
     /// (Init / Save / Save As / Delete / Randomize).
     PatchManager                       *patchManager     = nullptr;
+
+    /// Fires the processor's MIDI panic (hard-stop every voice). Used by the
+    /// title header's PANIC button.
+    std::function<void()>               midiPanic;
 };

@@ -444,6 +444,13 @@ void DirtyLittleBassSynthAudioProcessor::SaveMidiLearnMappings()
     midiLearnManager.ClearDirtyFlag();
 }
 
+void DirtyLittleBassSynthAudioProcessor::MidiPanic()
+{
+    // midiChannel = 0 stops every voice on every channel. allowTailOff = false
+    // gives a hard stop so a stuck note can't sustain through an envelope tail.
+    synth.allNotesOff(0, false);
+}
+
 void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
 {
     // Order here is the stable param-index order serialised mappings rely on.

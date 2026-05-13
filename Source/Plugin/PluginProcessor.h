@@ -52,6 +52,10 @@ public:
     PatchManager        &GetPatchManager()                noexcept { return patchManager; }
 
     void SaveMidiLearnMappings();
+
+    /// Stops every active voice immediately (no envelope tail). Safe to call
+    /// from the UI thread — Synthesiser guards note state with its own lock.
+    void MidiPanic();
     
     juce::AudioProcessorValueTreeState parameters;
 

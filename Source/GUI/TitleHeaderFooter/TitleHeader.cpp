@@ -22,6 +22,16 @@ TitleHeader::TitleHeader(GuiResources &res)
     addAndMakeVisible(tempoControls);
     addAndMakeVisible(midiLearnControls);
     addAndMakeVisible(patchControls);
+
+    panicButton.setButtonText      ("PANIC");
+    panicButton.setColour          (juce::TextButton::buttonColourId,  res.theme.structure);
+    panicButton.setColour          (juce::TextButton::textColourOffId, res.theme.orangeAccent);
+    panicButton.onClick = [this]()
+    {
+        if (resources.midiPanic)
+            resources.midiPanic();
+    };
+    addAndMakeVisible(panicButton);
 }
 
 void TitleHeader::paint(juce::Graphics &g)
@@ -50,7 +60,7 @@ void TitleHeader::paint(juce::Graphics &g)
     // === Right: brand text ===
     g.setColour(theme.textSecondary);
     g.setFont(juce::Font(juce::FontOptions("Helvetica"
-                                           , 12.0f
+                                           , 13.0f
                                            , juce::Font::bold))
               .withExtraKerningFactor(0.18f));
     g.drawText("FULLUMMUSIC", brandingRect, juce::Justification::centredRight);
@@ -65,8 +75,12 @@ void TitleHeader::resized()
     
     taglineRect    = bounds.removeFromLeft(375);
     pluginNameRect = taglineRect.removeFromTop(taglineRect.proportionOfHeight(0.66f));
-    brandingRect   = bounds.removeFromRight(115);
-    
+
+    auto rightCluster = bounds.removeFromRight(125);
+    brandingRect      = rightCluster.removeFromTop(rightCluster.proportionOfHeight(0.6f));
+    rightCluster.removeFromBottom(6);
+    panicButton.setBounds(rightCluster.reduced(20, 0));
+
     bounds.removeFromLeft(sectionGap);
     tempoControls.setBounds(bounds.removeFromLeft(150));
     

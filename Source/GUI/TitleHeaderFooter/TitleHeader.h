@@ -51,6 +51,8 @@ private:
     MidiLearnControls midiLearnControls;
     PatchControls     patchControls;
 
+    juce::TextButton  panicButton;
+
     juce::Rectangle<int> pluginNameRect;
     juce::Rectangle<int> taglineRect;
     juce::Rectangle<int> brandingRect;

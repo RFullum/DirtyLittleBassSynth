@@ -20,6 +20,7 @@ namespace
                     .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
                     .midiLearnManager  = &processor.GetMidiLearnManager(),
                     .patchManager      = &processor.GetPatchManager(),
+                    .midiPanic         = [&processor]{ processor.MidiPanic(); },
                 };
     }
 }
