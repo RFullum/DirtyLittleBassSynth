@@ -61,60 +61,60 @@ private:
     void RegisterMidiLearnableParams();
     void LoadMidiLearnMappings();
     
-    std::atomic<float>* oscMorphParameter;
-    std::atomic<float>* subOscMorphParameter;
-    std::atomic<float>* subGainParameter;
-    std::atomic<float>* subOctaveParameter;
-    std::atomic<float>* pitchBendParameter;
-    
-    std::atomic<float>* ampAttackParameter;
-    std::atomic<float>* ampDecayParameter;
-    std::atomic<float>* ampSustainParameter;
-    std::atomic<float>* ampReleaseParameter;
-    
-    std::atomic<float>* foldbackDistParameter;
+    std::atomic<float>* oscMorphParameter    = nullptr;
+    std::atomic<float>* subOscMorphParameter = nullptr;
+    std::atomic<float>* subGainParameter     = nullptr;
+    std::atomic<float>* subOctaveParameter   = nullptr;
+    std::atomic<float>* pitchBendParameter   = nullptr;
 
-    std::atomic<float>* ringModPitchParameter;
-    std::atomic<float>* ringToneParameter;
-    std::atomic<float>* ringModMixParameter;
-    
-    std::atomic<float>* freqShiftPitchParameter;
-    std::atomic<float>* freqShiftMixParameter;
-    
-    std::atomic<float>* sAndHPitchParameter;
-    std::atomic<float>* sAndHMixParameter;
-    
-    std::atomic<float>* filterCutoffParameter;
-    std::atomic<float>* filterResonanceParameter;
-    std::atomic<float>* filterSelectorParameter;
-    
-    std::atomic<float>* filtEnvAttackParameter;
-    std::atomic<float>* filtEnvDecayParameter;
-    std::atomic<float>* filtEnvSustainParameter;
-    std::atomic<float>* filtEnvReleaseParameter;
-    std::atomic<float>* filtEnvAmtCOParameter;
-    std::atomic<float>* filtEnvAmtResParameter;
-    
-    std::atomic<float>* filtLFOFreqParameter;
-    std::atomic<float>* filtLFOAmtParameter;
-    std::atomic<float>* filtLFOShapeParameter;
+    std::atomic<float>* ampAttackParameter  = nullptr;
+    std::atomic<float>* ampDecayParameter   = nullptr;
+    std::atomic<float>* ampSustainParameter = nullptr;
+    std::atomic<float>* ampReleaseParameter = nullptr;
 
-    std::atomic<float>* filtLFOSyncOnParameter;
-    std::atomic<float>* filtLFOSyncDivParameter;
-    
-    std::atomic<float>* portaTimeParameter;
-    std::atomic<float>* portaOnParameter;
-    std::atomic<float>* portaLegatoParameter;
-    
-    std::atomic<float>* masterGainParameter;
+    std::atomic<float>* foldbackDistParameter = nullptr;
 
-    std::atomic<float>* masterWideParameter;
-    std::atomic<float>* monoBelowFreqParameter;
+    std::atomic<float>* ringModPitchParameter = nullptr;
+    std::atomic<float>* ringToneParameter     = nullptr;
+    std::atomic<float>* ringModMixParameter   = nullptr;
 
-    std::atomic<float>* limiterOnParameter;
-    std::atomic<float>* limiterCeilingParameter;
+    std::atomic<float>* freqShiftPitchParameter = nullptr;
+    std::atomic<float>* freqShiftMixParameter   = nullptr;
 
-    std::atomic<float>* tempoFallbackBpmParameter;
+    std::atomic<float>* sAndHPitchParameter = nullptr;
+    std::atomic<float>* sAndHMixParameter   = nullptr;
+
+    std::atomic<float>* filterCutoffParameter    = nullptr;
+    std::atomic<float>* filterResonanceParameter = nullptr;
+    std::atomic<float>* filterSelectorParameter  = nullptr;
+
+    std::atomic<float>* filtEnvAttackParameter  = nullptr;
+    std::atomic<float>* filtEnvDecayParameter   = nullptr;
+    std::atomic<float>* filtEnvSustainParameter = nullptr;
+    std::atomic<float>* filtEnvReleaseParameter = nullptr;
+    std::atomic<float>* filtEnvAmtCOParameter   = nullptr;
+    std::atomic<float>* filtEnvAmtResParameter  = nullptr;
+
+    std::atomic<float>* filtLFOFreqParameter  = nullptr;
+    std::atomic<float>* filtLFOAmtParameter   = nullptr;
+    std::atomic<float>* filtLFOShapeParameter = nullptr;
+
+    std::atomic<float>* filtLFOSyncOnParameter  = nullptr;
+    std::atomic<float>* filtLFOSyncDivParameter = nullptr;
+
+    std::atomic<float>* portaTimeParameter   = nullptr;
+    std::atomic<float>* portaOnParameter     = nullptr;
+    std::atomic<float>* portaLegatoParameter = nullptr;
+
+    std::atomic<float>* masterGainParameter = nullptr;
+
+    std::atomic<float>* masterWideParameter    = nullptr;
+    std::atomic<float>* monoBelowFreqParameter = nullptr;
+
+    std::atomic<float>* limiterOnParameter      = nullptr;
+    std::atomic<float>* limiterCeilingParameter = nullptr;
+
+    std::atomic<float>* tempoFallbackBpmParameter = nullptr;
 
     MasterChain      masterChain;
     ScopeBuffer      scopeBuffer;
