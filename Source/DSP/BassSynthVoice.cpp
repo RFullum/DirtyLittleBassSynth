@@ -189,7 +189,7 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         const float oscRing    = DryWetLinear(s, ringSample, ringMix);
 
         const float freqShiftSample = freqShift.Process() * envVal;
-        const float oscShift        = DryWetLinear(oscRing, freqShiftSample, freqMix);
+        const float oscShift        = DryWetEP(oscRing, freqShiftSample, freqMix);
 
         const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
         upData[i] = DryWetEP(oscShift, sandhSample, sAndHMix);
