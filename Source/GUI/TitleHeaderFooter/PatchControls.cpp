@@ -198,47 +198,39 @@ PatchControls::PatchControls(GuiResources &res)
     };
 }
 
-void PatchControls::TriggerSave()
+void PatchControls::resized()
 {
-    if (resources.patchManager == nullptr)
-        return;
+    static constexpr int rowGap     = 4;
+    static constexpr int btnGap     = 4;
+    static constexpr int arrowWidth = 28;
 
-    // SavePatch returns false on Init/Factory — fall through to the dialog
-    // so the user is never left wondering why nothing happened.
-    if (! resources.patchManager->SavePatch())
-        ShowSaveAsDialog();
-}
+    auto bounds = getLocalBounds();
+    const int rowHeight = (bounds.getHeight() - rowGap) / 2;
 
-void PatchControls::TriggerSaveAs()
-{
-    ShowSaveAsDialog();
-}
+    auto topRow    = bounds.removeFromTop(rowHeight);
+    bounds.removeFromTop(rowGap);
+    auto bottomRow = bounds.removeFromTop(rowHeight);
 
-void PatchControls::Update()
-{
-    if (nameDisplay != nullptr)
-        nameDisplay->Update();
+    prevButton     .setBounds(topRow.removeFromLeft(arrowWidth));
+    topRow         .removeFromLeft(btnGap);
+    nextButton     .setBounds(topRow.removeFromRight(arrowWidth));
+    topRow         .removeFromRight(btnGap);
+    nameDisplay   ->setBounds(topRow);
 
-    if (resources.patchManager == nullptr)
-        return;
+    static constexpr int numButtons     = 5;
+    static constexpr int totalGapsWidth = btnGap * (numButtons - 1);
 
-    auto *pm = resources.patchManager;
+    const int actionBtnWidth = (bottomRow.getWidth() - totalGapsWidth) / numButtons;
 
-    // Delete: only user patches are deletable. Factory and Init dim DELETE via
-    // JUCE's default disabled appearance.
-    const bool deletable = pm->IsCurrentPatchUserOwned();
-    if (deleteButton.isEnabled() != deletable)
-        deleteButton.setEnabled(deletable);
-
-    // SAVE stays full-opacity in every state — it's always functional (falls
-    // through to Save As on Init/Factory), so dimming would falsely imply
-    // it's disabled.
-
-    // Arrows: disable when there's nothing to cycle through. Skips an awkward
-    // "click does nothing" state on a fresh install with an empty patch dir.
-    const bool hasPatches = ! pm->GetPatchList().empty();
-    if (prevButton.isEnabled() != hasPatches) prevButton.setEnabled(hasPatches);
-    if (nextButton.isEnabled() != hasPatches) nextButton.setEnabled(hasPatches);
+    initButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    saveButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    saveAsButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    deleteButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
+    bottomRow      .removeFromLeft(btnGap);
+    randomizeButton.setBounds(bottomRow);
 }
 
 void PatchControls::paintOverChildren(juce::Graphics &g)
@@ -331,6 +323,49 @@ void PatchControls::filesDropped(const juce::StringArray &files, int /*x*/, int 
     // can browse the new patches via the popup at their own pace.
     if (imported.size() == 1)
         pm->LoadPatch(imported.front());
+}
+
+void PatchControls::Update()
+{
+    if (nameDisplay != nullptr)
+        nameDisplay->Update();
+
+    if (resources.patchManager == nullptr)
+        return;
+
+    auto *pm = resources.patchManager;
+
+    // Delete: only user patches are deletable. Factory and Init dim DELETE via
+    // JUCE's default disabled appearance.
+    const bool deletable = pm->IsCurrentPatchUserOwned();
+    if (deleteButton.isEnabled() != deletable)
+        deleteButton.setEnabled(deletable);
+
+    // SAVE stays full-opacity in every state — it's always functional (falls
+    // through to Save As on Init/Factory), so dimming would falsely imply
+    // it's disabled.
+
+    // Arrows: disable when there's nothing to cycle through. Skips an awkward
+    // "click does nothing" state on a fresh install with an empty patch dir.
+    const bool hasPatches = ! pm->GetPatchList().empty();
+    if (prevButton.isEnabled() != hasPatches) prevButton.setEnabled(hasPatches);
+    if (nextButton.isEnabled() != hasPatches) nextButton.setEnabled(hasPatches);
+}
+
+void PatchControls::TriggerSave()
+{
+    if (resources.patchManager == nullptr)
+        return;
+
+    // SavePatch returns false on Init/Factory — fall through to the dialog
+    // so the user is never left wondering why nothing happened.
+    if (! resources.patchManager->SavePatch())
+        ShowSaveAsDialog();
+}
+
+void PatchControls::TriggerSaveAs()
+{
+    ShowSaveAsDialog();
 }
 
 void PatchControls::ShowSaveAsDialog()
@@ -476,39 +511,4 @@ void PatchControls::ShowAltPopupMenu(juce::Component *targetComponent)
             default:                                            break;   // 0 = dismissed
         }
     });
-}
-
-void PatchControls::resized()
-{
-    static constexpr int rowGap     = 4;
-    static constexpr int btnGap     = 4;
-    static constexpr int arrowWidth = 28;
-
-    auto bounds = getLocalBounds();
-    const int rowHeight = (bounds.getHeight() - rowGap) / 2;
-
-    auto topRow    = bounds.removeFromTop(rowHeight);
-    bounds.removeFromTop(rowGap);
-    auto bottomRow = bounds.removeFromTop(rowHeight);
-
-    prevButton     .setBounds(topRow.removeFromLeft(arrowWidth));
-    topRow         .removeFromLeft(btnGap);
-    nextButton     .setBounds(topRow.removeFromRight(arrowWidth));
-    topRow         .removeFromRight(btnGap);
-    nameDisplay   ->setBounds(topRow);
-
-    static constexpr int numButtons     = 5;
-    static constexpr int totalGapsWidth = btnGap * (numButtons - 1);
-
-    const int actionBtnWidth = (bottomRow.getWidth() - totalGapsWidth) / numButtons;
-
-    initButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
-    bottomRow      .removeFromLeft(btnGap);
-    saveButton     .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
-    bottomRow      .removeFromLeft(btnGap);
-    saveAsButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
-    bottomRow      .removeFromLeft(btnGap);
-    deleteButton   .setBounds(bottomRow.removeFromLeft(actionBtnWidth));
-    bottomRow      .removeFromLeft(btnGap);
-    randomizeButton.setBounds(bottomRow);
 }

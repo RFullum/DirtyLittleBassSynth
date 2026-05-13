@@ -131,6 +131,23 @@ void TempoControls::mouseDoubleClick(const juce::MouseEvent &)
     bpmEditor.grabKeyboardFocus();
 }
 
+void TempoControls::Update()
+{
+    if (resources.tempoSnapshot == nullptr)
+        return;
+
+    const auto latest = resources.tempoSnapshot->Read();
+
+    // Only repaint when the displayed values actually change.
+    const bool bpmChanged    = ! juce::approximatelyEqual(latest.bpm, currentTempo.bpm);
+    const bool sourceChanged = latest.bpmFromHost != currentTempo.bpmFromHost;
+
+    currentTempo = latest;
+
+    if (bpmChanged || sourceChanged)
+        repaint();
+}
+
 void TempoControls::CommitBpmEdit()
 {
     if (! bpmEditor.isVisible())
@@ -157,21 +174,4 @@ void TempoControls::CommitBpmEdit()
 void TempoControls::CancelBpmEdit()
 {
     bpmEditor.setVisible(false);
-}
-
-void TempoControls::Update()
-{
-    if (resources.tempoSnapshot == nullptr)
-        return;
-
-    const auto latest = resources.tempoSnapshot->Read();
-
-    // Only repaint when the displayed values actually change.
-    const bool bpmChanged    = ! juce::approximatelyEqual(latest.bpm, currentTempo.bpm);
-    const bool sourceChanged = latest.bpmFromHost != currentTempo.bpmFromHost;
-
-    currentTempo = latest;
-
-    if (bpmChanged || sourceChanged)
-        repaint();
 }
