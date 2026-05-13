@@ -45,15 +45,11 @@ public:
     void stopNote(float /*velocity*/, bool allowTailOff) override;
 
     void renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int startSample, int numSamples) override;
-
     void pitchWheelMoved(int newPitchWheelValue) override;
-
     void controllerMoved(int, int) override {}
-
     bool canPlaySound(juce::SynthesiserSound* sound) override;
 
     void Init(float SR, int blockSize);
-
     void SetOscParamPointers(std::atomic<float>   *oscMorphIn
                              , std::atomic<float> *subOscMorphIn
                              , std::atomic<float> *subOscGainIn
