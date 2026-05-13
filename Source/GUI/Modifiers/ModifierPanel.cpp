@@ -107,37 +107,6 @@ ModifierPanel::~ModifierPanel()
     resources.apvts->removeParameterListener("porta_legato", this);
 }
 
-void ModifierPanel::parameterChanged(const juce::String &parameterID, float newValue)
-{
-    juce::ignoreUnused(newValue);
-
-    if (parameterID == "porta_on" || parameterID == "porta_legato")
-    {
-        // Listener may fire on the audio thread; bounce to the message thread.
-        juce::Component::SafePointer<ModifierPanel> self(this);
-        juce::MessageManager::callAsync([self]()
-        {
-            if (self != nullptr)
-                self->RefreshPortaLook();
-        });
-    }
-}
-
-void ModifierPanel::RefreshPortaLook()
-{
-    const bool on     = portaOnButton    .getToggleState();
-    const bool legato = portaLegatoButton.getToggleState();
-
-    portaOnButton    .setButtonText(on     ? "ON"     : "OFF");
-    portaLegatoButton.setButtonText(legato ? "LEGATO" : "ALWAYS");
-
-    // Portamento label + slider dim when off; slider stays interactive so the
-    // user can still tweak the time value without flipping the toggle.
-    const float a = on ? 1.0f : 0.5f;
-    portaLabel .setAlpha(a);
-    portaSlider.setAlpha(a);
-}
-
 void ModifierPanel::resized()
 {
     static constexpr int sectionSpacerSize = 2;
@@ -199,4 +168,35 @@ void ModifierPanel::resized()
     sAndHRow      .removeFromLeft(modSectionGridWidth);
     sHPitchSlider .setBounds(sAndHRow.removeFromLeft(modSectionGridWidth));
     sHDryWetSlider.setBounds(sAndHRow.removeFromLeft(modSectionGridWidth));
+}
+
+void ModifierPanel::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    juce::ignoreUnused(newValue);
+
+    if (parameterID == "porta_on" || parameterID == "porta_legato")
+    {
+        // Listener may fire on the audio thread; bounce to the message thread.
+        juce::Component::SafePointer<ModifierPanel> self(this);
+        juce::MessageManager::callAsync([self]()
+        {
+            if (self != nullptr)
+                self->RefreshPortaLook();
+        });
+    }
+}
+
+void ModifierPanel::RefreshPortaLook()
+{
+    const bool on     = portaOnButton    .getToggleState();
+    const bool legato = portaLegatoButton.getToggleState();
+
+    portaOnButton    .setButtonText(on     ? "ON"     : "OFF");
+    portaLegatoButton.setButtonText(legato ? "LEGATO" : "ALWAYS");
+
+    // Portamento label + slider dim when off; slider stays interactive so the
+    // user can still tweak the time value without flipping the toggle.
+    const float a = on ? 1.0f : 0.5f;
+    portaLabel .setAlpha(a);
+    portaSlider.setAlpha(a);
 }

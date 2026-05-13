@@ -70,38 +70,6 @@ void MidiLearnOverlay::mouseDown(const juce::MouseEvent &e)
     repaint();
 }
 
-void MidiLearnOverlay::ShowContextMenu(int paramIndex)
-{
-    juce::PopupMenu menu;
-
-    const int cc = manager.GetFirstCcForParam(paramIndex);
-
-    if (cc < 0)
-    {
-        // Disabled placeholder so the user gets visible feedback that there's
-        // nothing to unmap on this param.
-        menu.addItem("(not mapped)", /*isActive*/ false, /*isTicked*/ false, [](){});
-    }
-    else
-    {
-        const juce::String label = "Unmap CC" + juce::String(cc);
-
-        juce::Component::SafePointer<MidiLearnOverlay> self(this);
-        const int idxCopy = paramIndex;
-
-        menu.addItem(label, [self, idxCopy]()
-        {
-            if (self != nullptr)
-            {
-                self->manager.UnmapParam(idxCopy);
-                self->repaint();    // remove the CC# badge immediately
-            }
-        });
-    }
-
-    menu.showMenuAsync(juce::PopupMenu::Options{});
-}
-
 void MidiLearnOverlay::mouseMove(const juce::MouseEvent &e)
 {
     const auto editorPos = e.getPosition() + getPosition();
@@ -194,6 +162,38 @@ juce::Component *MidiLearnOverlay::WalkUpForParamID(juce::Component *start)
     return nullptr;
 }
 
+void MidiLearnOverlay::ShowContextMenu(int paramIndex)
+{
+    juce::PopupMenu menu;
+
+    const int cc = manager.GetFirstCcForParam(paramIndex);
+
+    if (cc < 0)
+    {
+        // Disabled placeholder so the user gets visible feedback that there's
+        // nothing to unmap on this param.
+        menu.addItem("(not mapped)", /*isActive*/ false, /*isTicked*/ false, [](){});
+    }
+    else
+    {
+        const juce::String label = "Unmap CC" + juce::String(cc);
+
+        juce::Component::SafePointer<MidiLearnOverlay> self(this);
+        const int idxCopy = paramIndex;
+
+        menu.addItem(label, [self, idxCopy]()
+        {
+            if (self != nullptr)
+            {
+                self->manager.UnmapParam(idxCopy);
+                self->repaint();    // remove the CC# badge immediately
+            }
+        });
+    }
+
+    menu.showMenuAsync(juce::PopupMenu::Options{});
+}
+
 void MidiLearnOverlay::RebuildLearnableCache()
 {
     learnableComps.clear();
@@ -216,14 +216,6 @@ void MidiLearnOverlay::RebuildLearnableCache()
 
     walk(editor);
     cacheBuilt = true;
-}
-
-juce::Rectangle<int> MidiLearnOverlay::BoundsOf(juce::Component *comp)
-{
-    if (comp == nullptr)
-        return {};
-
-    return getLocalArea(comp, comp->getLocalBounds());
 }
 
 //============================================================
@@ -310,4 +302,12 @@ void MidiLearnOverlay::PaintFlash(juce::Graphics &g, juce::Component *comp, juce
 
     g.setColour(theme.secondaryAccent.withAlpha(alpha));
     g.fillRoundedRectangle(bounds.toFloat(), 5.0f);
+}
+
+juce::Rectangle<int> MidiLearnOverlay::BoundsOf(juce::Component *comp)
+{
+    if (comp == nullptr)
+        return {};
+
+    return getLocalArea(comp, comp->getLocalBounds());
 }
