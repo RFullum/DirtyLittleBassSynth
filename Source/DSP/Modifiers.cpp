@@ -12,11 +12,7 @@
 
 //==============================================================================
 
-RingMod::RingMod()
-: sampleRate(44100.0f)
-, modFrequency(0.0f)
-, ringToneSlider(0.0f)
-{}
+RingMod::RingMod() = default;
 
 void RingMod::SetSampleRate(float SR)
 {
@@ -60,13 +56,7 @@ void RingMod::SetIncrement()
 
 //==============================================================================
 
-FrequencyShifter::FrequencyShifter()
-: sampleRate(44100.0f)
-, modFrequency(0.0f)
-, sineLevel(1.0f)
-, spikeLevel(0.0f)
-, sawLevel(0.0f)
-{}
+FrequencyShifter::FrequencyShifter() = default;
 
 void FrequencyShifter::SetSampleRate(float SR)
 {
@@ -116,12 +106,7 @@ void FrequencyShifter::SetIncrement()
 
 //==============================================================================
 
-SampleAndHold::SampleAndHold()
-: sampleRate(44100.0f)
-, modFrequency(0.0f)
-, oscSampleVal(0.0f)
-, holdSampleVal(0.0f)
-{}
+SampleAndHold::SampleAndHold() = default;
 
 void SampleAndHold::SetSampleRate(float SR)
 {

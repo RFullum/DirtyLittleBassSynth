@@ -30,13 +30,13 @@ private:
     void SetUpWavetables();
     void SetIncrement();
 
-    float sampleRate;
-    float modFrequency;
+    float sampleRate   = 44100.0f;
+    float modFrequency = 0.0f;
 
     Wavetable       wtSine;
     SquareWavetable wtSquare;
 
-    float ringToneSlider;
+    float ringToneSlider = 0.0f;
 };
 
 //============================================================
@@ -55,16 +55,16 @@ private:
     void SetUpWavetables();
     void SetIncrement();
 
-    float sampleRate;
-    float modFrequency;
+    float sampleRate   = 44100.0f;
+    float modFrequency = 0.0f;
 
     Wavetable      wtSine;
     SpikeWavetable wtSpike;
     SawWavetable   wtSaw;
 
-    float sineLevel;
-    float spikeLevel;
-    float sawLevel;
+    float sineLevel  = 1.0f;
+    float spikeLevel = 0.0f;
+    float sawLevel   = 0.0f;
 };
 
 //============================================================
@@ -82,11 +82,11 @@ private:
     void SetUpWavetable();
     void SetIncrement();
 
-    float sampleRate;
-    float modFrequency;
+    float sampleRate   = 44100.0f;
+    float modFrequency = 0.0f;
 
     SquareWavetable wtSampHold;
 
-    float oscSampleVal;
-    float holdSampleVal;
+    float oscSampleVal  = 0.0f;
+    float holdSampleVal = 0.0f;
 };

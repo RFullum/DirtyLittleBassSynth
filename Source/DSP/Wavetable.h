@@ -60,7 +60,7 @@ protected:
     /// Rescale waveTable[level] to peak magnitude 1.0.
     void NormalizeLevel(int level);
 
-    float sampleRate;
+    float sampleRate = 44100.0f;
 
     // waveTable[mipmapLevel][sampleIndex].
     // Outer size is 1 for sine, numMipmapLevels for mipmapped shapes.
@@ -72,13 +72,13 @@ private:
     /// Lagrange-interpolated read from one mipmap level.
     float SampleAt(int level, float readPos) const;
 
-    float readHeadPos;
-    float increment;
+    float readHeadPos = 0.0f;
+    float increment   = 1.0f;
 
     // Mipmap selection: SetIncrement updates these, Process consumes them via lerp.
-    int   levelLow;
-    int   levelHigh;
-    float blendT;
+    int   levelLow  = 0;
+    int   levelHigh = 0;
+    float blendT    = 0.0f;
 };
 
 

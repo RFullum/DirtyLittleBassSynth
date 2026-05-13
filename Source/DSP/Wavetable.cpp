@@ -14,14 +14,7 @@
 
 //=== Wavetable Class: Sine Wave =================================
 
-Wavetable::Wavetable()
-: sampleRate(44100.0f)
-, readHeadPos(0.0f)
-, increment(1.0f)
-, levelLow(0)
-, levelHigh(0)
-, blendT(0.0f)
-{}
+Wavetable::Wavetable() = default;
 
 void Wavetable::SetSampleRate(float SR)
 {

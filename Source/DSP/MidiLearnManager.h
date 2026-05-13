@@ -149,8 +149,8 @@ private:
 
     struct DefaultMapping
     {
-        int cc;
-        int paramIndex;
+        int cc         = -1;
+        int paramIndex = -1;
     };
 
     std::vector<Entry>                       params;
