@@ -143,13 +143,13 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         }
 
         // Advance envs / smoothers once per base sample, cache for pass 2.
-        envValsCache       [(size_t) i] = env               .getNextSample();
-        filtEnvValsCache   [(size_t) i] = filtEnv           .getNextSample();
-        filtLFOEnvValsCache[(size_t) i] = filtLFOClickingEnv.getNextSample();
-        foldbackCache      [(size_t) i] = foldbackDistortionSmooth.getNextValue();
-        ringMixCache       [(size_t) i] = ringMixSmooth           .getNextValue();
-        freqShiftMixCache  [(size_t) i] = freqShiftMixValSmooth   .getNextValue();
-        sAndHMixCache      [(size_t) i] = sAndHMixValSmooth       .getNextValue();
+        envValsCache       [(size_t)i] = env               .getNextSample();
+        filtEnvValsCache   [(size_t)i] = filtEnv           .getNextSample();
+        filtLFOEnvValsCache[(size_t)i] = filtLFOClickingEnv.getNextSample();
+        foldbackCache      [(size_t)i] = foldbackDistortionSmooth.getNextValue();
+        ringMixCache       [(size_t)i] = ringMixSmooth           .getNextValue();
+        freqShiftMixCache  [(size_t)i] = freqShiftMixValSmooth   .getNextValue();
+        sAndHMixCache      [(size_t)i] = sAndHMixValSmooth       .getNextValue();
 
         // Pre-foldback main osc: mipmap-band-limited shape mix scaled by env.
         const float envVal      = envValsCache[(size_t) i];
@@ -174,11 +174,11 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
     for (int i = 0; i < upSamples; ++i)
     {
         const int   baseIdx     = i / oversamplingFactor;
-        const float envVal      = envValsCache    [(size_t) baseIdx];
-        const float foldbackAmt = foldbackCache   [(size_t) baseIdx];
-        const float ringMix     = ringMixCache    [(size_t) baseIdx];
+        const float envVal      = envValsCache     [(size_t) baseIdx];
+        const float foldbackAmt = foldbackCache    [(size_t) baseIdx];
+        const float ringMix     = ringMixCache     [(size_t) baseIdx];
         const float freqMix     = freqShiftMixCache[(size_t) baseIdx];
-        const float sAndHMix    = sAndHMixCache   [(size_t) baseIdx];
+        const float sAndHMix    = sAndHMixCache    [(size_t) baseIdx];
 
         // Foldback is the most aggressive non-linearity; running it at 4× SR
         // keeps the harmonics it creates above audible Nyquist.
@@ -203,9 +203,9 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
     for (int i = 0; i < numSamples; ++i)
     {
         const float modifiedSample = postModData[i];
-        const float envVal         = envValsCache       [(size_t) i];
-        const float filtEnvVal     = filtEnvValsCache   [(size_t) i];
-        const float filtLFOEnvVal  = filtLFOEnvValsCache[(size_t) i];
+        const float envVal         = envValsCache       [(size_t)i];
+        const float filtEnvVal     = filtEnvValsCache   [(size_t)i];
+        const float filtLFOEnvVal  = filtLFOEnvValsCache[(size_t)i];
 
         const float subSample      = ProcessSubOscSample(envVal, levels);
         const float mixedSample    = (modifiedSample + subSample) * 0.75f;
@@ -307,11 +307,11 @@ void BassSynthVoice::Init(float SR, int blockSize)
     // === Oversampling stage ===
     // Polyphase IIR halfband filters: minimum-phase, low latency. Integer-sample
     // latency makes host compensation clean.
-    oversampling = std::make_unique<juce::dsp::Oversampling<float>>(1   /*numChannels*/
-                                                                    , (size_t)oversamplingFactorLog2    /*factor (log2)*/
-                                                                    , juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR    /*filterType*/
-                                                                    , true  /*isMaxQuality*/
-                                                                    , true);    /*useIntegerLatency */
+    oversampling = std::make_unique<juce::dsp::Oversampling<float>>(1                                                               // numChannels
+                                                                    , (size_t)oversamplingFactorLog2                                // factor (log2)
+                                                                    , juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR    // filterType
+                                                                    , true                                                          // isMaxQuality
+                                                                    , true);                                                        // useIntegerLatency
 
     oversampling->initProcessing((size_t) blockSize);
     oversampling->reset();
@@ -320,13 +320,13 @@ void BassSynthVoice::Init(float SR, int blockSize)
     // audio thread never reallocates.
     preFoldbackBuf.setSize(1, blockSize, false, true, true);
 
-    envValsCache       .assign((size_t) blockSize, 0.0f);
-    filtEnvValsCache   .assign((size_t) blockSize, 0.0f);
-    filtLFOEnvValsCache.assign((size_t) blockSize, 0.0f);
-    foldbackCache      .assign((size_t) blockSize, 0.0f);
-    ringMixCache       .assign((size_t) blockSize, 0.0f);
-    freqShiftMixCache  .assign((size_t) blockSize, 0.0f);
-    sAndHMixCache      .assign((size_t) blockSize, 0.0f);
+    envValsCache       .assign((size_t)blockSize, 0.0f);
+    filtEnvValsCache   .assign((size_t)blockSize, 0.0f);
+    filtLFOEnvValsCache.assign((size_t)blockSize, 0.0f);
+    foldbackCache      .assign((size_t)blockSize, 0.0f);
+    ringMixCache       .assign((size_t)blockSize, 0.0f);
+    freqShiftMixCache  .assign((size_t)blockSize, 0.0f);
+    sAndHMixCache      .assign((size_t)blockSize, 0.0f);
 }
 
 int BassSynthVoice::GetOversamplingLatencyInSamples() const noexcept
@@ -338,9 +338,9 @@ int BassSynthVoice::GetOversamplingLatencyInSamples() const noexcept
 }
 
 void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
-                                       , std::atomic<float> *subOscMorphIn
-                                       , std::atomic<float> *subOscGainIn
-                                       , std::atomic<float> *subOctaveIn)
+                                         , std::atomic<float> *subOscMorphIn
+                                         , std::atomic<float> *subOscGainIn
+                                         , std::atomic<float> *subOctaveIn)
 {
     oscillatorMorph = oscMorphIn;
     subOscMorph     = subOscMorphIn;
@@ -349,9 +349,9 @@ void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
 }
 
 void BassSynthVoice::SetAmpADSRParamPointers(std::atomic<float>   *attack
-                                           , std::atomic<float> *decay
-                                           , std::atomic<float> *sustain
-                                           , std::atomic<float> *release)
+                                             , std::atomic<float> *decay
+                                             , std::atomic<float> *sustain
+                                             , std::atomic<float> *release)
 {
     ampAttack  = attack;
     ampDecay   = decay;
@@ -364,7 +364,7 @@ void BassSynthVoice::SetDistParamPointers(std::atomic<float> *foldDistIn)
     foldbackDistortion = foldDistIn;
 }
 
-void BassSynthVoice::SetRingModParamPointers(std::atomic<float>   *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
+void BassSynthVoice::SetRingModParamPointers(std::atomic<float> *ringPitch, std::atomic<float> *ringTone, std::atomic<float> *mix)
 {
     ringModPitch = ringPitch;
     ringModTone  = ringTone;
@@ -391,11 +391,11 @@ void BassSynthVoice::SetFilterParamPointers(std::atomic<float> *cutoff, std::ato
 }
 
 void BassSynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
-                                              , std::atomic<float> *decay
-                                              , std::atomic<float> *sustain
-                                              , std::atomic<float> *release
-                                              , std::atomic<float> *amtCO
-                                              , std::atomic<float> *amtRes)
+                                                , std::atomic<float> *decay
+                                                , std::atomic<float> *sustain
+                                                , std::atomic<float> *release
+                                                , std::atomic<float> *amtCO
+                                                , std::atomic<float> *amtRes)
 {
     filterAttack           = attack;
     filterDecay            = decay;
@@ -487,16 +487,17 @@ void BassSynthVoice::updatePitchBendRange(float newRange)
 
 BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 {
-    return {
-        oscParamControl.SinMorphGain      (oscillatorMorph),
-        oscParamControl.SpikeMorphGain    (oscillatorMorph),
-        oscParamControl.SawMorphGain      (oscillatorMorph),
-        subOscParamControl.SinSubGain     (subOscMorph),
-        subOscParamControl.SquareSubGain  (subOscMorph),
-        subOscParamControl.SawSubGain     (subOscMorph),
-        filtLFOShapeControl.SinSubGain    (filtLFOShape),
-        filtLFOShapeControl.SquareSubGain (filtLFOShape),
-        filtLFOShapeControl.SawSubGain    (filtLFOShape)
+    return
+    {
+        oscParamControl.SinMorphGain        (oscillatorMorph)
+        , oscParamControl.SpikeMorphGain    (oscillatorMorph)
+        , oscParamControl.SawMorphGain      (oscillatorMorph)
+        , subOscParamControl.SinSubGain     (subOscMorph)
+        , subOscParamControl.SquareSubGain  (subOscMorph)
+        , subOscParamControl.SawSubGain     (subOscMorph)
+        , filtLFOShapeControl.SinSubGain    (filtLFOShape)
+        , filtLFOShapeControl.SquareSubGain (filtLFOShape)
+        , filtLFOShapeControl.SawSubGain    (filtLFOShape)
     };
 }
 
