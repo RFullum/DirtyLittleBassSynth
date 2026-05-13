@@ -17,7 +17,6 @@
 /// Shared cutoff/resonance/LFO modulation state used by the IIR-based filters.
 struct FilterModulation
 {
-    // Static config
     float sampleRate    = 44100.0f;
     float maxCutoff     = 18000.0f;
     float minCutoff     = 20.0f;

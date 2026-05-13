@@ -329,14 +329,6 @@ void BassSynthVoice::Init(float SR, int blockSize)
     sAndHMixCache      .assign((size_t)blockSize, 0.0f);
 }
 
-int BassSynthVoice::GetOversamplingLatencyInSamples() const noexcept
-{
-    if (oversampling == nullptr)
-        return 0;
-
-    return (int) std::ceil(oversampling->getLatencyInSamples());
-}
-
 void BassSynthVoice::SetOscParamPointers(std::atomic<float>   *oscMorphIn
                                          , std::atomic<float> *subOscMorphIn
                                          , std::atomic<float> *subOscGainIn
@@ -483,6 +475,14 @@ void BassSynthVoice::updatePitchBendRange(float newRange)
 {
     pitchBendUpSemitones   = newRange;
     pitchBendDownSemitones = newRange;
+}
+
+int BassSynthVoice::GetOversamplingLatencyInSamples() const noexcept
+{
+    if (oversampling == nullptr)
+        return 0;
+
+    return (int) std::ceil(oversampling->getLatencyInSamples());
 }
 
 BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
