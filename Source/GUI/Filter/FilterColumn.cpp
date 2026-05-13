@@ -16,6 +16,8 @@ FilterColumn::FilterColumn(GuiResources &res)
 , filterAdsrPanel(res)
 , lfoPanel       (res)
 {
+    setOpaque(false);
+    
     addAndMakeVisible(filterPanel);
     addAndMakeVisible(filterAdsrPanel);
     addAndMakeVisible(lfoPanel);

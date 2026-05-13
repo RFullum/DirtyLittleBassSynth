@@ -18,6 +18,7 @@ TitleHeader::TitleHeader(GuiResources &res)
 , midiLearnControls(res)
 , patchControls(res)
 {
+    setOpaque(false);
     addAndMakeVisible(tempoControls);
     addAndMakeVisible(midiLearnControls);
     addAndMakeVisible(patchControls);

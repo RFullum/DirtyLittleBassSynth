@@ -14,12 +14,12 @@ MidiLearnOverlay::MidiLearnOverlay(MidiLearnManager &m, const Palette::Theme &t)
 : manager(m)
 , theme  (t)
 {
+    setOpaque(false);
+    
     setInterceptsMouseClicks(true, false);
     setMouseCursor(juce::MouseCursor::CrosshairCursor);
     setWantsKeyboardFocus(false);
 }
-
-//============================================================
 
 void MidiLearnOverlay::paint(juce::Graphics &g)
 {
@@ -91,8 +91,6 @@ void MidiLearnOverlay::mouseExit(const juce::MouseEvent &)
     }
 }
 
-//============================================================
-
 void MidiLearnOverlay::Update()
 {
     const auto state = manager.GetState();
@@ -135,8 +133,6 @@ void MidiLearnOverlay::Update()
         repaint();
     }
 }
-
-//============================================================
 
 juce::Component *MidiLearnOverlay::FindLearnableAt(juce::Point<int> editorPos)
 {
@@ -217,8 +213,6 @@ void MidiLearnOverlay::RebuildLearnableCache()
     walk(editor);
     cacheBuilt = true;
 }
-
-//============================================================
 
 void MidiLearnOverlay::PaintBadges(juce::Graphics &g)
 {

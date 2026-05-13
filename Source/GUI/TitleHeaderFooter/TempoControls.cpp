@@ -13,6 +13,8 @@
 TempoControls::TempoControls(GuiResources &res)
 : resources(res)
 {
+    setOpaque(false);
+    
     // Inline BPM text editor: hidden by default; appears on double-click in
     // standalone mode for direct typing of the tempo value.
     const auto editorFont = juce::Font(juce::FontOptions("Helvetica"

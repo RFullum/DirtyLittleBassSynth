@@ -13,6 +13,8 @@
 MidiLearnControls::MidiLearnControls(GuiResources &res)
 : resources(res)
 {
+    setOpaque(false);
+    
     // === LEARN ===
     // Toggles between Idle and Listening on the manager. Toggle state mirrors
     // manager.GetState() via Update(), so any source flipping the state

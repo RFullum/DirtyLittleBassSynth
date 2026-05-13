@@ -12,7 +12,10 @@
 
 //==============================================================================
 
-TitleFooter::TitleFooter() {}
+TitleFooter::TitleFooter()
+{
+    setOpaque(false);
+}
 
 void TitleFooter::paint(juce::Graphics &g)
 {

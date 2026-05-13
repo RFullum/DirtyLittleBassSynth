@@ -13,6 +13,7 @@
 
 OscPanel::OscPanel(GuiResources &res)
 {
+    setOpaque(false);
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;

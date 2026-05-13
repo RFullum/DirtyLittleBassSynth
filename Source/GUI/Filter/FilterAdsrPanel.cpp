@@ -13,6 +13,8 @@
 
 FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 {
+    setOpaque(false);
+    
     auto accent = res.theme.secondaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;

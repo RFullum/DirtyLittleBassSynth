@@ -13,6 +13,8 @@
 
 AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 {
+    setOpaque(false);
+    
     auto primary = res.theme.primaryAccent;
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;

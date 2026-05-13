@@ -14,6 +14,8 @@
 ModifierPanel::ModifierPanel(GuiResources &res)
 : resources(res)
 {
+    setOpaque(false);
+    
     auto primary = res.theme.primaryAccent;
     auto pink    = res.theme.pinkAccent;
     auto orange  = res.theme.orangeAccent;

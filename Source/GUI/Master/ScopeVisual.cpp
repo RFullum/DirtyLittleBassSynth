@@ -16,6 +16,8 @@ ScopeVisual::ScopeVisual(const ScopeBuffer &sourceIn)
 , bgColor  (juce::Colour((juce::uint8)7,   (juce::uint8)10, (juce::uint8)59))
 , fadeColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
 {
+    setOpaque(false);
+    
     static_assert(captureSamples >= displaySamples * 2, "captureSamples must leave at least displaySamples of trigger headroom");
     static_assert((ScopeBuffer::bufferSize & (ScopeBuffer::bufferSize - 1)) == 0, "ScopeBuffer must be power of two");
 }

@@ -99,6 +99,8 @@ PatchControls::PatchControls(GuiResources &res)
 , nameDisplay(std::make_unique<PatchNameDisplay>(res))
 , selectionPopup(res)
 {
+    setOpaque(false);
+    
     const auto &theme = res.theme;
 
     nameDisplay->SetPatchName("Init");

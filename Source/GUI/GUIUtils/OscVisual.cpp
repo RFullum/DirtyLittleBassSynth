@@ -15,6 +15,8 @@ OscVisual::OscVisual()
 , bgColor  (juce::Colour((juce::uint8)7,   (juce::uint8)10, (juce::uint8)59))
 , fadeColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
 {
+    setOpaque(false);
+    
     wtSine  .SetSampleRate(44100.0f);
     wtSpike .SetSampleRate(44100.0f);
     wtSquare.SetSampleRate(44100.0f);

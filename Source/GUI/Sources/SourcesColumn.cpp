@@ -15,6 +15,7 @@ SourcesColumn::SourcesColumn(GuiResources &res)
 , oscPanel    (res)
 , ampAdsrPanel(res)
 {
+    setOpaque(false);
     addAndMakeVisible(oscPanel);
     addAndMakeVisible(ampAdsrPanel);
 }

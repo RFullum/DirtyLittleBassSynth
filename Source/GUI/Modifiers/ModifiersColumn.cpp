@@ -13,6 +13,7 @@
 ModifiersColumn::ModifiersColumn(GuiResources &res)
 : modifierPanel(res)
 {
+    setOpaque(false);
     addAndMakeVisible(modifierPanel);
 }
 

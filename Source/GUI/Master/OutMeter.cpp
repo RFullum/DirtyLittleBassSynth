@@ -17,7 +17,9 @@ OutMeter::OutMeter()
 , clipDimColor  (juce::Colour((juce::uint8)50,  (juce::uint8)10, (juce::uint8)15))
 , levelColor    (juce::Colour((juce::uint8)0,   (juce::uint8)200,(juce::uint8)180))
 , levelBackColor(juce::Colour((juce::uint8)20,  (juce::uint8)25, (juce::uint8)35))
-{}
+{
+    setOpaque(false);
+}
 
 void OutMeter::paint(juce::Graphics &g)
 {
