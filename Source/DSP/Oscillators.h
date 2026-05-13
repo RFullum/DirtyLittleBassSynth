@@ -37,7 +37,8 @@ private:
 
 //=== TriOsc Class ===================================================
 
-class TriOsc : public Phasor
+class TriOsc
+    : public Phasor
 {
     float output(float p) override;
 };
@@ -45,7 +46,8 @@ class TriOsc : public Phasor
 
 //=== SinOsc Class ===================================================
 
-class SinOsc : public Phasor
+class SinOsc
+    : public Phasor
 {
 public:
     SinOsc();
@@ -59,7 +61,8 @@ private:
 
 //=== SquareOsc Class ===================================================
 
-class SquareOsc : public Phasor
+class SquareOsc
+    : public Phasor
 {
 public:
     SquareOsc();
@@ -75,7 +78,8 @@ private:
 
 //=== SawtoothOsc Class ===================================================
 
-class SawtoothOsc : public Phasor
+class SawtoothOsc
+    : public Phasor
 {
     float output(float p) override;
 };
@@ -84,7 +88,8 @@ class SawtoothOsc : public Phasor
 //=== SparseLFO Class ===================================================
 
 /// Sine wave, silent after the pulseWidth.
-class SparseLFO : public Phasor
+class SparseLFO
+    : public Phasor
 {
 public:
     SparseLFO();
@@ -102,7 +107,8 @@ private:
 //=== SquareIOLFO Class ===================================================
 
 /// Outputs 1.0f for pulseWidth, then 0.0f.
-class SquareIOLFO : public Phasor
+class SquareIOLFO
+    : public Phasor
 {
 public:
     SquareIOLFO();
