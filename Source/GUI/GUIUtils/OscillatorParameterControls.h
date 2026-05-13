@@ -30,7 +30,8 @@ public:
     float SawMorphGain(std::atomic<float>* oscMorphVal);
 
 protected:
-    float blendCurve;
+    /// blendCurve = 1.0 is linear; > 1.0 reduces blend overlap; 0.1..1.0 increases it.
+    float blendCurve = 0.2f;
 
 private:
     /// Maps parameter value to gain. Values 0..2 map to amplitudes 0..1.

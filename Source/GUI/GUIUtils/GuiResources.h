@@ -22,9 +22,9 @@
 /// to one of these in its constructor.
 struct GuiResources
 {
-    juce::AudioProcessorValueTreeState *apvts;
-    juce::LookAndFeel                  *dialLookAndFeel;
-    juce::LookAndFeel                  *dryWetLookAndFeel;
+    juce::AudioProcessorValueTreeState *apvts             = nullptr;
+    juce::LookAndFeel                  *dialLookAndFeel   = nullptr;
+    juce::LookAndFeel                  *dryWetLookAndFeel = nullptr;
     const Palette::Theme               &theme;
     const ScopeBuffer                  *scopeBuffer    = nullptr;
     const TempoSnapshot                *tempoSnapshot  = nullptr;

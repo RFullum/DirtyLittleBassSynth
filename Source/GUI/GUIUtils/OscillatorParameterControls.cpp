@@ -12,10 +12,7 @@
 
 //=================================================================
 
-/// blendCurve = 1.0 is linear; > 1.0 reduces blend overlap; 0.1..1.0 increases it.
-OscParamControl::OscParamControl()
-: blendCurve(0.2f)
-{}
+OscParamControl::OscParamControl() = default;
 
 float OscParamControl::SinMorphGain(std::atomic<float>* oscMorphVal)
 {
