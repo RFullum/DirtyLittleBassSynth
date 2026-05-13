@@ -80,18 +80,10 @@ public:
     void SetFilterLFOParamPointers(std::atomic<float>   *freq
                                    , std::atomic<float> *amount
                                    , std::atomic<float> *shape);
-    /// LFO sync mode + subdivision choice.
+    
     void SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, std::atomic<float> *syncDivIndex);
-
-    /// One-time setup of the host transport snapshot, used when sync mode is on.
     void SetTempoSnapshot(const TempoSnapshot *snapshot);
     void SetPortamentoParamPointers(std::atomic<float> *portaTime);
-
-    /// Mode pointers for portamento. `portaOn` is a bool atomic (0/1) — when off
-    /// every note jumps. `portaLegato` is a bool atomic — when true, glide only
-    /// applies when the new note arrives while the previous note is still held
-    /// (no stopNote in between); when false ("Always" mode), glide applies on
-    /// every note after the first.
     void SetPortamentoModeParamPointers(std::atomic<float> *portaOn, std::atomic<float> *portaLegato);
     void SetMasterGainParamPointers(std::atomic<float> *gainAmt);
     void SetFilterSpec(float &sampRate, float &sampleSize);
@@ -106,18 +98,32 @@ public:
     int GetOversamplingLatencyInSamples() const noexcept;
 
 private:
-    // === Oversampling ===
+    // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
+    struct BlockLevels
+    {
+        float mainSin, mainSpike, mainSaw;
+        float subSin,  subSquare, subSaw;
+        float lfoSin,  lfoSquare, lfoSaw;
+    };
+    
     // Foldback distortion + the modifier chain are run at 4× base sample rate to
     // suppress the alias distortion their non-linearities would otherwise create.
     // Wavetable / sub osc / filter / master gain stay at base rate.
     static constexpr int oversamplingFactorLog2 = 2;                              // 2 → 4×
     static constexpr int oversamplingFactor     = 1 << oversamplingFactorLog2;    // 4
+    
+    BlockLevels ComputeBlockLevels();
+    void        PrepareDspForBlock(const BlockLevels &levels);
+    
+    float ProcessSubOscSample(float envVal, const BlockLevels &levels);
+    float ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels);
 
+    float PitchBendCents();
+    float CalcShiftHz(float centsOffset);
+    void  SetPitchBend(int pitchWheelPos);
+    
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
-
-    // Block-sized scratch holding pre-foldback main-osc samples on the way in
-    // (will be replaced in-place with post-modifier samples on the way out).
-    juce::AudioBuffer<float> preFoldbackBuf;
+    juce::AudioBuffer<float>                        preFoldbackBuf;
 
     // Per-base-sample state cached during pass 1 so pass 2 (running at OSR)
     // doesn't try to advance these once per oversampled sample.
@@ -128,25 +134,6 @@ private:
     std::vector<float> ringMixCache;
     std::vector<float> freqShiftMixCache;
     std::vector<float> sAndHMixCache;
-
-private:
-    // Per-block oscillator morph levels for main / sub / filter-LFO osc banks.
-    struct BlockLevels
-    {
-        float mainSin, mainSpike, mainSaw;
-        float subSin,  subSquare, subSaw;
-        float lfoSin,  lfoSquare, lfoSaw;
-    };
-
-    // Block-stage helpers (called once per block from renderNextBlock).
-    BlockLevels ComputeBlockLevels();
-    void        PrepareDspForBlock(const BlockLevels &levels);
-
-    // Per-sample-stage helpers. Called from the post-oversampling base-rate loop;
-    // foldback + modifier-chain logic is inlined in renderNextBlock so it can run
-    // inside the oversampled section.
-    float ProcessSubOscSample(float envVal, const BlockLevels &levels);
-    float ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels);
 
     // Block-cached parameter values (loaded once per block in PrepareDspForBlock so
     // the per-sample loop never dereferences std::atomic<float>* on the audio thread).
@@ -163,23 +150,19 @@ private:
     // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.
     Filter *activeFilter = nullptr;
 
-    float PitchBendCents();
-    float CalcShiftHz(float centsOffset);
-    void  SetPitchBend(int pitchWheelPos);
-
-    bool playing;
-    bool ending;
+    bool playing = false;
+    bool ending  = false;
 
     // Playback note
-    float freq;
-    float vel;                  // velocity 0-1
-    float pitchBend;
-    float shiftHz;
-    float previousPitchWheelValue;
-    float pitchBendSemitones;
-    float pitchBendUpSemitones;
-    float pitchBendDownSemitones;
-    float lastReceivedPitchWheelValue;
+    float freq                        = 0.0f;
+    float vel                         = 0.0f;   // velocity 0-1
+    float pitchBend                   = 0.0f;
+    float shiftHz                     = 1.0f;
+    float previousPitchWheelValue     = 0.0f;
+    float pitchBendSemitones          = 12.0f;
+    float pitchBendUpSemitones        = 12.0f;
+    float pitchBendDownSemitones      = 12.0f;
+    float lastReceivedPitchWheelValue = 0.0f;
 
     juce::ADSR env;
     juce::ADSR filtEnv;
@@ -192,28 +175,28 @@ private:
     SubOsc subOsc;
 
     // Oscillator parameter members
-    std::atomic<float>         *oscillatorMorph;
-    std::atomic<float>         *subOscMorph;
-    std::atomic<float>         *subGain;
+    std::atomic<float>         *oscillatorMorph      = nullptr;
+    std::atomic<float>         *subOscMorph          = nullptr;
+    std::atomic<float>         *subGain              = nullptr;
     juce::SmoothedValue<float>  subGainSmooth;
-    std::atomic<float>         *subOctave;
-    std::atomic<float>         *foldbackDistortion;
-    int                         incrementDenominator;
+    std::atomic<float>         *subOctave            = nullptr;
+    std::atomic<float>         *foldbackDistortion   = nullptr;
+    int                         incrementDenominator = 0;
     
     // Oscillator Parameter Controls
     OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
     
     // Amp Envelope Parameter Controls
-    std::atomic<float>     *ampAttack;
-    std::atomic<float>     *ampDecay;
-    std::atomic<float>     *ampSustain;
-    std::atomic<float>     *ampRelease;
+    std::atomic<float>     *ampAttack  = nullptr;
+    std::atomic<float>     *ampDecay   = nullptr;
+    std::atomic<float>     *ampSustain = nullptr;
+    std::atomic<float>     *ampRelease = nullptr;
     juce::ADSR::Parameters  envParams;
-    
+
     // Portamento
     juce::SmoothedValue<float> portamento;
-    std::atomic<float> *portamentoAmount;
+    std::atomic<float> *portamentoAmount = nullptr;
     std::atomic<float> *portamentoOnParam     = nullptr;
     std::atomic<float> *portamentoLegatoParam = nullptr;
     bool                portaEverPlayed       = false;
@@ -226,25 +209,25 @@ private:
     RingMod ringMod;
 
     // Ring Mod Parameters
-    std::atomic<float>         *ringModPitch;
-    std::atomic<float>         *ringModTone;
-    std::atomic<float>         *ringMix;
+    std::atomic<float>         *ringModPitch = nullptr;
+    std::atomic<float>         *ringModTone  = nullptr;
+    std::atomic<float>         *ringMix      = nullptr;
     juce::SmoothedValue<float>  ringMixSmooth;
-    
+
     // Frequency Shifter Instances
     FrequencyShifter freqShift;
 
     // Frequency Shifter Parameters
-    std::atomic<float>         *freqShiftPitch;
-    std::atomic<float>         *freqShiftMixVal;
+    std::atomic<float>         *freqShiftPitch  = nullptr;
+    std::atomic<float>         *freqShiftMixVal = nullptr;
     juce::SmoothedValue<float>  freqShiftMixValSmooth;
-    
+
     // Sample and Hold Instances
     SampleAndHold sAndH;
 
     // Sample and Hold Parameters
-    std::atomic<float>         *sAndHPitch;
-    std::atomic<float>         *sAndHMixVal;
+    std::atomic<float>         *sAndHPitch  = nullptr;
+    std::atomic<float>         *sAndHMixVal = nullptr;
     juce::SmoothedValue<float>  sAndHMixValSmooth;
     
     
@@ -256,40 +239,40 @@ private:
     
     
     // Filter Parameters
-    std::atomic<float>         *filterCutoffFreq;
+    std::atomic<float>         *filterCutoffFreq = nullptr;
     juce::SmoothedValue<float>  filterCutoffFreqSmooth;
-    std::atomic<float>         *filterResonance;
-    std::atomic<float>         *filterSelector;
-    
+    std::atomic<float>         *filterResonance  = nullptr;
+    std::atomic<float>         *filterSelector   = nullptr;
+
     // Filter Envelope Parameters
-    std::atomic<float> *filterAttack;
-    std::atomic<float> *filterDecay;
-    std::atomic<float> *filterSustain;
-    std::atomic<float> *filterRelease;
-    std::atomic<float> *filterADSRCutOffAmount;
-    std::atomic<float> *filterADSRResAmount;
-    
+    std::atomic<float> *filterAttack           = nullptr;
+    std::atomic<float> *filterDecay            = nullptr;
+    std::atomic<float> *filterSustain          = nullptr;
+    std::atomic<float> *filterRelease          = nullptr;
+    std::atomic<float> *filterADSRCutOffAmount = nullptr;
+    std::atomic<float> *filterADSRResAmount    = nullptr;
+
     // Filter LFO Instance
     SubOsc filterLFO;
-    
+
     // Filter LFO Parameters
-    std::atomic<float> *filtLFOFreq;
-    std::atomic<float> *filtLFOAmt;
-    std::atomic<float> *filtLFOShape;
+    std::atomic<float> *filtLFOFreq  = nullptr;
+    std::atomic<float> *filtLFOAmt   = nullptr;
+    std::atomic<float> *filtLFOShape = nullptr;
     SubOscParamControl  filtLFOShapeControl;
 
     // Sync mode (filtLFO_sync, filtLFO_sync_div) + host transport snapshot.
     std::atomic<float>  *filtLFOSyncOn       = nullptr;
     std::atomic<float>  *filtLFOSyncDivIndex = nullptr;
-    const TempoSnapshot *tempoSnapshotPtr   = nullptr;
+    const TempoSnapshot *tempoSnapshotPtr    = nullptr;
     
     // Master Gain
-    float masterGain;
-    std::atomic<float>         *masterGainControl;
+    float                       masterGain        = 0.0f;
+    std::atomic<float>         *masterGainControl = nullptr;
     juce::SmoothedValue<float>  masterGainControlSmooth;
     juce::SmoothedValue<float>  velocitySmooth;
-    
+
     // Master Sample Rate
-    float sampleRate;
-    int samplesPerBlock;
+    float sampleRate      = 44100.0f;
+    int   samplesPerBlock = 0;
 };
