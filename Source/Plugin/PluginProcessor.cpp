@@ -49,7 +49,7 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"freq_shift_mix",   1}, "Freq Shift Mix",   juce::NormalisableRange<float>(0.0f,  1.0f, 0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("freq shift dry/wet")),
                     
                     // Sample and Hold Params
-                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_pitch", 1}, "S&H Pitch", juce::NormalisableRange<float>(1.0f, 128.0f, 0.01f, 1.0f, false), 128.0f, juce::AudioParameterFloatAttributes().withLabel("s&h pitch")),
+                    std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_pitch", 1}, "S&H Pitch", juce::NormalisableRange<float>(1.0f, 128.0f, 0.01f, 0.25f, false), 128.0f, juce::AudioParameterFloatAttributes().withLabel("s&h pitch")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"sandh_mix",   1}, "S&H Mix",   juce::NormalisableRange<float>(0.0f, 1.0f,   0.01f, 1.0f, false), 0.0f, juce::AudioParameterFloatAttributes().withLabel("s&h dry/wet")),
                     
                     // Filter Params
