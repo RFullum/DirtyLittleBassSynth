@@ -36,7 +36,7 @@ float RingMod::Process()
     float sinVal = wtSine  .Process();
     float sqVal  = wtSquare.Process();
 
-    return DryWetMix(sinVal, sqVal, ringToneSlider);
+    return DryWetLinear(sinVal, sqVal, ringToneSlider);
 }
 
 void RingMod::SetUpWavetables()

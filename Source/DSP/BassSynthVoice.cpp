@@ -186,13 +186,13 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
 
         // Modifier chain (ring mod → freq shift → sample-and-hold), each at OSR.
         const float ringSample = s * ringMod.Process() * envVal;
-        const float oscRing    = DryWetMix(s, ringSample, ringMix);
+        const float oscRing    = DryWetLinear(s, ringSample, ringMix);
 
         const float freqShiftSample = freqShift.Process() * envVal;
-        const float oscShift        = DryWetMix(oscRing, freqShiftSample, freqMix);
+        const float oscShift        = DryWetLinear(oscRing, freqShiftSample, freqMix);
 
         const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
-        upData[i] = DryWetMix(oscShift, sandhSample, sAndHMix);
+        upData[i] = DryWetLinear(oscShift, sandhSample, sAndHMix);
     }
 
     oversampling->processSamplesDown(baseBlock);
