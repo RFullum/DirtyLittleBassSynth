@@ -12,12 +12,7 @@
 
 //=== Phasor Class ===================================================
 
-Phasor::Phasor()
-: frequency(0.0f)
-, sampleRate(44100.0f)
-, phase(0.0f)
-, phaseDelta(0.0f)
-{}
+Phasor::Phasor() = default;
 
 float Phasor::process()
 {
@@ -57,9 +52,7 @@ float TriOsc::output(float p)
 
 //=== SinOsc Class ===================================================
 
-SinOsc::SinOsc()
-: TWOPI(2.0f * M_PI)
-{}
+SinOsc::SinOsc() = default;
 
 float SinOsc::output(float p)
 {
@@ -68,9 +61,7 @@ float SinOsc::output(float p)
 
 //=== SquareOsc Class ===================================================
 
-SquareOsc::SquareOsc()
-: pulseWidth(0.5f)
-{}
+SquareOsc::SquareOsc() = default;
 
 float SquareOsc::output(float p)
 {
@@ -96,10 +87,7 @@ float SawtoothOsc::output(float p)
 
 //=== SparseLFO Class ===================================================
 
-SparseLFO::SparseLFO()
-: pulseWidth(0.5f)
-, TWOPI(2.0f * M_PI)
-{}
+SparseLFO::SparseLFO() = default;
 
 float SparseLFO::output(float p)
 {
@@ -118,9 +106,7 @@ void SparseLFO::setPulseWidth(float pw)
 
 //=== SquareIOLFO Class ===================================================
 
-SquareIOLFO::SquareIOLFO()
-: pulseWidth(0.5f)
-{}
+SquareIOLFO::SquareIOLFO() = default;
 
 float SquareIOLFO::output(float p)
 {

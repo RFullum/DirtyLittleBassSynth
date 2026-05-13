@@ -28,10 +28,10 @@ public:
     float getSR();
 
 private:
-    float frequency;
-    float sampleRate;
-    float phase;
-    float phaseDelta;
+    float frequency  = 0.0f;
+    float sampleRate = 44100.0f;
+    float phase      = 0.0f;
+    float phaseDelta = 0.0f;
 };
 
 
@@ -53,7 +53,7 @@ public:
     float output(float p) override;
 
 private:
-    float TWOPI;
+    float TWOPI = 2.0f * (float) M_PI;
 };
 
 
@@ -69,7 +69,7 @@ public:
     void setPulseWidth(float pw);
 
 private:
-    float pulseWidth;
+    float pulseWidth = 0.5f;
 };
 
 
@@ -94,8 +94,8 @@ public:
     void setPulseWidth(float pw);   // 0.0 .. 1.0
 
 private:
-    float pulseWidth;
-    float TWOPI;
+    float pulseWidth = 0.5f;
+    float TWOPI      = 2.0f * (float) M_PI;
 };
 
 
@@ -112,5 +112,5 @@ public:
     void setPulseWidth(float pw);   // 0.0 .. 1.0
 
 private:
-    float pulseWidth;
+    float pulseWidth = 0.5f;
 };
