@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "GuiResources.h"
 #include "OtherLookAndFeel.h"
+#include "PopupLookAndFeel.h"
 #include "SourcesColumn.h"
 #include "FilterColumn.h"
 #include "ModifiersColumn.h"
@@ -38,6 +39,7 @@ private:
 
     OtherLookAndFeel dialLookAndFeel;
     OtherLookAndFeel dryWetLookAndFeel;
+    PopupLookAndFeel popupLookAndFeel { Palette::DefaultTheme };
 
     GuiResources resources;
 
@@ -57,6 +59,12 @@ private:
     // mode. Destroying it suppresses tooltip rendering without touching the
     // setTooltip() calls scattered through the panels.
     std::unique_ptr<juce::TooltipWindow> tooltipWindow;
+
+    /// Builds a tooltipWindow and patches its opacity / desktop flags so the
+    /// hover bubble can have transparent rounded corners (JUCE's default is
+    /// opaque + windowHasDropShadow, which produces a rectangular shadow
+    /// around the rounded fill).
+    void CreateTooltipWindow();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirtyLittleBassSynthAudioProcessorEditor)
 };

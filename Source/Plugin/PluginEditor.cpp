@@ -45,6 +45,10 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
     dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
 
+    // Route every juce::PopupMenu through our theme-aware LAF without having
+    // to thread Options::withParentComponent through each call site.
+    juce::LookAndFeel::setDefaultLookAndFeel(&popupLookAndFeel);
+
     titleFooter.setTheme(resources.theme);
 
     addAndMakeVisible(titleHeader);
@@ -60,14 +64,36 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     setWantsKeyboardFocus(true);
 
     if (processor.GetTooltipsEnabled())
-        tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
+        CreateTooltipWindow();
 
     juce::Timer::startTimerHz(60);
+}
+
+void DirtyLittleBassSynthAudioProcessorEditor::CreateTooltipWindow()
+{
+    tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
+
+    // Flip the tooltip window to non-opaque so its NSWindow alpha mask follows
+    // our rounded drawTooltip fill instead of the rectangular window bounds.
+    // We also re-addToDesktop without windowHasDropShadow — once the window is
+    // non-opaque, the OS-level shadow can still produce a faint rectangular
+    // halo at the corners, so we draw any shadow we want ourselves (currently
+    // none) rather than rely on the peer flag.
+    tooltipWindow->setOpaque(false);
+
+    if (tooltipWindow->isOnDesktop())
+    {
+        tooltipWindow->removeFromDesktop();
+        tooltipWindow->addToDesktop(juce::ComponentPeer::windowIsTemporary
+                                    | juce::ComponentPeer::windowIgnoresKeyPresses
+                                    | juce::ComponentPeer::windowIgnoresMouseClicks);
+    }
 }
 
 DirtyLittleBassSynthAudioProcessorEditor::~DirtyLittleBassSynthAudioProcessorEditor()
 {
     juce::Timer::stopTimer();
+    juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
 }
 
 void DirtyLittleBassSynthAudioProcessorEditor::paint(juce::Graphics &g)
@@ -170,7 +196,7 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     const bool haveTooltips = (tooltipWindow != nullptr);
     if (wantTooltips != haveTooltips)
     {
-        if (wantTooltips) tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
+        if (wantTooltips) CreateTooltipWindow();
         else              tooltipWindow.reset();
     }
 
