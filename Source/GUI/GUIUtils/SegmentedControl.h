@@ -17,6 +17,7 @@
 /// pills. Owns a ParameterAttachment so changes flow both ways with the APVTS.
 class SegmentedControl
     : public juce::Component
+    , public juce::SettableTooltipClient
 {
 public:
     SegmentedControl();

@@ -49,6 +49,10 @@ FilterPanel::FilterPanel(GuiResources &res)
     filterVisual.setColors(accent, bg, bgFade);
 
     addAndMakeVisible(filterVisual);
+
+    DLBS::SetTip(cutoffSlider, "Filter Cutoff Frequency");
+    DLBS::SetTip(resSlider,    "Filter Resonance");
+    DLBS::SetTip(filterType,   "Filter Type:\n2 Pole, 4 Pole, 8 Pole, Notch");
 }
 
 void FilterPanel::resized()

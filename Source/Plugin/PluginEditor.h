@@ -53,5 +53,10 @@ private:
     // and intercepts clicks first when learn mode is active.
     MidiLearnOverlay midiLearnOverlay;
 
+    // Created on demand when tooltips are enabled AND we're not in MIDI Learn
+    // mode. Destroying it suppresses tooltip rendering without touching the
+    // setTooltip() calls scattered through the panels.
+    std::unique_ptr<juce::TooltipWindow> tooltipWindow;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirtyLittleBassSynthAudioProcessorEditor)
 };

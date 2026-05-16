@@ -42,6 +42,7 @@ TempoControls::TempoControls(GuiResources &res)
     bpmEditor.onFocusLost = [this]() { CommitBpmEdit(); };
 
     addChildComponent(bpmEditor);
+    setTooltip("Control sync tempo in Standalone.\nDisplays plugin host's tempo."); // TODO: Update when Ableton Link is added
 }
 
 void TempoControls::paint(juce::Graphics &g)

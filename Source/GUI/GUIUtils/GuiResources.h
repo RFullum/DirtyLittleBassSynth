@@ -45,4 +45,10 @@ struct GuiResources
     /// Fires the processor's MIDI panic (hard-stop every voice). Used by the
     /// title header's PANIC button.
     std::function<void()>               midiPanic;
+
+    /// Read/write the global tooltips preference. Used by the title header's
+    /// right-click menu and the editor's keyboard shortcut. The editor polls
+    /// the getter in its timer to reconcile the TooltipWindow lifetime.
+    std::function<bool()>               getTooltipsEnabled;
+    std::function<void(bool)>           setTooltipsEnabled;
 };

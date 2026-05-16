@@ -65,6 +65,13 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
                     , res.apvts->getRawParameterValue("filtEnv_release"));
 
     addAndMakeVisible(adsrVisual);
+
+    DLBS::SetTip(fltAttackSlider,    "Filter Attack");
+    DLBS::SetTip(fltDecaySlider,     "Filter Decay");
+    DLBS::SetTip(fltSustainSlider,   "Filter Sustain");
+    DLBS::SetTip(fltReleaseSlider,   "Filter Release");
+    DLBS::SetTip(adsrToCutoffSlider, "Envelop to Cutoff Frequency Amount");
+    DLBS::SetTip(adsrToResSlider,    "Envelop to Resonance Frequency Amount"); 
 }
 
 void FilterAdsrPanel::resized()

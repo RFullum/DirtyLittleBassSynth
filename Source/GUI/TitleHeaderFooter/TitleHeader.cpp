@@ -9,6 +9,7 @@
 */
 
 #include "TitleHeader.h"
+#include "GuiHelpers.h"
 
 //==============================================================================
 
@@ -32,22 +33,66 @@ TitleHeader::TitleHeader(GuiResources &res)
             resources.midiPanic();
     };
     addAndMakeVisible(panicButton);
+    DLBS::SetTip(panicButton, "MIDI Panic: Click to kill stuck MIDI");
+
+    // === Plugin-name label ===
+    // Painted style mirrors what the old paint() routine drew: primaryAccent,
+    // Helvetica 20 bold, kerned, bottom-left justified. The Label gives us a
+    // place to attach the right-click handler + a hover tooltip pointing users
+    // at the hidden menu.
+    pluginNameLabel.setText("DIRTY LITTLE BASS SYNTH", juce::dontSendNotification);
+    pluginNameLabel.setColour       (juce::Label::textColourId, res.theme.primaryAccent);
+    pluginNameLabel.setFont         (juce::Font(juce::FontOptions("Helvetica"
+                                                                   , 20.0f
+                                                                   , juce::Font::bold))
+                                     .withExtraKerningFactor(0.22f));
+    pluginNameLabel.setJustificationType(juce::Justification::bottomLeft);
+    pluginNameLabel.setBorderSize(juce::BorderSize<int>(0));
+    pluginNameLabel.setInterceptsMouseClicks(true, false);
+    pluginNameLabel.setTooltip("Right-click for menu");
+    addAndMakeVisible(pluginNameLabel);
+}
+
+void TitleHeader::TitleLabel::mouseDown(const juce::MouseEvent &e)
+{
+    if (e.mods.isPopupMenu())
+    {
+        header.ShowAppMenu();
+        return;
+    }
+
+    juce::Label::mouseDown(e);
+}
+
+void TitleHeader::ShowAppMenu()
+{
+    if (! resources.getTooltipsEnabled || ! resources.setTooltipsEnabled)
+        return;
+
+    const bool tipsOn = resources.getTooltipsEnabled();
+
+    juce::PopupMenu menu;
+    juce::PopupMenu::Item tooltipItem;
+    tooltipItem.itemID         = 1;
+    tooltipItem.text           = "Show Tooltips";
+    tooltipItem.shortcutKeyDescription = "F1";
+    tooltipItem.isTicked       = tipsOn;
+    tooltipItem.action         = [this, tipsOn]()
+    {
+        if (resources.setTooltipsEnabled)
+            resources.setTooltipsEnabled(! tipsOn);
+    };
+    menu.addItem(tooltipItem);
+
+    menu.showMenuAsync(juce::PopupMenu::Options()
+                       .withTargetComponent(&pluginNameLabel));
 }
 
 void TitleHeader::paint(juce::Graphics &g)
 {
     const auto &theme = resources.theme;
 
-    // === Left: plugin name + tagline ===
-    g.setColour(theme.primaryAccent);
-    g.setFont(juce::Font(juce::FontOptions("Helvetica"
-                                           , 20.0f
-                                           , juce::Font::bold))
-              .withExtraKerningFactor(0.22f));
-    g.drawText("DIRTY LITTLE BASS SYNTH"
-               , pluginNameRect
-               , juce::Justification::bottomLeft);
-
+    // === Left: tagline (plugin name is a child Label, see ctor + resized) ===
     g.setColour(theme.textSecondary);
     g.setFont(juce::Font(juce::FontOptions("Helvetica"
                                            , 10.0f
@@ -75,6 +120,7 @@ void TitleHeader::resized()
     
     taglineRect    = bounds.removeFromLeft(375);
     pluginNameRect = taglineRect.removeFromTop(taglineRect.proportionOfHeight(0.66f));
+    pluginNameLabel.setBounds(pluginNameRect);
 
     auto rightCluster = bounds.removeFromRight(125);
     brandingRect      = rightCluster.removeFromTop(rightCluster.proportionOfHeight(0.6f));

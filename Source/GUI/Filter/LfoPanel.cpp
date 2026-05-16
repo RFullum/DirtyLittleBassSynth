@@ -79,6 +79,12 @@ LfoPanel::LfoPanel(GuiResources &res)
     res.apvts->addParameterListener("filtLFO_sync", this);
 
     RefreshSyncModeLook();
+
+    DLBS::SetTip(lfoShapeSlider,   "Morph LFO: Sine - Square - Saw");
+    DLBS::SetTip(lfoFreqSlider,    "LFO frequency in Hz");
+    DLBS::SetTip(lfoSyncDivSlider, "LFO Sync Rate");
+    DLBS::SetTip(lfoAmountSlider,  "LFO to Filter Amount");
+    DLBS::SetTip(lfoSyncControl,   "Set LFO to Frequency or Sync modes"); 
 }
 
 LfoPanel::~LfoPanel()

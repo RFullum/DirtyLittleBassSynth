@@ -7,6 +7,7 @@
 */
 
 #include "PatchControls.h"
+#include "GuiHelpers.h"
 
 //==============================================================================
 
@@ -198,6 +199,14 @@ PatchControls::PatchControls(GuiResources &res)
         if (resources.patchManager != nullptr)
             resources.patchManager->StepPatch(+1);
     };
+
+    DLBS::SetTip(prevButton,      "Scroll to previous preset");
+    DLBS::SetTip(nextButton,      "Scroll to next preset");
+    DLBS::SetTip(initButton,      "Initialize patch");
+    DLBS::SetTip(saveButton,      "Save current patch");
+    DLBS::SetTip(saveAsButton,    "Save parameters as patch");
+    DLBS::SetTip(deleteButton,    "Delete current patch");
+    DLBS::SetTip(randomizeButton, "Randomize parameter values"); 
 }
 
 void PatchControls::resized()

@@ -451,6 +451,25 @@ void DirtyLittleBassSynthAudioProcessor::MidiPanic()
     synth.allNotesOff(0, false);
 }
 
+bool DirtyLittleBassSynthAudioProcessor::GetTooltipsEnabled() const
+{
+    // const_cast is fine here: getUserSettings() just lazily instantiates the
+    // underlying PropertiesFile; reading the value is itself a const op.
+    if (auto *userSettings = const_cast<juce::ApplicationProperties &>(applicationProperties).getUserSettings())
+        return userSettings->getBoolValue("tooltipsEnabled", true);
+
+    return true;
+}
+
+void DirtyLittleBassSynthAudioProcessor::SetTooltipsEnabled(bool enabled)
+{
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        userSettings->setValue("tooltipsEnabled", enabled);
+        userSettings->saveIfNeeded();
+    }
+}
+
 void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
 {
     // Order here is the stable param-index order serialised mappings rely on.

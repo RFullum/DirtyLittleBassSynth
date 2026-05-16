@@ -56,6 +56,11 @@ public:
     /// Stops every active voice immediately (no envelope tail). Safe to call
     /// from the UI thread — Synthesiser guards note state with its own lock.
     void MidiPanic();
+
+    /// Global tooltip on/off preference. Persisted per-user via
+    /// `juce::ApplicationProperties` (same store as MIDI Learn mappings).
+    bool GetTooltipsEnabled() const;
+    void SetTooltipsEnabled(bool enabled);
     
     juce::AudioProcessorValueTreeState parameters;
 

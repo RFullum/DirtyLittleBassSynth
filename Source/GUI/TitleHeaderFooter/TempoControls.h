@@ -20,6 +20,7 @@
 /// and shows the host BPM with a "HOST" badge instead of "INT".
 class TempoControls
     : public juce::Component
+    , public juce::SettableTooltipClient
 {
 public:
     TempoControls(GuiResources &resources);

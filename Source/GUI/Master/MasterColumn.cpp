@@ -111,6 +111,12 @@ MasterColumn::MasterColumn(GuiResources &res)
     // Set initial button text + look from the current parameter value.
     ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
     RefreshCeilingEnabledLook();
+
+    DLBS::SetTip(masterGainSlider,    "Master Output Gain"); 
+    DLBS::SetTip(ceilingOnButton,     "Ceiling Limiter On/Off");
+    DLBS::SetTip(ceilingSlider,       "Ceiling Limiter Threshold");
+    DLBS::SetTip(wideSlider,          "Haas widener\nSlider position delays opposite stereo chanel");
+    DLBS::SetTip(monoCrossoverSlider, "Mono frequencies below crossover frequency");
 }
 
 MasterColumn::~MasterColumn()
@@ -151,7 +157,7 @@ void MasterColumn::resized()
 {
     constexpr int sectionSpacerSize    = 2;
     constexpr int sectionLabelHeight   = 16;
-    constexpr int knobLabelHeight      = 18;
+    constexpr int knobLabelHeight      = 16;
     constexpr int knobRowHeight        = 90;
     constexpr int meterHeight          = 90;
     constexpr int grMeterWidth         = 12;
@@ -161,30 +167,36 @@ void MasterColumn::resized()
     constexpr int monoRowHeight        = 80;
     constexpr int monoLabelHeight      = 16;
     constexpr int gap                  = 8;
-    constexpr int onButtonWidth        = 28;
+    constexpr int onButtonWidth        = 36;
     constexpr int onButtonHeight       = 14;
+    constexpr int onButtonGap          = 4;
 
     auto bounds = getLocalBounds().reduced(sectionSpacerSize);
 
     sectionLabel.setBounds(bounds.removeFromTop(sectionLabelHeight).reduced(8, 0));
     bounds.removeFromTop(gap);
 
-    // === Top: Out Gain rotary | Ceiling (toggle + rotary), side by side ===
-    auto knobRow      = bounds.removeFromTop(knobRowHeight);
-    auto outGainCell  = knobRow.removeFromLeft(knobRow.getWidth() / 2);
-    auto ceilingCell  = knobRow;
+    // === Top: Out Gain rotary | Ceiling rotary, side by side ===
+    // Each cell: label on top, rotary in the middle, optional toggle button
+    // pinned to the bottom (centred under the rotary). Currently only the
+    // ceiling cell uses a button.
+    auto knobRow     = bounds.removeFromTop(knobRowHeight);
+    auto outGainCell = knobRow.removeFromLeft(knobRow.getWidth() / 2);
+    auto ceilingCell = knobRow;
 
-    auto outGainLabel = outGainCell.removeFromTop(knobLabelHeight);
-    masterGainLabel .setBounds(outGainLabel);
+    masterGainLabel .setBounds(outGainCell.removeFromTop(knobLabelHeight));
+    ceilingLabel    .setBounds(ceilingCell.removeFromTop(knobLabelHeight));
+
+    auto outGainButtonRow = outGainCell.removeFromBottom(onButtonHeight);
+    auto ceilingButtonRow = ceilingCell.removeFromBottom(onButtonHeight);
+    juce::ignoreUnused(outGainButtonRow);
+    outGainCell.removeFromBottom(onButtonGap);
+    ceilingCell.removeFromBottom(onButtonGap);
+
     masterGainSlider.setBounds(outGainCell);
+    ceilingSlider   .setBounds(ceilingCell);
 
-    // Ceiling label strip: ON button (left) + "Ceiling" label (rest).
-    auto ceilLabelStrip = ceilingCell.removeFromTop(knobLabelHeight);
-    auto ceilOnArea     = ceilLabelStrip.removeFromLeft(onButtonWidth)
-                                        .withSizeKeepingCentre(onButtonWidth, onButtonHeight);
-    ceilingOnButton.setBounds(ceilOnArea);
-    ceilingLabel   .setBounds(ceilLabelStrip);
-    ceilingSlider  .setBounds(ceilingCell);
+    ceilingOnButton.setBounds(ceilingButtonRow.withSizeKeepingCentre(onButtonWidth, onButtonHeight));
 
     bounds.removeFromTop(gap);
 

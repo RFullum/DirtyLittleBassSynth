@@ -47,11 +47,29 @@ public:
 private:
     GuiResources &resources;
 
+    /// Shows the app-level right-click menu (currently: tooltips on/off).
+    /// Exposed as a method so the plugin-name Label can call it cleanly.
+    void ShowAppMenu();
+
     TempoControls     tempoControls;
     MidiLearnControls midiLearnControls;
     PatchControls     patchControls;
 
     juce::TextButton  panicButton;
+
+    /// Plugin name as an interactive Label so it can carry its own tooltip and
+    /// receive right-clicks for the app-level menu. The Label is non-editable;
+    /// we override its mouseDown via a small subclass.
+    class TitleLabel : public juce::Label
+    {
+    public:
+        explicit TitleLabel(TitleHeader &owner) : header(owner) {}
+        void mouseDown(const juce::MouseEvent &e) override;
+    private:
+        TitleHeader &header;
+    };
+
+    TitleLabel pluginNameLabel { *this };
 
     juce::Rectangle<int> pluginNameRect;
     juce::Rectangle<int> taglineRect;

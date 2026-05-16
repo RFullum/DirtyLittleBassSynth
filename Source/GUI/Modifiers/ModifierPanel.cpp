@@ -101,6 +101,18 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 
     // Initial button labels + alpha state.
     RefreshPortaLook();
+
+    DLBS::SetTip(portaSlider,         "Portamento glide time");
+    DLBS::SetTip(foldbackSlider,      "Foldback Distortion Amount");
+    DLBS::SetTip(ringToneSlider,      "Ring Mod Tone");
+    DLBS::SetTip(ringPitchSlider,     "Ring Mod Pitch");
+    DLBS::SetTip(ringDryWetSlider,    "Ring Mod Dry/Wet");
+    DLBS::SetTip(frqShftPitchSlider,  "Frequency Shift Pitch");
+    DLBS::SetTip(frqShftDryWetSlider, "Frequency Shift Dry/Wet");
+    DLBS::SetTip(sHPitchSlider,       "Sample and Hold Pitch");
+    DLBS::SetTip(sHDryWetSlider,      "Sample and Hold Dry/Wet");
+    DLBS::SetTip(portaOnButton,       "Portamento On/Off");
+    DLBS::SetTip(portaLegatoButton,   "Portamento\nAlways: glides every note\nLegato: only glides on overlapping notes"); 
 }
 
 ModifierPanel::~ModifierPanel()

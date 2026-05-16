@@ -21,6 +21,8 @@ namespace
                     .midiLearnManager  = &processor.GetMidiLearnManager(),
                     .patchManager      = &processor.GetPatchManager(),
                     .midiPanic         = [&processor]{ processor.MidiPanic(); },
+                    .getTooltipsEnabled = [&processor]{ return processor.GetTooltipsEnabled(); },
+                    .setTooltipsEnabled = [&processor](bool v){ processor.SetTooltipsEnabled(v); },
                 };
     }
 }
@@ -56,6 +58,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     
     addKeyListener(this);
     setWantsKeyboardFocus(true);
+
+    if (processor.GetTooltipsEnabled())
+        tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
 
     juce::Timer::startTimerHz(60);
 }
@@ -130,6 +135,14 @@ bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &
         return true;
     }
 
+    // F1 toggles tooltips globally (standalone only). The editor's timer
+    // reconciles tooltipWindow lifetime, so we just flip the preference here.
+    if (key == juce::KeyPress::F1Key && resources.getTooltipsEnabled && resources.setTooltipsEnabled)
+    {
+        resources.setTooltipsEnabled(! resources.getTooltipsEnabled());
+        return true;
+    }
+
     return false;
 }
 
@@ -146,6 +159,17 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 
     if (learning || midiLearnOverlay.isVisible())
         midiLearnOverlay.Update();
+
+    // Reconcile TooltipWindow existence with the user preference, but suppress
+    // it entirely while MIDI Learn is active (tooltips would distract from the
+    // learn overlay's click-to-arm workflow).
+    const bool wantTooltips = processor.GetTooltipsEnabled() && ! learning;
+    const bool haveTooltips = (tooltipWindow != nullptr);
+    if (wantTooltips != haveTooltips)
+    {
+        if (wantTooltips) tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
+        else              tooltipWindow.reset();
+    }
 
     // Persist mappings whenever the manager flags itself dirty (binding landed,
     // unmap, clear-all). File I/O happens here on the message thread; the

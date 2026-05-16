@@ -55,6 +55,11 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
                     , res.apvts->getRawParameterValue("amp_release"));
 
     addAndMakeVisible(adsrVisual);
+
+    DLBS::SetTip(oscAttackSlider,  "Main & Sub Attack"); 
+    DLBS::SetTip(oscDecaySlider,   "Main & Sub Decay");
+    DLBS::SetTip(oscSustainSlider, "Main & Sub Sustain");
+    DLBS::SetTip(oscReleaseSlider, "Main & Sub Release");
 }
 
 void AmpAdsrPanel::resized()

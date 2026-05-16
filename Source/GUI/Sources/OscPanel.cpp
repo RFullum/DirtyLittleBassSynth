@@ -74,6 +74,13 @@ OscPanel::OscPanel(GuiResources &res)
 
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);
+
+    // Tooltips — fill these in by replacing the empty strings.
+    DLBS::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw"); 
+    DLBS::SetTip(subMorphSlider,       "Morph Sub oscillator: Sine - Square - Saw");
+    DLBS::SetTip(subGainSlider,        "Sub oscillator gain\n0.0dB is unity with Main Oscillator");
+    DLBS::SetTip(pitchBendRangeSlider, "Pitch Bend Range");
+    DLBS::SetTip(subOctave,            "Sub Osc number of octaves below Main Osc");
 }
 
 void OscPanel::resized()

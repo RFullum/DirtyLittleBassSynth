@@ -169,4 +169,14 @@ namespace DLBS
         button.getProperties().set("paramID", paramID);
         return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID, button);
     }
+
+    /// Single chokepoint for hover-tooltip text. Routed through here so the
+    /// (currently empty) strings can be searched/replaced as a batch, and so
+    /// we have one place to gate or transform tip text later if needed.
+    /// Pass any SettableTooltipClient-derived control (Slider, Button, ComboBox,
+    /// Label, etc.).
+    inline void SetTip(juce::SettableTooltipClient &control, const juce::String &text)
+    {
+        control.setTooltip(text);
+    }
 }
