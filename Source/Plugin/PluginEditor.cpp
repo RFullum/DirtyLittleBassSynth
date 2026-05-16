@@ -160,10 +160,13 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (learning || midiLearnOverlay.isVisible())
         midiLearnOverlay.Update();
 
-    // Reconcile TooltipWindow existence with the user preference, but suppress
-    // it entirely while MIDI Learn is active (tooltips would distract from the
-    // learn overlay's click-to-arm workflow).
-    const bool wantTooltips = processor.GetTooltipsEnabled() && ! learning;
+    // Reconcile TooltipWindow existence with the user preference. We don't
+    // need to special-case MIDI Learn here: the learn overlay covers the body
+    // and intercepts mouse hits, and isn't a TooltipClient, so JUCE finds no
+    // tip under the cursor for body controls during learn mode. The title
+    // header sits outside the overlay and keeps its tooltips, which is what
+    // we want (the user can still discover what LEARN / CLEAR MAPS do).
+    const bool wantTooltips = processor.GetTooltipsEnabled();
     const bool haveTooltips = (tooltipWindow != nullptr);
     if (wantTooltips != haveTooltips)
     {
