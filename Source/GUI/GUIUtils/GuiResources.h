@@ -52,6 +52,11 @@ struct GuiResources
     std::function<bool()>               getTooltipsEnabled;
     std::function<void(bool)>           setTooltipsEnabled;
 
+    /// Read/write the CC Echo preference (standalone-only at runtime). The
+    /// title header's right-click menu uses these to show / toggle the item.
+    std::function<bool()>               getCcEchoEnabled;
+    std::function<void(bool)>           setCcEchoEnabled;
+
     /// Per-block snapshots from the active voice for the FilterPanel's
     /// animated visualiser. Null when no display feed has been wired up.
     const std::atomic<float>           *filtEnvDisplay = nullptr;  // 0..1

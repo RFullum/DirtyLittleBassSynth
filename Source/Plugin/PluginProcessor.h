@@ -11,11 +11,12 @@
 //==============================================================================
 
 class DirtyLittleBassSynthAudioProcessor
-    : public juce::AudioProcessor
+    : public  juce::AudioProcessor
+    , private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     DirtyLittleBassSynthAudioProcessor();
-    ~DirtyLittleBassSynthAudioProcessor() override = default;
+    ~DirtyLittleBassSynthAudioProcessor() override;
 
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -68,6 +69,9 @@ public:
     bool GetTooltipsEnabled() const;
     void SetTooltipsEnabled(bool enabled);
     
+    bool GetCcEchoEnabled() const;
+    void SetCcEchoEnabled(bool enabled);
+    
     juce::AudioProcessorValueTreeState parameters;
 
     juce::AudioBuffer<float> outputLevelBuffer;
@@ -75,6 +79,16 @@ public:
 private:
     void RegisterMidiLearnableParams();
     void LoadMidiLearnMappings();
+
+    /// APVTS Listener entry point — used for CC Echo.
+    void parameterChanged(const juce::String &parameterID, float newValue) override;
+    void AttachCcEchoListeners();
+    void DetachCcEchoListeners();
+
+    /// CC# → next-pending-value (0..127), or -1 for "nothing pending".
+    std::array<std::atomic<int>, 128> pendingCcEcho;
+    std::atomic<bool>                 ccEchoEnabled { true };
+    juce::StringArray                 ccEchoListenedParamIDs;
     
     std::atomic<float>* oscMorphParameter    = nullptr;
     std::atomic<float>* subOscMorphParameter = nullptr;

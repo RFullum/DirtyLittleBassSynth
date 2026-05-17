@@ -192,6 +192,14 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     RegisterMidiLearnableParams();
     LoadMidiLearnMappings();
 
+    for (auto &slot : pendingCcEcho)
+        slot.store(-1, std::memory_order_relaxed);
+
+    if (auto *userSettings = applicationProperties.getUserSettings())
+        ccEchoEnabled.store(userSettings->getBoolValue("ccEchoEnabled", true), std::memory_order_relaxed);
+
+    AttachCcEchoListeners();
+
     patchManager.Init();
 
 #if JUCE_DEBUG
@@ -269,8 +277,13 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
                                                      , m.getControllerValue());
     }
 
-    // === Pull tempo / transport state from the host's playhead and publish a
-    // ===  block-rate snapshot for the rest of the plugin.
+    for (int cc = 0; cc < (int) pendingCcEcho.size(); ++cc)
+    {
+        const int pending = pendingCcEcho[(size_t) cc].exchange(-1, std::memory_order_acq_rel);
+        if (pending >= 0)
+            midiMessages.addEvent(juce::MidiMessage::controllerEvent(1, cc, pending), 0);
+    }
+
     {
         TempoInfo info;
         info.bpm                = (tempoFallbackBpmParameter != nullptr)
@@ -450,6 +463,84 @@ void DirtyLittleBassSynthAudioProcessor::MidiPanic()
     // midiChannel = 0 stops every voice on every channel. allowTailOff = false
     // gives a hard stop so a stuck note can't sustain through an envelope tail.
     synth.allNotesOff(0, false);
+}
+
+DirtyLittleBassSynthAudioProcessor::~DirtyLittleBassSynthAudioProcessor()
+{
+    DetachCcEchoListeners();
+}
+
+bool DirtyLittleBassSynthAudioProcessor::GetCcEchoEnabled() const
+{
+    return ccEchoEnabled.load(std::memory_order_acquire);
+}
+
+void DirtyLittleBassSynthAudioProcessor::SetCcEchoEnabled(bool enabled)
+{
+    ccEchoEnabled.store(enabled, std::memory_order_release);
+
+    if (auto *userSettings = applicationProperties.getUserSettings())
+    {
+        userSettings->setValue("ccEchoEnabled", enabled);
+        userSettings->saveIfNeeded();
+    }
+}
+
+void DirtyLittleBassSynthAudioProcessor::AttachCcEchoListeners()
+{
+    for (int i = 0; i < midiLearnManager.GetNumParams(); ++i)
+    {
+        const auto id = midiLearnManager.GetParamID(i);
+
+        if (id.isNotEmpty())
+        {
+            parameters.addParameterListener(id, this);
+            ccEchoListenedParamIDs.add(id);
+        }
+    }
+}
+
+void DirtyLittleBassSynthAudioProcessor::DetachCcEchoListeners()
+{
+    for (const auto &id : ccEchoListenedParamIDs)
+        parameters.removeParameterListener(id, this);
+
+    ccEchoListenedParamIDs.clear();
+}
+
+void DirtyLittleBassSynthAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    juce::ignoreUnused(newValue);
+
+    // Standalone-only feature
+    if (wrapperType != juce::AudioProcessor::wrapperType_Standalone)
+        return;
+
+    if (! ccEchoEnabled.load(std::memory_order_acquire))
+        return;
+
+    const int paramIndex = midiLearnManager.GetParamIndexById(parameterID);
+    if (paramIndex < 0)
+        return;
+
+    // Suppress feedback
+    if (midiLearnManager.ConsumeAppliedFromCcFlag(paramIndex))
+        return;
+
+    const int cc = midiLearnManager.GetFirstCcForParam(paramIndex);
+    if (cc < 0)
+        return;     // param has no CC mapping; nothing to echo
+
+    auto *param = midiLearnManager.GetParam(paramIndex);
+    if (param == nullptr)
+        return;
+
+    const float normalised = param->getValue();             // already 0..1
+    const int   ccValue    = juce::jlimit(0, 127, (int) std::round(normalised * 127.0f));
+
+    // Store the latest value; if multiple changes land before processBlock
+    // drains, we send the most recent — which is what a controller wants.
+    pendingCcEcho[(size_t) cc].store(ccValue, std::memory_order_release);
 }
 
 bool DirtyLittleBassSynthAudioProcessor::GetTooltipsEnabled() const

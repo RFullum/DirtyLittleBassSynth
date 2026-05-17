@@ -23,6 +23,8 @@ namespace
                     .midiPanic          = [&processor]{ processor.MidiPanic(); },
                     .getTooltipsEnabled = [&processor]{ return processor.GetTooltipsEnabled(); },
                     .setTooltipsEnabled = [&processor](bool isEnabled){ processor.SetTooltipsEnabled(isEnabled); },
+                    .getCcEchoEnabled   = [&processor]{ return processor.GetCcEchoEnabled(); },
+                    .setCcEchoEnabled   = [&processor](bool isEnabled){ processor.SetCcEchoEnabled(isEnabled); },
                     .filtEnvDisplay     = &processor.filtEnvDisplayValue,
                     .filtLFODisplay     = &processor.filtLFODisplayValue,
                 };

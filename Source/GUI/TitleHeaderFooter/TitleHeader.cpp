@@ -84,6 +84,24 @@ void TitleHeader::ShowAppMenu()
     };
     menu.addItem(tooltipItem);
 
+    if (resources.isStandalone
+        && resources.getCcEchoEnabled
+        && resources.setCcEchoEnabled)
+    {
+        const bool ccEchoOn = resources.getCcEchoEnabled();
+
+        juce::PopupMenu::Item ccEchoItem;
+        ccEchoItem.itemID   = 2;
+        ccEchoItem.text     = "Echo CCs to Controller";
+        ccEchoItem.isTicked = ccEchoOn;
+        ccEchoItem.action   = [this, ccEchoOn]()
+        {
+            if (resources.setCcEchoEnabled)
+                resources.setCcEchoEnabled(! ccEchoOn);
+        };
+        menu.addItem(ccEchoItem);
+    }
+
     menu.showMenuAsync(juce::PopupMenu::Options()
                        .withTargetComponent(&pluginNameLabel));
 }

@@ -108,6 +108,12 @@ public:
     /// returns the lowest for use in CC# badge display.)
     int GetFirstCcForParam(int paramIndex) const noexcept;
 
+    /// Atomic test-and-clear: true iff HandleControllerMessage just drove this
+    /// param via an incoming CC. The CC-echo listener calls this in its
+    /// parameterChanged callback to suppress echoing a value the controller
+    /// just sent us (avoids feedback loops).
+    bool ConsumeAppliedFromCcFlag(int paramIndex) noexcept;
+
     //==========================================================================
     // Param info (UI thread).
     //==========================================================================
@@ -139,7 +145,8 @@ public:
     void ClearDirtyFlag()      noexcept { dirty.store(false, std::memory_order_release); }
 
 private:
-    static constexpr int numCcSlots = 128;
+    static constexpr int numCcSlots         = 128;
+    static constexpr int maxLearnableParams = 128;   // upper bound for appliedFromCc flags
 
     struct Entry
     {
@@ -160,6 +167,11 @@ private:
     std::atomic<State> state            { State::Idle };
     std::atomic<int>   armedParamIndex  { -1 };
     std::atomic<bool>  dirty            { false };
+
+    /// Per-param flag set by HandleControllerMessage immediately before the
+    /// setValueNotifyingHost call, consumed by the CC-echo listener so it can
+    /// skip echoing the value the controller just sent.
+    std::array<std::atomic<bool>, maxLearnableParams> appliedFromCc {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLearnManager)
 };

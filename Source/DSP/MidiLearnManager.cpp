@@ -68,9 +68,24 @@ void MidiLearnManager::HandleControllerMessage(int ccNumber, int ccValue)
         if (auto *param = params[(size_t) paramIdx].param)
         {
             const float normalised = (float) ccValue / 127.0f;
+
+            // Mark the param so the CC-echo APVTS listener can skip echoing
+            // a value the controller just sent us. The flag is consumed by the
+            // listener via ConsumeAppliedFromCcFlag.
+            if (paramIdx < maxLearnableParams)
+                appliedFromCc[(size_t) paramIdx].store(true, std::memory_order_release);
+
             param->setValueNotifyingHost(normalised);
         }
     }
+}
+
+bool MidiLearnManager::ConsumeAppliedFromCcFlag(int paramIndex) noexcept
+{
+    if (paramIndex < 0 || paramIndex >= maxLearnableParams)
+        return false;
+
+    return appliedFromCc[(size_t) paramIndex].exchange(false, std::memory_order_acq_rel);
 }
 
 //==============================================================================
