@@ -102,8 +102,19 @@ void FilterPanel::Update()
     const float resAmt     = envResAmtPtr != nullptr ? envResAmtPtr->load() : 0.0f;
     const float lfoAmt     = lfoAmtPtr    != nullptr ? lfoAmtPtr   ->load() : 0.0f;
 
-    const float effCutoff  = juce::jlimit(0.0f, 1.0f, baseCutoff + envVal * coAmt + lfoVal * lfoAmt);
-    const float effRes     = juce::jlimit(0.0f, 1.0f, baseRes    + envVal * resAmt);
+    const float cutoffHeadroomUp   = (1.0f - baseCutoff) * coAmt;
+    const float cutoffHeadroomDown = baseCutoff          * lfoAmt;   // LFO can pull below baseline
+    const float cutoffHeadroomLfoU = (1.0f - baseCutoff) * lfoAmt;
+
+    const float envCutoffOffset = envVal * cutoffHeadroomUp;
+    const float lfoCutoffOffset = lfoVal >= 0.0f
+                                    ? lfoVal * cutoffHeadroomLfoU
+                                    : lfoVal * cutoffHeadroomDown;
+
+    const float effCutoff = juce::jlimit(0.0f, 1.0f, baseCutoff + envCutoffOffset + lfoCutoffOffset);
+
+    const float resHeadroom = (2.0f - baseRes) * resAmt;
+    const float effRes      = juce::jlimit(1.0f, 2.0f, baseRes + envVal * resHeadroom);
 
     filterVisual.drawFilterShape(filterType.GetSelectedIndex() + 1
                                  , effCutoff
