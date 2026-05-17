@@ -225,6 +225,14 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
             playing = false;
         }
     }
+
+    // Publish per-block snapshots for the UI's animated filter visual. We use
+    // the *last* sample of the block, which is fine at 60Hz display rate
+    if (filtEnvDisplayPtr != nullptr && filtLFODisplayPtr != nullptr && numSamples > 0)
+    {
+        filtEnvDisplayPtr->store(filtEnvValsCache[(size_t) numSamples - 1]);
+        filtLFODisplayPtr->store(lastFiltLFOSample);
+    }
 }
 
 void BassSynthVoice::pitchWheelMoved(int newPitchWheelValue)
@@ -410,6 +418,12 @@ void BassSynthVoice::SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, s
     filtLFOSyncDivIndex = syncDivIndex;
 }
 
+void BassSynthVoice::SetFilterDisplaySnapshotPointers(std::atomic<float> *envDisplay, std::atomic<float> *lfoDisplay)
+{
+    filtEnvDisplayPtr = envDisplay;
+    filtLFODisplayPtr = lfoDisplay;
+}
+
 void BassSynthVoice::SetTempoSnapshot(const TempoSnapshot *snapshot)
 {
     tempoSnapshotPtr = snapshot;
@@ -575,6 +589,7 @@ float BassSynthVoice::ProcessSubOscSample(float envVal, const BlockLevels &level
 float BassSynthVoice::ProcessFilterChain(float input, float filtEnvVal, float filtLFOEnvVal, const BlockLevels &levels)
 {
     const float filtLFOSample      = filterLFO.Process(levels.lfoSin, levels.lfoSquare, levels.lfoSaw) * filtLFOEnvVal;
+    lastFiltLFOSample              = filtLFOSample;   // capture for end-of-block UI snapshot
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
 
     return activeFilter->ProcessFilter(freq

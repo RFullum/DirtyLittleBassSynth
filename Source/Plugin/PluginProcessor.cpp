@@ -163,21 +163,22 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
 
     for (auto* v : typedVoices)
     {
-        v->SetOscParamPointers           (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
-        v->SetAmpADSRParamPointers       (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
-        v->SetPortamentoParamPointers    (portaTimeParameter);
-        v->SetPortamentoModeParamPointers(portaOnParameter, portaLegatoParameter);
-        v->SetDistParamPointers          (foldbackDistParameter);
-        v->SetRingModParamPointers       (ringModPitchParameter, ringToneParameter, ringModMixParameter);
-        v->SetFreqShiftParamPointers     (freqShiftPitchParameter, freqShiftMixParameter);
-        v->SetSampleAndHoldParamPointers (sAndHPitchParameter, sAndHMixParameter);
-        v->SetFilterParamPointers        (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
-        v->SetFilterADSRParamPointers    (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
-        v->SetFilterLFOParamPointers     (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
-        v->SetFilterLFOSyncParamPointers (filtLFOSyncOnParameter, filtLFOSyncDivParameter);
-        v->SetTempoSnapshot              (&tempoSnapshot);
-        v->SetMasterGainParamPointers    (masterGainParameter);
-        v->updatePitchBendRange          (*pitchBendParameter);
+        v->SetOscParamPointers             (oscMorphParameter, subOscMorphParameter, subGainParameter, subOctaveParameter);
+        v->SetAmpADSRParamPointers         (ampAttackParameter, ampDecayParameter, ampSustainParameter, ampReleaseParameter);
+        v->SetPortamentoParamPointers      (portaTimeParameter);
+        v->SetPortamentoModeParamPointers  (portaOnParameter, portaLegatoParameter);
+        v->SetDistParamPointers            (foldbackDistParameter);
+        v->SetRingModParamPointers         (ringModPitchParameter, ringToneParameter, ringModMixParameter);
+        v->SetFreqShiftParamPointers       (freqShiftPitchParameter, freqShiftMixParameter);
+        v->SetSampleAndHoldParamPointers   (sAndHPitchParameter, sAndHMixParameter);
+        v->SetFilterParamPointers          (filterCutoffParameter, filterResonanceParameter, filterSelectorParameter);
+        v->SetFilterADSRParamPointers      (filtEnvAttackParameter, filtEnvDecayParameter, filtEnvSustainParameter, filtEnvReleaseParameter, filtEnvAmtCOParameter, filtEnvAmtResParameter);
+        v->SetFilterLFOParamPointers       (filtLFOFreqParameter, filtLFOAmtParameter, filtLFOShapeParameter);
+        v->SetFilterLFOSyncParamPointers   (filtLFOSyncOnParameter, filtLFOSyncDivParameter);
+        v->SetFilterDisplaySnapshotPointers(&filtEnvDisplayValue, &filtLFODisplayValue);
+        v->SetTempoSnapshot                (&tempoSnapshot);
+        v->SetMasterGainParamPointers      (masterGainParameter);
+        v->updatePitchBendRange            (*pitchBendParameter);
     }
 
     // === MIDI Learn ===

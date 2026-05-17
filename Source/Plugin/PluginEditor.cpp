@@ -11,18 +11,20 @@ namespace
     {
         return GuiResources
                 {
-                    .apvts             = &processor.parameters,
-                    .dialLookAndFeel   = &dialLAF,
-                    .dryWetLookAndFeel = &dryWetLAF,
-                    .theme             = Palette::DefaultTheme,
-                    .scopeBuffer       = &processor.GetScopeBuffer(),
-                    .tempoSnapshot     = &processor.GetTempoSnapshot(),
-                    .isStandalone      = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
-                    .midiLearnManager  = &processor.GetMidiLearnManager(),
-                    .patchManager      = &processor.GetPatchManager(),
-                    .midiPanic         = [&processor]{ processor.MidiPanic(); },
+                    .apvts              = &processor.parameters,
+                    .dialLookAndFeel    = &dialLAF,
+                    .dryWetLookAndFeel  = &dryWetLAF,
+                    .theme              = Palette::DefaultTheme,
+                    .scopeBuffer        = &processor.GetScopeBuffer(),
+                    .tempoSnapshot      = &processor.GetTempoSnapshot(),
+                    .isStandalone       = (processor.wrapperType == juce::AudioProcessor::wrapperType_Standalone),
+                    .midiLearnManager   = &processor.GetMidiLearnManager(),
+                    .patchManager       = &processor.GetPatchManager(),
+                    .midiPanic          = [&processor]{ processor.MidiPanic(); },
                     .getTooltipsEnabled = [&processor]{ return processor.GetTooltipsEnabled(); },
-                    .setTooltipsEnabled = [&processor](bool v){ processor.SetTooltipsEnabled(v); },
+                    .setTooltipsEnabled = [&processor](bool isEnabled){ processor.SetTooltipsEnabled(isEnabled); },
+                    .filtEnvDisplay     = &processor.filtEnvDisplayValue,
+                    .filtLFODisplay     = &processor.filtLFODisplayValue,
                 };
     }
 }

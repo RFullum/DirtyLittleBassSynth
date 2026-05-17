@@ -78,6 +78,12 @@ public:
                                    , std::atomic<float> *shape);
     
     void SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, std::atomic<float> *syncDivIndex);
+
+    /// Where to publish per-block snapshots of the filter envelope value (0..1)
+    /// and last LFO output (signed, already scaled by the click env). Owned by
+    /// the processor; the voice writes once per block.
+    void SetFilterDisplaySnapshotPointers(std::atomic<float> *envDisplay
+                                          , std::atomic<float> *lfoDisplay);
     void SetTempoSnapshot(const TempoSnapshot *snapshot);
     void SetPortamentoParamPointers(std::atomic<float> *portaTime);
     void SetPortamentoModeParamPointers(std::atomic<float> *portaOn, std::atomic<float> *portaLegato);
@@ -141,6 +147,15 @@ private:
     float filterADSRCutOffAmountVal = 0.0f;
     float filterADSRResAmountVal    = 0.0f;
     float filtLFOAmtVal             = 0.0f;
+
+    // Last LFO sample (post click-env), captured by ProcessFilterChain so the
+    // end-of-block snapshot publish has something to write.
+    float lastFiltLFOSample         = 0.0f;
+
+    // Pointers into the processor's atomic snapshots for the animated filter
+    // visual. Null when the editor isn't open / hasn't wired them up.
+    std::atomic<float> *filtEnvDisplayPtr = nullptr;
+    std::atomic<float> *filtLFODisplayPtr = nullptr;
 
     // Selected filter for the current block. Set in PrepareDspForBlock so the per-sample
     // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.

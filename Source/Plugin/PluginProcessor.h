@@ -45,6 +45,12 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    /// Last-sample snapshots from the active voice, published once per audio
+    /// block for the FilterPanel's animated visualizer. UI thread reads these
+    /// to draw the modulated cutoff/res position on the response curve.
+    std::atomic<float> filtEnvDisplayValue { 0.0f };  // 0..1   (filter ADSR)
+    std::atomic<float> filtLFODisplayValue { 0.0f };  // -1..1  (post click-env)
+
     float                GetMasterGainReductionDb() const noexcept { return masterChain.GetGainReductionDb(); }
     const ScopeBuffer   &GetScopeBuffer()           const noexcept { return scopeBuffer; }
     const TempoSnapshot &GetTempoSnapshot()         const noexcept { return tempoSnapshot; }

@@ -29,6 +29,8 @@ public:
     void Update();
 
 private:
+    GuiResources &resources;
+
     FilterVisual filterVisual;
 
     juce::Slider     cutoffSlider;
@@ -41,6 +43,13 @@ private:
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> cutoffAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> resAtt;
+
+    // Cached APVTS raw-value pointers for modulation amounts. Read each timer
+    // tick to compute the effective (modulated) cutoff/res positions for the
+    // animated visualiser.
+    std::atomic<float> *envCOAmtPtr  = nullptr;
+    std::atomic<float> *envResAmtPtr = nullptr;
+    std::atomic<float> *lfoAmtPtr    = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterPanel)
 };

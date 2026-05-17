@@ -51,4 +51,9 @@ struct GuiResources
     /// the getter in its timer to reconcile the TooltipWindow lifetime.
     std::function<bool()>               getTooltipsEnabled;
     std::function<void(bool)>           setTooltipsEnabled;
+
+    /// Per-block snapshots from the active voice for the FilterPanel's
+    /// animated visualiser. Null when no display feed has been wired up.
+    const std::atomic<float>           *filtEnvDisplay = nullptr;  // 0..1
+    const std::atomic<float>           *filtLFODisplay = nullptr;  // -1..1
 };
