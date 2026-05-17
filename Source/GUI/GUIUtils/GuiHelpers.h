@@ -29,7 +29,9 @@ namespace DLBS
                               ? juce::Slider::TextBoxRight
                               : juce::Slider::TextBoxBelow;
 
-        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 38 : 44;
+        // 48 px on the right side fits the widest value string we produce
+        // ("100 ms"–"999 ms"), which "m" + "s" makes too wide for the old 38px.
+        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 48 : 44;
         const int tbH = 14;
 
         slider.setTextBoxStyle(tbPos, false, tbW, tbH);

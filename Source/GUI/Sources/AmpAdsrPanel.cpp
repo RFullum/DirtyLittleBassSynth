@@ -68,8 +68,9 @@ void AmpAdsrPanel::resized()
     sectionLabel.setBounds(bounds.removeFromTop(16));
     
     const int margin = bounds.proportionOfWidth(0.15f);
-    adsrVisual.setBounds(bounds.removeFromTop(bounds.proportionOfHeight(0.5f))
-                               .reduced(margin, 0));
+    auto visualArea  = bounds.removeFromTop(bounds.proportionOfHeight(0.5f))
+                             .reduced(margin, 0);
+    adsrVisual.setBounds(visualArea.removeFromLeft(visualArea.proportionOfWidth(0.97f)));
     
     const int rowH = bounds.proportionOfHeight(0.25f);
     auto adsrRow   = [&](juce::Slider &slider, juce::Label &label)

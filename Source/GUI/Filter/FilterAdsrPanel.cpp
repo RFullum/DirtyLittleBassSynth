@@ -105,7 +105,7 @@ void FilterAdsrPanel::resized()
     adsrRow(fltReleaseSlider, fltReleaseLabel);
     
     bounds.removeFromLeft(24);
-    bounds.removeFromRight(45);
+    bounds.removeFromRight(55);
     adsrVisual.setBounds(bounds);
 }
 
