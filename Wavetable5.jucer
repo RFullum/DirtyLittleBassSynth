@@ -3,8 +3,8 @@
 <JUCERPROJECT id="YrQPUQ" name="Dirty Little Bass Synth" projectType="audioplug"
               pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
               displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic"
-              companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
-              version="2.0.0" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
+              companyName="FullumMusic" companyWebsite="https://www.fullummusic.com/"
+              version="2.0.0" pluginName="Dirty Little Bass Synth" pluginDesc="Monophonic wavetable synth for getting quick and dirty bass and sub sounds."
               pluginManufacturerCode="FulM" addUsingNamespaceToJuceHeader="0"
               cppLanguageStandard="20" pluginCode="Dlbs">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
@@ -213,10 +213,12 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" postbuildCommand="set -e&#10;&#10;# Skip non-bundle targets (e.g. the Shared Code static lib, Manifest Helper).&#10;# Bundle targets produce a .app / .vst3 / .component directory; static libs&#10;# produce a .a file and have no Contents/Resources/.&#10;BUNDLE=&quot;${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}&quot;&#10;if [ ! -d &quot;$BUNDLE&quot; ]; then&#10;    echo &quot;Skipping factory preset copy: ${FULL_PRODUCT_NAME} is not a bundle&quot;&#10;    exit 0&#10;fi&#10;&#10;SRC=&quot;${SRCROOT}/../../Resources/FactoryPresets&quot;&#10;DEST=&quot;${BUNDLE}/Contents/Resources/Patches&quot;&#10;&#10;if [ -d &quot;$SRC&quot; ]; then&#10;    mkdir -p &quot;$DEST&quot;&#10;    rsync -a --delete --include=&quot;*.dlbs&quot; --exclude=&quot;*&quot; &quot;$SRC/&quot; &quot;$DEST/&quot;&#10;    echo &quot;Copied factory presets from $SRC &#8594; $DEST&quot;&#10;else&#10;    echo &quot;warning: factory preset source folder not found at $SRC&quot;&#10;fi">
+    <XCODE_MAC targetFolder="Builds/MacOSX" postbuildCommand="set -e&#10;&#10;# Skip non-bundle targets (e.g. the Shared Code static lib, Manifest Helper).&#10;# Bundle targets produce a .app / .vst3 / .component directory; static libs&#10;# produce a .a file and have no Contents/Resources/.&#10;BUNDLE=&quot;${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}&quot;&#10;if [ ! -d &quot;$BUNDLE&quot; ]; then&#10;    echo &quot;Skipping factory preset copy: ${FULL_PRODUCT_NAME} is not a bundle&quot;&#10;    exit 0&#10;fi&#10;&#10;SRC=&quot;${SRCROOT}/../../Resources/FactoryPresets&quot;&#10;DEST=&quot;${BUNDLE}/Contents/Resources/Patches&quot;&#10;&#10;if [ -d &quot;$SRC&quot; ]; then&#10;    mkdir -p &quot;$DEST&quot;&#10;    rsync -a --delete --include=&quot;*.dlbs&quot; --exclude=&quot;*&quot; &quot;$SRC/&quot; &quot;$DEST/&quot;&#10;    echo &quot;Copied factory presets from $SRC &#8594; $DEST&quot;&#10;else&#10;    echo &quot;warning: factory preset source folder not found at $SRC&quot;&#10;fi"
+               hardenedRuntime="1">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="../../Source/Plugin&#10;../../Source/Plugin/PatchEngine&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils&#10;../../Source/GUI/TitleHeaderFooter&#10;../../Source/GUI/MIDI"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/Plugin/PatchEngine&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils&#10;../../Source/GUI/TitleHeaderFooter&#10;../../Source/GUI/MIDI"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../Source/Plugin&#10;../../Source/Plugin/PatchEngine&#10;../../Source/DSP&#10;../../Source/GUI&#10;../../Source/GUI/Sources&#10;../../Source/GUI/Filter&#10;../../Source/GUI/Modifiers&#10;../../Source/GUI/Master&#10;../../Source/GUI/GUIUtils&#10;../../Source/GUI/TitleHeaderFooter&#10;../../Source/GUI/MIDI"
+                       macOSDeploymentTarget="11.0" osxCompatibility="11.0 SDK" osxArchitecture="64BitIntel"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>

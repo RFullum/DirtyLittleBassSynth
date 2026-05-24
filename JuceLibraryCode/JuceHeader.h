@@ -46,7 +46,7 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "Dirty Little Bass Synth";
-    const char* const  companyName    = "Fullum Music";
+    const char* const  companyName    = "FullumMusic";
     const char* const  versionString  = "2.0.0";
     const int          versionNumber  = 0x20000;
 }

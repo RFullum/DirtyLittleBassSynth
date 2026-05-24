@@ -44,7 +44,7 @@
  #define JucePlugin_Name                   "Dirty Little Bass Synth"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "Dirty Little Bass Synth"
+ #define JucePlugin_Desc                   "Monophonic wavetable synth for getting quick and dirty bass and sub sounds."
 #endif
 #ifndef  JucePlugin_Manufacturer
  #define JucePlugin_Manufacturer           "FullumMusic"
