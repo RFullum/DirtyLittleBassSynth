@@ -217,8 +217,9 @@ void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int sa
 
     // Voices share the same oversampling latency (identical config). Report the
     // first voice's latency to the host so it can compensate.
-    const int oversamplingLatency = typedVoices.empty() ? 0
-                                                        : typedVoices.front()->GetOversamplingLatencyInSamples();
+    const int oversamplingLatency = typedVoices.empty()
+                                        ? 0
+                                        : typedVoices.front()->GetOversamplingLatencyInSamples();
 
     setLatencySamples(oversamplingLatency);
 
