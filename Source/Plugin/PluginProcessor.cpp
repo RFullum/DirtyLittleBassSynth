@@ -73,7 +73,7 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     // Master Gain
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_gain", 1}, "Master Gain", juce::NormalisableRange<float>(0.0f, 2.0f, 0.01f, 2.0f, true), 1.0f, juce::AudioParameterFloatAttributes().withLabel("master gain") ),
 
-                    // Master Stereo (Haas widener + bass mono-izer crossover)
+                    // Master Stereo
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"master_wide",     1}, "Stereo Width",    juce::NormalisableRange<float>(-1.0f,    1.0f, 0.001f, 1.0f, false),   0.0f, juce::AudioParameterFloatAttributes().withLabel("widen")),
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mono_below_freq", 1}, "Mono Below Freq", juce::NormalisableRange<float>(20.0f, 300.0f, 1.0f,   0.5f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("mono crossover")),
 
@@ -84,13 +84,10 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
                     // Tempo (fallback when no host transport / standalone)
                     std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"tempo_fallback_bpm", 1}, "Tempo (Fallback)", juce::NormalisableRange<float>(30.0f, 300.0f, 0.1f, 1.0f, false), 120.0f, juce::AudioParameterFloatAttributes().withLabel("BPM")),
 
-                    // LFO sync mode (placeholder — DSP wired in Step 7).
+                    // LFO sync mode
                     std::make_unique<juce::AudioParameterBool>  (juce::ParameterID{"filtLFO_sync",     1}, "LFO Sync", false),
                     std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{"filtLFO_sync_div", 1}, "LFO Sync Subdivision",
-                                                                 juce::StringArray({"1/1", "1/2", "1/4", "1/4D", "1/4T",
-                                                                                    "1/8", "1/8D", "1/8T",
-                                                                                    "1/16", "1/16D", "1/16T", "1/32"}),
-                                                                 5)   // default index 5 = "1/8"
+                                                                 juce::StringArray({"1/1", "1/2", "1/4", "1/4D", "1/4T", "1/8", "1/8D", "1/8T", "1/16", "1/16D", "1/16T", "1/32"}), 5)   // default index 5 = "1/8"
                 })
 {
     oscMorphParameter    = parameters.getRawParameterValue("osc_morph");
@@ -258,9 +255,6 @@ void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& 
 {
     juce::ScopedNoDenormals noDenormals;
 
-    // === MIDI CC routing (learn mappings + standalone defaults) ===
-    // The manager owns all CC→param dispatch. It also performs the binding when
-    // the user is in Learn mode and a param has been armed.
     for (const auto meta : midiMessages)
     {
         const auto m = meta.getMessage();
@@ -398,7 +392,7 @@ void DirtyLittleBassSynthAudioProcessor::getStateInformation(juce::MemoryBlock& 
 {
     // Wrap the APVTS state in a DLBSPluginState root so we can also stash the
     // currently-loaded patch path. Reopening a host project restores both the
-    // exact param values AND the patch name shown in the title header.
+    // param values AND the patch name.
     juce::ValueTree root { "DLBSPluginState" };
     root.setProperty("currentPatchPath"
                      , patchManager.GetCurrentPatchFile().getFullPathName()
@@ -415,8 +409,6 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, i
     if (xmlState == nullptr)
         return;
 
-    // New format: <DLBSPluginState currentPatchPath="…"> wrapping the APVTS
-    // state as a child. Read both halves.
     if (xmlState->hasTagName("DLBSPluginState"))
     {
         const auto root       = juce::ValueTree::fromXml(*xmlState);
@@ -425,8 +417,6 @@ void DirtyLittleBassSynthAudioProcessor::setStateInformation(const void* data, i
         if (apvtsChild.isValid())
             parameters.replaceState(apvtsChild);
 
-        // Patch path is best-effort — missing file or empty string just leaves
-        // current-patch tracking on Init (per SetCurrentFromRestoredPath).
         const auto pathString = root.getProperty("currentPatchPath").toString();
         if (pathString.isNotEmpty())
             patchManager.SetCurrentFromRestoredPath(juce::File(pathString));
@@ -557,7 +547,7 @@ void DirtyLittleBassSynthAudioProcessor::SetTooltipsEnabled(bool enabled)
 
 void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
 {
-    // Order here is the stable param-index order serialised mappings rely on.
+    // Order is the stable param-index order mappings rely on.
     // Adding params later is fine; renaming or removing one will silently drop
     // existing mappings that referenced the old paramID (handled in
     // MidiLearnManager::RestoreMappings).
@@ -582,10 +572,9 @@ void DirtyLittleBassSynthAudioProcessor::RegisterMidiLearnableParams()
     for (const auto &id : learnableIDs)
         midiLearnManager.RegisterParam(parameters, id);
 
-    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount. Registered
-    // as a default (not a one-shot mapping) so a Clear Maps action restores it
-    // afterwards. Any user override loaded via LoadMidiLearnMappings() takes
-    // priority since RestoreMappings runs after this default is applied.
+    // Standalone-only default: CC1 (mod wheel) → Filter LFO Amount.
+    // Clear Maps action restores it
+    // Any user override loaded via LoadMidiLearnMappings() takes priority
     if (wrapperType == wrapperType_Standalone)
     {
         const int lfoAmtIdx = midiLearnManager.GetParamIndexById("filtLFO_amt");

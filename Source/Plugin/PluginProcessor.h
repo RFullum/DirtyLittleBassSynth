@@ -60,12 +60,9 @@ public:
 
     void SaveMidiLearnMappings();
 
-    /// Stops every active voice immediately (no envelope tail). Safe to call
-    /// from the UI thread — Synthesiser guards note state with its own lock.
+    /// Safe to call from the UI thread
     void MidiPanic();
 
-    /// Global tooltip on/off preference. Persisted per-user via
-    /// `juce::ApplicationProperties` (same store as MIDI Learn mappings).
     bool GetTooltipsEnabled() const;
     void SetTooltipsEnabled(bool enabled);
     
@@ -80,7 +77,6 @@ private:
     void RegisterMidiLearnableParams();
     void LoadMidiLearnMappings();
 
-    /// APVTS Listener entry point — used for CC Echo.
     void parameterChanged(const juce::String &parameterID, float newValue) override;
     void AttachCcEchoListeners();
     void DetachCcEchoListeners();

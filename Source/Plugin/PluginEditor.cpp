@@ -49,8 +49,6 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
     dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
 
-    // Route every juce::PopupMenu through our theme-aware LAF without having
-    // to thread Options::withParentComponent through each call site.
     juce::LookAndFeel::setDefaultLookAndFeel(&popupLookAndFeel);
 
     titleFooter.setTheme(resources.theme);
@@ -76,13 +74,6 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 void DirtyLittleBassSynthAudioProcessorEditor::CreateTooltipWindow()
 {
     tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
-
-    // Flip the tooltip window to non-opaque so its NSWindow alpha mask follows
-    // our rounded drawTooltip fill instead of the rectangular window bounds.
-    // We also re-addToDesktop without windowHasDropShadow — once the window is
-    // non-opaque, the OS-level shadow can still produce a faint rectangular
-    // halo at the corners, so we draw any shadow we want ourselves (currently
-    // none) rather than rely on the peer flag.
     tooltipWindow->setOpaque(false);
 
     if (tooltipWindow->isOnDesktop())
@@ -178,9 +169,6 @@ bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
-    // Toggle the MIDI Learn overlay's visibility based on the manager's state.
-    // The audio thread can transition Armed → Listening when a CC binds, so
-    // polling here keeps the visual in sync without a dedicated listener.
     const auto learnState = processor.GetMidiLearnManager().GetState();
     const bool learning   = (learnState != MidiLearnManager::State::Idle);
 
@@ -190,12 +178,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
     if (learning || midiLearnOverlay.isVisible())
         midiLearnOverlay.Update();
 
-    // Reconcile TooltipWindow existence with the user preference. We don't
-    // need to special-case MIDI Learn here: the learn overlay covers the body
-    // and intercepts mouse hits, and isn't a TooltipClient, so JUCE finds no
-    // tip under the cursor for body controls during learn mode. The title
-    // header sits outside the overlay and keeps its tooltips, which is what
-    // we want (the user can still discover what LEARN / CLEAR MAPS do).
     const bool wantTooltips = processor.GetTooltipsEnabled();
     const bool haveTooltips = (tooltipWindow != nullptr);
     if (wantTooltips != haveTooltips)
@@ -204,9 +186,6 @@ void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
         else              tooltipWindow.reset();
     }
 
-    // Persist mappings whenever the manager flags itself dirty (binding landed,
-    // unmap, clear-all). File I/O happens here on the message thread; the
-    // audio thread only flips the atomic flag.
     if (processor.GetMidiLearnManager().IsDirty())
         processor.SaveMidiLearnMappings();
 

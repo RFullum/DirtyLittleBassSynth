@@ -60,10 +60,6 @@ private:
     // setTooltip() calls scattered through the panels.
     std::unique_ptr<juce::TooltipWindow> tooltipWindow;
 
-    /// Builds a tooltipWindow and patches its opacity / desktop flags so the
-    /// hover bubble can have transparent rounded corners (JUCE's default is
-    /// opaque + windowHasDropShadow, which produces a rectangular shadow
-    /// around the rounded fill).
     void CreateTooltipWindow();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirtyLittleBassSynthAudioProcessorEditor)
