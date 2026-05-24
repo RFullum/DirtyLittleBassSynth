@@ -77,17 +77,6 @@ public:
     void SetCurrentFromRestoredPath(const juce::File &path);
     void RandomizeAll();
 
-    // TODO: Put behind JUCE_DEBUG deft?
-    /// Generates `count` random patches named "Test Preset" (auto-incremented
-    /// to "Test Preset 2", "Test Preset 3", …) under the user dir, then
-    /// restores the APVTS state and current-patch tracking to whatever they
-    /// were before the call. Used by the JUCE_DEBUG-only first-run seed in
-    /// PluginProcessor so the patch system has something to navigate and
-    /// browse against without manual patch creation.
-    ///
-    /// Safe to call at any time — the snapshot/restore makes it transparent.
-    /// No-op when `count <= 0`.
-    void GenerateTestPatches(int count = 5);
 
     juce::String  GetCurrentPatchName()     const noexcept { return currentPatchName; }
     juce::File    GetCurrentPatchFile()     const noexcept { return currentPatchFile; }
@@ -133,7 +122,6 @@ private:
     juce::String  currentPatchName { "Init" };
 
     /// Atomic because APVTS listener callbacks can fire from the audio thread
-    /// when the host drives a parameter via automation.
     std::atomic<bool> isDirty { false };
 
     /// True during programmatic patch application (LoadInit / ApplyPatchTree).
