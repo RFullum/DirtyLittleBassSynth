@@ -6,7 +6,7 @@
               companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
               version="2.0.0" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
               pluginManufacturerCode="FulM" addUsingNamespaceToJuceHeader="0"
-              cppLanguageStandard="20">
+              cppLanguageStandard="20" pluginCode="Dlbs">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{E5018C48-C090-97DC-6782-1AE51AF9E7E0}" name="Resources">
       <GROUP id="{00C737FC-B218-DE32-8286-2D70FCBA0FA3}" name="FactoryPresets">
