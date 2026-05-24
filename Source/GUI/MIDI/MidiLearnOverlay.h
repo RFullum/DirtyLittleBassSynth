@@ -13,13 +13,11 @@
 #include "ColorPalette.h"
 #include "MidiLearnManager.h"
 
-//============================================================
+//==============================================================================
 
-/// Glass-pane overlay sized over the editor's body area. Hidden in idle mode;
-/// when MIDI Learn is active it becomes visible and intercepts every mouse
-/// click that would otherwise reach a learnable control. Also paints all the
-/// learn-mode visuals: subtle global tint, hover halo, armed-param pulse,
-/// CC# badges on mapped params, and a transient flash when a binding lands.
+// Glass-pane sized over the editor's body. In learn mode it intercepts clicks
+// to learnable controls and paints the learn visuals (tint, hover halo, armed
+// pulse, CC# badges, binding-lands flash).
 class MidiLearnOverlay
     : public juce::Component
 {
@@ -31,14 +29,9 @@ public:
     void mouseMove(const juce::MouseEvent &) override;
     void mouseExit(const juce::MouseEvent &) override;
 
-    /// Polled from the editor's 60Hz timer when learn mode is active.
-    /// Detects state transitions (Armed → Listening = binding landed, kicks
-    /// off a flash) and triggers repaints while animations are in progress.
+    // Polled from the editor's 60Hz timer while learn mode is active.
     void Update();
 
-    /// Forces the cache of learnable components to be rebuilt on the next
-    /// paint. Currently unused — components are static after editor construction
-    /// — but available for future dynamic-UI support.
     void InvalidateCache() noexcept { cacheBuilt = false; }
 
 private:
@@ -59,14 +52,12 @@ private:
     MidiLearnManager     &manager;
     const Palette::Theme &theme;
 
-    // Animation / transition state.
     MidiLearnManager::State                          lastState     = MidiLearnManager::State::Idle;
     juce::Component::SafePointer<juce::Component>    hoveredComp;
     juce::Component::SafePointer<juce::Component>    armedComp;
     juce::Component::SafePointer<juce::Component>    flashComp;
     juce::int64                                      flashStartMs  = 0;
 
-    // Cache of all learnable child components, populated lazily on first paint.
     std::vector<juce::Component::SafePointer<juce::Component>> learnableComps;
     bool                                              cacheBuilt   = false;
 

@@ -8,7 +8,7 @@
 
 #include "MidiLearnOverlay.h"
 
-//============================================================
+//==============================================================================
 
 MidiLearnOverlay::MidiLearnOverlay(MidiLearnManager &m, const Palette::Theme &t)
 : manager(m)
@@ -26,7 +26,6 @@ void MidiLearnOverlay::paint(juce::Graphics &g)
     if (! cacheBuilt)
         RebuildLearnableCache();
 
-    // Subtle full-area tint to mark the mode visually.
     g.fillAll(theme.secondaryAccent.withAlpha(0.06f));
 
     PaintBadges(g);
@@ -58,7 +57,7 @@ void MidiLearnOverlay::mouseDown(const juce::MouseEvent &e)
     if (idx < 0)
         return;
 
-    // Right-click → context menu (unmap). Left-click → arm.
+    // Right-click: context menu (unmap). Left-click: arm.
     if (e.mods.isPopupMenu())
     {
         ShowContextMenu(idx);
@@ -95,7 +94,7 @@ void MidiLearnOverlay::Update()
 {
     const auto state = manager.GetState();
 
-    // Detect "binding just landed": Armed → Listening with a cached armed comp.
+    // Armed -> Listening with a cached armed comp == binding just landed.
     if (lastState == MidiLearnManager::State::Armed
         && state    == MidiLearnManager::State::Listening
         && armedComp != nullptr)
@@ -104,19 +103,16 @@ void MidiLearnOverlay::Update()
         flashStartMs = (juce::int64) juce::Time::getMillisecondCounter();
     }
 
-    // Drop the armed cache when state leaves Armed.
     if (state != MidiLearnManager::State::Armed)
         armedComp = nullptr;
 
-    // Rebuild the badge cache after the state machine first becomes active —
-    // ensures any param that gained a CC binding via persistence load shows up
-    // immediately on first entering learn mode.
+    // Refresh badges on first entry to learn mode so persistence-loaded
+    // bindings show up.
     if (lastState == MidiLearnManager::State::Idle && state != MidiLearnManager::State::Idle)
         cacheBuilt = false;
 
     lastState = state;
 
-    // Animate while pulse or flash is active. Both demand per-frame repaints.
     const bool armedAnim = (state == MidiLearnManager::State::Armed && armedComp != nullptr);
     const bool flashing  = (flashComp != nullptr
                             && (juce::int64) juce::Time::getMillisecondCounter() - flashStartMs < flashDurationMs);
@@ -127,8 +123,7 @@ void MidiLearnOverlay::Update()
     }
     else if (flashComp != nullptr)
     {
-        // Flash duration just ended — clear the pointer and repaint once to
-        // remove the residual visual.
+        // Flash just ended: clear pointer + one final repaint.
         flashComp = nullptr;
         repaint();
     }
@@ -166,8 +161,7 @@ void MidiLearnOverlay::ShowContextMenu(int paramIndex)
 
     if (cc < 0)
     {
-        // Disabled placeholder so the user gets visible feedback that there's
-        // nothing to unmap on this param.
+        // Disabled placeholder so the user sees nothing-to-unmap feedback.
         menu.addItem("(not mapped)", /*isActive*/ false, /*isTicked*/ false, [](){});
     }
     else
@@ -182,7 +176,7 @@ void MidiLearnOverlay::ShowContextMenu(int paramIndex)
             if (self != nullptr)
             {
                 self->manager.UnmapParam(idxCopy);
-                self->repaint();    // remove the CC# badge immediately
+                self->repaint();
             }
         });
     }
@@ -275,7 +269,7 @@ void MidiLearnOverlay::PaintArmedPulse(juce::Graphics &g, juce::Component *comp)
 
     const auto bounds = BoundsOf(comp).expanded(3);
 
-    // ~600ms cycle: alpha 0.6 ↔ 1.0
+    // ~600ms cycle, alpha 0.6 -> 1.0
     const auto  now   = juce::Time::getMillisecondCounter();
     const float t     = (float) (now % 600) / 600.0f;
     const float alpha = 0.6f + 0.4f * (0.5f + 0.5f * std::sin(t * juce::MathConstants<float>::twoPi));
@@ -292,7 +286,7 @@ void MidiLearnOverlay::PaintFlash(juce::Graphics &g, juce::Component *comp, juce
     const auto bounds = BoundsOf(comp).expanded(3);
 
     const float t     = juce::jlimit(0.0f, 1.0f, (float) elapsedMs / (float) flashDurationMs);
-    const float alpha = (1.0f - t) * 0.55f;     // fades 0.55 → 0
+    const float alpha = (1.0f - t) * 0.55f;     // fades 0.55 -> 0
 
     g.setColour(theme.secondaryAccent.withAlpha(alpha));
     g.fillRoundedRectangle(bounds.toFloat(), 5.0f);
