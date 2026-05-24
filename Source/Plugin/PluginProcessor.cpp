@@ -354,7 +354,7 @@ bool DirtyLittleBassSynthAudioProcessor::acceptsMidi() const
 bool DirtyLittleBassSynthAudioProcessor::producesMidi() const
 {
 #if JucePlugin_ProducesMidiOutput
-    return true;
+    return wrapperType == juce::AudioProcessor::wrapperType_Standalone;
 #else
     return false;
 #endif

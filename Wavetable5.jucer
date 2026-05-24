@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="YrQPUQ" name="Dirty Little Bass Synth" projectType="audioplug"
-              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
               displaySplashScreen="1" jucerFormatVersion="1" pluginManufacturer="FullumMusic"
               companyName="Fullum Music" companyWebsite="https://www.fullummusic.com/"
               version="2.0.0" pluginName="Dirty Little Bass Synth" pluginDesc="Dirty Little Bass Synth"
