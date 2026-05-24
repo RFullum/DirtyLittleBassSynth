@@ -5,15 +5,6 @@
     Created: 26 Apr 2020 2:38:54pm
     Author:  Robert Fullum
 
- Parent Class: Wavetable
- -Single sine cycle (no mipmap needed)
-
- Children:
- -SawWavetable     (mipmapped, one level per octave)
- -SquareWavetable  (mipmapped, one level per octave)
-
- Grandchildren:
- -SpikeWavetable (child of SquareWavetable, mipmapped)
   ==============================================================================
 */
 
@@ -36,8 +27,8 @@ public:
     void  SetIncrement(float noteFreq);
     float GetWavetableSampleValue(int index);   // returns level 0; for visualizer use
 
-    /// Sets the read head to a normalised phase (0..1, wraps if out of range).
-    /// Used by the filter-LFO sync stage to lock the LFO to host transport position.
+    // Sets the read head to a normalised phase (0..1, wraps if out of range).
+    // Used by the filter-LFO sync stage to lock the LFO to host transport position.
     void  SetPhase(float phase01);
 
     static constexpr int   waveTableSize     = 1024;
@@ -46,18 +37,18 @@ public:
     static constexpr float lowestFundamental = 16.35f; // MIDI 12 (C0)
 
 protected:
-    /// Number of mipmap levels for this shape. Base (sine) returns 1.
+    // Number of mipmap levels for this shape. Base (sine) returns 1.
     virtual int NumLevels() const { return 1; }
 
-    /// Fills waveTable[level] with this shape's band-limited content for that level.
-    /// Base implementation populates one sine cycle.
+    // Fills waveTable[level] with this shape's band-limited content for that level.
+    // Base implementation populates one sine cycle.
     virtual void BuildLevel(int level);
 
-    /// Highest harmonic index that can be included at this mipmap level
-    /// without exceeding Nyquist at the top of the level's octave.
+    // Highest harmonic index that can be included at this mipmap level
+    // without exceeding Nyquist at the top of the level's octave.
     int HarmonicCapForLevel(int level) const;
 
-    /// Rescale waveTable[level] to peak magnitude 1.0.
+    // Rescale waveTable[level] to peak magnitude 1.0.
     void NormalizeLevel(int level);
 
     float sampleRate = 44100.0f;
@@ -69,7 +60,7 @@ protected:
     SinOsc sinOsc;
 
 private:
-    /// Lagrange-interpolated read from one mipmap level.
+    // Lagrange-interpolated read from one mipmap level.
     float SampleAt(int level, float readPos) const;
 
     float readHeadPos = 0.0f;
