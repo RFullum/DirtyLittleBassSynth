@@ -18,8 +18,6 @@ namespace
     static constexpr int columnWidth     = 200;
     static constexpr int scrollBarSpace  = 12;
 
-    //============================================================
-
     class PatchGridItem
         : public juce::Component
     {

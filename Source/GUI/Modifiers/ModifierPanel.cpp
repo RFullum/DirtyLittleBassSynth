@@ -9,7 +9,7 @@
 #include "ModifierPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 ModifierPanel::ModifierPanel(GuiResources &res)
 : resources(res)
@@ -42,8 +42,6 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchSlider      .setLookAndFeel(res.dialLookAndFeel);
     sHDryWetSlider     .setLookAndFeel(res.dryWetLookAndFeel);
     
-    // Dry/Wet rotaries get a 50% tick + brighter highlight when near centre,
-    // since 50/50 is a meaningful balance point on those controls.
     ringDryWetSlider   .getProperties().set("snapAt50", true);
     frqShftDryWetSlider.getProperties().set("snapAt50", true);
     sHDryWetSlider     .getProperties().set("snapAt50", true);
@@ -79,7 +77,6 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchAtt       = DLBS::AttachSlider(*res.apvts, "sandh_pitch",      sHPitchSlider);
     sHDryWetAtt      = DLBS::AttachSlider(*res.apvts, "sandh_mix",        sHDryWetSlider);
 
-    // === Portamento mode buttons: ON/OFF + ALWAYS/LEGATO ===
     auto styleModeButton = [&](juce::TextButton &btn, juce::Colour onTextColor)
     {
         btn.setClickingTogglesState(true);
@@ -99,7 +96,6 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     res.apvts->addParameterListener("porta_on",     this);
     res.apvts->addParameterListener("porta_legato", this);
 
-    // Initial button labels + alpha state.
     RefreshPortaLook();
 
     DLBS::SetTip(portaSlider,         "Portamento glide time");
@@ -136,7 +132,6 @@ void ModifierPanel::resized()
 
     portaLabel.setBounds(portaArea.removeFromTop(rowLabelH));
 
-    // Two mode buttons sit at the bottom of portaArea; the rotary fills the rest.
     static constexpr int portaBtnRowHeight = 18;
     static constexpr int portaBtnGap       = 4;
     static constexpr int portaBtnRowInset  = 12;
@@ -208,8 +203,7 @@ void ModifierPanel::RefreshPortaLook()
     portaOnButton    .setButtonText(on     ? "ON"     : "OFF");
     portaLegatoButton.setButtonText(legato ? "LEGATO" : "ALWAYS");
 
-    // Portamento label + slider dim when off; slider stays interactive so the
-    // user can still tweak the time value without flipping the toggle.
+    // Dim when off; slider stays interactive so time can be set before toggling on.
     const float a = on ? 1.0f : 0.5f;
     portaLabel .setAlpha(a);
     portaSlider.setAlpha(a);

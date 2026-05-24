@@ -8,7 +8,7 @@
 
 #include "ModifiersColumn.h"
 
-//============================================================
+//==============================================================================
 
 ModifiersColumn::ModifiersColumn(GuiResources &res)
 : modifierPanel(res)

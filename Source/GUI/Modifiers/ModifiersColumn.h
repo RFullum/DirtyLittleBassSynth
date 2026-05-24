@@ -12,10 +12,8 @@
 #include "GuiResources.h"
 #include "ModifierPanel.h"
 
-//============================================================
+//==============================================================================
 
-/// Modifiers column. Currently houses just the ModifierPanel; wraps it as a
-/// column so the editor lays out four equal-width column components.
 class ModifiersColumn
     : public juce::Component
 {
