@@ -14,7 +14,9 @@ SegmentedControl::SegmentedControl()
 : activeFill  (juce::Colours::white)
 , outlineColor(juce::Colours::grey)
 , textColor   (juce::Colours::white)
-{}
+{
+    setOpaque(false);
+}
 
 void SegmentedControl::paint(juce::Graphics &g)
 {

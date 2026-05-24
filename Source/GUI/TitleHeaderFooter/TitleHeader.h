@@ -41,7 +41,9 @@ private:
     public:
         explicit TitleLabel(TitleHeader &owner)
             : header(owner)
-        {}
+        {
+            setOpaque(false);
+        }
         
         void mouseDown(const juce::MouseEvent &e) override;
     private:

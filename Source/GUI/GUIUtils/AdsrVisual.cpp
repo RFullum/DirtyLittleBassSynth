@@ -14,7 +14,9 @@ AdsrVisual::AdsrVisual()
 : lineColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
 , bgColor  (juce::Colour((juce::uint8)7,   (juce::uint8)10, (juce::uint8)59))
 , fadeColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
-{}
+{
+    setOpaque(false);
+}
 
 void AdsrVisual::paint(juce::Graphics &g)
 {

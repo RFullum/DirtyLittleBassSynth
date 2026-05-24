@@ -35,6 +35,7 @@ namespace
         , ticked(tickedIn)
         , onClick(std::move(onClickIn))
         {
+            setOpaque(false);
             setMouseCursor(juce::MouseCursor::PointingHandCursor);
         }
 
@@ -109,6 +110,8 @@ namespace
         : viewportHeight(viewportHeightIn)
         , onSelect      (std::move(onSelectIn))
         {
+            setOpaque(false);
+
             const int rowH = juce::jmax(28, viewportHeight / itemsPerColumn);
             itemHeight     = rowH;
 
