@@ -9,13 +9,11 @@
 #include "OtherLookAndFeel.h"
 #include <cmath>
 
-//============================================================
+//==============================================================================
 
 OtherLookAndFeel::OtherLookAndFeel()
 : trackBackground(juce::Colour((juce::uint8)30, (juce::uint8)33, (juce::uint8)48))
 {}
-
-//============================================================
 
 void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height
                                         , float sliderPos, float rotaryStartAngle, float rotaryEndAngle
@@ -44,10 +42,8 @@ void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int wid
     g.setColour(fillColor);
     g.strokePath(valueArc, juce::PathStrokeType(arcThick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 
-    // "snapAt50" property: small radial tick at the centre of the rotary range.
-    // Brightens to full thumb-colour when within 1.5% of dead centre. No actual
-    // snapping behaviour — purely a visual cue for finding 50% (e.g. on dry/wet
-    // controls where 50/50 is a meaningful balance point).
+    // "snapAt50": radial tick at centre, brightens within 1.5% of dead centre.
+    // Visual cue only, no actual snapping.
     const bool snapAt50 = (bool) slider.getProperties().getWithDefault("snapAt50", false);
 
     if (snapAt50)
@@ -70,10 +66,6 @@ void OtherLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y, int wid
     }
 }
 
-//============================================================
-
-/// Thin-track linear slider with a small round thumb. Filled portion uses the slider's
-/// trackColourId; thumb uses thumbColourId; unfilled track uses trackBackground.
 void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int width, int height
                                         , float sliderPos, float minSliderPos, float maxSliderPos
                                         , const juce::Slider::SliderStyle style, juce::Slider &slider)
@@ -97,8 +89,7 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         g.setColour(trackBackground);
         g.fillRoundedRectangle(trackX, trackY, trackW, trackThick, trackThick * 0.5f);
 
-        // "bipolarFill" property: fill spans from the track centre to the thumb,
-        // not from the left edge. Used for bipolar controls like the stereo widener.
+        // "bipolarFill": fill spans from track centre to thumb (used by stereo widener).
         const bool bipolar = (bool) slider.getProperties().getWithDefault("bipolarFill", false);
 
         g.setColour(fillColor);
@@ -143,7 +134,7 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
         g.setColour(trackBackground);
         g.fillRoundedRectangle(trackX, trackY, trackThick, trackH, trackThick * 0.5f);
 
-        // Fill from bottom (max y) up to thumb position (sliderPos has lower y for higher value).
+        // Fill from bottom to thumb. JUCE vertical sliderPos: lower y = higher value.
         g.setColour(fillColor);
         g.fillRoundedRectangle(trackX, sliderPos, trackThick,
                                (float)(y + height) - sliderPos, trackThick * 0.5f);
@@ -154,9 +145,7 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
                       , thumbRadius * 2.0f
                       , thumbRadius * 2.0f);
 
-        // 50% snap-marker tick (left + right of the track at the centre y).
-        // For vertical sliders, lower y is higher value, so invert when computing
-        // the normalised position from the thumb's pixel coordinate.
+        // 50% snap-marker tick. Vertical: lower y = higher value, so invert.
         if (snapAt50)
         {
             const float norm     = 1.0f - (sliderPos - trackY) / juce::jmax(1.0f, trackH);
@@ -182,8 +171,6 @@ void OtherLookAndFeel::drawLinearSlider(juce::Graphics &g, int x, int y, int wid
                                                , slider);
     }
 }
-
-//============================================================
 
 void OtherLookAndFeel::SetTrackBackground(juce::Colour color)
 {

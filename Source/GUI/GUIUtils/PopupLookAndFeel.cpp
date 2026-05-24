@@ -8,14 +8,13 @@
 
 #include "PopupLookAndFeel.h"
 
-//============================================================
+//==============================================================================
 
 PopupLookAndFeel::PopupLookAndFeel(const Palette::Theme &themeRef)
 : theme(themeRef)
 {
-    // Alpha just below 1.0 — flips juce::Colour::isOpaque() to false so
-    // PopupMenu::MenuWindow doesn't fillAll the corners. Stay under ~0.998f;
-    // anything that rounds to byte 255 becomes opaque again.
+    // Alpha < 1.0 flips isOpaque() to false so JUCE's MenuWindow skips its
+    // corner-clobbering fillAll. Stay under ~0.998f (byte 255 would round opaque).
     setColour(juce::PopupMenu::backgroundColourId,            theme.background.withAlpha(0.99f));
     setColour(juce::PopupMenu::textColourId,                  theme.textPrimary);
     setColour(juce::PopupMenu::headerTextColourId,            theme.textSecondary);
@@ -123,10 +122,8 @@ void PopupLookAndFeel::drawPopupMenuItem(juce::Graphics               &g
 
     if (shortcutKeyText.isNotEmpty())
     {
-        // Allocate only the width the shortcut actually needs (+ a small gap)
-        // so the main item text isn't crowded out. JUCE pre-concatenates the
-        // shortcut into the text passed to getIdealPopupMenuItemSize, so the
-        // overall row is already wide enough.
+        // Take only what the shortcut needs. JUCE pre-concatenates it into
+        // getIdealPopupMenuItemSize's text, so the row is already wide enough.
         auto       shortcutFont  = getPopupMenuFont().withHeight(getPopupMenuFont().getHeight() * 0.85f);
         const int  shortcutWidth = juce::GlyphArrangement::getStringWidthInt(shortcutFont, shortcutKeyText) + 8;
         auto       shortcutArea  = contentArea.removeFromRight(shortcutWidth);
@@ -199,8 +196,6 @@ void PopupLookAndFeel::getIdealPopupMenuItemSize(const juce::String &text
     idealHeight = standardMenuItemHeight > 0 ? standardMenuItemHeight : itemHeight;
 }
 
-//============================================================
-
 void PopupLookAndFeel::drawAlertBox(juce::Graphics              &g
                                     , juce::AlertWindow         &alert
                                     , const juce::Rectangle<int> &textArea
@@ -212,6 +207,9 @@ void PopupLookAndFeel::drawAlertBox(juce::Graphics              &g
     g.fillRoundedRectangle(bounds, cornerRadius);
 
     juce::ignoreUnused(alert);
+
+    // Recolour title runs in place: title font is taller than the body, so any
+    // run above the body-font height is part of the title.
     const float bodyFontHeight = getAlertWindowMessageFont().getHeight();
 
     for (int line = 0; line < textLayout.getNumLines(); ++line)

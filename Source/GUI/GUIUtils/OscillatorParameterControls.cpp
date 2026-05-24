@@ -10,7 +10,7 @@
 
 #include "OscillatorParameterControls.h"
 
-//=================================================================
+//==============================================================================
 
 OscParamControl::OscParamControl() = default;
 
@@ -42,7 +42,7 @@ float OscParamControl::LevelFormula(std::atomic<float>* MV, float CV)
     return outVal;
 }
 
-//=================================================================
+//==============================================================================
 
 float SubOscParamControl::SinSubGain   (std::atomic<float>* subMorphVal) { return SinMorphGain  (subMorphVal); }
 float SubOscParamControl::SquareSubGain(std::atomic<float>* subMorphVal) { return SpikeMorphGain(subMorphVal); }

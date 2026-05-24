@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "ColorPalette.h"
 
-//============================================================
+//==============================================================================
 
 class PopupLookAndFeel
     : public juce::LookAndFeel_V4

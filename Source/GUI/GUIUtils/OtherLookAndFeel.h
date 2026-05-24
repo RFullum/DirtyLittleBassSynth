@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 
-//============================================================
+//==============================================================================
 
 class OtherLookAndFeel
     : public juce::LookAndFeel_V4
@@ -26,8 +26,8 @@ public:
                           , float sliderPos, float minSliderPos, float maxSliderPos
                           , const juce::Slider::SliderStyle style, juce::Slider &slider) override;
 
-    /// Sets the dim background color used for unfilled portions of tracks and arcs.
-    /// Per-control accent / thumb colors come from the slider's own colour ids.
+    // Dim background color for unfilled portions of tracks/arcs. Per-control
+    // accent + thumb colors come from the slider's own colour IDs.
     void SetTrackBackground(juce::Colour color);
 
 private:

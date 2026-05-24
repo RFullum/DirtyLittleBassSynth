@@ -10,11 +10,10 @@
 
 #include <JuceHeader.h>
 
-//============================================================
+//==============================================================================
 
-/// Horizontal segmented button row driving a juce::AudioParameterChoice. Replaces
-/// a ComboBox where a fixed, small number of options (2-5) reads better as inline
-/// pills. Owns a ParameterAttachment so changes flow both ways with the APVTS.
+// Horizontal pill-row bound to a juce::AudioParameterChoice. Suits small
+// fixed option sets (2-5) better than a ComboBox.
 class SegmentedControl
     : public juce::Component
     , public juce::SettableTooltipClient
@@ -22,15 +21,11 @@ class SegmentedControl
 public:
     SegmentedControl();
     ~SegmentedControl() override = default;
-    
+
     void paint(juce::Graphics &) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent &) override;
 
-    /// Builds N segments labelled by the strings in items, attaches to the named
-    /// choice parameter, and styles segments with the given colors.
-    /// activeFill is used for the selected segment's background; outline / inactive
-    /// text use outlineColor; text uses textColor.
     void Setup(juce::AudioProcessorValueTreeState &apvts
                , const juce::String               &parameterID
                , const juce::StringArray          &items
@@ -39,7 +34,6 @@ public:
                , juce::Colour                      textColor
                , float                             fontSize = 12.0f);
 
-    /// 0-based index of the currently selected segment.
     int GetSelectedIndex() const noexcept { return selectedIndex; }
 
 private:

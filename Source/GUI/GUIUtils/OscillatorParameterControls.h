@@ -12,49 +12,40 @@
 
 #include <JuceHeader.h>
 
-//=================================================================
+//==============================================================================
 
-/// Maps the main oscillator morph parameter (0..2) to per-shape gain levels.
+// Maps a 0..2 morph parameter onto per-shape gains.
+//   val 0 -> sin/sub-sin/etc. = 1, others = 0
+//   val 1 -> middle shape    = 1, others = 0
+//   val 2 -> saw             = 1, others = 0
 class OscParamControl
 {
 public:
     OscParamControl();
 
-    /// val 0 = amp 1; val 1 = amp 0; val 2 = amp 0
-    float SinMorphGain(std::atomic<float>* oscMorphVal);
-
-    /// val 0 = amp 0; val 1 = amp 1; val 2 = amp 0
+    float SinMorphGain  (std::atomic<float>* oscMorphVal);
     float SpikeMorphGain(std::atomic<float>* oscMorphVal);
-
-    /// val 0 = amp 0; val 1 = amp 0; val 2 = amp 1
-    float SawMorphGain(std::atomic<float>* oscMorphVal);
+    float SawMorphGain  (std::atomic<float>* oscMorphVal);
 
 protected:
-    /// blendCurve = 1.0 is linear; > 1.0 reduces blend overlap; 0.1..1.0 increases it.
+    // 1.0 = linear blend; >1 = less overlap; 0.1..1 = more overlap.
     float blendCurve = 0.2f;
 
 private:
-    /// Maps parameter value to gain. Values 0..2 map to amplitudes 0..1.
     float LevelFormula(std::atomic<float>* MV, float CV);
 };
 
 
-//=================================================================
+//==============================================================================
 
-/// Adds sub-octave selection on top of OscParamControl.
 class SubOscParamControl
     : public OscParamControl
 {
 public:
-    /// val 0 = amp 1; val 1 = amp 0; val 2 = amp 0
-    float SinSubGain(std::atomic<float>* subMorphVal);
-
-    /// val 0 = amp 0; val 1 = amp 1; val 2 = amp 0
+    float SinSubGain   (std::atomic<float>* subMorphVal);
     float SquareSubGain(std::atomic<float>* subMorphVal);
+    float SawSubGain   (std::atomic<float>* subMorphVal);
 
-    /// val 0 = amp 0; val 1 = amp 0; val 2 = amp 1
-    float SawSubGain(std::atomic<float>* subMorphVal);
-
-    /// Returns octave denominator: 1, 2, or 4.
+    // Returns octave denominator: 1, 2, or 4.
     int SubOctaveSelector(std::atomic<float>* subOctVal);
 };

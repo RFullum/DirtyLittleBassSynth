@@ -8,7 +8,7 @@
 
 #include "SegmentedControl.h"
 
-//============================================================
+//==============================================================================
 
 SegmentedControl::SegmentedControl()
 : activeFill  (juce::Colours::white)
@@ -104,8 +104,7 @@ void SegmentedControl::Setup(juce::AudioProcessorValueTreeState &apvts
 
     parameter = apvts.getParameter(parameterID);
 
-    // Tag the component with the paramID so the MIDI Learn glass-pane can
-    // identify which parameter to arm when the user clicks on it.
+    // Tag for MidiLearnOverlay arm-on-click (matches AttachSlider/AttachButton).
     getProperties().set("paramID", parameterID);
 
     if (parameter != nullptr)
