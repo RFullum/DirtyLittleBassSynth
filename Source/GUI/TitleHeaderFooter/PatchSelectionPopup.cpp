@@ -7,8 +7,243 @@
 */
 
 #include "PatchSelectionPopup.h"
+#include "PatchManager.h"
 
-//==============================================================================
+namespace
+{
+    static constexpr int popupWidth      = 1300;
+    static constexpr int popupHeight     = 500;   // 15 rows × ~30 px + padding + scrollbar
+    static constexpr int popupPadding    = 16;
+    static constexpr int itemsPerColumn  = 15;
+    static constexpr int columnWidth     = 200;
+    static constexpr int scrollBarSpace  = 12;
+
+    //============================================================
+
+    class PatchGridItem
+        : public juce::Component
+    {
+    public:
+        PatchGridItem(const juce::String      &nameIn
+                      , juce::Colour           textColourIn
+                      , juce::Colour           hoverColourIn
+                      , bool                   tickedIn
+                      , std::function<void()>  onClickIn)
+        : name(nameIn)
+        , textColour(textColourIn)
+        , hoverColour(hoverColourIn)
+        , ticked(tickedIn)
+        , onClick(std::move(onClickIn))
+        {
+            setMouseCursor(juce::MouseCursor::PointingHandCursor);
+        }
+
+        void paint(juce::Graphics &g) override
+        {
+            const auto bounds = getLocalBounds().toFloat();
+
+            if (hovered)
+            {
+                g.setColour(hoverColour);
+                g.fillRoundedRectangle(bounds.reduced(2.0f), 3.0f);
+            }
+
+            auto content = getLocalBounds().reduced(10, 0);
+
+            // Tick column on the left for the currently-loaded patch.
+            const int tickCol = 16;
+            auto tickArea = content.removeFromLeft(tickCol);
+
+            if (ticked)
+            {
+                const int tickSize = juce::jmin(tickArea.getHeight() - 12, 10);
+                const auto t = tickArea.withSizeKeepingCentre(tickSize, tickSize);
+
+                g.setColour(textColour);
+                juce::Path tick;
+                tick.startNewSubPath((float) t.getX(),                              (float) t.getCentreY());
+                tick.lineTo         ((float) t.getX() + t.getWidth() * 0.4f,        (float) t.getBottom());
+                tick.lineTo         ((float) t.getRight(),                          (float) t.getY());
+                g.strokePath(tick, juce::PathStrokeType(1.4f,
+                                                        juce::PathStrokeType::curved,
+                                                        juce::PathStrokeType::rounded));
+            }
+
+            g.setColour(textColour);
+            g.setFont(juce::Font(juce::FontOptions("Helvetica", 13.0f, juce::Font::bold))
+                      .withExtraKerningFactor(0.04f));
+            g.drawText(name, content, juce::Justification::centredLeft, true);
+        }
+
+        void mouseEnter(const juce::MouseEvent &) override { hovered = true;  repaint(); }
+        void mouseExit (const juce::MouseEvent &) override { hovered = false; repaint(); }
+
+        void mouseUp(const juce::MouseEvent &e) override
+        {
+            if (! e.mouseWasDraggedSinceMouseDown() && onClick != nullptr)
+                onClick();
+        }
+
+    private:
+        juce::String name;
+        juce::Colour textColour;
+        juce::Colour hoverColour;
+        bool         ticked;
+        bool         hovered = false;
+        std::function<void()> onClick;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchGridItem)
+    };
+
+//============================================================
+
+    class PatchGridContent
+        : public juce::Component
+    {
+    public:
+        PatchGridContent(const Palette::Theme                         &theme
+                         , const std::vector<PatchManager::PatchInfo> &patches
+                         , const juce::File                           &currentFile
+                         , std::function<void(juce::File)>             onSelectIn
+                         , int                                         viewportHeightIn)
+        : viewportHeight(viewportHeightIn)
+        , onSelect      (std::move(onSelectIn))
+        {
+            const int rowH = juce::jmax(28, viewportHeight / itemsPerColumn);
+            itemHeight     = rowH;
+
+            items.reserve(patches.size());
+
+            for (const auto &info : patches)
+            {
+                const auto colour = info.source == PatchManager::Source::Factory
+                                        ? theme.primaryAccent
+                                        : theme.secondaryAccent;
+
+                const auto hover = colour.withAlpha(0.18f);
+                const bool tick  = (info.file == currentFile);
+                const auto file  = info.file;
+
+                auto item = std::make_unique<PatchGridItem>(info.name
+                                                            , colour
+                                                            , hover
+                                                            , tick
+                                                            , [this, file]()
+                                                              {
+                                                                  if (onSelect)
+                                                                      onSelect(file);
+                                                              });
+                addAndMakeVisible(item.get());
+                items.push_back(std::move(item));
+            }
+
+            const int numCols = std::max(1, (int) std::ceil((double) items.size() / itemsPerColumn));
+            setSize(numCols * columnWidth, itemHeight * itemsPerColumn);
+        }
+
+        void resized() override
+        {
+            for (size_t i = 0; i < items.size(); ++i)
+            {
+                const int col = (int) (i / itemsPerColumn);
+                const int row = (int) (i % itemsPerColumn);
+                items[i]->setBounds(col * columnWidth
+                                    , row * itemHeight
+                                    , columnWidth
+                                    , itemHeight);
+            }
+        }
+
+    private:
+        int viewportHeight = 0;
+        int itemHeight     = 0;
+
+        std::vector<std::unique_ptr<PatchGridItem>> items;
+        std::function<void(juce::File)>             onSelect;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchGridContent)
+    };
+
+//============================================================
+
+    class PatchSelectionPopupComponent
+        : public juce::Component
+    {
+    public:
+        PatchSelectionPopupComponent(const GuiResources                           &resourcesIn
+                                     , const std::vector<PatchManager::PatchInfo> &patches
+                                     , const juce::File                           &currentFile)
+        : resources(resourcesIn)
+        {
+            setOpaque       (false);
+            setWantsKeyboardFocus(true);
+            setInterceptsMouseClicks(true, true);
+
+            const int viewportHeight = popupHeight - popupPadding * 2 - scrollBarSpace;
+
+            auto contentOwned = std::make_unique<PatchGridContent>(resourcesIn.theme
+                                                                   , patches
+                                                                   , currentFile
+                                                                   , [this](juce::File f)
+                                                                     {
+                                                                         chosenFile = f;
+                                                                         exitModalState(1);
+                                                                     }
+                                                                   , viewportHeight);
+
+            viewport.setViewedComponent(contentOwned.release(), true);
+            viewport.setScrollBarsShown(false, true);
+            viewport.setScrollOnDragMode(juce::Viewport::ScrollOnDragMode::nonHover);
+            addAndMakeVisible(viewport);
+        }
+
+        void paint(juce::Graphics &g) override
+        {
+            constexpr float cornerRadius = 6.0f;
+            constexpr float borderWidth  = 1.5f;
+
+            const auto bounds = getLocalBounds().toFloat();
+
+            g.setColour(resources.theme.background);
+            g.fillRoundedRectangle(bounds, cornerRadius);
+
+            g.setColour(resources.theme.primaryAccent.withAlpha(0.5f));
+            g.drawRoundedRectangle(bounds.reduced(borderWidth * 0.5f), cornerRadius, borderWidth);
+        }
+
+        void resized() override
+        {
+            viewport.setBounds(getLocalBounds().reduced(popupPadding));
+        }
+
+        bool keyPressed(const juce::KeyPress &key) override
+        {
+            if (key == juce::KeyPress::escapeKey)
+            {
+                exitModalState(0);
+                return true;
+            }
+
+            return false;
+        }
+
+        void inputAttemptWhenModal() override
+        {
+            exitModalState(0);
+        }
+
+        const juce::File &GetChosenFile() const noexcept { return chosenFile; }
+
+    private:
+        const GuiResources &resources;
+        juce::Viewport      viewport;
+        juce::File          chosenFile;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchSelectionPopupComponent)
+    };
+}
+
+//============================================================
 
 PatchSelectionPopup::PatchSelectionPopup(GuiResources &res)
 : resources(res)
@@ -19,76 +254,38 @@ void PatchSelectionPopup::Show(juce::Component *targetComponent)
     if (resources.patchManager == nullptr || targetComponent == nullptr)
         return;
 
-    // Refresh on every open so external Finder changes (drops, deletions)
-    // are reflected without needing a manual refresh action.
     auto *pm = resources.patchManager;
     pm->RefreshPatchList();
 
-    const auto &theme       = resources.theme;
-    const auto &patches     = pm->GetPatchList();
-    const auto  currentFile = pm->GetCurrentPatchFile();
+    auto *editor = targetComponent->getTopLevelComponent();
+    if (editor == nullptr)
+        return;
 
-    juce::PopupMenu menu;
+    // shared_ptr keeps the component alive across the lifetime
+    auto popup = std::make_shared<PatchSelectionPopupComponent>(resources
+                                                                , pm->GetPatchList()
+                                                                , pm->GetCurrentPatchFile());
 
-    // Empty list: a single disabled placeholder so the popup doesn't appear
-    // broken. juce::PopupMenu can do strange things on some platforms when
-    // shown completely empty.
-    if (patches.empty())
-    {
-        menu.addItem(-1, "(no patches yet)", /*isEnabled*/ false);
-    }
-    else
-    {
-        // Walk the list once, splitting at the factory/user boundary so we
-        // can drop a separator between the two sections. Item IDs are 1-based
-        // because PopupMenu returns 0 for "dismissed" — we need to distinguish
-        // "user picked the first patch" from "user pressed Esc".
-        bool factorySeen   = false;
-        bool separatorAdded = false;
+    editor->addAndMakeVisible(popup.get());
 
-        for (size_t i = 0; i < patches.size(); ++i)
-        {
-            const auto &info      = patches[i];
-            const bool  isFactory = info.source == PatchManager::Source::Factory;
+    const auto editorBounds = editor->getLocalBounds();
+    const int  w            = juce::jmin(popupWidth,  editorBounds.getWidth());
+    const int  h            = juce::jmin(popupHeight, editorBounds.getHeight());
+    popup->setBounds(juce::Rectangle<int>(0, 0, w, h).withCentre(editorBounds.getCentre()));
 
-            // Drop the separator the moment we transition factory -> user.
-            if (! isFactory && factorySeen && ! separatorAdded)
-            {
-                menu.addSeparator();
-                separatorAdded = true;
-            }
+    popup->grabKeyboardFocus();
 
-            juce::PopupMenu::Item item;
-            item.itemID   = (int) (i + 1);
-            item.text     = info.name;
-            item.colour   = isFactory ? theme.primaryAccent : theme.secondaryAccent;
-            item.isTicked = (info.file == currentFile);
-            menu.addItem(item);
+    popup->enterModalState(true
+                           , juce::ModalCallbackFunction::create(
+                                 [popup, pm](int /*result*/)
+                                 {
+                                     const auto chosen = popup->GetChosenFile();
 
-            if (isFactory)
-                factorySeen = true;
-        }
-    }
+                                     if (auto *parent = popup->getParentComponent())
+                                         parent->removeChildComponent(popup.get());
 
-    // Snapshot the file list so the callback isn't sensitive to later
-    // RefreshPatchList calls (e.g. from drag-drop import landing between the
-    // popup opening and the user selecting an entry).
-    std::vector<juce::File> fileSnapshot;
-    fileSnapshot.reserve(patches.size());
-    for (const auto &p : patches)
-        fileSnapshot.push_back(p.file);
-
-    const auto options = juce::PopupMenu::Options()
-                             .withTargetComponent(targetComponent)
-                             .withTargetScreenArea(targetComponent->getScreenBounds());
-
-    menu.showMenuAsync(options, [pm, fileSnapshot = std::move(fileSnapshot)] (int chosen)
-    {
-        if (chosen <= 0)
-            return;   // 0 = dismissed, -1 = the empty-list placeholder
-
-        const auto index = (size_t) (chosen - 1);
-        if (index < fileSnapshot.size())
-            pm->LoadPatch(fileSnapshot[index]);
-    });
+                                     if (chosen.existsAsFile())
+                                         pm->LoadPatch(chosen);
+                                 })
+                           , false);
 }
