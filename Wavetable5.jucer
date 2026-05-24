@@ -9,50 +9,52 @@
               cppLanguageStandard="20">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
     <GROUP id="{E5018C48-C090-97DC-6782-1AE51AF9E7E0}" name="Resources">
-      <FILE id="Zfhwx2" name="Attack Throat Bass.dlbs" compile="0" resource="1"
-            file="Resources/Attack Throat Bass.dlbs"/>
-      <FILE id="MaGi3C" name="Bendy Saw Lead.dlbs" compile="0" resource="1"
-            file="Resources/Bendy Saw Lead.dlbs"/>
-      <FILE id="urWmU8" name="Bloom Sub.dlbs" compile="0" resource="1" file="Resources/Bloom Sub.dlbs"/>
-      <FILE id="bT1ZuN" name="Bright Lead.dlbs" compile="0" resource="1"
-            file="Resources/Bright Lead.dlbs"/>
-      <FILE id="L1wKiu" name="Clunker.dlbs" compile="0" resource="1" file="Resources/Clunker.dlbs"/>
-      <FILE id="yC7TE0" name="Compooter.dlbs" compile="0" resource="1" file="Resources/Compooter.dlbs"/>
-      <FILE id="O0ff04" name="Distowahh.dlbs" compile="0" resource="1" file="Resources/Distowahh.dlbs"/>
-      <FILE id="zFCGgx" name="Emergency Movement.dlbs" compile="0" resource="1"
-            file="Resources/Emergency Movement.dlbs"/>
-      <FILE id="LPC2OY" name="FiftyFifty.dlbs" compile="0" resource="1" file="Resources/FiftyFifty.dlbs"/>
-      <FILE id="LbRQzJ" name="Filthy.dlbs" compile="0" resource="1" file="Resources/Filthy.dlbs"/>
-      <FILE id="f6Wp79" name="Grizzle.dlbs" compile="0" resource="1" file="Resources/Grizzle.dlbs"/>
-      <FILE id="lrOAoD" name="Pitch Reducer.dlbs" compile="0" resource="1"
-            file="Resources/Pitch Reducer.dlbs"/>
-      <FILE id="DwECJh" name="Push Bass.dlbs" compile="0" resource="1" file="Resources/Push Bass.dlbs"/>
-      <FILE id="tjeZTJ" name="Raver Boy.dlbs" compile="0" resource="1" file="Resources/Raver Boy.dlbs"/>
-      <FILE id="QOa2o3" name="Raver Girl.dlbs" compile="0" resource="1" file="Resources/Raver Girl.dlbs"/>
-      <FILE id="ttuQIQ" name="Retro Repeater.dlbs" compile="0" resource="1"
-            file="Resources/Retro Repeater.dlbs"/>
-      <FILE id="QJy9ie" name="Ring Chorus.dlbs" compile="0" resource="1"
-            file="Resources/Ring Chorus.dlbs"/>
-      <FILE id="iVlqaw" name="Ring Saw Sub.dlbs" compile="0" resource="1"
-            file="Resources/Ring Saw Sub.dlbs"/>
-      <FILE id="CBryIJ" name="Ripper.dlbs" compile="0" resource="1" file="Resources/Ripper.dlbs"/>
-      <FILE id="WWhw2f" name="Shook.dlbs" compile="0" resource="1" file="Resources/Shook.dlbs"/>
-      <FILE id="o8B4ae" name="Shudder synth.dlbs" compile="0" resource="1"
-            file="Resources/Shudder synth.dlbs"/>
-      <FILE id="XuyF2V" name="Sine Harmonic.dlbs" compile="0" resource="1"
-            file="Resources/Sine Harmonic.dlbs"/>
-      <FILE id="OCqnyL" name="Sine Square Sub.dlbs" compile="0" resource="1"
-            file="Resources/Sine Square Sub.dlbs"/>
-      <FILE id="PwNcAP" name="Sizzler.dlbs" compile="0" resource="1" file="Resources/Sizzler.dlbs"/>
-      <FILE id="MRUWFe" name="Sqare Lead.dlbs" compile="0" resource="1" file="Resources/Sqare Lead.dlbs"/>
-      <FILE id="U4kC0Q" name="Square sub lead.dlbs" compile="0" resource="1"
-            file="Resources/Square sub lead.dlbs"/>
-      <FILE id="f0TC8z" name="Stab knock bass.dlbs" compile="0" resource="1"
-            file="Resources/Stab knock bass.dlbs"/>
-      <FILE id="UWw3iv" name="Super Saw.dlbs" compile="0" resource="1" file="Resources/Super Saw.dlbs"/>
-      <FILE id="h1PesP" name="WobRing.dlbs" compile="0" resource="1" file="Resources/WobRing.dlbs"/>
-      <FILE id="mM7fR1" name="Worried Robot.dlbs" compile="0" resource="1"
-            file="Resources/Worried Robot.dlbs"/>
+      <GROUP id="{00C737FC-B218-DE32-8286-2D70FCBA0FA3}" name="FactoryPresets">
+        <FILE id="ClMqbd" name="Attack Throat Bass.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Attack Throat Bass.dlbs"/>
+        <FILE id="QZ9eiT" name="Bendy Saw Lead.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Bendy Saw Lead.dlbs"/>
+        <FILE id="lJsg0P" name="Bloom Sub.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Bloom Sub.dlbs"/>
+        <FILE id="o9xv3v" name="Bright Lead.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Bright Lead.dlbs"/>
+        <FILE id="PddjZN" name="Clunker.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Clunker.dlbs"/>
+        <FILE id="mf4jaL" name="Compooter.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Compooter.dlbs"/>
+        <FILE id="sCmqqH" name="Distowahh.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Distowahh.dlbs"/>
+        <FILE id="zE54wO" name="Emergency Movement.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Emergency Movement.dlbs"/>
+        <FILE id="WEsRKh" name="FiftyFifty.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/FiftyFifty.dlbs"/>
+        <FILE id="dSdE3q" name="Filthy.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Filthy.dlbs"/>
+        <FILE id="yK4exZ" name="Grizzle.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Grizzle.dlbs"/>
+        <FILE id="Euezyb" name="Pitch Reducer.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Pitch Reducer.dlbs"/>
+        <FILE id="qLz5DI" name="Push Bass.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Push Bass.dlbs"/>
+        <FILE id="xBiDE5" name="Raver Boy.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Raver Boy.dlbs"/>
+        <FILE id="WnkiJO" name="Raver Girl.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Raver Girl.dlbs"/>
+        <FILE id="FQx4yD" name="Retro Repeater.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Retro Repeater.dlbs"/>
+        <FILE id="hQ7OFC" name="Ring Chorus.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Ring Chorus.dlbs"/>
+        <FILE id="lTeysz" name="Ring Saw Sub.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Ring Saw Sub.dlbs"/>
+        <FILE id="DBtXLE" name="Ripper.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Ripper.dlbs"/>
+        <FILE id="rThQrF" name="Shook.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Shook.dlbs"/>
+        <FILE id="uQeWbG" name="Shudder synth.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Shudder synth.dlbs"/>
+        <FILE id="Cu3IhC" name="Sine Harmonic.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Sine Harmonic.dlbs"/>
+        <FILE id="R1djQT" name="Sine Square Sub.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Sine Square Sub.dlbs"/>
+        <FILE id="txHOFS" name="Sizzler.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Sizzler.dlbs"/>
+        <FILE id="C7t5I7" name="Sqare Lead.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Sqare Lead.dlbs"/>
+        <FILE id="VXQadP" name="Square sub lead.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Square sub lead.dlbs"/>
+        <FILE id="EVTQFc" name="Stab knock bass.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Stab knock bass.dlbs"/>
+        <FILE id="gs1CR5" name="Super Saw.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/Super Saw.dlbs"/>
+        <FILE id="iuJjad" name="WobRing.dlbs" compile="0" resource="1" file="Resources/FactoryPresets/WobRing.dlbs"/>
+        <FILE id="qPDlGw" name="Worried Robot.dlbs" compile="0" resource="1"
+              file="Resources/FactoryPresets/Worried Robot.dlbs"/>
+      </GROUP>
     </GROUP>
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <GROUP id="{A1000001-0000-0000-0000-000000000001}" name="Plugin">
