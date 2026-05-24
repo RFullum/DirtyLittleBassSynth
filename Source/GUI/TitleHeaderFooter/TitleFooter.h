@@ -15,7 +15,6 @@
 
 //==============================================================================
 
-/// Bottom-of-window footer strip: version on the left, URL on the right.
 class TitleFooter
     : public juce::Component
 {
