@@ -42,7 +42,7 @@ void MidiLearnManager::HandleControllerMessage(int ccNumber, int ccValue)
     if (ccNumber < 0 || ccNumber >= numCcSlots)
         return;
 
-    // === Learn mode: bind the incoming CC to the armed param. ===
+    // Learn mode
     if (state.load(std::memory_order_acquire) == State::Armed)
     {
         const int armed = armedParamIndex.load(std::memory_order_acquire);
@@ -60,7 +60,7 @@ void MidiLearnManager::HandleControllerMessage(int ccNumber, int ccValue)
         }
     }
 
-    // === Normal operation: route the CC to whatever param it's mapped to. ===
+    // Normal mode
     const int paramIdx = ccToParamIndex[(size_t) ccNumber].load(std::memory_order_acquire);
 
     if (paramIdx >= 0 && paramIdx < (int) params.size())
@@ -88,8 +88,6 @@ bool MidiLearnManager::ConsumeAppliedFromCcFlag(int paramIndex) noexcept
     return appliedFromCc[(size_t) paramIndex].exchange(false, std::memory_order_acq_rel);
 }
 
-//==============================================================================
-
 void MidiLearnManager::EnterListening() noexcept
 {
     armedParamIndex.store(-1,               std::memory_order_release);
@@ -113,8 +111,6 @@ void MidiLearnManager::ArmParam(int paramIndex) noexcept
     armedParamIndex.store(paramIndex,    std::memory_order_release);
     state          .store(State::Armed,  std::memory_order_release);
 }
-
-//==============================================================================
 
 void MidiLearnManager::SetMapping(int ccNumber, int paramIndex) noexcept
 {
@@ -172,8 +168,6 @@ void MidiLearnManager::ClearAllMappings() noexcept
     dirty.store(true, std::memory_order_release);
 }
 
-//==============================================================================
-
 int MidiLearnManager::GetParamForCc(int ccNumber) const noexcept
 {
     if (ccNumber < 0 || ccNumber >= numCcSlots)
@@ -195,8 +189,6 @@ int MidiLearnManager::GetFirstCcForParam(int paramIndex) const noexcept
 
     return -1;
 }
-
-//==============================================================================
 
 juce::String MidiLearnManager::GetParamID(int paramIndex) const
 {
@@ -224,8 +216,6 @@ int MidiLearnManager::GetParamIndexById(const juce::String &paramID) const
 
     return -1;
 }
-
-//==============================================================================
 
 juce::String MidiLearnManager::SerialiseMappings() const
 {

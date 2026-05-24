@@ -15,20 +15,7 @@
 
 //==============================================================================
 
-/// Centralised CC → parameter routing with a learn-mode state machine.
-///
-/// The audio thread calls HandleControllerMessage for each incoming CC; if
-/// the manager is in the Armed state the CC is bound to the armed parameter,
-/// otherwise the CC is looked up in the mapping table and (if mapped) drives
-/// the corresponding parameter via setValueNotifyingHost.
-///
-/// The lookup table is `cc → paramIndex`, one direction. Several CCs can map
-/// to the same parameter (a knob and a fader controlling cutoff together);
-/// each CC controls at most one parameter. Re-binding a CC to a new param
-/// silently replaces its previous binding.
-///
-/// State transitions and table mutations all use atomics, so the audio thread
-/// can read freely while the UI thread arms/unmaps without locks.
+// audio thread calls HandleControllerMessage for each incoming CC
 class MidiLearnManager
 {
 public:
@@ -41,106 +28,33 @@ public:
 
     MidiLearnManager();
 
-    //==========================================================================
-    // Setup — call from PluginProcessor's constructor.
-    //==========================================================================
-
-    /// Registers a learnable parameter from the APVTS by its parameterID.
-    /// Returns the assigned parameter index (>= 0) or -1 if the param wasn't
-    /// found. The index is stable for the lifetime of the manager.
-    int RegisterParam(juce::AudioProcessorValueTreeState &apvts, const juce::String &paramID);
-
-    //==========================================================================
-    // Audio thread.
-    //==========================================================================
-
-    /// Called from processBlock for each incoming CC. If in Armed state, binds
-    /// the CC to the currently armed param and returns to Listening. Otherwise
-    /// looks up the CC in the table and (if mapped) updates the corresponding
-    /// parameter.
+    int  RegisterParam(juce::AudioProcessorValueTreeState &apvts, const juce::String &paramID);
     void HandleControllerMessage(int ccNumber, int ccValue);
-
-    //==========================================================================
-    // Learn-mode state (UI thread).
-    //==========================================================================
 
     State GetState()             const noexcept { return state.load           (std::memory_order_acquire); }
     int   GetArmedParamIndex()   const noexcept { return armedParamIndex.load (std::memory_order_acquire); }
 
-    /// Enter learn mode: state → Listening (or Armed → Listening if a param
-    /// was previously armed). Idempotent.
     void EnterListening() noexcept;
-
-    /// Leave learn mode entirely: state → Idle.
     void ExitLearn() noexcept;
-
-    /// Arm a parameter for the next incoming CC. Requires state to be in
-    /// learn mode (Listening or Armed). No-op if paramIndex is out of range.
     void ArmParam(int paramIndex) noexcept;
 
-    //==========================================================================
-    // Mapping queries / mutations (UI thread).
-    //==========================================================================
-
-    /// Sets a CC → param binding directly (used during persistence load and
-    /// internally by the default-mapping helpers). Pass paramIndex = -1 to
-    /// clear the slot.
     void SetMapping(int ccNumber, int paramIndex) noexcept;
-
-    /// Registers a fallback CC → param binding and applies it immediately.
-    /// ClearAllMappings re-applies every registered default after wiping the
-    /// table — used by the processor for the standalone-only CC1 → LFO Amount
-    /// default so a Clear Maps action doesn't leave the mod wheel unmapped.
     void RegisterDefaultMapping(int ccNumber, int paramIndex) noexcept;
-
-    /// Removes every CC that points to the given param. No-op if paramIndex
-    /// is out of range.
     void UnmapParam(int paramIndex) noexcept;
-
-    /// Wipes the entire mapping table.
     void ClearAllMappings() noexcept;
 
-    /// Returns the param index controlled by the given CC, or -1 if unmapped.
     int GetParamForCc(int ccNumber) const noexcept;
-
-    /// Returns the first CC bound to the given param (lowest CC#), or -1 if
-    /// the param has no CC binding. (A param can have multiple CCs; this
-    /// returns the lowest for use in CC# badge display.)
     int GetFirstCcForParam(int paramIndex) const noexcept;
-
-    /// Atomic test-and-clear: true iff HandleControllerMessage just drove this
-    /// param via an incoming CC. The CC-echo listener calls this in its
-    /// parameterChanged callback to suppress echoing a value the controller
-    /// just sent us (avoids feedback loops).
     bool ConsumeAppliedFromCcFlag(int paramIndex) noexcept;
-
-    //==========================================================================
-    // Param info (UI thread).
-    //==========================================================================
 
     int                          GetNumParams()                    const noexcept { return (int) params.size(); }
     juce::String                 GetParamID  (int paramIndex)      const;
     juce::RangedAudioParameter*  GetParam    (int paramIndex)      const noexcept;
     int                          GetParamIndexById(const juce::String &paramID) const;
 
-    //==========================================================================
-    // Persistence.
-    //==========================================================================
-
-    /// Serialises the current mappings into a "cc:paramID|cc:paramID|..." string
-    /// suitable for storage via juce::PropertiesFile::setValue.
     juce::String SerialiseMappings() const;
-
-    /// Restores mappings from a string produced by SerialiseMappings. Existing
-    /// mappings are cleared first. Unknown paramIDs are ignored silently
-    /// (e.g., if a param was renamed between plugin versions).
     void RestoreMappings(const juce::String &serialised);
-
-    /// True when the mapping table has changed since the last ClearDirtyFlag().
-    /// Set by every mutator (HandleControllerMessage when binding lands,
-    /// SetMapping, UnmapParam, ClearAllMappings). The UI thread polls this so
-    /// it can persist mappings to disk without doing file I/O on the audio
-    /// thread.
+    
     bool IsDirty()       const noexcept { return dirty.load (std::memory_order_acquire); }
     void ClearDirtyFlag()      noexcept { dirty.store(false, std::memory_order_release); }
 
@@ -168,9 +82,9 @@ private:
     std::atomic<int>   armedParamIndex  { -1 };
     std::atomic<bool>  dirty            { false };
 
-    /// Per-param flag set by HandleControllerMessage immediately before the
-    /// setValueNotifyingHost call, consumed by the CC-echo listener so it can
-    /// skip echoing the value the controller just sent.
+    // Per-param flag set by HandleControllerMessage immediately before the
+    // setValueNotifyingHost call, consumed by the CC-echo listener so it can
+    // skip echoing the value the controller just sent.
     std::array<std::atomic<bool>, maxLearnableParams> appliedFromCc {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLearnManager)
