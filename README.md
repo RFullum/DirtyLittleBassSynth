@@ -150,7 +150,7 @@ A gain-reduction meter sits beside the output meter (below) showing how hard the
 
 ### Scope
 
-Oscilloscope of the post-master output. Self-triggers on a zero crossing for a stable display.
+Oscilloscope of the post-master output.
 
 ### Output Meter
 
