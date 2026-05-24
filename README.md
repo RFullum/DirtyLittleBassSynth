@@ -2,8 +2,6 @@
 
 The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get big, disgustingly aggressive Bass tones quickly.
 
-The synth is laid out in four vertical columns — **Oscillators**, **Modifiers**, **Filter**, **Master** — with a title bar across the top.
-
 ---
 
 ## Title Bar
