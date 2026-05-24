@@ -201,14 +201,6 @@ DirtyLittleBassSynthAudioProcessor::DirtyLittleBassSynthAudioProcessor()
     AttachCcEchoListeners();
 
     patchManager.Init();
-
-#if JUCE_DEBUG
-    // First-run dev seed: only when the user patches folder is empty (so we
-    // don't pile up "Test Preset" duplicates on every debug launch).
-    // Delete the files from Finder to regenerate a fresh batch.
-    if (patchManager.GetPatchList().empty())
-        patchManager.GenerateTestPatches(5);
-#endif
 }
 
 void DirtyLittleBassSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)

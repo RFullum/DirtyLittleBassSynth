@@ -29,9 +29,11 @@ namespace DLBS
                               ? juce::Slider::TextBoxRight
                               : juce::Slider::TextBoxBelow;
 
-        // 48 px on the right side fits the widest value string we produce
-        // ("100 ms"–"999 ms"), which "m" + "s" makes too wide for the old 38px.
-        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 48 : 44;
+        // 48 px on the right (TextBoxRight, ADSR sliders) fits "100 ms"–"999 ms";
+        // 56 px below (TextBoxBelow, rotaries + verticals) fits "-XX.X dB" values
+        // like "-19.2 dB" / "-12.0 dB" without truncation. Shorter-content sliders
+        // (Mono Below, LFO Freq, Bend, etc.) just gain unused horizontal padding.
+        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 48 : 56;
         const int tbH = 14;
 
         slider.setTextBoxStyle(tbPos, false, tbW, tbH);
