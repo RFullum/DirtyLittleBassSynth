@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DLBSPatch name="Grizzle" pluginVersion="2.0.0">
+  <ParameterTree>
+    <PARAM id="amp_attack" value="2.122000217437744"/>
+    <PARAM id="amp_decay" value="2.559999942779541"/>
+    <PARAM id="amp_release" value="0.02999999932944775"/>
+    <PARAM id="amp_sustain" value="0.4599999785423279"/>
+    <PARAM id="filtEnv_COAmt" value="0.3299999833106995"/>
+    <PARAM id="filtEnv_ResAmt" value="0.550000011920929"/>
+    <PARAM id="filtEnv_attack" value="3.112000226974487"/>
+    <PARAM id="filtEnv_decay" value="0.449999988079071"/>
+    <PARAM id="filtEnv_release" value="0.5399999618530273"/>
+    <PARAM id="filtEnv_sustain" value="0.8399999737739563"/>
+    <PARAM id="filtLFO_amt" value="0.0"/>
+    <PARAM id="filtLFO_freq" value="3.769999980926514"/>
+    <PARAM id="filtLFO_shape" value="0.0"/>
+    <PARAM id="filter_cutoff" value="0.3500000238418579"/>
+    <PARAM id="filter_res" value="1.269999980926514"/>
+    <PARAM id="filter_type" value="2.0"/>
+    <PARAM id="foldback_dist" value="33.2680778503418"/>
+    <PARAM id="freq_shift_mix" value="0.1899999976158142"/>
+    <PARAM id="freq_shift_pitch" value="1.679999947547913"/>
+    <PARAM id="master_gain" value="0.3400000035762787"/>
+    <PARAM id="osc_morph" value="0.9399999976158142"/>
+    <PARAM id="pitch_bend_range" value="12.0"/>
+    <PARAM id="porta_time" value="0.1184029206633568"/>
+    <PARAM id="ring_mod_mix" value="0.3799999952316284"/>
+    <PARAM id="ring_mod_pitch" value="3.579999923706055"/>
+    <PARAM id="ring_tone" value="0.4699999988079071"/>
+    <PARAM id="sandh_mix" value="0.09999999403953552"/>
+    <PARAM id="sandh_pitch" value="116.1399993896484"/>
+    <PARAM id="sub_osc_gain" value="0.8199999928474426"/>
+    <PARAM id="sub_osc_morph" value="0.5600000023841858"/>
+    <PARAM id="sub_osc_octave" value="1.0"/>
+    <PARAM id="master_wide" value="4.74974513053894e-8"/>
+    <PARAM id="mono_below_freq" value="120.0"/>
+    <PARAM id="limiter_ceiling" value="-4.599999904632568"/>
+    <PARAM id="limiter_on" value="1.0"/>
+    <PARAM id="filtLFO_sync" value="0.0"/>
+    <PARAM id="filtLFO_sync_div" value="2.0"/>
+    <PARAM id="porta_legato" value="0.0"/>
+    <PARAM id="porta_on" value="1.0"/>
+  </ParameterTree>
+</DLBSPatch>

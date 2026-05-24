@@ -8,13 +8,58 @@
               pluginManufacturerCode="FulM" addUsingNamespaceToJuceHeader="0"
               cppLanguageStandard="20">
   <MAINGROUP id="bK7WUZ" name="Dirty Little Bass Synth">
+    <GROUP id="{E5018C48-C090-97DC-6782-1AE51AF9E7E0}" name="Resources">
+      <FILE id="Zfhwx2" name="Attack Throat Bass.dlbs" compile="0" resource="1"
+            file="Resources/Attack Throat Bass.dlbs"/>
+      <FILE id="MaGi3C" name="Bendy Saw Lead.dlbs" compile="0" resource="1"
+            file="Resources/Bendy Saw Lead.dlbs"/>
+      <FILE id="urWmU8" name="Bloom Sub.dlbs" compile="0" resource="1" file="Resources/Bloom Sub.dlbs"/>
+      <FILE id="bT1ZuN" name="Bright Lead.dlbs" compile="0" resource="1"
+            file="Resources/Bright Lead.dlbs"/>
+      <FILE id="L1wKiu" name="Clunker.dlbs" compile="0" resource="1" file="Resources/Clunker.dlbs"/>
+      <FILE id="yC7TE0" name="Compooter.dlbs" compile="0" resource="1" file="Resources/Compooter.dlbs"/>
+      <FILE id="O0ff04" name="Distowahh.dlbs" compile="0" resource="1" file="Resources/Distowahh.dlbs"/>
+      <FILE id="zFCGgx" name="Emergency Movement.dlbs" compile="0" resource="1"
+            file="Resources/Emergency Movement.dlbs"/>
+      <FILE id="LPC2OY" name="FiftyFifty.dlbs" compile="0" resource="1" file="Resources/FiftyFifty.dlbs"/>
+      <FILE id="LbRQzJ" name="Filthy.dlbs" compile="0" resource="1" file="Resources/Filthy.dlbs"/>
+      <FILE id="f6Wp79" name="Grizzle.dlbs" compile="0" resource="1" file="Resources/Grizzle.dlbs"/>
+      <FILE id="lrOAoD" name="Pitch Reducer.dlbs" compile="0" resource="1"
+            file="Resources/Pitch Reducer.dlbs"/>
+      <FILE id="DwECJh" name="Push Bass.dlbs" compile="0" resource="1" file="Resources/Push Bass.dlbs"/>
+      <FILE id="tjeZTJ" name="Raver Boy.dlbs" compile="0" resource="1" file="Resources/Raver Boy.dlbs"/>
+      <FILE id="QOa2o3" name="Raver Girl.dlbs" compile="0" resource="1" file="Resources/Raver Girl.dlbs"/>
+      <FILE id="ttuQIQ" name="Retro Repeater.dlbs" compile="0" resource="1"
+            file="Resources/Retro Repeater.dlbs"/>
+      <FILE id="QJy9ie" name="Ring Chorus.dlbs" compile="0" resource="1"
+            file="Resources/Ring Chorus.dlbs"/>
+      <FILE id="iVlqaw" name="Ring Saw Sub.dlbs" compile="0" resource="1"
+            file="Resources/Ring Saw Sub.dlbs"/>
+      <FILE id="CBryIJ" name="Ripper.dlbs" compile="0" resource="1" file="Resources/Ripper.dlbs"/>
+      <FILE id="WWhw2f" name="Shook.dlbs" compile="0" resource="1" file="Resources/Shook.dlbs"/>
+      <FILE id="o8B4ae" name="Shudder synth.dlbs" compile="0" resource="1"
+            file="Resources/Shudder synth.dlbs"/>
+      <FILE id="XuyF2V" name="Sine Harmonic.dlbs" compile="0" resource="1"
+            file="Resources/Sine Harmonic.dlbs"/>
+      <FILE id="OCqnyL" name="Sine Square Sub.dlbs" compile="0" resource="1"
+            file="Resources/Sine Square Sub.dlbs"/>
+      <FILE id="PwNcAP" name="Sizzler.dlbs" compile="0" resource="1" file="Resources/Sizzler.dlbs"/>
+      <FILE id="MRUWFe" name="Sqare Lead.dlbs" compile="0" resource="1" file="Resources/Sqare Lead.dlbs"/>
+      <FILE id="U4kC0Q" name="Square sub lead.dlbs" compile="0" resource="1"
+            file="Resources/Square sub lead.dlbs"/>
+      <FILE id="f0TC8z" name="Stab knock bass.dlbs" compile="0" resource="1"
+            file="Resources/Stab knock bass.dlbs"/>
+      <FILE id="UWw3iv" name="Super Saw.dlbs" compile="0" resource="1" file="Resources/Super Saw.dlbs"/>
+      <FILE id="h1PesP" name="WobRing.dlbs" compile="0" resource="1" file="Resources/WobRing.dlbs"/>
+      <FILE id="mM7fR1" name="Worried Robot.dlbs" compile="0" resource="1"
+            file="Resources/Worried Robot.dlbs"/>
+    </GROUP>
     <GROUP id="{B9193002-3A5A-F8F5-8071-B34FCCAD6955}" name="Source">
       <GROUP id="{A1000001-0000-0000-0000-000000000001}" name="Plugin">
         <GROUP id="{0A0C807B-B01C-71D7-3A98-A33428FF13E5}" name="PatchEngine">
           <FILE id="aPatM01" name="PatchManager.cpp" compile="1" resource="0"
                 file="Source/Plugin/PatchEngine/PatchManager.cpp"/>
-          <FILE id="aPatM02" name="PatchManager.h" compile="0" resource="0"
-                file="Source/Plugin/PatchEngine/PatchManager.h"/>
+          <FILE id="aPatM02" name="PatchManager.h" compile="0" resource="0" file="Source/Plugin/PatchEngine/PatchManager.h"/>
         </GROUP>
         <FILE id="OF3xSN" name="PluginProcessor.cpp" compile="1" resource="0"
               file="Source/Plugin/PluginProcessor.cpp"/>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DLBSPatch name="Filthy" pluginVersion="2.0.0">
+  <ParameterTree>
+    <PARAM id="amp_attack" value="0.07200000435113907"/>
+    <PARAM id="amp_decay" value="0.3599999845027924"/>
+    <PARAM id="amp_release" value="0.09999999403953552"/>
+    <PARAM id="amp_sustain" value="0.7999999523162842"/>
+    <PARAM id="filtEnv_COAmt" value="0.0"/>
+    <PARAM id="filtEnv_ResAmt" value="0.0"/>
+    <PARAM id="filtEnv_attack" value="0.009999999776482582"/>
+    <PARAM id="filtEnv_decay" value="1.0"/>
+    <PARAM id="filtEnv_release" value="0.09999999403953552"/>
+    <PARAM id="filtEnv_sustain" value="1.0"/>
+    <PARAM id="filtLFO_amt" value="0.0"/>
+    <PARAM id="filtLFO_freq" value="1.0"/>
+    <PARAM id="filtLFO_shape" value="0.0"/>
+    <PARAM id="filter_cutoff" value="0.7750000357627869"/>
+    <PARAM id="filter_res" value="1.149999976158142"/>
+    <PARAM id="filter_type" value="1.0"/>
+    <PARAM id="foldback_dist" value="200.0"/>
+    <PARAM id="freq_shift_mix" value="0.7699999809265137"/>
+    <PARAM id="freq_shift_pitch" value="0.25"/>
+    <PARAM id="master_gain" value="1.0"/>
+    <PARAM id="osc_morph" value="1.0"/>
+    <PARAM id="pitch_bend_range" value="12.0"/>
+    <PARAM id="porta_time" value="0.01999999955296516"/>
+    <PARAM id="ring_mod_mix" value="1.0"/>
+    <PARAM id="ring_mod_pitch" value="0.25"/>
+    <PARAM id="ring_tone" value="0.0"/>
+    <PARAM id="sandh_mix" value="0.0"/>
+    <PARAM id="sandh_pitch" value="128.0"/>
+    <PARAM id="sub_osc_gain" value="0.3899999856948853"/>
+    <PARAM id="sub_osc_morph" value="0.0"/>
+    <PARAM id="sub_osc_octave" value="1.0"/>
+    <PARAM id="master_wide" value="4.74974513053894e-8"/>
+    <PARAM id="mono_below_freq" value="120.0"/>
+    <PARAM id="limiter_ceiling" value="-7.5"/>
+    <PARAM id="limiter_on" value="1.0"/>
+    <PARAM id="filtLFO_sync" value="0.0"/>
+    <PARAM id="filtLFO_sync_div" value="5.0"/>
+    <PARAM id="porta_legato" value="0.0"/>
+    <PARAM id="porta_on" value="0.0"/>
+  </ParameterTree>
+</DLBSPatch>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DLBSPatch name="Raver Girl" pluginVersion="2.0.0">
+  <ParameterTree>
+    <PARAM id="amp_attack" value="0.1000000014901161"/>
+    <PARAM id="amp_decay" value="1.0"/>
+    <PARAM id="amp_release" value="0.3799999952316284"/>
+    <PARAM id="amp_sustain" value="0.9099999666213989"/>
+    <PARAM id="filtEnv_COAmt" value="0.0"/>
+    <PARAM id="filtEnv_ResAmt" value="0.0"/>
+    <PARAM id="filtEnv_attack" value="0.009999999776482582"/>
+    <PARAM id="filtEnv_decay" value="1.0"/>
+    <PARAM id="filtEnv_release" value="0.09999999403953552"/>
+    <PARAM id="filtEnv_sustain" value="1.0"/>
+    <PARAM id="filtLFO_amt" value="0.0"/>
+    <PARAM id="filtLFO_freq" value="1.0"/>
+    <PARAM id="filtLFO_shape" value="0.0"/>
+    <PARAM id="filter_cutoff" value="0.7880000472068787"/>
+    <PARAM id="filter_res" value="1.25"/>
+    <PARAM id="filter_type" value="0.0"/>
+    <PARAM id="foldback_dist" value="10.30746936798096"/>
+    <PARAM id="freq_shift_mix" value="0.0"/>
+    <PARAM id="freq_shift_pitch" value="1.0"/>
+    <PARAM id="master_gain" value="1.0"/>
+    <PARAM id="osc_morph" value="0.6200000047683716"/>
+    <PARAM id="pitch_bend_range" value="12.0"/>
+    <PARAM id="porta_time" value="0.01999999955296516"/>
+    <PARAM id="ring_mod_mix" value="0.5"/>
+    <PARAM id="ring_mod_pitch" value="1.029999971389771"/>
+    <PARAM id="ring_tone" value="0.7299999594688416"/>
+    <PARAM id="sandh_mix" value="0.0"/>
+    <PARAM id="sandh_pitch" value="128.0"/>
+    <PARAM id="sub_osc_gain" value="1.0"/>
+    <PARAM id="sub_osc_morph" value="1.429999947547913"/>
+    <PARAM id="sub_osc_octave" value="1.0"/>
+    <PARAM id="master_wide" value="0.2250000536441803"/>
+    <PARAM id="mono_below_freq" value="120.0"/>
+    <PARAM id="limiter_ceiling" value="-3.899999856948853"/>
+    <PARAM id="limiter_on" value="1.0"/>
+    <PARAM id="filtLFO_sync" value="0.0"/>
+    <PARAM id="filtLFO_sync_div" value="5.0"/>
+    <PARAM id="porta_legato" value="0.0"/>
+    <PARAM id="porta_on" value="0.0"/>
+  </ParameterTree>
+</DLBSPatch>
