@@ -79,9 +79,9 @@ public:
     
     void SetFilterLFOSyncParamPointers(std::atomic<float> *syncOn, std::atomic<float> *syncDivIndex);
 
-    /// Where to publish per-block snapshots of the filter envelope value (0..1)
-    /// and last LFO output (signed, already scaled by the click env). Owned by
-    /// the processor; the voice writes once per block.
+    // Where to publish per-block snapshots of the filter envelope value (0..1)
+    // and last LFO output (signed, already scaled by the click env). Owned by
+    // the processor; the voice writes once per block.
     void SetFilterDisplaySnapshotPointers(std::atomic<float> *envDisplay
                                           , std::atomic<float> *lfoDisplay);
     void SetTempoSnapshot(const TempoSnapshot *snapshot);
@@ -95,8 +95,8 @@ public:
     void SetPortamentoTime(float SR, float portaTime);
     void updatePitchBendRange(float newRange);
 
-    /// Latency introduced by the oversampling stage, in *base-rate* samples.
-    /// Reported to the host so it can compensate. Returns 0 before Init has run.
+    // Latency introduced by the oversampling stage, in *base-rate* samples.
+    // Reported to the host so it can compensate. Returns 0 before Init has run.
     int GetOversamplingLatencyInSamples() const noexcept;
 
 private:
@@ -148,7 +148,7 @@ private:
     float filterADSRResAmountVal    = 0.0f;
     float filtLFOAmtVal             = 0.0f;
 
-    // Last LFO sample (post click-env), captured by ProcessFilterChain so the
+    // Last LFO sample captured by ProcessFilterChain so the
     // end-of-block snapshot publish has something to write.
     float lastFiltLFOSample         = 0.0f;
 
@@ -158,7 +158,7 @@ private:
     std::atomic<float> *filtLFODisplayPtr = nullptr;
 
     // Selected filter for the current block. Set in PrepareDspForBlock so the per-sample
-    // loop calls ProcessFilter via virtual dispatch instead of switching on every sample.
+    // loop calls ProcessFilter instead of switching on every sample.
     Filter *activeFilter = nullptr;
 
     bool playing = false;
@@ -179,11 +179,10 @@ private:
     juce::ADSR filtEnv;
     juce::ADSR filtLFOClickingEnv;
     
-    // Wavetable Class Instances
-    Wavetable wtSine;
-    SawWavetable wtSaw;
+    Wavetable      wtSine;
+    SawWavetable   wtSaw;
     SpikeWavetable wtSpike;
-    SubOsc subOsc;
+    SubOsc         subOsc;
 
     // Oscillator parameter members
     std::atomic<float>         *oscillatorMorph      = nullptr;
@@ -216,37 +215,34 @@ private:
     // Foldback Distortion
     juce::SmoothedValue<float> foldbackDistortionSmooth;
     
-    // Ring Mod Instances
+    // Ring Mod
     RingMod ringMod;
 
-    // Ring Mod Parameters
     std::atomic<float>         *ringModPitch = nullptr;
     std::atomic<float>         *ringModTone  = nullptr;
     std::atomic<float>         *ringMix      = nullptr;
     juce::SmoothedValue<float>  ringMixSmooth;
 
-    // Frequency Shifter Instances
+    // Frequency Shifter
     FrequencyShifter freqShift;
-
-    // Frequency Shifter Parameters
+    
     std::atomic<float>         *freqShiftPitch  = nullptr;
     std::atomic<float>         *freqShiftMixVal = nullptr;
     juce::SmoothedValue<float>  freqShiftMixValSmooth;
 
-    // Sample and Hold Instances
+    // Sample and Hold
     SampleAndHold sAndH;
-
-    // Sample and Hold Parameters
+    
     std::atomic<float>         *sAndHPitch  = nullptr;
     std::atomic<float>         *sAndHMixVal = nullptr;
     juce::SmoothedValue<float>  sAndHMixValSmooth;
     
     
-    // Filter Instances
-    TwoPoleLPF twoPoleLPF;
-    FourPoleLPF fourPoleLPF;
+    // Filter
+    TwoPoleLPF   twoPoleLPF;
+    FourPoleLPF  fourPoleLPF;
     EightPoleLPF eightPoleLPF;
-    NotchFilter notchFilter;
+    NotchFilter  notchFilter;
     
     
     // Filter Parameters

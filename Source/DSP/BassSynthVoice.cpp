@@ -32,12 +32,12 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     freq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
 
     // === Portamento mode handling ===
-    // Off              → instant jump to the new note's frequency.
-    // On + Always      → glide on every note after the first.
-    // On + Legato      → glide only when the new note arrives while the
-    //                    previous note is still held (no stopNote since).
-    // First-ever note  → always jumps (the smoother's current value is 0,
-    //                    and gliding from 0 produces a silent ramp-up).
+    // Off               instant jump to the new note's frequency.
+    // On + Always       glide on every note after the first.
+    // On + Legato       glide only when the new note arrives while the
+    //                   previous note is still held (no stopNote since).
+    // First-ever note   always jumps (the smoother's current value is 0,
+    //                   and gliding from 0 produces a silent ramp-up).
     const bool portaOn     = (portamentoOnParam     != nullptr) && (portamentoOnParam     ->load() > 0.5f);
     const bool portaLegato = (portamentoLegatoParam != nullptr) && (portamentoLegatoParam ->load() > 0.5f);
 
@@ -62,11 +62,6 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
 
 void BassSynthVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
-    // Portamento legato detection: only treat a tail-off-allowed stop as a real
-    // note-off. JUCE's Synthesiser calls stopNote(0, false) to hard-stop the
-    // voice when stealing it for an overlapping note — that's the exact case
-    // where legato mode wants to glide, so we leave portaNoteWasReleased false
-    // through that path.
     if (allowTailOff)
     {
         portaNoteWasReleased = true;
@@ -92,9 +87,6 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
     PrepareDspForBlock(levels);
 
     // ===== PASS 1: Base-rate per-sample state =====
-    // Advance the wavetable phasors, env, ADSRs, and parameter smoothers at the
-    // base sample rate. Build the pre-foldback main-osc signal into a scratch
-    // buffer that pass 2 will feed into the oversampling stage.
     auto *preFoldData = preFoldbackBuf.getWritePointer(0);
 
     float previousFinalFreq      = 0.0f;
@@ -180,11 +172,10 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         const float freqMix     = freqShiftMixCache[(size_t) baseIdx];
         const float sAndHMix    = sAndHMixCache    [(size_t) baseIdx];
 
-        // Foldback is the most aggressive non-linearity; running it at 4× SR
+        // Foldback is the most aggressive running it at 4× SR
         // keeps the harmonics it creates above audible Nyquist.
         float s = std::sin(upData[i] * foldbackAmt);
 
-        // Modifier chain (ring mod → freq shift → sample-and-hold), each at OSR.
         const float ringSample = s * ringMod.Process() * envVal;
         const float oscRing    = DryWetLinear(s, ringSample, ringMix);
 
@@ -313,8 +304,6 @@ void BassSynthVoice::Init(float SR, int blockSize)
     velocitySmooth.setCurrentAndTargetValue(1.0f);
 
     // === Oversampling stage ===
-    // Polyphase IIR halfband filters: minimum-phase, low latency. Integer-sample
-    // latency makes host compensation clean.
     oversampling = std::make_unique<juce::dsp::Oversampling<float>>(1                                                               // numChannels
                                                                     , (size_t)oversamplingFactorLog2                                // factor (log2)
                                                                     , juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR    // filterType
@@ -543,7 +532,7 @@ void BassSynthVoice::PrepareDspForBlock(const BlockLevels &levels)
 
     // === Filter LFO frequency / phase ===
     // FRQ mode: free-run at the slider's Hz value.
-    // SYNC mode: derive Hz from host BPM × subdivision. When the transport is
+    // SYNC mode: BPM × subdivision. When the transport is
     // playing, lock phase to ppqPosition so the LFO cycles align with the song
     // grid; when stopped, free-run at the synced equivalent rate.
     const bool lfoSyncOn = (filtLFOSyncOn != nullptr) && (*filtLFOSyncOn > 0.5f);
