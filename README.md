@@ -1,80 +1,173 @@
-# DirtyLittleBassSynth
+# Dirty Little Bass Synth
 
 The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get big, disgustingly aggressive Bass tones quickly.
 
+The synth is laid out in four vertical columns — **Oscillators**, **Modifiers**, **Filter**, **Master** — with a title bar across the top.
 
+---
 
-## Oscillator Section
+## Title Bar
 
-There are two oscillators, each morphing between three different wave-shapes: The Oscillator and Sub Oscillator. The wavetables are made using only sine waves at the appropriate harmonic intervals and amplitudes. I'm using 56 harmonic sines for the square, spike, and sawtooth because i love how aggressively dirty they sound. The spike is essentially a resonantly high-passed square wave. There's a visual representation of the actual wave-shapes as you morph their shape.
+### Plugin Name (DIRTY LITTLE BASS SYNTH)
+
+Hover for a hint. **Right-click** to open the app menu:
+
+- **Show Tooltips** (F1) — toggle hover-help text on every control.
+- **Echo CCs to Controller** (standalone only) — sends CC messages back to your MIDI controller when you move a mapped control via the UI or load a patch. Useful for motorized faders and LED-ring encoders.
+
+### BPM Display
+
+Shows the current tempo with an **INT** badge (standalone) or **HOST** badge (plugin in a DAW).
+
+In standalone: drag the BPM number up/down to change it (Shift = fine). Double-click to type a value.
+
+### LEARN
+
+Click to enter MIDI Learn mode. The body of the synth dims and intercepts clicks.
+
+- **Left-click** a control to arm it, then send a CC from your controller to bind. The control shows its mapped CC# as a small badge.
+- **Right-click** a mapped control to unmap.
+- **CLEAR MAPS** wipes every binding.
+
+Click LEARN again to exit. Mappings persist globally across sessions. In standalone, CC1 is mapped to Filter LFO Amount by default.
+
+### Patch Controls
+
+Top row: prev/next arrows around the current patch name. **Click the patch name** to open a grid popup of all factory + user patches. Factory patches are read-only (teal); user patches are editable (purple). A `*` after the name = unsaved changes.
+
+Bottom row:
+
+- **INIT** — load the default initialised state.
+- **SAVE** — overwrite the current user patch. Disabled on factory + Init.
+- **SAVE AS** — name a new patch and write it to your user folder.
+- **DELETE** — remove the current user patch (confirmation prompt). Disabled on factory + Init.
+- **RANDOM** — randomise every parameter.
+
+You can also drag a `.dlbs` file from Finder onto the patch area to import.
+
+Standalone keyboard shortcuts: **Cmd+S** = SAVE, **Cmd+Shift+S** = SAVE AS.
+
+### PANIC
+
+Hard-stops every active voice. Use when a stuck note slips through.
+
+---
+
+## Oscillators Column
 
 ### Oscillator
 
-Horizontal slider morphs between Sine, Spike, and Sawtooth wave-shapes. Pitch-bend anywhere from 0 to 24 semitones via the vertical slider.
+- **MORPH** slider — morphs between Sine, Spike, and Sawtooth.
+- **Bend** vertical slider — pitch-bend range, 0–24 semitones.
+
+The visualiser above the morph slider shows the current waveshape.
 
 ### Sub Oscillator
 
-Horizontal slider morphs between Sine, Square, and Sawtooth wave-shapes. Vertical slider controls the Sub Osc's gain. ComboBox selects the Sub Osc's octave: 0 is the same octave as the Osc; -1 and -2 are one and two octaves below the Osc, respectively.
+- **MORPH** slider — morphs between Sine, Square, and Sawtooth.
+- **Sub Gain** vertical slider — sub-osc gain in dB, −∞ to 0 dB.
+- **0 / -1 / -2** buttons — sub octave relative to the main oscillator.
 
+### Amp
 
+ADSR envelope applied to both Osc and Sub:
 
-## Oscillator Control Section
+- **A** — attack time
+- **D** — decay time
+- **S** — sustain level
+- **R** — release time
 
-Here we have the controls that directly affect the oscillators' sound generation: ADSR envelope, Portamento, and Foldback Distortion.
+The envelope shape visualiser above the sliders previews the current shape.
 
-### ADSR
+---
 
-The envelope control vertical sliders works as you'd expect: Attack time; Decay time; Sustain level; Release time.
+## Modifiers Column
+
+The dry/wet knobs blend with the main Osc only — the Sub bypasses everything in this column. Dry/wet rotaries support **double-click = 0%**, **shift-click = 50%**, **Cmd-click = 100%**.
+
+The chain order is **Foldback → Ring Mod → Freq Shift → Sample & Hold**.
 
 ### Portamento
 
-Rotary dial that controls the amount of time it takes to slide from one note to the next, from instantly to a long time.
+Rotary glide time (instant to ~1 s). Two mode buttons below:
 
-### Fold-back Distortion
+- **OFF / ON** — engages portamento.
+- **ALWAYS / LEGATO** — glide on every note vs. only on overlapping notes.
 
-Only affects the Oscillator, not the Sub Oscillator. Rotary Dial adds harmonic content to the main Osc by applying fold-back distortion to the morphed wave-shape.
+When off, the knob dims but stays interactive so you can preset a time.
 
+### Foldback Distortion
 
+Rotary adds harmonic content by folding the Osc waveform back on itself. Affects only the main Osc.
 
-## Modifier Section
+### Ring Mod / Freq Shift / Sample & Hold
 
-Three different modifiers: Ring Modulation, Frequency Shifter, Sample & Hold Distortion. These are only applied to the main Osc via the dry/wet knobs.
+Three rows sharing a common column layout:
 
-### Ring Mod
+- **Tone** (Ring Mod only) — morphs the carrier between Sine and Square.
+- **Pitch** — modifier frequency relative to the played note. −2 to +2 octaves, centre = unison.
+- **Dry/Wet** — blends the modified signal with everything upstream in the chain.
 
-Tone controls the wave-shape of the ring modulator, morphing from Sine to Square. The Pitch range is -2 to +2 octaves, defaulting to unison. Dry/Wet blends with the main Osc signal.
+Sample & Hold's Pitch counterclockwise produces heavy bit-crushing; fully counterclockwise produces a square-like waveform an octave down.
 
-### Freq Shift
+---
 
-Pitch range is -2 to +2 octaves, defaulting to unison. Dry/Wet blends with the main Osc signal and the Ring Mod.
+## Filter Column
 
-### S&H Distortion
+### Filter
 
-Sample & Hold distortion grabs sample values and holds them for an amount of time depending on the Pitch. With the Pitch fully clockwise, it's taking the sample values at the current frequency for minimal bit-crushing. Pitch fully-counterclockwise essentially creates a square wave at unison by taking a sample at a rate an octave down and holding it. In between is serious bit crushing. Dry/Wet blends with the main Osc, the Ring Mod, and the Freq Shift.
+- Filter type buttons: **-12dB / -24dB / -48dB / Notch**.
+- **Cutoff** horizontal slider below the visualiser.
+- **Rez** (resonance) vertical slider to the right.
 
+The filter visualiser animates in real time as the envelope and LFO modulate the cutoff and resonance.
 
+### Filter Env
 
-## Filter Section
-
-### The Filter
-Filter mode is selectable: -12dB, -24dB, -48dB, and Notch. The Cutoff Frequency is controlled by a horizontal slider below the filter visualizer. The Filter Resonance is controlled by a vertical slider to the right of the visualizer.
-
-### Filter ADSR
-
-ADSR works just like you'd expect: Attack time, Decay time, Sustain frequency, Release time. Two rotary knobs control how much the ADSR is sent to the Cutoff Frequency, and Resonance amount.
+- **A / D / S / R** sliders — ADSR for the filter envelope.
+- **To Cutoff** knob — how much the envelope pushes the cutoff.
+- **To Rez** knob — how much the envelope pushes resonance.
 
 ### Filter LFO
 
-LFO Shape morphs three shapes via horizontal slider below the visualizer: Sine wave, Square wave, Sawtooth wave. The Frequency vertical slider controls the speed of the LFO. The To Cutoff vertical slider controls how much the LFO affects the Filter Cutoff.
+- Shape morph slider below the visualiser — Sine, Square, Saw.
+- **Freq** vertical slider — LFO speed.
+- **Amount** vertical slider — how much the LFO drives the cutoff.
+- **FRQ / SYNC** toggle — FRQ uses the Freq slider in Hz; SYNC swaps the slider for a tempo-synced subdivision picker that locks to the host or standalone BPM.
 
+---
 
-
-## Out
+## Master Column
 
 ### Out Gain
 
-Vertical slider controls the output gain from 0 to 2. Defaults to unity gain: 1.0
+Rotary master output gain, in dB.
 
-### Out Meter
+### Ceiling Limiter
 
-Shows the output level. Any samples greater than 1 magnitude (digital 0 dB) causes the big red Clipping light to turn bright red.
+- **Ceiling** rotary — limiter ceiling in dB.
+- **ON / OFF** button — bypass the limiter.
+
+A gain-reduction meter sits beside the output meter (below) showing how hard the limiter is working.
+
+### Scope
+
+Oscilloscope of the post-master output. Self-triggers on a zero crossing for a stable display.
+
+### Output Meter
+
+Stereo level meter with a clip strip at the top of each channel. Clip strips latch red whenever a sample crosses 0 dBFS.
+
+### Wide
+
+Bipolar Haas-style stereo widener. Centre = mono. The further from centre, the wider the stereo image.
+
+### Mono Below
+
+Crossover frequency rotary. Frequencies below this are summed to mono. Useful for keeping low end punchy on club systems.
+
+---
+
+## Tooltips
+
+Hover any control to see its description. Toggle on/off via the title-bar right-click menu, or **F1** in standalone.
