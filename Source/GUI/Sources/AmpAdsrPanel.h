@@ -12,9 +12,8 @@
 #include "GuiResources.h"
 #include "AdsrVisual.h"
 
-//============================================================
+//==============================================================================
 
-/// Lower half of the Sources column: amp ADSR sliders + envelope visual.
 class AmpAdsrPanel
     : public juce::Component
 {
@@ -23,7 +22,6 @@ public:
 
     void resized() override;
 
-    /// Called from the editor's timer so the envelope visual rebuilds its path.
     void Update();
 
 private:

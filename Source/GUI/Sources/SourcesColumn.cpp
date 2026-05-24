@@ -8,7 +8,7 @@
 
 #include "SourcesColumn.h"
 
-//============================================================
+//==============================================================================
 
 SourcesColumn::SourcesColumn(GuiResources &res)
 : resources   (res)

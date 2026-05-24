@@ -9,7 +9,7 @@
 #include "AmpAdsrPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 {

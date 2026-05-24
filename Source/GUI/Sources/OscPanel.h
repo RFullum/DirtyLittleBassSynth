@@ -13,10 +13,8 @@
 #include "OscVisual.h"
 #include "SegmentedControl.h"
 
-//============================================================
+//==============================================================================
 
-/// Top-left section: main oscillator (morph + bend range + visual) stacked over
-/// sub oscillator (morph + sub gain + sub octave + visual).
 class OscPanel
     : public juce::Component
 {
@@ -25,7 +23,6 @@ public:
 
     void resized() override;
 
-    /// Called from the editor's timer so the wave visuals can rebuild their paths.
     void Update();
 
 private:

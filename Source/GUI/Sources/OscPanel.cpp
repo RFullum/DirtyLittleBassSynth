@@ -9,7 +9,7 @@
 #include "OscPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 OscPanel::OscPanel(GuiResources &res)
 {
@@ -23,8 +23,7 @@ OscPanel::OscPanel(GuiResources &res)
     DLBS::SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     DLBS::SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
-    // Morph sliders sit directly under their wave visuals; suppress the value textbox
-    // so the slider track spans the full width of the visual above it.
+    // No textbox: track spans the full width of the visual above.
     oscMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     subMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 
@@ -55,9 +54,8 @@ OscPanel::OscPanel(GuiResources &res)
     subMorphAtt       = DLBS::AttachSlider(*res.apvts, "sub_osc_morph", subMorphSlider);
     subGainAtt        = DLBS::AttachSlider(*res.apvts, "sub_osc_gain",  subGainSlider);
 
-    // pitch_bend_range is intentionally NOT registered for MIDI Learn — it's a
-    // setup parameter, not a live-tweak control. Keep the raw attachment so the
-    // slider isn't tagged with a paramID.
+    // Raw attachment (not DLBS::AttachSlider): keeps pitch_bend_range out of
+    // MIDI Learn — setup param, not a live-tweak control.
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
     DLBS::SetSliderTextFormat(subGainSlider, DLBS::FormatGainDb);
@@ -75,8 +73,7 @@ OscPanel::OscPanel(GuiResources &res)
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);
 
-    // Tooltips — fill these in by replacing the empty strings.
-    DLBS::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw"); 
+    DLBS::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw");
     DLBS::SetTip(subMorphSlider,       "Morph Sub oscillator: Sine - Square - Saw");
     DLBS::SetTip(subGainSlider,        "Sub oscillator gain\n0.0dB is unity with Main Oscillator");
     DLBS::SetTip(pitchBendRangeSlider, "Pitch Bend Range");
