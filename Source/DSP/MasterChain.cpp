@@ -91,9 +91,6 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
     if (numChannels < 1 || numSamples <= 0)
         return;
 
-    // Update crossover frequency from the smoothed param. Block-rate is fine for
-    // LR coefficient updates — the SmoothedValue glides between blocks so big
-    // user movements still sound continuous.
     crossoverSmooth.setTargetValue(*monoCrossoverHzParam);
 
     const float blockCutoff = crossoverSmooth.skip(numSamples);
@@ -106,8 +103,6 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
 
     widthSmooth.setTargetValue(*widthParam);
 
-    // Limiter setup (block-rate). When off, signal passes through unmodified and
-    // the GR meter holds at 0 dB.
     const bool  limiterOn   = (limiterOnParam != nullptr) && (*limiterOnParam > 0.5f);
     const float ceilingDb   = (limiterCeilingDbParam != nullptr) ? limiterCeilingDbParam->load() : 0.0f;
     const float ceilingLin  = juce::Decibels::decibelsToGain(ceilingDb);
@@ -127,13 +122,11 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
     {
         const float width = widthSmooth.getNextValue();
 
-        // Strip DC + sub-audio rumble before any further processing.
         const float inL = masterHighPass.processSample(0, bufL[i]);
         const float inR = (bufR != nullptr)
                               ? masterHighPass.processSample(1, bufR[i])
                               : inL;
 
-        // Band-split each channel.
         const float lowL  = lowPass .processSample(0, inL);
         const float highL = highPass.processSample(0, inL);
         const float lowR  = (bufR != nullptr) ? lowPass .processSample(1, inR) : lowL;
@@ -142,8 +135,6 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
         // Force the low band to mono.
         const float lowMono = (lowL + lowR) * 0.5f;
 
-        // Write the high band into the delay line, then read back with the
-        // current Haas offset on whichever channel is being widened.
         delayL[writePos] = highL;
         delayR[writePos] = highR;
 
@@ -156,9 +147,9 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
         if (delaySamples > 0)
         {
             if (width > 0.0f)
-                outHighL = delayL[readPos];   // slider right → delay left channel
+                outHighL = delayL[readPos];   // slider right == delay left channel
             else
-                outHighR = delayR[readPos];   // slider left  → delay right channel
+                outHighR = delayR[readPos];   // slider left  == delay right channel
         }
 
         writePos = (writePos + 1) & bufMask;
@@ -166,7 +157,6 @@ void MasterChain::Process(juce::AudioBuffer<float> &buffer)
         float sampL = lowMono + outHighL;
         float sampR = lowMono + outHighR;
 
-        // === Limiter (post mono+widen) ===
         if (limiterOn)
         {
             const float peak = juce::jmax(std::abs(sampL), std::abs(sampR));

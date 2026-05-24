@@ -12,52 +12,44 @@
 
 //==============================================================================
 
-/// Post-voice master DSP block. Signal flow:
-///   1. Master HPF (fixed 20 Hz, hidden) — strips DC + sub-audio rumble.
-///   2. Crossover split (Linkwitz-Riley LR4, 24 dB/oct) at user-set frequency.
-///      Low band is forced to mono (bass mono-izer); high band has a Haas delay
-///      applied to one channel (stereo widener). Bands sum back to a flat response.
-///   3. Brick-wall limiter at user-set ceiling (when on). Stereo-linked.
-///
-/// `widthParam`: -1..+1, where 0 = mono (no Haas delay) and ±1 = max delay
-/// (~25 ms). Sign selects which channel is delayed.
-/// `monoCrossoverHzParam`: 20..300 Hz crossover frequency.
+// Post-voice master DSP block. Signal flow:
+//   1. Master HPF (fixed 20 Hz, hidden): strips DC + sub-audio rumble.
+//   2. Crossover split (Linkwitz-Riley LR4, 24 dB/oct):
+//      Low band is forced to mono (bass mono-izer); high band has a Haas delay
+//      applied to one channel (stereo widener). Bands sum back to a flat response.
+//   3. Brick-wall limiter at user-set ceiling (when on). Stereo-linked.
 class MasterChain
 {
 public:
     MasterChain();
 
-    /// Allocates the Haas delay buffer and prepares the LR filters. Must be
-    /// called from prepareToPlay before any Process call.
+    // Allocates the Haas delay buffer and prepares the LR filters. Must be
+    // called from prepareToPlay before any Process call.
     void Prepare(double sampleRate, int blockSize, int numChannels);
 
-    /// Clears delay buffer + filter state. Call from prepareToPlay or on a
-    /// transport reset.
+    // Clears delay buffer + filter state. Call from prepareToPlay or on a
+    // transport reset.
     void Reset();
 
-    /// Replaces the buffer in-place with the mono-izer + widener + limiter output.
+    // Replaces the buffer in-place with the mono-izer + widener + limiter output.
     void Process(juce::AudioBuffer<float> &buffer);
 
-    /// One-time setup: APVTS atomic pointers for widener + bass mono-izer.
+    // One-time setup: APVTS atomic pointers
     void SetParamPointers(std::atomic<float> *widthAmt, std::atomic<float> *monoCrossoverHz);
-
-    /// One-time setup: APVTS atomic pointers for the limiter on/off + ceiling (dB).
     void SetLimiterParamPointers(std::atomic<float> *limiterOn, std::atomic<float> *ceilingDb);
 
-    /// Latest gain-reduction value in dB (>= 0). Read by the UI thread to drive the
-    /// GR meter; updated each block by the audio thread via a relaxed atomic store.
+    // Latest gain-reduction value in dB (>= 0). Read by the UI thread to drive the
+    // GR meter; updated each block by the audio thread via a relaxed atomic store.
     float GetGainReductionDb() const noexcept { return currentGRDb.load(std::memory_order_relaxed); }
 
 private:
     static constexpr float maxHaasDelaySec = 0.025f;
 
-    std::atomic<float> *widthParam           = nullptr;
-    std::atomic<float> *monoCrossoverHzParam = nullptr;
-    std::atomic<float> *limiterOnParam       = nullptr;
+    std::atomic<float> *widthParam            = nullptr;
+    std::atomic<float> *monoCrossoverHzParam  = nullptr;
+    std::atomic<float> *limiterOnParam        = nullptr;
     std::atomic<float> *limiterCeilingDbParam = nullptr;
 
-    /// Hidden cleanup HPF — fixed 20 Hz, runs before the mono-izer to keep DC and
-    /// sub-audio rumble out of the rest of the chain. Not user-controllable.
     static constexpr float masterHpHz = 20.0f;
     juce::dsp::LinkwitzRileyFilter<float> masterHighPass;
 

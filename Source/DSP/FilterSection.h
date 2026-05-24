@@ -26,11 +26,8 @@ struct FilterModulation
     float cutoffFreq = 1000.0f;
     float resonance  = 1.0f;
 
-    // Output of ApplyEnvAndLfo (drives IIR coefficients)
-    float cutoffLFO      = 1000.0f;
-    float resonanceScale = 0.1f;
-
-    // Coefficient-update change-detection
+    float cutoffLFO          = 1000.0f;
+    float resonanceScale     = 0.1f;
     float cutoffLFOPrev      = 1000.0f;
     float resonanceScalePrev = 0.1f;
 
