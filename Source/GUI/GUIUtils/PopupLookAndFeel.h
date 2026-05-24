@@ -45,6 +45,14 @@ public:
     void                 drawTooltip      (juce::Graphics &g, const juce::String &text, int width, int height) override;
     juce::Rectangle<int> getTooltipBounds (const juce::String &tipText, juce::Point<int> screenPos, juce::Rectangle<int> parentArea) override;
 
+    void drawAlertBox (juce::Graphics               &g
+                       , juce::AlertWindow          &alert
+                       , const juce::Rectangle<int> &textArea
+                       , juce::TextLayout           &textLayout) override;
+    juce::Font getAlertWindowFont       () override;
+    juce::Font getAlertWindowTitleFont  () override;
+    juce::Font getAlertWindowMessageFont() override;
+
 private:
     const Palette::Theme &theme;
 

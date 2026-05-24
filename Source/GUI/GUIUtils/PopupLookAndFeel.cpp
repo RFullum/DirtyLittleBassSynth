@@ -21,6 +21,23 @@ PopupLookAndFeel::PopupLookAndFeel(const Palette::Theme &themeRef)
     setColour(juce::PopupMenu::headerTextColourId,            theme.textSecondary);
     setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.primaryAccent.withAlpha(0.20f));
     setColour(juce::PopupMenu::highlightedTextColourId,       theme.textPrimary);
+
+    setColour(juce::AlertWindow::backgroundColourId, theme.background);
+    setColour(juce::AlertWindow::textColourId,       theme.textPrimary);
+    setColour(juce::AlertWindow::outlineColourId,    juce::Colours::transparentBlack);
+
+    setColour(juce::TextEditor::backgroundColourId,     theme.structure);
+    setColour(juce::TextEditor::textColourId,           theme.textPrimary);
+    setColour(juce::TextEditor::outlineColourId,        juce::Colours::transparentBlack);
+    setColour(juce::TextEditor::focusedOutlineColourId, theme.primaryAccent);
+    setColour(juce::TextEditor::highlightColourId,      theme.primaryAccent.withAlpha(0.35f));
+    setColour(juce::TextEditor::highlightedTextColourId, theme.textPrimary);
+    setColour(juce::TextEditor::shadowColourId,         juce::Colours::transparentBlack);
+
+    setColour(juce::TextButton::buttonColourId,    theme.structure);
+    setColour(juce::TextButton::buttonOnColourId,  theme.primaryAccent.withAlpha(0.25f));
+    setColour(juce::TextButton::textColourOffId,   theme.textPrimary);
+    setColour(juce::TextButton::textColourOnId,    theme.textPrimary);
 }
 
 void PopupLookAndFeel::drawPopupMenuBackground(juce::Graphics &g, int width, int height)
@@ -159,8 +176,6 @@ juce::Rectangle<int> PopupLookAndFeel::getTooltipBounds(const juce::String   &ti
     const int w = (int) std::ceil(layout.getWidth())  + 16;
     const int h = (int) std::ceil(layout.getHeight()) + 10;
 
-    // Position the tip below-right of the cursor when there's room, mirroring
-    // JUCE's default placement logic.
     return juce::Rectangle<int>(screenPos.x > parentArea.getCentreX() ? screenPos.x - (w + 12) : screenPos.x + 24,
                                 screenPos.y > parentArea.getCentreY() ? screenPos.y - (h + 6)  : screenPos.y + 6,
                                 w, h).constrainedWithin(parentArea);
@@ -182,4 +197,43 @@ void PopupLookAndFeel::getIdealPopupMenuItemSize(const juce::String &text
     auto font   = getPopupMenuFont();
     idealWidth  = juce::GlyphArrangement::getStringWidthInt(font, text) + itemPaddingX * 2 + 24;
     idealHeight = standardMenuItemHeight > 0 ? standardMenuItemHeight : itemHeight;
+}
+
+//============================================================
+
+void PopupLookAndFeel::drawAlertBox(juce::Graphics              &g
+                                    , juce::AlertWindow         &alert
+                                    , const juce::Rectangle<int> &textArea
+                                    , juce::TextLayout          &textLayout)
+{
+    const auto bounds = alert.getLocalBounds().toFloat();
+
+    g.setColour(theme.background);
+    g.fillRoundedRectangle(bounds, cornerRadius);
+
+    juce::ignoreUnused(alert);
+    const float bodyFontHeight = getAlertWindowMessageFont().getHeight();
+
+    for (int line = 0; line < textLayout.getNumLines(); ++line)
+        for (auto *run : textLayout.getLine(line).runs)
+            if (run != nullptr && run->font.getHeight() > bodyFontHeight + 0.5f)
+                run->colour = theme.orangeAccent;
+
+    textLayout.draw(g, textArea.toFloat());
+}
+
+juce::Font PopupLookAndFeel::getAlertWindowFont()
+{
+    return juce::Font(juce::FontOptions("Helvetica", 13.0f, 0));
+}
+
+juce::Font PopupLookAndFeel::getAlertWindowTitleFont()
+{
+    return juce::Font(juce::FontOptions("Helvetica", 16.0f, juce::Font::bold))
+           .withExtraKerningFactor(0.04f);
+}
+
+juce::Font PopupLookAndFeel::getAlertWindowMessageFont()
+{
+    return juce::Font(juce::FontOptions("Helvetica", 13.0f, 0));
 }
