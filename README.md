@@ -162,7 +162,7 @@ Bipolar Haas-style stereo widener. Centre = mono. The further from centre, the w
 
 ### Mono Below
 
-Crossover frequency rotary. Frequencies below this are summed to mono. Useful for keeping low end punchy on club systems.
+Crossover frequency rotary. Frequencies below this are summed to mono.
 
 ---
 
