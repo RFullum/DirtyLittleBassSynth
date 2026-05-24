@@ -13,9 +13,8 @@
 #include "FilterVisual.h"
 #include "SegmentedControl.h"
 
-//============================================================
+//==============================================================================
 
-/// Bottom-left section: filter visualizer + cutoff/resonance sliders + filter type combo.
 class FilterPanel
     : public juce::Component
 {
@@ -24,8 +23,6 @@ public:
 
     void resized() override;
 
-    /// Called from the editor's timer to redraw the filter response curve from
-    /// the current cutoff / resonance / type values.
     void Update();
 
 private:
@@ -44,9 +41,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> cutoffAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> resAtt;
 
-    // Cached APVTS raw-value pointers for modulation amounts. Read each timer
-    // tick to compute the effective (modulated) cutoff/res positions for the
-    // animated visualiser.
+    // Cached raw-value pointers read each timer tick for the modulated visualiser.
     std::atomic<float> *envCOAmtPtr  = nullptr;
     std::atomic<float> *envResAmtPtr = nullptr;
     std::atomic<float> *lfoAmtPtr    = nullptr;

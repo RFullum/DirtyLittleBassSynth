@@ -12,10 +12,8 @@
 #include "GuiResources.h"
 #include "AdsrVisual.h"
 
-//============================================================
+//==============================================================================
 
-/// Bottom-middle section: filter ADSR sliders plus envelope-to-cutoff and
-/// envelope-to-resonance amount knobs.
 class FilterAdsrPanel
     : public juce::Component
 {
@@ -24,7 +22,6 @@ public:
 
     void resized() override;
 
-    /// Called from the editor's timer so the envelope visual rebuilds its path.
     void Update();
 
 private:

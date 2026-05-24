@@ -13,15 +13,10 @@
 #include "OutMeter.h"
 #include "ScopeVisual.h"
 
-//============================================================
+//==============================================================================
 
 // TODO: Re-organize layout after all features hooked into audio.
 
-/// Right-hand column. Top-to-bottom: Out Gain + Limiter (on/off + Ceiling rotary),
-/// scope, output meter with adjacent vertical gain-reduction meter, Haas widener,
-/// bass mono-izer crossover.
-/// The widener / ceiling / mono-izer / GR meter are visual placeholders for now —
-/// no APVTS bindings and no DSP yet. Hook them up as the processors land.
 class MasterColumn
     : public  juce::Component
     , private juce::AudioProcessorValueTreeState::Listener
@@ -33,15 +28,10 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Pushes the latest L/R output magnitudes and limiter gain-reduction value
-    /// into the column's meters. Called from the editor's timer.
     void Update(float leftLevel, float rightLevel, float gainReductionDb, float sampleRate);
 
 private:
-    /// Updates the alpha of the ceiling rotary + label to reflect the on/off state.
     void RefreshCeilingEnabledLook();
-
-    /// Listener callback — fires on user click and on host automation changes.
     void parameterChanged(const juce::String &parameterID, float newValue) override;
 
     GuiResources &resources;
@@ -51,16 +41,13 @@ private:
     juce::Slider masterGainSlider;
     juce::Label  masterGainLabel;
 
-    // Limiter (placeholder — no DSP yet)
     juce::TextButton ceilingOnButton;
     juce::Slider     ceilingSlider;
     juce::Label      ceilingLabel;
 
-    // Haas widener (placeholder — no DSP yet). Bipolar horizontal slider, center = mono.
     juce::Slider wideSlider;
     juce::Label  wideLabel;
 
-    // Bass mono-izer crossover (placeholder — no DSP yet).
     juce::Slider monoCrossoverSlider;
     juce::Label  monoCrossoverLabel;
 
@@ -73,12 +60,9 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ceilingAtt;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> ceilingOnAtt;
 
-
-    // Vertical gain-reduction meter sitting next to the output meter; fills from
-    // the top down as the limiter pulls the gain.
     juce::Rectangle<int> grMeterRect;
 
-    // Latest GR value from the audio thread (in dB, >= 0). Updated each timer tick.
+    // Latest GR value (dB, >= 0). Written by Update() from the audio-thread feed.
     float gainReductionDb = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MasterColumn)

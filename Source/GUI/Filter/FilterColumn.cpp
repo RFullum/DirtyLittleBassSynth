@@ -8,7 +8,7 @@
 
 #include "FilterColumn.h"
 
-//============================================================
+//==============================================================================
 
 FilterColumn::FilterColumn(GuiResources &res)
 : resources      (res)
@@ -37,7 +37,6 @@ void FilterColumn::resized()
 
     auto bounds = getLocalBounds();
 
-    // Equal-thirds split: filter / filter-ADSR / LFO.
     const int rowH    = bounds.getHeight() / 3;
     auto      filtArea = bounds.removeFromTop(rowH);
     auto      adsrArea = bounds.removeFromTop(rowH);
@@ -46,7 +45,6 @@ void FilterColumn::resized()
     filterAdsrPanel.setBounds(adsrArea);
     lfoPanel       .setBounds(bounds);
 
-    // Horizontal dividers between rows, inset from the column edges.
     dividerA = juce::Rectangle<int>(dividerInset,
                                     rowH - dividerThick / 2,
                                     getWidth() - dividerInset * 2,

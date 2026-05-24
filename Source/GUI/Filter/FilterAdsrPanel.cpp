@@ -9,7 +9,7 @@
 #include "FilterAdsrPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 {

@@ -10,12 +10,11 @@
 
 #include <JuceHeader.h>
 
-//============================================================
+//==============================================================================
 
 namespace DLBS
 {
-    /// Configures a slider's style, colors, and an always-visible value text box.
-    /// Text box is placed to the right of horizontal sliders, below vertical and rotary.
+    // Styles a slider with our textbox layout (right of horizontal, below others).
     inline void SetupSlider(juce::Component             *parent
                             , juce::Slider              &slider
                             , juce::Slider::SliderStyle  style
@@ -29,10 +28,7 @@ namespace DLBS
                               ? juce::Slider::TextBoxRight
                               : juce::Slider::TextBoxBelow;
 
-        // 48 px on the right (TextBoxRight, ADSR sliders) fits "100 ms"–"999 ms";
-        // 56 px below (TextBoxBelow, rotaries + verticals) fits "-XX.X dB" values
-        // like "-19.2 dB" / "-12.0 dB" without truncation. Shorter-content sliders
-        // (Mono Below, LFO Freq, Bend, etc.) just gain unused horizontal padding.
+        // 48px right fits "100 ms"-"999 ms"; 56px below fits "-XX.X dB".
         const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 48 : 56;
         const int tbH = 14;
 
@@ -52,7 +48,6 @@ namespace DLBS
         parent->addAndMakeVisible(slider);
     }
 
-    /// Configures a label's font/text/color; adds to parent.
     inline void SetupLabel(juce::Component       *parent
                            , juce::Label         &label
                            , juce::String         labelText
@@ -69,7 +64,7 @@ namespace DLBS
         parent->addAndMakeVisible(label);
     }
 
-    /// Configures a small uppercase letter-spaced section header label and adds to parent.
+    // Small uppercase letter-spaced section header.
     inline void SetupSectionLabel(juce::Component *parent
                                   , juce::Label   &label
                                   , juce::String   text
@@ -86,7 +81,7 @@ namespace DLBS
         parent->addAndMakeVisible(label);
     }
 
-    /// Formats a slider value as ms (under 1s) or s (>= 1s), useful for ADSR times.
+    // Formats as "X ms" under 1s, "X.XX s" otherwise. Used by ADSR sliders.
     inline juce::String FormatTime(double seconds)
     {
         if (seconds < 1.0)
@@ -95,7 +90,7 @@ namespace DLBS
         return juce::String(seconds, 2) + " s";
     }
 
-    /// Formats a linear gain (0..N) as dB, with -inf for near-silence.
+    // Linear gain -> dB, with "-inf" for near-silence.
     inline juce::String FormatGainDb(double linear)
     {
         if (linear <= 0.0001)
@@ -105,14 +100,13 @@ namespace DLBS
         return juce::String(db, 1) + " dB";
     }
 
-    /// Formats a 0..1 value as a percent.
     inline juce::String FormatPercent(double v)
     {
         return juce::String((int)std::round(v * 100.0)) + "%";
     }
 
-    /// Maps the cutoff slider position (1..100, log-tapered) onto Hz/kHz for display.
-    /// Mirrors FilterModulation::KeyMapFixed (20Hz..17kHz) — display only.
+    // Cutoff slider position (1..100) -> Hz/kHz. Display only — mirrors
+    // FilterModulation::KeyMapFixed (20Hz..17kHz).
     inline juce::String FormatCutoffHz(double pos)
     {
         const float hz = juce::jmap((float)pos, 1.0f, 100.0f, 20.0f, 17000.0f);
@@ -123,8 +117,7 @@ namespace DLBS
         return juce::String(hz / 1000.0f, 2) + " kHz";
     }
 
-    /// Installs a value-display formatter on a slider. The reverse parser strips
-    /// non-numeric trailing text so users can type either "1.2" or "1.2 s".
+    // Reverse parser strips non-numeric trailing text so users can type "1.2" or "1.2 s".
     inline void SetSliderTextFormat(juce::Slider                          &slider
                                     , std::function<juce::String(double)> formatter)
     {
@@ -136,7 +129,6 @@ namespace DLBS
         slider.updateText();
     }
 
-    /// Configures a combobox's items; adds to parent.
     inline void SetupComboBox(juce::Component     *parent
                               , juce::ComboBox    &box
                               , juce::StringArray  items)
@@ -148,13 +140,9 @@ namespace DLBS
         parent->addAndMakeVisible(box);
     }
 
-    //========================================================================
-    // MIDI-Learn-aware attachment helpers.
-    // These wrap the standard APVTS attachment construction and *also* tag the
-    // component's properties with the parameterID. The MIDI Learn glass-pane
-    // reads that property to figure out which param a clicked component drives.
-    // Use these everywhere a learnable APVTS attachment is created.
-    //========================================================================
+    // Attach* helpers tag the component with "paramID" so MidiLearnOverlay
+    // can resolve a click to its bound APVTS parameter. Always use these for
+    // learnable controls.
 
     inline std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>
     AttachSlider(juce::AudioProcessorValueTreeState &apvts,
@@ -174,11 +162,7 @@ namespace DLBS
         return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID, button);
     }
 
-    /// Single chokepoint for hover-tooltip text. Routed through here so the
-    /// (currently empty) strings can be searched/replaced as a batch, and so
-    /// we have one place to gate or transform tip text later if needed.
-    /// Pass any SettableTooltipClient-derived control (Slider, Button, ComboBox,
-    /// Label, etc.).
+    // Single chokepoint for tooltip text so we can grep / gate / transform later.
     inline void SetTip(juce::SettableTooltipClient &control, const juce::String &text)
     {
         control.setTooltip(text);

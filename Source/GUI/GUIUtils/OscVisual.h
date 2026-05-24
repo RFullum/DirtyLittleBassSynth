@@ -16,9 +16,8 @@
 
 //==============================================================================
 
-/// Visualizes the morph blend between three wavetable shapes for the main, sub, or
-/// filter-LFO oscillators. Reads the morph parameter on the UI thread and computes
-/// its own waveform; no audio-thread coupling.
+// Renders the morph blend between three wavetable shapes. UI-thread only;
+// computes its own waveform from the morph parameter, no audio coupling.
 class OscVisual
     : public juce::Component
 {
@@ -28,9 +27,9 @@ public:
 
     void paint(juce::Graphics &) override;
     void resized() override;
-    
+
     void Init(std::atomic<float> *morphParamIn, bool useSquareIn, std::atomic<float> *gainParamIn = nullptr);
-    void Update();  // Reads the morph parameter, rebuilds the displayed path, repaints. Call from the editor's timer.
+    void Update();
     void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
     
 private:
@@ -39,7 +38,7 @@ private:
     static constexpr int waveTableSize = 1024;
 
     std::atomic<float> *morphParam = nullptr;
-    std::atomic<float> *gainParam  = nullptr;     // optional; scales displayed amplitude (0..1)
+    std::atomic<float> *gainParam  = nullptr;     // optional; scales display amplitude
     bool                useSquare  = false;
 
     Wavetable       wtSine;

@@ -24,20 +24,16 @@ void FilterVisual::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    // Background fill
     g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
     g.fillRoundedRectangle(visualBox, cornerRound);
 
-    // Center reference line
     const float cy = (float)getHeight() * 0.5f;
     g.setColour(lineColor.withAlpha(0.15f));
     g.drawLine(0.0f, cy, (float)getWidth(), cy, 0.5f);
 
-    // Faint area fill below the curve
     g.setColour(lineColor.withAlpha(0.08f));
     g.fillPath(filterArea);
 
-    // Filter response line
     g.setColour(lineColor);
     g.strokePath(filterShape,
                  juce::PathStrokeType(1.4f,
@@ -80,8 +76,7 @@ void FilterVisual::buildPaths(int type)
     const float halfHeight = (float)getHeight() * 0.5f;
     const float resMap     = juce::jmap(resonance, 1.0f, 2.0f, 0.0f, halfHeight * 2.5f);
 
-    // rolloffControl moves the cubic control points horizontally to shape the
-    // steepness of the curve per filter order.
+    // Horizontal cubic-control offset per filter order — drives curve steepness.
     float rolloffControl;
     switch (type)
     {
@@ -96,9 +91,8 @@ void FilterVisual::buildPaths(int type)
 
     const float x1 = reducer;
     const float y1 = halfHeight;
-    // cutoffFreq is the normalised slider position (0..1). The DSP applies an
-    // exponential frequency map per-note; for the visual we just lay it out linearly
-    // across the panel width — the slider feel is what carries the perceptual curve.
+    // cutoffFreq is the 0..1 slider position. The visual maps it linearly here;
+    // the DSP applies its own exponential per-note frequency curve.
     const float x2 = juce::jmap(juce::jlimit(0.0f, 1.0f, cutoffFreq),
                                 0.0f, 1.0f,
                                 15.0f, (float)getWidth() - reducer);
@@ -111,13 +105,12 @@ void FilterVisual::buildPaths(int type)
     juce::Point<float> ctrlPt1  (juce::jmax(reducer, x2 - rolloffControl), halfHeight);
     juce::Point<float> ctrlPt2  (juce::jmax(reducer, x2 - rolloffControl), y2);
 
-    // --- Line path: the response curve only (open, for stroking).
     filterShape.startNewSubPath(origin);
     filterShape.cubicTo        (ctrlPt1, ctrlPt2, maxFilter);
 
     if (type == 4)
     {
-        // Notch climbs back up to the centerline at the right edge.
+        // Notch: climb back to the centerline at the right edge.
         juce::Point<float> maxFreq(rightX, halfHeight);
         juce::Point<float> ctrlPt3(juce::jmin(rightX, x2 + rolloffControl), y2);
         juce::Point<float> ctrlPt4(juce::jmin(rightX, x2 + rolloffControl), halfHeight);
@@ -126,12 +119,11 @@ void FilterVisual::buildPaths(int type)
     }
     else
     {
-        // LPF: extend along the bottom past the cutoff so the line reads as
-        // "rolled off to silence."
+        // LPF: extend along the bottom so the line reads as rolled-off.
         filterShape.lineTo(rightX, bottomY);
     }
 
-    // --- Area path: same curve, closed at the bottom for a faint fill below.
+    // Same curve, closed at the bottom for the faint fill underneath.
     filterArea = filterShape;
     filterArea.lineTo(rightX, bottomY);
     filterArea.lineTo(x1,     bottomY);

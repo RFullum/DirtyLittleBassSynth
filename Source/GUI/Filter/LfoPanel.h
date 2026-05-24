@@ -13,13 +13,8 @@
 #include "OscVisual.h"
 #include "SegmentedControl.h"
 
-//============================================================
+//==============================================================================
 
-/// Bottom-right section: filter LFO shape (with visual) plus rate (free-run Hz
-/// or tempo-synced subdivision) and amount sliders.
-/// FRQ mode shows the Hz slider; SYNC mode swaps it for a discrete subdivision
-/// selector that locks to host transport via the per-block snapshot in
-/// BassSynthVoice::PrepareDspForBlock.
 class LfoPanel
     : public  juce::Component
     , private juce::AudioProcessorValueTreeState::Listener
@@ -31,15 +26,10 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Called from the editor's timer so the LFO shape visual rebuilds its path.
     void Update();
 
 private:
-    /// Listener callback — fires on user toggle of FRQ/SYNC and on host automation.
     void parameterChanged(const juce::String &parameterID, float newValue) override;
-
-    /// Toggles visibility of lfoFreqSlider vs lfoSyncDivSlider and updates the
-    /// "Freq" / "Sync" label based on the current sync mode.
     void RefreshSyncModeLook();
 
     GuiResources &resources;
@@ -51,10 +41,10 @@ private:
     juce::Slider     lfoSyncDivSlider;    // visible in SYNC mode
     juce::Slider     lfoAmountSlider;
 
-    SegmentedControl lfoSyncControl;      // FRQ / SYNC toggle
+    SegmentedControl lfoSyncControl;
 
     juce::Label sectionLabel;
-    juce::Label lfoRateLabel;             // "Freq" / "Sync"
+    juce::Label lfoRateLabel;             // "Freq" or "Sync" depending on mode
     juce::Label lfoAmountLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> shapeAtt;

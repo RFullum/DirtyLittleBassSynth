@@ -10,19 +10,12 @@
 
 #include <JuceHeader.h>
 
-//============================================================
+//==============================================================================
 
-/// Slider variant for dry/wet (mix) controls. Adds two click-to-set gestures on
-/// top of the standard juce::Slider behaviour:
-///   • Shift-click       → midpoint of the slider's range (typically 50% mix)
-///   • Cmd/Ctrl-click    → maximum of the slider's range  (typically 100% mix)
-///
-/// The OS-aware modifier comes from juce::ModifierKeys::commandModifier — Cmd
-/// on macOS, Ctrl on Windows/Linux — matching each platform's convention for
-/// "alternate-action click."
-///
-/// Works alongside juce::Slider::setDoubleClickReturnValue(true, 0.0) which is
-/// used elsewhere to drive double-click → 0% behaviour.
+// Slider extensions for mix controls:
+//   Shift-click    -> midpoint (50% mix)
+//   Cmd/Ctrl-click -> maximum  (100% mix)
+//   Double-click   -> 0% (via setDoubleClickReturnValue at the call site)
 class DryWetSlider
     : public juce::Slider
 {

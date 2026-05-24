@@ -8,7 +8,7 @@
 
 #include "ScopeVisual.h"
 
-//============================================================
+//==============================================================================
 
 ScopeVisual::ScopeVisual(const ScopeBuffer &sourceIn)
 : source   (sourceIn)
@@ -29,12 +29,10 @@ void ScopeVisual::paint(juce::Graphics &g)
     g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
     g.fillRoundedRectangle(visualBox, cornerRound);
 
-    // Faint zero line.
     const float cy = visualBox.getCentreY();
     g.setColour(lineColor.withAlpha(0.15f));
     g.drawLine(visualBox.getX(), cy, visualBox.getRight(), cy, 0.5f);
 
-    // Trace.
     g.setColour(lineColor);
     g.strokePath(scopePath
                  , juce::PathStrokeType(1.4f
@@ -68,9 +66,7 @@ void ScopeVisual::RebuildPath()
 {
     source.CopyLatest(scopeData, captureSamples);
 
-    // Find a positive-going zero crossing somewhere in the first
-    // (captureSamples - displaySamples) samples so we always have a full
-    // displaySamples window after the trigger.
+    // Trigger search confined to leave a full displaySamples window after it.
     const int searchLen = captureSamples - displaySamples;
     int       trig      = -1;
 

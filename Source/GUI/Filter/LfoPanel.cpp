@@ -9,7 +9,7 @@
 #include "LfoPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 LfoPanel::LfoPanel(GuiResources &res)
 : resources(res)
@@ -25,8 +25,7 @@ LfoPanel::LfoPanel(GuiResources &res)
     DLBS::SetupSlider(this, lfoSyncDivSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     DLBS::SetupSlider(this, lfoAmountSlider,  juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
-    // LFO shape slider sits directly under the LFO visual; suppress its value textbox
-    // so the slider track spans the full width of the visual above it.
+    // No textbox: track spans the full width of the visual above.
     lfoShapeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 
     lfoShapeSlider  .setLookAndFeel(res.dialLookAndFeel);
@@ -44,9 +43,8 @@ LfoPanel::LfoPanel(GuiResources &res)
     divAtt    = DLBS::AttachSlider(*res.apvts, "filtLFO_sync_div", lfoSyncDivSlider);
     amountAtt = DLBS::AttachSlider(*res.apvts, "filtLFO_amt",      lfoAmountSlider);
 
-    // Display the choice's text label ("1/8", "1/4D", etc.) in the slider's
-    // textbox by overriding textFromValueFunction. The slider attachment maps
-    // 0..count-1 integer values onto the choice indices.
+    // Display choice strings ("1/8", "1/4D", ...) instead of the underlying
+    // 0..count-1 integer the SliderAttachment surfaces.
     if (auto *divParam = dynamic_cast<juce::AudioParameterChoice *>(res.apvts->getParameter("filtLFO_sync_div")))
     {
         const auto &choices = divParam->choices;
@@ -57,11 +55,9 @@ LfoPanel::LfoPanel(GuiResources &res)
             return choices[idx];
         };
 
-        // Force the textbox to refresh now that the lambda is in place.
         lfoSyncDivSlider.updateText();
     }
 
-    // FRQ / SYNC toggle, attached to filtLFO_sync (bool param → 2 segments).
     lfoSyncControl.Setup(*res.apvts, "filtLFO_sync",
                          juce::StringArray({"FRQ", "SYNC"}),
                          accent, res.theme.structure, res.theme.textSecondary);
@@ -74,8 +70,6 @@ LfoPanel::LfoPanel(GuiResources &res)
 
     addAndMakeVisible(lfoVisual);
 
-    // Listen for FRQ/SYNC changes from any source (UI click, automation, preset
-    // recall). The listener flips slider visibility + label text.
     res.apvts->addParameterListener("filtLFO_sync", this);
 
     RefreshSyncModeLook();
@@ -94,7 +88,6 @@ LfoPanel::~LfoPanel()
 
 void LfoPanel::paint(juce::Graphics &)
 {
-    // Sub-components draw themselves; nothing custom for LfoPanel itself.
 }
 
 void LfoPanel::resized()
@@ -106,7 +99,6 @@ void LfoPanel::resized()
     sectionLabel.setBounds(bounds.removeFromTop(16));
     bounds.removeFromBottom(sectionSpacerSize);
 
-    // Right cluster: rate (Hz / sync) and amount vertical sliders side by side.
     auto slidersArea = bounds.removeFromRight(100);
     auto amtArea     = slidersArea.removeFromRight(slidersArea.proportionOfWidth(0.5f));
 
@@ -114,11 +106,10 @@ void LfoPanel::resized()
     lfoAmountSlider .setBounds(amtArea);
 
     lfoRateLabel    .setBounds(slidersArea.removeFromTop(sliderLabelH));
-    // Both rate sliders share the same area; visibility is toggled by the sync mode.
+    // Both rate sliders share bounds; RefreshSyncModeLook flips visibility.
     lfoFreqSlider   .setBounds(slidersArea);
     lfoSyncDivSlider.setBounds(slidersArea);
 
-    // Bottom strip: FRQ / SYNC toggle on the left, room left for future use.
     auto syncRow = bounds.removeFromBottom(25).reduced(sectionSpacerSize * 2, sectionSpacerSize);
     syncRowRect  = syncRow;
 

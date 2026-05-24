@@ -11,12 +11,10 @@
 #include <JuceHeader.h>
 #include "ScopeBuffer.h"
 
-//============================================================
+//==============================================================================
 
-/// Oscilloscope display. Pulls samples from a ScopeBuffer each timer tick, finds
-/// a positive-going zero crossing for waveform stability, and renders the
-/// resulting trace as a juce::Path. Background gradient + faint zero-line match
-/// the OscVisual / AdsrVisual style.
+// Oscilloscope: pulls from ScopeBuffer each tick, triggers on a positive-going
+// zero crossing for waveform stability, paints the trace as a juce::Path.
 class ScopeVisual
     : public juce::Component
 {
@@ -27,11 +25,7 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Reads the latest samples from the buffer, applies the trigger, and
-    /// repaints. Call from the editor's timer.
     void Update();
-
-    /// Sets the trace, background, and bottom-fade colors.
     void SetColors(juce::Colour line, juce::Colour background, juce::Colour fade);
 
 private:

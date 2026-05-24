@@ -10,11 +10,8 @@
 
 #include <JuceHeader.h>
 
-//============================================================
+//==============================================================================
 
-/// Renders an attack/decay/sustain/release envelope curve from APVTS parameters.
-/// Lives on the UI thread; the editor's timer drives Update() which re-reads the
-/// four atomic parameter pointers and rebuilds the path.
 class AdsrVisual
     : public juce::Component
 {

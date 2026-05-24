@@ -24,8 +24,7 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Rebuilds the displayed shape from the current filter type / cutoff / resonance.
-    /// filtType: 1 = -12dB LPF, 2 = -24dB LPF, 3 = -48dB LPF, 4 = Notch.
+    // filtType: 1 = -12dB LPF, 2 = -24dB LPF, 3 = -48dB LPF, 4 = Notch.
     void drawFilterShape(int filtType, float cutoff, float res);
 
     void setColors(juce::Colour line, juce::Colour background, juce::Colour fade);

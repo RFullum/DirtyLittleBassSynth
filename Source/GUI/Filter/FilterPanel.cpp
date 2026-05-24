@@ -9,7 +9,7 @@
 #include "FilterPanel.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 FilterPanel::FilterPanel(GuiResources &res)
 : resources(res)
@@ -86,12 +86,8 @@ void FilterPanel::resized()
 
 void FilterPanel::Update()
 {
-    // Compute the effective cutoff / resonance in slider-position space (0..1)
-    // by stacking the env and LFO modulations on top of the base slider values.
-    // This is a deliberately simpler model than the DSP (which works in Hz with
-    // exponential mapping and asymmetric LFO headroom) — the visual already
-    // operates in slider space, and the animation only needs to read as "the
-    // filter is being pushed around," not be sample-accurate.
+    // Slider-position-space approximation of the DSP's Hz-space modulation —
+    // good enough visually, much cheaper.
     const float baseCutoff = (float) cutoffSlider.getValue();
     const float baseRes    = (float) resSlider   .getValue();
 
@@ -103,7 +99,7 @@ void FilterPanel::Update()
     const float lfoAmt     = lfoAmtPtr    != nullptr ? lfoAmtPtr   ->load() : 0.0f;
 
     const float cutoffHeadroomUp   = (1.0f - baseCutoff) * coAmt;
-    const float cutoffHeadroomDown = baseCutoff          * lfoAmt;   // LFO can pull below baseline
+    const float cutoffHeadroomDown = baseCutoff          * lfoAmt;   // -ve LFO pulls below baseline
     const float cutoffHeadroomLfoU = (1.0f - baseCutoff) * lfoAmt;
 
     const float envCutoffOffset = envVal * cutoffHeadroomUp;

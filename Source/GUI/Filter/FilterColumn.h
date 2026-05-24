@@ -14,10 +14,8 @@
 #include "FilterAdsrPanel.h"
 #include "LfoPanel.h"
 
-//============================================================
+//==============================================================================
 
-/// Filter column. Stacks the filter panel, the filter-ADSR panel, and the LFO
-/// panel from top to bottom. Spans the full body height between header and footer.
 class FilterColumn
     : public juce::Component
 {
@@ -27,7 +25,6 @@ public:
     void paint  (juce::Graphics &) override;
     void resized()                  override;
 
-    /// Forwarded by the editor's timer.
     void Update();
 
 private:

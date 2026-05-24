@@ -8,7 +8,7 @@
 
 #include "AdsrVisual.h"
 
-//============================================================
+//==============================================================================
 
 AdsrVisual::AdsrVisual()
 : lineColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
@@ -25,16 +25,13 @@ void AdsrVisual::paint(juce::Graphics &g)
     g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
     g.fillRoundedRectangle(visualBox, cornerRound);
 
-    // Faint baseline at zero
     const float baseY = visualBox.getBottom() - 1.0f;
     g.setColour(lineColor.withAlpha(0.15f));
     g.drawLine(visualBox.getX(), baseY, visualBox.getRight(), baseY, 0.5f);
 
-    // Faint area under the envelope
     g.setColour(lineColor.withAlpha(0.08f));
     g.fillPath(envArea);
 
-    // Envelope line
     g.setColour(lineColor);
     g.strokePath(envShape, juce::PathStrokeType(1.4f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
@@ -86,9 +83,7 @@ void AdsrVisual::RebuildPath()
     const float s = juce::jlimit(0.0f, 1.0f, sustainParam->load());
     const float r = releaseParam->load();
 
-    // Allocate a fixed-width hold segment so the sustain level is always visible.
-    // Hold width tracks the envelope's other times so short envelopes still show
-    // the plateau without dwarfing it on long ones.
+    // Synthetic hold segment so the sustain plateau is always visible at any total length.
     const float hold      = juce::jmax(0.25f, (a + d + r) * 0.25f);
     const float totalTime = juce::jmax(0.001f, a + d + hold + r);
 

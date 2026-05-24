@@ -25,19 +25,16 @@ void OutMeter::paint(juce::Graphics &g)
 {
     constexpr float corner = 1.5f;
 
-    // Per-channel clip strips (top)
     g.setColour(leftClipping ? clipLitColor : clipDimColor);
     g.fillRoundedRectangle(leftClipRect.toFloat(), corner);
 
     g.setColour(rightClipping ? clipLitColor : clipDimColor);
     g.fillRoundedRectangle(rightClipRect.toFloat(), corner);
 
-    // Per-channel level meter backgrounds
     g.setColour(levelBackColor);
     g.fillRoundedRectangle(leftMeterBack .toFloat(), corner);
     g.fillRoundedRectangle(rightMeterBack.toFloat(), corner);
 
-    // Level fills
     g.setColour(levelColor);
     g.fillRoundedRectangle(leftMeterLevel .toFloat(), corner);
     g.fillRoundedRectangle(rightMeterLevel.toFloat(), corner);

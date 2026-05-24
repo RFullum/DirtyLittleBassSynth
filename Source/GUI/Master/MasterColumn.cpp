@@ -9,7 +9,7 @@
 #include "MasterColumn.h"
 #include "GuiHelpers.h"
 
-//============================================================
+//==============================================================================
 
 MasterColumn::MasterColumn(GuiResources &res)
 : resources(res)
@@ -36,7 +36,6 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     DLBS::SetSliderTextFormat(masterGainSlider, DLBS::FormatGainDb);
 
-    // === Limiter Ceiling ===
     ceilingOnButton.setClickingTogglesState(true);
     ceilingOnButton.setColour              (juce::TextButton::buttonColourId,   res.theme.structure);
     ceilingOnButton.setColour              (juce::TextButton::buttonOnColourId, res.theme.pinkAccent.withAlpha(0.25f));
@@ -59,11 +58,8 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     ceilingAtt = DLBS::AttachSlider(*res.apvts, "limiter_ceiling", ceilingSlider);
 
-    // Listen for limiter_on changes from any source (UI click, automation, preset
-    // recall). The listener updates the button text + alpha of the ceiling controls.
     res.apvts->addParameterListener("limiter_on", this);
 
-    // === Haas Widener (placeholder). Bipolar slider; center = mono. ===
     DLBS::SetupSlider(this
                       , wideSlider
                       , juce::Slider::SliderStyle::LinearHorizontal
@@ -76,13 +72,11 @@ MasterColumn::MasterColumn(GuiResources &res)
     wideSlider.setTextBoxStyle          (juce::Slider::NoTextBox, false, 0, 0);
     wideSlider.setDoubleClickReturnValue(true, 0.0);
 
-    // Tells OtherLookAndFeel::drawLinearSlider to fill from the centre of the track
-    // to the thumb instead of from the left edge.
+    // Read by OtherLookAndFeel::drawLinearSlider: fill from track centre, not left edge.
     wideSlider.getProperties().set("bipolarFill", true);
 
     wideAtt = DLBS::AttachSlider(*res.apvts, "master_wide", wideSlider);
 
-    // === Bass Mono-izer crossover (placeholder) ===
     DLBS::SetupSlider(this
                       , monoCrossoverSlider
                       , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
@@ -108,7 +102,6 @@ MasterColumn::MasterColumn(GuiResources &res)
         addAndMakeVisible(*scopeVisual);
     }
 
-    // Set initial button text + look from the current parameter value.
     ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
     RefreshCeilingEnabledLook();
 
@@ -126,8 +119,7 @@ MasterColumn::~MasterColumn()
 
 void MasterColumn::paint(juce::Graphics &g)
 {
-    // GR meter — vertical bar that fills downward from the top as the limiter
-    // pulls gain. Display range: 0..maxGRDb dB.
+    // GR meter fills top-down. Display range 0..maxGRDb dB.
     constexpr float maxGRDb = 12.0f;
 
     g.setColour(resources.theme.structure);
@@ -176,10 +168,7 @@ void MasterColumn::resized()
     sectionLabel.setBounds(bounds.removeFromTop(sectionLabelHeight).reduced(8, 0));
     bounds.removeFromTop(gap);
 
-    // === Top: Out Gain rotary | Ceiling rotary, side by side ===
-    // Each cell: label on top, rotary in the middle, optional toggle button
-    // pinned to the bottom (centred under the rotary). Currently only the
-    // ceiling cell uses a button.
+    // Each top cell: label, rotary, optional toggle pinned to the bottom.
     auto knobRow     = bounds.removeFromTop(knobRowHeight);
     auto outGainCell = knobRow.removeFromLeft(knobRow.getWidth() / 2);
     auto ceilingCell = knobRow;
@@ -200,7 +189,6 @@ void MasterColumn::resized()
 
     bounds.removeFromTop(gap);
 
-    // === Bottom-up: mono-izer, widener, output meter (with GR meter to the right) ===
     auto monoRow       = bounds.removeFromBottom(monoRowHeight);
     auto monoLabelArea = monoRow.removeFromTop(monoLabelHeight);
     monoCrossoverLabel .setBounds(monoLabelArea);
@@ -224,7 +212,6 @@ void MasterColumn::resized()
 
     bounds.removeFromBottom(gap);
 
-    // === Middle: scope fills the remaining space (square-ish in a typical column) ===
     if (scopeVisual != nullptr)
         scopeVisual->setBounds(bounds.reduced(2, 0));
 }

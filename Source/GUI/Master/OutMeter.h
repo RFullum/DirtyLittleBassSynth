@@ -14,7 +14,6 @@
 
 //==============================================================================
 
-/// Stereo output meter: per-channel level bars with a clip strip at the top of each.
 class OutMeter
     : public juce::Component
 {
@@ -25,10 +24,7 @@ public:
     void paint(juce::Graphics &) override;
     void resized() override;
 
-    /// Pushes new per-channel magnitudes into the meter and recomputes display heights.
     void outMeterLevel(float leftLevel, float rightLevel, float sampleRate);
-
-    /// Sets the colors of the level fill and the clip-strip lit state.
     void setColors(juce::Colour levelColor, juce::Colour clipColor);
 
 private:

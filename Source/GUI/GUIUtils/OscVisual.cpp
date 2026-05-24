@@ -8,7 +8,7 @@
 
 #include "OscVisual.h"
 
-//============================================================
+//==============================================================================
 
 OscVisual::OscVisual()
 : lineColor(juce::Colour((juce::uint8)255, (juce::uint8)94, (juce::uint8)0))
@@ -32,20 +32,16 @@ void OscVisual::paint(juce::Graphics &g)
 {
     constexpr float cornerRound = 2.0f;
 
-    // Background fill
     g.setGradientFill     (juce::ColourGradient::vertical(bgColor, fadeColor, visualBox));
     g.fillRoundedRectangle(visualBox, cornerRound);
 
-    // Center reference line
     const float cy = (float)getHeight() * 0.5f;
     g.setColour(lineColor.withAlpha(0.15f));
     g.drawLine(0.0f, cy, (float)getWidth(), cy, 0.5f);
 
-    // Faint area fill below the wave
     g.setColour(lineColor.withAlpha(0.08f));
     g.fillPath(oscArea);
 
-    // Wave line
     g.setColour(lineColor);
     g.strokePath(oscShape,
                  juce::PathStrokeType(1.4f,
@@ -87,7 +83,6 @@ void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colo
 
 void OscVisual::RebuildPath()
 {
-    // Read the morph parameter and convert to per-shape gain levels.
     const float sinLevel    = morphControl.SinMorphGain  (morphParam);
     const float centerLevel = morphControl.SpikeMorphGain(morphParam);
     const float sawLevel    = morphControl.SawMorphGain  (morphParam);
@@ -128,7 +123,6 @@ void OscVisual::RebuildPath()
         return juce::jmap(sampleAt(i), halfHeight, heightReduce);
     };
 
-    // Connected line path through every wavetable sample.
     oscShape.startNewSubPath(sampleX(0), sampleY(0));
     for (int i = 1; i < waveTableSize; ++i)
         oscShape.lineTo(sampleX(i), sampleY(i));
