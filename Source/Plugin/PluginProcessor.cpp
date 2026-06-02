@@ -254,6 +254,7 @@ bool DirtyLittleBassSynthAudioProcessor::isBusesLayoutSupported(const BusesLayou
 void DirtyLittleBassSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
+    buffer.clear();
 
     for (const auto meta : midiMessages)
     {
