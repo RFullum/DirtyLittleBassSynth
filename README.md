@@ -1,6 +1,23 @@
 # Dirty Little Bass Synth
 
+[![Latest release](https://img.shields.io/github/v/release/RFullum/DirtyLittleBassSynth?label=download&style=for-the-badge)](https://github.com/RFullum/DirtyLittleBassSynth/releases/latest)
+
 The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get big, disgustingly aggressive Bass tones quickly.
+
+---
+
+## Download
+
+Grab the latest macOS installer from the [Releases page](https://github.com/RFullum/DirtyLittleBassSynth/releases/latest). The `.pkg` installs the VST3, AU, and Standalone. Signed and notarized for macOS.
+
+**Install locations:**
+
+- VST3 → `/Library/Audio/Plug-Ins/VST3/Dirty Little Bass Synth.vst3`
+- AU → `/Library/Audio/Plug-Ins/Components/Dirty Little Bass Synth.component`
+- Standalone → `/Applications/Dirty Little Bass Synth.app`
+- User patches → `~/Library/Application Support/FullumMusic/Dirty Little Bass Synth/Patches/`
+
+**System requirements:** macOS 11 (Big Sur) or later. Universal binary (Apple Silicon + Intel).
 
 ---
 
