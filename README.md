@@ -2,6 +2,8 @@
 
 [![Latest release](https://img.shields.io/github/v/release/RFullum/DirtyLittleBassSynth?label=download&style=for-the-badge)](https://github.com/RFullum/DirtyLittleBassSynth/releases/latest)
 
+![Dirty Little Bass Synth UI](docs/dlbs-ui.png)
+
 The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get big, disgustingly aggressive Bass tones quickly.
 
 ---
