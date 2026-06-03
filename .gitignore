@@ -98,3 +98,6 @@ compile_commands.json
 *.tmp
 *.orig
 /B150987_AudioProgramming_Assignment_3.pdf
+
+# ---- Claude Code ----
+CLAUDE.md
