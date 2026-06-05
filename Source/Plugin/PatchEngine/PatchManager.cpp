@@ -487,7 +487,20 @@ juce::File PatchManager::ResolveFactoryPatchesDirectory()
    #if JUCE_MAC
     return exe.getChildFile("Contents/Resources/Patches");
    #else
-    return exe.getParentDirectory().getChildFile("Patches");
+    // Linux/Windows have no single canonical layout: a bare executable
+    // (Standalone) keeps patches next to the binary, while a VST3 bundle stores
+    // them under Contents/Resources/Patches — and the binary lives one level
+    // deeper in Contents/<arch>/. Probe both and return the first that exists,
+    // falling back to the next-to-binary path so the returned (possibly
+    // missing) dir is still well-defined.
+    auto nextToBinary    = exe.getParentDirectory().getChildFile("Patches");
+    auto bundleResources = exe.getParentDirectory().getParentDirectory()
+                              .getChildFile("Resources").getChildFile("Patches");
+
+    if (bundleResources.isDirectory())
+        return bundleResources;
+
+    return nextToBinary;
    #endif
 }
 

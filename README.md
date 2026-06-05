@@ -8,18 +8,79 @@ The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get
 
 ---
 
+## System Requirements
+
+**macOS**
+
+- macOS 11 (Big Sur) or later
+- Universal binary (Apple Silicon + Intel)
+- Formats: **VST3**, **AU**, **Standalone**
+
+**Linux**
+
+- 64-bit x86_64 distribution with **glibc 2.38 or newer**. The build is produced
+  on Debian 13 (trixie); current/recent distros (Debian 13, Ubuntu 24.04+, recent
+  Fedora/Arch) work, but older releases (e.g. Ubuntu 22.04, Debian 12) ship an
+  older glibc and will not load it.
+- A standard desktop audio/GUI stack (ALSA or JACK, X11, FreeType, Fontconfig) plus
+  OpenGL for the animated visualisers — present on any typical desktop Linux.
+- Formats: **VST3**, **Standalone** (no AU — that format is macOS-only)
+- ARM (aarch64) Linux is not currently provided; the build is x86_64 only.
+
+Windows presets exist in `CMakePresets.json` but haven't been exercised.
+
+---
+
 ## Download
 
-Grab the latest macOS installer from the [Releases page](https://github.com/RFullum/DirtyLittleBassSynth/releases/latest). The `.pkg` installs the VST3, AU, and Standalone. Signed and notarized for macOS.
+Grab the latest build from the [Releases page](https://github.com/RFullum/DirtyLittleBassSynth/releases/latest).
 
-**Install locations:**
+**macOS** — the `.pkg` installs the VST3, AU, and Standalone. Signed and notarized.
+
+**Linux** — two tarballs are provided:
+
+- **VST3** — extract into your personal VST3 folder, then rescan plug-ins in your DAW:
+
+  ```sh
+  mkdir -p ~/.vst3
+  tar -xzf DirtyLittleBassSynth-2.0.0-Linux-x86_64.vst3.tar.gz -C ~/.vst3
+  ```
+
+  For a system-wide install, extract into `/usr/lib/vst3` instead (needs `sudo`).
+
+- **Standalone** — extract anywhere and run the executable. Keep the bundled
+  `Patches/` folder next to the binary so the factory patches load:
+
+  ```sh
+  tar -xzf DirtyLittleBassSynth-2.0.0-Linux-x86_64.Standalone.tar.gz
+  cd "Dirty Little Bass Synth"
+  ./"Dirty Little Bass Synth"
+  ```
+
+See the System Requirements above for the glibc baseline.
+
+---
+
+## Where files land after install
+
+**macOS**
 
 - VST3 → `/Library/Audio/Plug-Ins/VST3/Dirty Little Bass Synth.vst3`
 - AU → `/Library/Audio/Plug-Ins/Components/Dirty Little Bass Synth.component`
 - Standalone → `/Applications/Dirty Little Bass Synth.app`
-- User patches → `~/Library/Application Support/FullumMusic/Dirty Little Bass Synth/Patches/`
 
-**System requirements:** macOS 11 (Big Sur) or later. Universal binary (Apple Silicon + Intel).
+User patches live at:
+`~/Library/Application Support/FullumMusic/Dirty Little Bass Synth/Patches/`
+
+**Linux**
+
+- VST3 → `~/.vst3/Dirty Little Bass Synth.vst3` (or `/usr/lib/vst3/` system-wide)
+- Standalone → wherever you extracted it
+
+User patches live at:
+`~/.config/FullumMusic/Dirty Little Bass Synth/Patches/`
+
+Factory patches travel inside the VST3 bundle (and beside the Standalone binary) and are read-only.
 
 ---
 
@@ -188,3 +249,58 @@ Crossover frequency rotary. Frequencies below this are summed to mono.
 ## Tooltips
 
 Hover any control to see its description. Toggle on/off via the title-bar right-click menu, or **F1** in standalone.
+
+---
+
+## Building from Source
+
+Requires CMake ≥ 3.22 and a C++20 compiler. JUCE is vendored as a git submodule.
+
+Clone with submodules:
+
+```sh
+git clone --recurse-submodules https://github.com/RFullum/DirtyLittleBassSynth.git
+cd DirtyLittleBassSynth
+```
+
+If you already cloned without `--recurse-submodules`:
+
+```sh
+git submodule update --init --recursive
+```
+
+### macOS
+
+The signed, notarized release is built with Projucer + Xcode from `Wavetable5.jucer`
+(see `scripts/package-and-notarize.sh`). The CMake presets below also build on macOS
+for local development (without signing):
+
+```sh
+cmake --preset=macos
+cmake --build --preset=macos-release
+```
+
+### Linux
+
+Uses the Ninja Multi-Config generator with the system compiler (GCC). Install the
+JUCE build dependencies first (Debian/Ubuntu names shown):
+
+```sh
+sudo apt install build-essential ninja-build cmake \
+    libasound2-dev libjack-jackd2-dev \
+    libfreetype-dev libfontconfig1-dev \
+    libx11-dev libxext-dev libxinerama-dev libxrandr-dev libxcursor-dev \
+    libxcomposite-dev libxrender-dev libgl-dev libcurl4-openssl-dev
+```
+
+Configure and build the released formats:
+
+```sh
+cmake --preset=linux
+cmake --build --preset=linux-release --target DirtyLittleBassSynth_VST3 DirtyLittleBassSynth_Standalone
+```
+
+The VST3 installs to `~/.vst3/Dirty Little Bass Synth.vst3`; the Standalone and its
+`Patches/` folder land in
+`build/linux/DirtyLittleBassSynth_artefacts/Release/Standalone/`. For development
+iteration, use `--preset=linux-debug` instead.

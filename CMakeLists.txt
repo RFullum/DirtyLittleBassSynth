@@ -151,6 +151,22 @@ elseif(UNIX)
                     "$<TARGET_FILE_DIR:DirtyLittleBassSynth_VST3>/../Resources/Patches"
             VERBATIM
             COMMENT "Copying factory presets into DirtyLittleBassSynth_VST3 (Linux)")
+
+        # COPY_PLUGIN_AFTER_BUILD installs the bundle to ~/.vst3 via JUCE's own
+        # POST_BUILD step, which runs BEFORE this one and so misses the presets
+        # staged above. Sync them into the installed copy too, so a freshly
+        # built VST3 loaded straight from ~/.vst3 has its factory patches.
+        # (Release tarballs are built from the build-tree artifact, which is
+        # already complete — this only fixes the dev auto-install.)
+        if(DEFINED ENV{HOME})
+            set(_installed_vst3_patches "$ENV{HOME}/.vst3/Dirty Little Bass Synth.vst3/Contents/Resources/Patches")
+            add_custom_command(TARGET DirtyLittleBassSynth_VST3 POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory "${_installed_vst3_patches}"
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        "${FACTORY_PRESETS_SRC}" "${_installed_vst3_patches}"
+                VERBATIM
+                COMMENT "Syncing factory presets into installed ~/.vst3 copy (Linux dev convenience)")
+        endif()
     endif()
     # Standalone: bare executable, presets live next to the binary.
     if(TARGET DirtyLittleBassSynth_Standalone)
