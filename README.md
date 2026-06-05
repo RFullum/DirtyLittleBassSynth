@@ -27,7 +27,13 @@ The Dirty Little Bass Synth is a monophonic wavetable Bass synth designed to get
 - Formats: **VST3**, **Standalone** (no AU — that format is macOS-only)
 - ARM (aarch64) Linux is not currently provided; the build is x86_64 only.
 
-Windows presets exist in `CMakePresets.json` but haven't been exercised.
+**Windows**
+
+- 64-bit Windows 10 or 11 (x64).
+- Self-contained — the Visual C++ Redistributable is **not** required (the MSVC
+  runtime is statically linked into the plug-in and Standalone).
+- Formats: **VST3**, **Standalone** (no AU — that format is macOS-only)
+- ARM (aarch64) Windows is not currently provided; the build is x64 only.
 
 ---
 
@@ -43,7 +49,7 @@ Grab the latest build from the [Releases page](https://github.com/RFullum/DirtyL
 
   ```sh
   mkdir -p ~/.vst3
-  tar -xzf DirtyLittleBassSynth-2.0.0-Linux-x86_64.vst3.tar.gz -C ~/.vst3
+  tar -xzf DirtyLittleBassSynth-2.0.1-Linux-x86_64.vst3.tar.gz -C ~/.vst3
   ```
 
   For a system-wide install, extract into `/usr/lib/vst3` instead (needs `sudo`).
@@ -52,12 +58,32 @@ Grab the latest build from the [Releases page](https://github.com/RFullum/DirtyL
   `Patches/` folder next to the binary so the factory patches load:
 
   ```sh
-  tar -xzf DirtyLittleBassSynth-2.0.0-Linux-x86_64.Standalone.tar.gz
+  tar -xzf DirtyLittleBassSynth-2.0.1-Linux-x86_64.Standalone.tar.gz
   cd "Dirty Little Bass Synth"
   ./"Dirty Little Bass Synth"
   ```
 
 See the System Requirements above for the glibc baseline.
+
+**Windows** — two zips are provided:
+
+- **VST3** — download `…-Windows-x86_64.vst3.zip` and extract the
+  `Dirty Little Bass Synth.vst3` folder into the standard system VST3 directory:
+
+  ```
+  C:\Program Files\Common Files\VST3\
+  ```
+
+  Right-click the zip → **Extract All…**, then move the extracted
+  `Dirty Little Bass Synth.vst3` folder into that location (you'll be prompted
+  for administrator permission, since it's under `Program Files`). Rescan
+  plug-ins in your DAW. Because the build is unsigned, your browser may warn the
+  zip is "not commonly downloaded" — choose **Keep**. If extraction is blocked,
+  right-click the zip → **Properties** → tick **Unblock** → **OK** first.
+
+- **Standalone** — download `…-Windows-x86_64.Standalone.zip` and extract
+  anywhere. Run `Dirty Little Bass Synth.exe`, keeping the bundled `Patches/`
+  folder next to it so the factory patches load.
 
 ---
 
@@ -79,6 +105,14 @@ User patches live at:
 
 User patches live at:
 `~/.config/FullumMusic/Dirty Little Bass Synth/Patches/`
+
+**Windows**
+
+- VST3 → `C:\Program Files\Common Files\VST3\Dirty Little Bass Synth.vst3`
+- Standalone → wherever you extracted it
+
+User patches live at:
+`%APPDATA%\FullumMusic\Dirty Little Bass Synth\Patches\`
 
 Factory patches travel inside the VST3 bundle (and beside the Standalone binary) and are read-only.
 
@@ -304,3 +338,25 @@ The VST3 installs to `~/.vst3/Dirty Little Bass Synth.vst3`; the Standalone and 
 `Patches/` folder land in
 `build/linux/DirtyLittleBassSynth_artefacts/Release/Standalone/`. For development
 iteration, use `--preset=linux-debug` instead.
+
+### Windows
+
+Requires **Visual Studio 2026** (the v18 toolset) with the *Desktop development
+with C++* workload. The bundled CMake works — either add it to your `PATH` or
+run from a *Developer PowerShell for VS*. Both the plug-in and the Standalone
+link the MSVC runtime statically, so the artefacts need no Visual C++
+Redistributable.
+
+Configure and build the released formats:
+
+```powershell
+cmake --preset=windows
+cmake --build --preset=windows-release --target DirtyLittleBassSynth_VST3 DirtyLittleBassSynth_Standalone
+```
+
+The build does **not** auto-install on Windows (the system VST3 folder needs
+admin rights). The artefacts land under
+`build\windows\DirtyLittleBassSynth_artefacts\Release\` — copy the VST3 into
+`C:\Program Files\Common Files\VST3\` yourself, or load it from the build tree in
+your DAW. The Standalone `.exe` and its `Patches/` folder sit in the `Standalone\`
+subfolder. For development iteration, use `--preset=windows-debug`.

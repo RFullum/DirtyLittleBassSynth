@@ -10,12 +10,38 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# --- Windows C++ runtime ------------------------------------------------------
+# Statically link the MSVC runtime (/MT, /MTd for Debug) so the shipped VST3 and
+# Standalone are self-contained and do NOT require end users to have the Visual
+# C++ Redistributable installed. Set before add_subdirectory(JUCE) so every
+# target — JUCE's static libs and our own sources alike — links the runtime the
+# same way; a mismatch produces LNK4098 / runtime-heap corruption. Relies on
+# policy CMP0091 (MSVC runtime selected via abstraction), default-NEW on
+# CMake 3.15+.
+if(WIN32)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 # --- JUCE ---------------------------------------------------------------------
 # JUCE 8 is vendored as a git submodule at ./JUCE (pinned to the same commit as
 # the Center Space project for cross-project consistency).
 add_subdirectory(JUCE)
 
 # --- Plugin target ------------------------------------------------------------
+# COPY_PLUGIN_AFTER_BUILD auto-installs the freshly-built plugin so it loads in a
+# DAW without a manual copy. On macOS/Linux JUCE targets a user-writable dir
+# (~/Library/Audio/Plug-Ins, ~/.vst3), so it just works. On Windows the only
+# standard VST3 location is the SYSTEM path C:\Program Files\Common Files\VST3,
+# which needs administrator rights — an unelevated build fails the post-build
+# copy (copyDir.cmake / MSB3073). We package the zips straight from the build
+# artefacts, so the auto-install is unnecessary on Windows; disable it there to
+# keep non-admin builds green.
+if(WIN32)
+    set(DLBS_COPY_AFTER_BUILD FALSE)
+else()
+    set(DLBS_COPY_AFTER_BUILD TRUE)
+endif()
+
 # Settings mirror Wavetable5.jucer:
 #   pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
 #   pluginManufacturerCode="FulM"  pluginCode="Dlbs"
@@ -43,7 +69,7 @@ juce_add_plugin(DirtyLittleBassSynth
     VST3_CATEGORIES             Instrument Synth
     AU_MAIN_TYPE                kAudioUnitType_MusicDevice
     HARDENED_RUNTIME_ENABLED    TRUE
-    COPY_PLUGIN_AFTER_BUILD     TRUE)
+    COPY_PLUGIN_AFTER_BUILD     ${DLBS_COPY_AFTER_BUILD})
 
 # Compile-time JUCE options. Mirrors the .jucer JUCEOPTIONS plus a couple of
 # build-system specifics:
@@ -60,7 +86,13 @@ target_compile_definitions(DirtyLittleBassSynth PUBLIC
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     JUCE_WEB_BROWSER=0
     JUCE_DISPLAY_SPLASH_SCREEN=0
-    JUCE_REPORT_APP_USAGE=0)
+    JUCE_REPORT_APP_USAGE=0
+    # MSVC's <cmath> only exposes M_PI etc. when _USE_MATH_DEFINES is set before
+    # <cmath> is first included. Oscillators.h defines it locally, but JuceHeader.h
+    # pulls in <cmath> earlier in the translation unit, so the local define lands
+    # after the include guard has already closed. Set it project-wide for MSVC so
+    # it is in effect before any include. Inert on Clang/GCC (POSIX defines M_PI).
+    $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>)
 
 # --- Sources ------------------------------------------------------------------
 # Glob the Source/ tree (CONFIGURE_DEPENDS re-globs when files are added/removed).
@@ -194,6 +226,32 @@ elseif(UNIX)
                     "$<TARGET_FILE_DIR:DirtyLittleBassSynth_Standalone>/Patches"
             VERBATIM
             COMMENT "Copying factory presets next to DirtyLittleBassSynth_Standalone (Linux)")
+    endif()
+elseif(WIN32)
+    # Windows mirrors the Linux layout (cmake -E commands are generator-agnostic).
+    # VST3: the .dll lands in <…>.vst3/Contents/x86_64-win/, so ../Resources
+    # resolves to the bundle's Contents/Resources — the second probe path in
+    # ResolveFactoryPatchesDirectory().
+    if(TARGET DirtyLittleBassSynth_VST3)
+        add_custom_command(TARGET DirtyLittleBassSynth_VST3 POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                    "$<TARGET_FILE_DIR:DirtyLittleBassSynth_VST3>/../Resources/Patches"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    "${FACTORY_PRESETS_SRC}"
+                    "$<TARGET_FILE_DIR:DirtyLittleBassSynth_VST3>/../Resources/Patches"
+            VERBATIM
+            COMMENT "Copying factory presets into DirtyLittleBassSynth_VST3 (Windows)")
+    endif()
+    # Standalone: bare .exe, presets live next to the binary (first probe path).
+    if(TARGET DirtyLittleBassSynth_Standalone)
+        add_custom_command(TARGET DirtyLittleBassSynth_Standalone POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                    "$<TARGET_FILE_DIR:DirtyLittleBassSynth_Standalone>/Patches"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    "${FACTORY_PRESETS_SRC}"
+                    "$<TARGET_FILE_DIR:DirtyLittleBassSynth_Standalone>/Patches"
+            VERBATIM
+            COMMENT "Copying factory presets next to DirtyLittleBassSynth_Standalone (Windows)")
     endif()
 endif()
 

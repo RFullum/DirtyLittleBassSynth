@@ -23,10 +23,10 @@
 
         {
             "name": "windows",
-            "displayName": "Windows — Visual Studio 2022",
-            "description": "Placeholder for future Windows builds. Visual Studio 17 2022, x64.",
+            "displayName": "Windows — Visual Studio 2026",
+            "description": "Visual Studio 18 2026 generator, x64. Builds VST3 + Standalone with a statically-linked MSVC runtime (no VC++ redist needed).",
             "inherits": "base",
-            "generator": "Visual Studio 17 2022",
+            "generator": "Visual Studio 18 2026",
             "architecture": "x64",
             "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
         },
