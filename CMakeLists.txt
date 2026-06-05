@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum macOS deployment target")
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "macOS architectures (Universal Binary)")
 
-project(DirtyLittleBassSynth VERSION 2.0.0 LANGUAGES C CXX)
+project(DirtyLittleBassSynth VERSION 2.0.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,7 +23,7 @@ add_subdirectory(JUCE)
 # targets are built (AU is an Apple-only format and JUCE skips it off-Apple).
 juce_add_plugin(DirtyLittleBassSynth
     PRODUCT_NAME                "Dirty Little Bass Synth"
-    VERSION                     2.0.0
+    VERSION                     2.0.1
     COMPANY_NAME                "FullumMusic"
     COMPANY_WEBSITE             "https://www.fullummusic.com/"
     BUNDLE_ID                   "com.FullumMusic.DirtyLittleBassSynth"

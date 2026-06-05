@@ -77,13 +77,13 @@
  #define JucePlugin_EditorRequiresKeyboardFocus  0
 #endif
 #ifndef  JucePlugin_Version
- #define JucePlugin_Version                2.0.0
+ #define JucePlugin_Version                2.0.1
 #endif
 #ifndef  JucePlugin_VersionCode
- #define JucePlugin_VersionCode            0x20000
+ #define JucePlugin_VersionCode            0x20001
 #endif
 #ifndef  JucePlugin_VersionString
- #define JucePlugin_VersionString          "2.0.0"
+ #define JucePlugin_VersionString          "2.0.1"
 #endif
 #ifndef  JucePlugin_VSTUniqueID
  #define JucePlugin_VSTUniqueID            JucePlugin_PluginCode
@@ -155,7 +155,7 @@
  #define JucePlugin_ARAFactoryID           "com.FullumMusic.DirtyLittleBassSynth.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.FullumMusic.DirtyLittleBassSynth.aradocumentarchive.2.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.FullumMusic.DirtyLittleBassSynth.aradocumentarchive.2.0.1"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""

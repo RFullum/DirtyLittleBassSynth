@@ -31,6 +31,7 @@
 #include <juce_gui_extra/juce_gui_extra.h>
 #include <juce_opengl/juce_opengl.h>
 
+#include "BinaryData.h"
 
 #if defined (JUCE_PROJUCER_VERSION) && JUCE_PROJUCER_VERSION < JUCE_VERSION
  /** If you've hit this error then the version of the Projucer that was used to generate this project is
@@ -47,7 +48,7 @@ namespace ProjectInfo
 {
     const char* const  projectName    = "Dirty Little Bass Synth";
     const char* const  companyName    = "FullumMusic";
-    const char* const  versionString  = "2.0.0";
-    const int          versionNumber  = 0x20000;
+    const char* const  versionString  = "2.0.1";
+    const int          versionNumber  = 0x20001;
 }
 #endif
