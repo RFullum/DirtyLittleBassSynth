@@ -1,0 +1,54 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": { "major": 3, "minor": 22, "patch": 0 },
+
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+
+        {
+            "name": "macos",
+            "displayName": "macOS — Xcode (Universal)",
+            "description": "Xcode multi-config generator. Universal Binary (arm64 + x86_64). Use this preset on macOS.",
+            "inherits": "base",
+            "generator": "Xcode",
+            "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+        },
+
+        {
+            "name": "windows",
+            "displayName": "Windows — Visual Studio 2022",
+            "description": "Placeholder for future Windows builds. Visual Studio 17 2022, x64.",
+            "inherits": "base",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+        },
+
+        {
+            "name": "linux",
+            "displayName": "Linux — Ninja Multi-Config",
+            "description": "Ninja Multi-Config generator (system compiler). VST3 + Standalone.",
+            "inherits": "base",
+            "generator": "Ninja Multi-Config",
+            "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+        }
+    ],
+
+    "buildPresets": [
+        { "name": "macos-debug",     "configurePreset": "macos",   "configuration": "Debug"   },
+        { "name": "macos-release",   "configurePreset": "macos",   "configuration": "Release" },
+
+        { "name": "windows-debug",   "configurePreset": "windows", "configuration": "Debug"   },
+        { "name": "windows-release", "configurePreset": "windows", "configuration": "Release" },
+
+        { "name": "linux-debug",     "configurePreset": "linux",   "configuration": "Debug"   },
+        { "name": "linux-release",   "configurePreset": "linux",   "configuration": "Release" }
+    ]
+}
