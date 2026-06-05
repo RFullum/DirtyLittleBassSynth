@@ -1,6 +1,10 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#if JUCE_LINUX
+ #include "BinaryData.h"
+#endif
+
 //==============================================================================
 
 namespace
@@ -70,6 +74,37 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 
     juce::Timer::startTimerHz(60);
 }
+
+#if JUCE_LINUX
+void DirtyLittleBassSynthAudioProcessorEditor::ApplyStandaloneWindowIconIfNeeded()
+{
+    if (standaloneWindowIconApplied)
+        return;
+
+    // Only the Standalone owns a top-level window we should icon; in a DAW the
+    // host owns the window, so leave it alone.
+    if (! resources.isStandalone)
+    {
+        standaloneWindowIconApplied = true;
+        return;
+    }
+
+    auto *peer = getPeer();
+    if (peer == nullptr)
+        return;   // window not realised yet — retry on the next timer tick
+
+    auto icon = juce::ImageCache::getFromMemory(BinaryData::FullumMusic_Icon_Spectrum_1024_png
+                                                , BinaryData::FullumMusic_Icon_Spectrum_1024_pngSize);
+    if (icon.isValid())
+    {
+        // The source PNG is 1024x1024; window managers only need a small icon
+        // for the titlebar/taskbar. Downscale so _NET_WM_ICON stays compact.
+        peer->setIcon(icon.rescaled(256, 256, juce::Graphics::highResamplingQuality));
+    }
+
+    standaloneWindowIconApplied = true;
+}
+#endif
 
 void DirtyLittleBassSynthAudioProcessorEditor::CreateTooltipWindow()
 {
@@ -169,6 +204,10 @@ bool DirtyLittleBassSynthAudioProcessorEditor::keyPressed(const juce::KeyPress &
 
 void DirtyLittleBassSynthAudioProcessorEditor::timerCallback()
 {
+   #if JUCE_LINUX
+    ApplyStandaloneWindowIconIfNeeded();
+   #endif
+
     const auto learnState = processor.GetMidiLearnManager().GetState();
     const bool learning   = (learnState != MidiLearnManager::State::Idle);
 

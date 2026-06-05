@@ -30,6 +30,13 @@ public:
 private:
     void timerCallback() override;
 
+   #if JUCE_LINUX
+    // JUCE provides no Linux app-icon mechanism, so set the Standalone window
+    // icon at runtime from the embedded PNG. No-op when hosted in a DAW.
+    void ApplyStandaloneWindowIconIfNeeded();
+    bool standaloneWindowIconApplied = false;
+   #endif
+
     // Standalone-only Cmd+S / Cmd+Shift+S handling.
     bool keyPressed(const juce::KeyPress &key, juce::Component *originator) override;
 

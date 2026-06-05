@@ -29,6 +29,10 @@ juce_add_plugin(DirtyLittleBassSynth
     BUNDLE_ID                   "com.FullumMusic.DirtyLittleBassSynth"
     PLUGIN_MANUFACTURER_CODE    FulM
     PLUGIN_CODE                 Dlbs
+    # App/plugin icon (mirrors the .jucer bigIcon/smallIcon). Primarily used by
+    # the Standalone (window/taskbar icon) and baked into the macOS bundle.
+    ICON_BIG                    "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png"
+    ICON_SMALL                  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png"
     FORMATS                     VST3 AU Standalone
     DESCRIPTION                 "Monophonic wavetable synth for getting quick and dirty bass and sub sounds."
     IS_SYNTH                    TRUE
@@ -86,6 +90,17 @@ target_include_directories(DirtyLittleBassSynth PRIVATE
     Source/GUI/TitleHeaderFooter
     Source/GUI/MIDI)
 
+# --- Embedded binary data (icon) ----------------------------------------------
+# JUCE has no Linux app-icon mechanism (juceaide only emits .icns/.ico), so the
+# Standalone window icon is set at runtime from this embedded PNG — see
+# PluginEditor::ApplyStandaloneWindowIconIfNeeded(). The symbol name matches the
+# Projucer-generated BinaryData (FullumMusic_Icon_Spectrum_1024_png) so the same
+# source compiles under both build systems.
+juce_add_binary_data(DirtyLittleBassSynth_Data
+    SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png")
+# Static lib linked into the .so plugin targets — must be PIC on Linux.
+set_target_properties(DirtyLittleBassSynth_Data PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
 # --- JuceHeader.h -------------------------------------------------------------
 # Generated header lets sources keep using <JuceHeader.h> (41 files do).
 juce_generate_juce_header(DirtyLittleBassSynth)
@@ -110,6 +125,7 @@ target_link_libraries(DirtyLittleBassSynth
         juce::juce_gui_extra
         juce::juce_opengl
         juce::juce_cryptography
+        DirtyLittleBassSynth_Data
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
