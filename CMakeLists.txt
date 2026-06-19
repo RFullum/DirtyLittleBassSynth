@@ -144,6 +144,9 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/FullumLookAndFeel.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/TitleFooter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/Selector.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Oscillators.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Wavetable.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/SubOscillator.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"

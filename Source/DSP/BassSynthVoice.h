@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "Oscillators.h"
-#include "Wavetable.h"
-#include "SubOscillator.h"
+#include "DSP/Oscillators.h"
+#include "DSP/Wavetable.h"
+#include "DSP/SubOscillator.h"
 #include "OscillatorParameterControls.h"
 #include "DryWet.h"
 #include "Modifiers.h"
@@ -179,10 +179,10 @@ private:
     juce::ADSR filtEnv;
     juce::ADSR filtLFOClickingEnv;
     
-    Wavetable      wtSine;
-    SawWavetable   wtSaw;
-    SpikeWavetable wtSpike;
-    SubOsc         subOsc;
+    FullumOscillators::Wavetable      wtSine;
+    FullumOscillators::SawWavetable   wtSaw;
+    FullumOscillators::SpikeWavetable wtSpike;
+    FullumOscillators::SubOsc         subOsc;
 
     // Oscillator parameter members
     std::atomic<float>         *oscillatorMorph      = nullptr;
@@ -260,7 +260,7 @@ private:
     std::atomic<float> *filterADSRResAmount    = nullptr;
 
     // Filter LFO Instance
-    SubOsc filterLFO;
+    FullumOscillators::SubOsc filterLFO;
 
     // Filter LFO Parameters
     std::atomic<float> *filtLFOFreq  = nullptr;

@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Wavetable.h"
+#include "DSP/Wavetable.h"
 #include "OscillatorParameterControls.h"
 
 //==============================================================================
@@ -41,10 +41,10 @@ private:
     std::atomic<float> *gainParam  = nullptr;     // optional; scales display amplitude
     bool                useSquare  = false;
 
-    Wavetable       wtSine;
-    SpikeWavetable  wtSpike;
-    SquareWavetable wtSquare;
-    SawWavetable    wtSaw;
+    FullumOscillators::Wavetable       wtSine;
+    FullumOscillators::SpikeWavetable  wtSpike;
+    FullumOscillators::SquareWavetable wtSquare;
+    FullumOscillators::SawWavetable    wtSaw;
 
     OscParamControl morphControl;
 

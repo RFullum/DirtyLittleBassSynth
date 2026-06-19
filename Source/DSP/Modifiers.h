@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Wavetable.h"
+#include "DSP/Wavetable.h"
 #include "DryWet.h"
 
 //==============================================================================
@@ -33,8 +33,8 @@ private:
     float sampleRate   = 44100.0f;
     float modFrequency = 0.0f;
 
-    Wavetable       wtSine;
-    SquareWavetable wtSquare;
+    FullumOscillators::Wavetable       wtSine;
+    FullumOscillators::SquareWavetable wtSquare;
 
     float ringToneSlider = 0.0f;
 };
@@ -58,9 +58,9 @@ private:
     float sampleRate   = 44100.0f;
     float modFrequency = 0.0f;
 
-    Wavetable      wtSine;
-    SpikeWavetable wtSpike;
-    SawWavetable   wtSaw;
+    FullumOscillators::Wavetable      wtSine;
+    FullumOscillators::SpikeWavetable wtSpike;
+    FullumOscillators::SawWavetable   wtSaw;
 
     float sineLevel  = 1.0f;
     float spikeLevel = 0.0f;
@@ -85,7 +85,7 @@ private:
     float sampleRate   = 44100.0f;
     float modFrequency = 0.0f;
 
-    SquareWavetable wtSampHold;
+    FullumOscillators::SquareWavetable wtSampHold;
 
     float oscSampleVal  = 0.0f;
     float holdSampleVal = 0.0f;
