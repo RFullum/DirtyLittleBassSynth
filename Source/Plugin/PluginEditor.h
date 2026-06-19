@@ -3,8 +3,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "GuiResources.h"
-#include "OtherLookAndFeel.h"
-#include "PopupLookAndFeel.h"
+#include "GUI/FullumLookAndFeel.h"
 #include "SourcesColumn.h"
 #include "FilterColumn.h"
 #include "ModifiersColumn.h"
@@ -44,9 +43,9 @@ private:
 
     std::vector<juce::Rectangle<int>> dividers;
 
-    OtherLookAndFeel dialLookAndFeel;
-    OtherLookAndFeel dryWetLookAndFeel;
-    PopupLookAndFeel popupLookAndFeel { Palette::DefaultTheme };
+    FullumLookAndFeel dialLookAndFeel   { Palette::DefaultTheme };
+    FullumLookAndFeel dryWetLookAndFeel { Palette::DefaultTheme };
+    FullumLookAndFeel popupLookAndFeel  { Palette::DefaultTheme };
 
     GuiResources resources;
 

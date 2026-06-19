@@ -50,8 +50,9 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 {
     setSize(1300, 700);
 
-    dialLookAndFeel  .SetTrackBackground(resources.theme.structure);
-    dryWetLookAndFeel.SetTrackBackground(resources.theme.structure);
+    dialLookAndFeel  .SetTrackBackground (resources.theme.structure);
+    dryWetLookAndFeel.SetTrackBackground (resources.theme.structure);
+    popupLookAndFeel .SetAlertTitleAccent(resources.theme.orangeAccent);
 
     juce::LookAndFeel::setDefaultLookAndFeel(&popupLookAndFeel);
 
