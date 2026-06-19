@@ -42,6 +42,7 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
 , processor(p)
 , resources(MakeResources(p, dialLookAndFeel, dryWetLookAndFeel))
 , titleHeader    (resources)
+, titleFooter    (resources.theme, ProjectInfo::versionString)
 , sourcesColumn  (resources)
 , filterColumn   (resources)
 , modifiersColumn(resources)
@@ -55,8 +56,6 @@ DirtyLittleBassSynthAudioProcessorEditor::DirtyLittleBassSynthAudioProcessorEdit
     popupLookAndFeel .SetAlertTitleAccent(resources.theme.orangeAccent);
 
     juce::LookAndFeel::setDefaultLookAndFeel(&popupLookAndFeel);
-
-    titleFooter.setTheme(resources.theme);
 
     addAndMakeVisible(titleHeader);
     addAndMakeVisible(titleFooter);

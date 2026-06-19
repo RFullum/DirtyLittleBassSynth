@@ -9,7 +9,7 @@
 #include "ModifiersColumn.h"
 #include "MasterColumn.h"
 #include "TitleHeaderFooter/TitleHeader.h"
-#include "TitleHeaderFooter/TitleFooter.h"
+#include "GUI/TitleFooter.h"
 #include "MIDI/MidiLearnOverlay.h"
 
 //==============================================================================

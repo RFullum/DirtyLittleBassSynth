@@ -142,6 +142,7 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/PatchControls.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/PatchSelectionPopup.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/FullumLookAndFeel.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/TitleFooter.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
