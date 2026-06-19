@@ -7,9 +7,11 @@
 */
 
 #include "AmpAdsrPanel.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
 #include "GUI/Format.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -39,10 +41,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f, style, juce::Justification::centredRight);
     GuiHelpers::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f, style, juce::Justification::centredRight);
 
-    attackAtt  = DLBS::AttachSlider(*res.apvts, "amp_attack",  oscAttackSlider);
-    decayAtt   = DLBS::AttachSlider(*res.apvts, "amp_decay",   oscDecaySlider);
-    sustainAtt = DLBS::AttachSlider(*res.apvts, "amp_sustain", oscSustainSlider);
-    releaseAtt = DLBS::AttachSlider(*res.apvts, "amp_release", oscReleaseSlider);
+    attackAtt  = MidiLearn::AttachSlider(*res.apvts, "amp_attack",  oscAttackSlider);
+    decayAtt   = MidiLearn::AttachSlider(*res.apvts, "amp_decay",   oscDecaySlider);
+    sustainAtt = MidiLearn::AttachSlider(*res.apvts, "amp_sustain", oscSustainSlider);
+    releaseAtt = MidiLearn::AttachSlider(*res.apvts, "amp_release", oscReleaseSlider);
 
     Format::SetSliderTextFormat(oscAttackSlider,  Format::TimeSec);
     Format::SetSliderTextFormat(oscDecaySlider,   Format::TimeSec);

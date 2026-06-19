@@ -27,26 +27,4 @@ namespace DLBS
         return juce::String(hz / 1000.0f, 2) + " kHz";
     }
 
-    // Attach* helpers tag the component with "paramID" so MidiLearnOverlay
-    // can resolve a click to its bound APVTS parameter. Always use these for
-    // learnable controls.
-
-    inline std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>
-    AttachSlider(juce::AudioProcessorValueTreeState &apvts,
-                 const juce::String                 &paramID,
-                 juce::Slider                       &slider)
-    {
-        slider.getProperties().set("paramID", paramID);
-        return std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID, slider);
-    }
-
-    inline std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment>
-    AttachButton(juce::AudioProcessorValueTreeState &apvts,
-                 const juce::String                 &paramID,
-                 juce::Button                       &button)
-    {
-        button.getProperties().set("paramID", paramID);
-        return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID, button);
-    }
-
 }

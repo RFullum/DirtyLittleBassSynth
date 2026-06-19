@@ -161,6 +161,8 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/Visualizers/ScopeVisual.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/Visualizers/AdsrVisual.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/Visualizers/FilterVisual.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/State/MidiLearnManager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/MidiLearnOverlay.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"

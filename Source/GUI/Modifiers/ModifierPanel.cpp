@@ -7,8 +7,10 @@
 */
 
 #include "ModifierPanel.h"
+
 #include "GUI/GuiHelpers.h"
 #include "GuiHelpers.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -68,15 +70,15 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, pitchLabel,    "Pitch",                txt, 12.0f);
     GuiHelpers::SetupLabel(this, dryWetLabel,   "Dry/Wet",              txt, 12.0f);
 
-    portaAtt         = DLBS::AttachSlider(*res.apvts, "porta_time",       portaSlider);
-    foldbackAtt      = DLBS::AttachSlider(*res.apvts, "foldback_dist",    foldbackSlider);
-    ringToneAtt      = DLBS::AttachSlider(*res.apvts, "ring_tone",        ringToneSlider);
-    ringPitchAtt     = DLBS::AttachSlider(*res.apvts, "ring_mod_pitch",   ringPitchSlider);
-    ringDryWetAtt    = DLBS::AttachSlider(*res.apvts, "ring_mod_mix",     ringDryWetSlider);
-    frqShftPitchAtt  = DLBS::AttachSlider(*res.apvts, "freq_shift_pitch", frqShftPitchSlider);
-    frqShftDryWetAtt = DLBS::AttachSlider(*res.apvts, "freq_shift_mix",   frqShftDryWetSlider);
-    sHPitchAtt       = DLBS::AttachSlider(*res.apvts, "sandh_pitch",      sHPitchSlider);
-    sHDryWetAtt      = DLBS::AttachSlider(*res.apvts, "sandh_mix",        sHDryWetSlider);
+    portaAtt         = MidiLearn::AttachSlider(*res.apvts, "porta_time",       portaSlider);
+    foldbackAtt      = MidiLearn::AttachSlider(*res.apvts, "foldback_dist",    foldbackSlider);
+    ringToneAtt      = MidiLearn::AttachSlider(*res.apvts, "ring_tone",        ringToneSlider);
+    ringPitchAtt     = MidiLearn::AttachSlider(*res.apvts, "ring_mod_pitch",   ringPitchSlider);
+    ringDryWetAtt    = MidiLearn::AttachSlider(*res.apvts, "ring_mod_mix",     ringDryWetSlider);
+    frqShftPitchAtt  = MidiLearn::AttachSlider(*res.apvts, "freq_shift_pitch", frqShftPitchSlider);
+    frqShftDryWetAtt = MidiLearn::AttachSlider(*res.apvts, "freq_shift_mix",   frqShftDryWetSlider);
+    sHPitchAtt       = MidiLearn::AttachSlider(*res.apvts, "sandh_pitch",      sHPitchSlider);
+    sHDryWetAtt      = MidiLearn::AttachSlider(*res.apvts, "sandh_mix",        sHDryWetSlider);
 
     auto styleModeButton = [&](juce::TextButton &btn, juce::Colour onTextColor)
     {
@@ -91,8 +93,8 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     styleModeButton(portaOnButton,     primary);
     styleModeButton(portaLegatoButton, primary);
 
-    portaOnAtt     = DLBS::AttachButton(*res.apvts, "porta_on",     portaOnButton);
-    portaLegatoAtt = DLBS::AttachButton(*res.apvts, "porta_legato", portaLegatoButton);
+    portaOnAtt     = MidiLearn::AttachButton(*res.apvts, "porta_on",     portaOnButton);
+    portaLegatoAtt = MidiLearn::AttachButton(*res.apvts, "porta_legato", portaLegatoButton);
 
     res.apvts->addParameterListener("porta_on",     this);
     res.apvts->addParameterListener("porta_legato", this);

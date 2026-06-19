@@ -7,8 +7,10 @@
 */
 
 #include "LfoPanel.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -44,10 +46,10 @@ LfoPanel::LfoPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, lfoRateLabel,   "Freq",   txt, 14.0f);
     GuiHelpers::SetupLabel(this, lfoAmountLabel, "Amount", txt, 14.0f);
 
-    shapeAtt  = DLBS::AttachSlider(*res.apvts, "filtLFO_shape",    lfoShapeSlider);
-    freqAtt   = DLBS::AttachSlider(*res.apvts, "filtLFO_freq",     lfoFreqSlider);
-    divAtt    = DLBS::AttachSlider(*res.apvts, "filtLFO_sync_div", lfoSyncDivSlider);
-    amountAtt = DLBS::AttachSlider(*res.apvts, "filtLFO_amt",      lfoAmountSlider);
+    shapeAtt  = MidiLearn::AttachSlider(*res.apvts, "filtLFO_shape",    lfoShapeSlider);
+    freqAtt   = MidiLearn::AttachSlider(*res.apvts, "filtLFO_freq",     lfoFreqSlider);
+    divAtt    = MidiLearn::AttachSlider(*res.apvts, "filtLFO_sync_div", lfoSyncDivSlider);
+    amountAtt = MidiLearn::AttachSlider(*res.apvts, "filtLFO_amt",      lfoAmountSlider);
 
     // Display choice strings ("1/8", "1/4D", ...) instead of the underlying
     // 0..count-1 integer the SliderAttachment surfaces.
@@ -64,7 +66,7 @@ LfoPanel::LfoPanel(GuiResources &res)
         lfoSyncDivSlider.updateText();
     }
 
-    lfoSyncControl.getProperties().set("paramID", "filtLFO_sync");
+    lfoSyncControl.getProperties().set(MidiLearn::ParamIDProperty, "filtLFO_sync");
     addAndMakeVisible(lfoSyncControl);
 
     auto bg     = res.theme.background;

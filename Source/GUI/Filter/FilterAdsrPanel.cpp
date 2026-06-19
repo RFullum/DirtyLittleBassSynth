@@ -7,9 +7,11 @@
 */
 
 #include "FilterAdsrPanel.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
 #include "GUI/Format.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -46,12 +48,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 14.0f);
     GuiHelpers::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 14.0f);
 
-    attackAtt   = DLBS::AttachSlider(*res.apvts, "filtEnv_attack",  fltAttackSlider);
-    decayAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_decay",   fltDecaySlider);
-    sustainAtt  = DLBS::AttachSlider(*res.apvts, "filtEnv_sustain", fltSustainSlider);
-    releaseAtt  = DLBS::AttachSlider(*res.apvts, "filtEnv_release", fltReleaseSlider);
-    toCutoffAtt = DLBS::AttachSlider(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
-    toResAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
+    attackAtt   = MidiLearn::AttachSlider(*res.apvts, "filtEnv_attack",  fltAttackSlider);
+    decayAtt    = MidiLearn::AttachSlider(*res.apvts, "filtEnv_decay",   fltDecaySlider);
+    sustainAtt  = MidiLearn::AttachSlider(*res.apvts, "filtEnv_sustain", fltSustainSlider);
+    releaseAtt  = MidiLearn::AttachSlider(*res.apvts, "filtEnv_release", fltReleaseSlider);
+    toCutoffAtt = MidiLearn::AttachSlider(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
+    toResAtt    = MidiLearn::AttachSlider(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
 
     Format::SetSliderTextFormat(fltAttackSlider,  Format::TimeSec);
     Format::SetSliderTextFormat(fltDecaySlider,   Format::TimeSec);

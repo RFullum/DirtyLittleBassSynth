@@ -10,7 +10,7 @@
 #include "MasterColumn.h"
 #include "TitleHeaderFooter/TitleHeader.h"
 #include "GUI/TitleFooter.h"
-#include "MIDI/MidiLearnOverlay.h"
+#include "GUI/MidiLearnOverlay.h"
 
 //==============================================================================
 

@@ -5,7 +5,7 @@
 #include "MasterChain.h"
 #include "DSP/Utils/ScopeBuffer.h"
 #include "TempoSnapshot.h"
-#include "MidiLearnManager.h"
+#include "State/MidiLearnManager.h"
 #include "State/PatchManager.h"
 
 //==============================================================================

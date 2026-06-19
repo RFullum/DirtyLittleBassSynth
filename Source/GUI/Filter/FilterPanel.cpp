@@ -7,9 +7,11 @@
 */
 
 #include "FilterPanel.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
 #include "GUI/Format.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -46,11 +48,11 @@ FilterPanel::FilterPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
     GuiHelpers::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
-    filterType.getProperties().set("paramID", "filter_type");
+    filterType.getProperties().set(MidiLearn::ParamIDProperty, "filter_type");
     addAndMakeVisible(filterType);
 
-    cutoffAtt = DLBS::AttachSlider(*res.apvts, "filter_cutoff", cutoffSlider);
-    resAtt    = DLBS::AttachSlider(*res.apvts, "filter_res",    resSlider);
+    cutoffAtt = MidiLearn::AttachSlider(*res.apvts, "filter_cutoff", cutoffSlider);
+    resAtt    = MidiLearn::AttachSlider(*res.apvts, "filter_res",    resSlider);
 
     Format::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
 

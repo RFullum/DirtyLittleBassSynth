@@ -7,9 +7,11 @@
 */
 
 #include "MasterColumn.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
 #include "GUI/Format.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -34,7 +36,7 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    gainAtt = DLBS::AttachSlider(*res.apvts, "master_gain", masterGainSlider);
+    gainAtt = MidiLearn::AttachSlider(*res.apvts, "master_gain", masterGainSlider);
 
     Format::SetSliderTextFormat(masterGainSlider, Format::GainDb);
 
@@ -45,7 +47,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     ceilingOnButton.setColour              (juce::TextButton::textColourOffId,  res.theme.textSecondary);
     addAndMakeVisible(ceilingOnButton);
 
-    ceilingOnAtt = DLBS::AttachButton(*res.apvts, "limiter_on", ceilingOnButton);
+    ceilingOnAtt = MidiLearn::AttachButton(*res.apvts, "limiter_on", ceilingOnButton);
 
     GuiHelpers::SetupSlider(this
                             , ceilingSlider
@@ -58,7 +60,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     ceilingSlider.setLookAndFeel    (res.dialLookAndFeel);
     ceilingSlider.setTextValueSuffix(" dB");
 
-    ceilingAtt = DLBS::AttachSlider(*res.apvts, "limiter_ceiling", ceilingSlider);
+    ceilingAtt = MidiLearn::AttachSlider(*res.apvts, "limiter_ceiling", ceilingSlider);
 
     res.apvts->addParameterListener("limiter_on", this);
 
@@ -77,7 +79,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     // Read by OtherLookAndFeel::drawLinearSlider: fill from track centre, not left edge.
     wideSlider.getProperties().set("bipolarFill", true);
 
-    wideAtt = DLBS::AttachSlider(*res.apvts, "master_wide", wideSlider);
+    wideAtt = MidiLearn::AttachSlider(*res.apvts, "master_wide", wideSlider);
 
     GuiHelpers::SetupSlider(this
                             , monoCrossoverSlider
@@ -90,7 +92,7 @@ MasterColumn::MasterColumn(GuiResources &res)
     monoCrossoverSlider.setLookAndFeel    (res.dialLookAndFeel);
     monoCrossoverSlider.setTextValueSuffix(" Hz");
 
-    monoCrossoverAtt = DLBS::AttachSlider(*res.apvts, "mono_below_freq", monoCrossoverSlider);
+    monoCrossoverAtt = MidiLearn::AttachSlider(*res.apvts, "mono_below_freq", monoCrossoverSlider);
 
     outMeter.setColors(accent, res.theme.pinkAccent);
     addAndMakeVisible(outMeter);

@@ -7,9 +7,11 @@
 */
 
 #include "OscPanel.h"
+
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
 #include "GUI/Format.h"
+#include "GUI/MidiLearnAttachments.h"
 
 //==============================================================================
 
@@ -51,14 +53,14 @@ OscPanel::OscPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, fontSizeSmall);
     GuiHelpers::SetupLabel(this, pitchBendRangeLabel, "Bend",        txt, fontSizeSmall);
     
-    subOctave.getProperties().set("paramID", "sub_osc_octave");
+    subOctave.getProperties().set(MidiLearn::ParamIDProperty, "sub_osc_octave");
     addAndMakeVisible(subOctave);
     
-    oscMorphAtt       = DLBS::AttachSlider(*res.apvts, "osc_morph",     oscMorphSlider);
-    subMorphAtt       = DLBS::AttachSlider(*res.apvts, "sub_osc_morph", subMorphSlider);
-    subGainAtt        = DLBS::AttachSlider(*res.apvts, "sub_osc_gain",  subGainSlider);
+    oscMorphAtt       = MidiLearn::AttachSlider(*res.apvts, "osc_morph",     oscMorphSlider);
+    subMorphAtt       = MidiLearn::AttachSlider(*res.apvts, "sub_osc_morph", subMorphSlider);
+    subGainAtt        = MidiLearn::AttachSlider(*res.apvts, "sub_osc_gain",  subGainSlider);
     
-    // Raw attachment (not DLBS::AttachSlider): keeps pitch_bend_range out of
+    // Raw attachment (not MidiLearn::AttachSlider): keeps pitch_bend_range out of
     // MIDI Learn — setup param, not a live-tweak control.
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
     
