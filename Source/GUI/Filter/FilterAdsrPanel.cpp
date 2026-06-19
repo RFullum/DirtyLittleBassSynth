@@ -61,10 +61,15 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
     adsrVisual.SetColors(accent, bg, bgFade);
-    adsrVisual.Init(res.apvts->getRawParameterValue("filtEnv_attack")
-                    , res.apvts->getRawParameterValue("filtEnv_decay")
-                    , res.apvts->getRawParameterValue("filtEnv_sustain")
-                    , res.apvts->getRawParameterValue("filtEnv_release"));
+    adsrAttack  = res.apvts->getRawParameterValue("amp_attack");
+    adsrDecay   = res.apvts->getRawParameterValue("amp_decay");
+    adsrSustain = res.apvts->getRawParameterValue("amp_sustain");
+    adsrRelease = res.apvts->getRawParameterValue("amp_release");
+
+    adsrVisual.SetADSR(adsrAttack->load()
+                       , adsrDecay->load()
+                       , adsrSustain->load()
+                       , adsrRelease->load());
 
     addAndMakeVisible(adsrVisual);
 
@@ -113,5 +118,8 @@ void FilterAdsrPanel::resized()
 
 void FilterAdsrPanel::Update()
 {
-    adsrVisual.Update();
+    adsrVisual.SetADSR(adsrAttack->load()
+                       , adsrDecay->load()
+                       , adsrSustain->load()
+                       , adsrRelease->load());
 }

@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "OutMeter.h"
-#include "ScopeVisual.h"
+#include "GUI/Visualizers/ScopeVisual.h"
 
 //==============================================================================
 

@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
-#include "AdsrVisual.h"
+#include "GUI/Visualizers/AdsrVisual.h"
 
 //==============================================================================
 
@@ -26,6 +26,11 @@ public:
 
 private:
     AdsrVisual adsrVisual;
+    
+    std::atomic<float> *adsrAttack  = nullptr;
+    std::atomic<float> *adsrDecay   = nullptr;
+    std::atomic<float> *adsrSustain = nullptr;
+    std::atomic<float> *adsrRelease = nullptr;
 
     juce::Slider oscAttackSlider;
     juce::Slider oscDecaySlider;

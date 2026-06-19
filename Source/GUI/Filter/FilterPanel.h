@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
-#include "FilterVisual.h"
+#include "GUI/Visualizers/FilterVisual.h"
 #include "GUI/Selector.h"
 
 //==============================================================================

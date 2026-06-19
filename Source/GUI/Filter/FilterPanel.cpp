@@ -15,6 +15,9 @@
 
 FilterPanel::FilterPanel(GuiResources &res)
 : resources(res)
+, filterVisual(res.theme.secondaryAccent
+               , res.theme.background
+               , res.theme.background.darker())
 , filterType(*res.apvts
              , "filter_type"
              , res.theme
@@ -50,10 +53,6 @@ FilterPanel::FilterPanel(GuiResources &res)
     resAtt    = DLBS::AttachSlider(*res.apvts, "filter_res",    resSlider);
 
     Format::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
-
-    auto bg     = res.theme.background;
-    auto bgFade = res.theme.background.darker();
-    filterVisual.setColors(accent, bg, bgFade);
 
     addAndMakeVisible(filterVisual);
 

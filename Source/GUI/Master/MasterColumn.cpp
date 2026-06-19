@@ -97,10 +97,10 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     if (res.scopeBuffer != nullptr)
     {
-        scopeVisual = std::make_unique<ScopeVisual>(*res.scopeBuffer);
-        scopeVisual->SetColors(accent
-                               , res.theme.background
-                               , res.theme.background.darker());
+        scopeVisual = std::make_unique<ScopeVisual>(*res.scopeBuffer
+                                                    , accent
+                                                    , res.theme.background
+                                                    , res.theme.background.darker());
         addAndMakeVisible(*scopeVisual);
     }
 
