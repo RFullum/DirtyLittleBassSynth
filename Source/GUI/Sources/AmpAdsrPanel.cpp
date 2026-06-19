@@ -9,6 +9,7 @@
 #include "AmpAdsrPanel.h"
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/Format.h"
 
 //==============================================================================
 
@@ -43,10 +44,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     sustainAtt = DLBS::AttachSlider(*res.apvts, "amp_sustain", oscSustainSlider);
     releaseAtt = DLBS::AttachSlider(*res.apvts, "amp_release", oscReleaseSlider);
 
-    DLBS::SetSliderTextFormat(oscAttackSlider,  DLBS::FormatTime);
-    DLBS::SetSliderTextFormat(oscDecaySlider,   DLBS::FormatTime);
-    DLBS::SetSliderTextFormat(oscSustainSlider, DLBS::FormatPercent);
-    DLBS::SetSliderTextFormat(oscReleaseSlider, DLBS::FormatTime);
+    Format::SetSliderTextFormat(oscAttackSlider,  Format::TimeSec);
+    Format::SetSliderTextFormat(oscDecaySlider,   Format::TimeSec);
+    Format::SetSliderTextFormat(oscSustainSlider, Format::Percent);
+    Format::SetSliderTextFormat(oscReleaseSlider, Format::TimeSec);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();

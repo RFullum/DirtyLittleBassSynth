@@ -9,6 +9,7 @@
 #include "FilterAdsrPanel.h"
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/Format.h"
 
 //==============================================================================
 
@@ -52,10 +53,10 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     toCutoffAtt = DLBS::AttachSlider(*res.apvts, "filtEnv_COAmt",   adsrToCutoffSlider);
     toResAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_ResAmt",  adsrToResSlider);
 
-    DLBS::SetSliderTextFormat(fltAttackSlider,  DLBS::FormatTime);
-    DLBS::SetSliderTextFormat(fltDecaySlider,   DLBS::FormatTime);
-    DLBS::SetSliderTextFormat(fltSustainSlider, DLBS::FormatPercent);
-    DLBS::SetSliderTextFormat(fltReleaseSlider, DLBS::FormatTime);
+    Format::SetSliderTextFormat(fltAttackSlider,  Format::TimeSec);
+    Format::SetSliderTextFormat(fltDecaySlider,   Format::TimeSec);
+    Format::SetSliderTextFormat(fltSustainSlider, Format::Percent);
+    Format::SetSliderTextFormat(fltReleaseSlider, Format::TimeSec);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();

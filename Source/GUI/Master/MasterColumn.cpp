@@ -9,6 +9,7 @@
 #include "MasterColumn.h"
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/Format.h"
 
 //==============================================================================
 
@@ -35,7 +36,7 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     gainAtt = DLBS::AttachSlider(*res.apvts, "master_gain", masterGainSlider);
 
-    DLBS::SetSliderTextFormat(masterGainSlider, DLBS::FormatGainDb);
+    Format::SetSliderTextFormat(masterGainSlider, Format::GainDb);
 
     ceilingOnButton.setClickingTogglesState(true);
     ceilingOnButton.setColour              (juce::TextButton::buttonColourId,   res.theme.structure);

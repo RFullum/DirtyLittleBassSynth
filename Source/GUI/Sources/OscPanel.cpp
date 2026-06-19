@@ -9,6 +9,7 @@
 #include "OscPanel.h"
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/Format.h"
 
 //==============================================================================
 
@@ -60,7 +61,7 @@ OscPanel::OscPanel(GuiResources &res)
     // MIDI Learn — setup param, not a live-tweak control.
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
 
-    DLBS::SetSliderTextFormat(subGainSlider, DLBS::FormatGainDb);
+    Format::SetSliderTextFormat(subGainSlider, Format::GainDb);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();

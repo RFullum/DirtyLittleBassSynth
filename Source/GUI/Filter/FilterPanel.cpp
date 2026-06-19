@@ -9,6 +9,7 @@
 #include "FilterPanel.h"
 #include "GuiHelpers.h"
 #include "GUI/GuiHelpers.h"
+#include "GUI/Format.h"
 
 //==============================================================================
 
@@ -48,7 +49,7 @@ FilterPanel::FilterPanel(GuiResources &res)
     cutoffAtt = DLBS::AttachSlider(*res.apvts, "filter_cutoff", cutoffSlider);
     resAtt    = DLBS::AttachSlider(*res.apvts, "filter_res",    resSlider);
 
-    DLBS::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
+    Format::SetSliderTextFormat(cutoffSlider, DLBS::FormatCutoffHz);
 
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
