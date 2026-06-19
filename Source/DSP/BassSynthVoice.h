@@ -201,7 +201,6 @@ private:
     int                         incrementDenominator = 0;
     
     // Oscillator Parameter Controls
-    OscParamControl oscParamControl;
     SubOscParamControl subOscParamControl;
     
     // Amp Envelope Parameter Controls
@@ -274,7 +273,6 @@ private:
     std::atomic<float> *filtLFOFreq  = nullptr;
     std::atomic<float> *filtLFOAmt   = nullptr;
     std::atomic<float> *filtLFOShape = nullptr;
-    SubOscParamControl  filtLFOShapeControl;
 
     // Sync mode (filtLFO_sync, filtLFO_sync_div) + host transport snapshot.
     std::atomic<float>  *filtLFOSyncOn       = nullptr;

@@ -8,6 +8,8 @@
 
 #include "OscVisual.h"
 
+#include "DSP/Utils/Morph.h"
+
 //==============================================================================
 
 OscVisual::OscVisual()
@@ -83,9 +85,9 @@ void OscVisual::SetColors(juce::Colour line, juce::Colour background, juce::Colo
 
 void OscVisual::RebuildPath()
 {
-    const float sinLevel    = morphControl.SinMorphGain  (morphParam);
-    const float centerLevel = morphControl.SpikeMorphGain(morphParam);
-    const float sawLevel    = morphControl.SawMorphGain  (morphParam);
+    const float sinLevel    = FullumDspUtils::MorphWeight(morphParam->load(), 0.0f);
+    const float centerLevel = FullumDspUtils::MorphWeight(morphParam->load(), 1.0f);
+    const float sawLevel    = FullumDspUtils::MorphWeight(morphParam->load(), 2.0f);
 
     oscShape.clear();
     oscArea .clear();

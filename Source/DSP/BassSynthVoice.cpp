@@ -9,7 +9,9 @@
 */
 
 #include "BassSynthVoice.h"
+
 #include "DSP/Effects/Foldback.h"
+#include "DSP/Utils/Morph.h"
 
 //======================================================
 
@@ -497,15 +499,15 @@ BassSynthVoice::BlockLevels BassSynthVoice::ComputeBlockLevels()
 {
     return
     {
-        oscParamControl.SinMorphGain        (oscillatorMorph)
-        , oscParamControl.SpikeMorphGain    (oscillatorMorph)
-        , oscParamControl.SawMorphGain      (oscillatorMorph)
-        , subOscParamControl.SinSubGain     (subOscMorph)
-        , subOscParamControl.SquareSubGain  (subOscMorph)
-        , subOscParamControl.SawSubGain     (subOscMorph)
-        , filtLFOShapeControl.SinSubGain    (filtLFOShape)
-        , filtLFOShapeControl.SquareSubGain (filtLFOShape)
-        , filtLFOShapeControl.SawSubGain    (filtLFOShape)
+        FullumDspUtils::  MorphWeight(oscillatorMorph->load(), 0.0f)     // SinMorphGain
+        , FullumDspUtils::MorphWeight(oscillatorMorph->load(), 1.0f)   // SpikeMorphGain
+        , FullumDspUtils::MorphWeight(oscillatorMorph->load(), 2.0f)   // SawMorphGain
+        , FullumDspUtils::MorphWeight(subOscMorph->load(),    0.0f)    // SinSubGain
+        , FullumDspUtils::MorphWeight(subOscMorph->load(),    1.0f)    // SquareSubGain
+        , FullumDspUtils::MorphWeight(subOscMorph->load(),    2.0f)    // SawSubGain
+        , FullumDspUtils::MorphWeight(filtLFOShape->load(),   0.0f)    // SinSubGain
+        , FullumDspUtils::MorphWeight(filtLFOShape->load(),   1.0f)    // SquareSubGain
+        , FullumDspUtils::MorphWeight(filtLFOShape->load(),   2.0f)    // SawSubGain
     };
 }
 

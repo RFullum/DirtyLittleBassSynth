@@ -12,7 +12,6 @@
 
 #include <JuceHeader.h>
 #include "DSP/Wavetable.h"
-#include "OscillatorParameterControls.h"
 
 //==============================================================================
 
@@ -45,8 +44,6 @@ private:
     FullumOscillators::SpikeWavetable  wtSpike;
     FullumOscillators::SquareWavetable wtSquare;
     FullumOscillators::SawWavetable    wtSaw;
-
-    OscParamControl morphControl;
 
     juce::Colour lineColor;
     juce::Colour bgColor;
