@@ -107,6 +107,37 @@ target_sources(DirtyLittleBassSynth PRIVATE ${DLBS_SOURCES})
 # Mirror on-disk folder structure in IDE navigators (Xcode, Visual Studio).
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Source" PREFIX "Source" FILES ${DLBS_SOURCES})
 
+# --- FullumModules (navigator visibility only, NOT yet built) ------------------
+# Shared modules live in the ./FullumModules git submodule. This block surfaces
+# them in IDE navigators (Xcode, Visual Studio) as a top-level "FullumModules"
+# group alongside "Source", so the tree is browsable while the migration that
+# actually adopts each module proceeds incrementally.
+#
+# The files are added to the target purely for display: every .cpp is flagged
+# HEADER_FILE_ONLY so the compiler skips it. Until a module is wired in (its
+# include dir added and the in-tree Source/ copy deleted — see FullumModules/
+# CLAUDE.md), compiling these would duplicate symbols already provided by Source/.
+# As each module is adopted, drop its files from this glob (or remove the
+# HEADER_FILE_ONLY flag once they replace the Source/ copy).
+#
+# Migration/ holds the migration prompts/notes (Markdown), not module code — the
+# glob only picks up .cpp/.h, so it is naturally excluded.
+file(GLOB_RECURSE FULLUM_MODULE_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/*.h")
+
+target_sources(DirtyLittleBassSynth PRIVATE ${FULLUM_MODULE_SOURCES})
+
+# Display-only: do not compile any FullumModules .cpp yet.
+foreach(_fm_src IN LISTS FULLUM_MODULE_SOURCES)
+    if(_fm_src MATCHES "\\.cpp$")
+        set_source_files_properties("${_fm_src}" PROPERTIES HEADER_FILE_ONLY TRUE)
+    endif()
+endforeach()
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
+    FILES ${FULLUM_MODULE_SOURCES})
+
 # Source subdirectories on the include path so existing #include "Foo.h"
 # directives keep working without per-file path prefixes.
 target_include_directories(DirtyLittleBassSynth PRIVATE
