@@ -470,6 +470,39 @@ void DirtyLittleBassSynthAudioProcessor::SetCcEchoEnabled(bool enabled)
     }
 }
 
+PatchConfig DirtyLittleBassSynthAudioProcessor::MakeDlbsPatchConfig()
+{
+    PatchConfig config;
+    config.fileExtension = ".dlbs";
+    config.rootTagName   = "DLBSPatch";
+    config.pluginName    = "Dirty Little Bass Synth";
+    config.companyName   = "FullumMusic";
+
+    config.isExcludedFromPatch = [] (const juce::String &id)
+    {
+        return id == "tempo_fallback_bpm";
+    };
+
+    config.isExcludedFromRandomize = [] (const juce::String &id)
+    {
+        return id == "tempo_fallback_bpm" || id == "pitch_bend_range"
+            || id == "master_gain"        || id == "master_wide"
+            || id == "mono_below_freq"    || id == "limiter_on"
+            || id == "limiter_ceiling";
+    };
+
+    config.postRandomizeDefaults =
+    {
+        { "master_gain",     1.0f },
+        { "master_wide",     0.0f },
+        { "mono_below_freq", 120.0f },
+        { "limiter_on",      0.0f },
+        { "limiter_ceiling", -0.1f }
+    };
+
+    return config;
+}
+
 void DirtyLittleBassSynthAudioProcessor::AttachCcEchoListeners()
 {
     for (int i = 0; i < midiLearnManager.GetNumParams(); ++i)

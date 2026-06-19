@@ -6,7 +6,7 @@
 #include "ScopeBuffer.h"
 #include "TempoSnapshot.h"
 #include "MidiLearnManager.h"
-#include "PatchManager.h"
+#include "State/PatchManager.h"
 
 //==============================================================================
 
@@ -68,6 +68,8 @@ public:
     
     bool GetCcEchoEnabled() const;
     void SetCcEchoEnabled(bool enabled);
+    
+    static PatchConfig MakeDlbsPatchConfig();
     
     juce::AudioProcessorValueTreeState parameters;
 
@@ -145,11 +147,9 @@ private:
     ScopeBuffer      scopeBuffer;
     TempoSnapshot    tempoSnapshot;
     MidiLearnManager midiLearnManager;
-    PatchManager     patchManager { parameters };
+    PatchManager     patchManager { parameters, MakeDlbsPatchConfig() };
 
     juce::ApplicationProperties applicationProperties;
-
-private:
 
     juce::Synthesiser synth;
     int voiceCount = 1;

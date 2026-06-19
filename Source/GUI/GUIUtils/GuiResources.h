@@ -13,7 +13,7 @@
 #include "ScopeBuffer.h"
 #include "TempoSnapshot.h"
 #include "MidiLearnManager.h"
-#include "PatchManager.h"
+#include "State/PatchManager.h"
 
 //==============================================================================
 

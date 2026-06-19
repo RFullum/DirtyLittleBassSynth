@@ -135,12 +135,19 @@ foreach(_fm_src IN LISTS FULLUM_MODULE_SOURCES)
     endif()
 endforeach()
 
+# Adopted modules — compile these (overrides the display-only flag above).
+# Add each module's .cpp here as it is migrated in and its Source/ copy deleted.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/State/PatchManager.cpp"
+    PROPERTIES HEADER_FILE_ONLY FALSE)
+
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
     FILES ${FULLUM_MODULE_SOURCES})
 
 # Source subdirectories on the include path so existing #include "Foo.h"
 # directives keep working without per-file path prefixes.
 target_include_directories(DirtyLittleBassSynth PRIVATE
+    FullumModules            # root → shared modules referenced folder-rooted, e.g. "State/PatchManager.h"
     Source/Plugin
     Source/Plugin/PatchEngine
     Source/DSP
