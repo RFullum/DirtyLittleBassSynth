@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "GUI/ColorPalette.h"
 #include <JuceHeader.h>
 
 //==============================================================================
@@ -17,28 +18,16 @@
 namespace Palette
 {
 
-    struct Theme
-    {
-        juce::Colour background;
-        juce::Colour structure;
-        juce::Colour primaryAccent;
-        juce::Colour secondaryAccent;
-        juce::Colour pinkAccent;
-        juce::Colour orangeAccent;
-        juce::Colour textPrimary;
-        juce::Colour textSecondary;
-    };
-
     inline const Theme DefaultTheme
     {
-        juce::Colour(0xFF0D0E12),   // background:      not-quite-black
-        juce::Colour(0xFF1A1C24),   // structure:       dark blue-grey  - alt: 0xFF22252F
-        juce::Colour(0xFF00C8B4),   // primaryAccent:   teal            - alt: 0xFF1BD4C0
-        juce::Colour(0xFF4C6EF5),   // secondaryAccent: purplish        - alt: 0xFF5B7BFF
-        juce::Colour(0xFFFF2D78),   // pinkAccent:      hot pink
-        juce::Colour(0xFFFF6B00),   // orangeAccent:    blaze orange
-        juce::Colour(0xFFD0D8E8),   // textPrimary:     blue-tinted off-white
-        juce::Colour(0xFF5A6480)    // textSecondary:   blue-gray
+        .background      = juce::Colour(0xFF0D0E12),   // not-quite-black
+        .structure       = juce::Colour(0xFF1A1C24),   // dark blue-grey
+        .primaryAccent   = juce::Colour(0xFF00C8B4),   // teal
+        .secondaryAccent = juce::Colour(0xFF4C6EF5),   // purplish
+        .textPrimary     = juce::Colour(0xFFD0D8E8),   // blue-tinted off-white
+        .textSecondary   = juce::Colour(0xFF5A6480),   // blue-gray
+        .pinkAccent      = juce::Colour(0xFFFF2D78),   // hot pink
+        .orangeAccent    = juce::Colour(0xFFFF6B00)    // blaze orange
     };
 
 }   // namespace Palette
