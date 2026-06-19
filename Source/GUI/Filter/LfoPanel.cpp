@@ -8,6 +8,7 @@
 
 #include "LfoPanel.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -20,10 +21,10 @@ LfoPanel::LfoPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, lfoShapeSlider,   juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    DLBS::SetupSlider(this, lfoFreqSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-    DLBS::SetupSlider(this, lfoSyncDivSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-    DLBS::SetupSlider(this, lfoAmountSlider,  juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, lfoShapeSlider,   juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, lfoFreqSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, lfoSyncDivSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, lfoAmountSlider,  juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     // No textbox: track spans the full width of the visual above.
     lfoShapeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
@@ -33,10 +34,10 @@ LfoPanel::LfoPanel(GuiResources &res)
     lfoSyncDivSlider.setLookAndFeel(res.dialLookAndFeel);
     lfoAmountSlider .setLookAndFeel(res.dialLookAndFeel);
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Filter LFO", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, lfoRateLabel,   "Freq",   txt, 14.0f);
-    DLBS::SetupLabel(this, lfoAmountLabel, "Amount", txt, 14.0f);
+    GuiHelpers::SetupLabel(this, lfoRateLabel,   "Freq",   txt, 14.0f);
+    GuiHelpers::SetupLabel(this, lfoAmountLabel, "Amount", txt, 14.0f);
 
     shapeAtt  = DLBS::AttachSlider(*res.apvts, "filtLFO_shape",    lfoShapeSlider);
     freqAtt   = DLBS::AttachSlider(*res.apvts, "filtLFO_freq",     lfoFreqSlider);
@@ -74,11 +75,11 @@ LfoPanel::LfoPanel(GuiResources &res)
 
     RefreshSyncModeLook();
 
-    DLBS::SetTip(lfoShapeSlider,   "Morph LFO: Sine - Square - Saw");
-    DLBS::SetTip(lfoFreqSlider,    "LFO frequency in Hz");
-    DLBS::SetTip(lfoSyncDivSlider, "LFO Sync Rate");
-    DLBS::SetTip(lfoAmountSlider,  "LFO to Filter Amount");
-    DLBS::SetTip(lfoSyncControl,   "Set LFO to Frequency or Sync modes"); 
+    GuiHelpers::SetTip(lfoShapeSlider,   "Morph LFO: Sine - Square - Saw");
+    GuiHelpers::SetTip(lfoFreqSlider,    "LFO frequency in Hz");
+    GuiHelpers::SetTip(lfoSyncDivSlider, "LFO Sync Rate");
+    GuiHelpers::SetTip(lfoAmountSlider,  "LFO to Filter Amount");
+    GuiHelpers::SetTip(lfoSyncControl,   "Set LFO to Frequency or Sync modes"); 
 }
 
 LfoPanel::~LfoPanel()

@@ -8,6 +8,7 @@
 
 #include "OscPanel.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -18,10 +19,10 @@ OscPanel::OscPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    DLBS::SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    DLBS::SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-    DLBS::SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     // No textbox: track spans the full width of the visual above.
     oscMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
@@ -32,16 +33,17 @@ OscPanel::OscPanel(GuiResources &res)
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
     pitchBendRangeSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
 
     static constexpr float fontSizeLarge = 24.0f;
     static constexpr float fontSizeSmall = 13.0f;
-    DLBS::SetupLabel(this, oscLabel,            "OSC",         txt, fontSizeLarge, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, morphOscLabel,       "MORPH",       txt, fontSizeSmall, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, subLabel,            "SUB",         txt, fontSizeLarge, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, morphSubLabel,       "MORPH",       txt, fontSizeSmall, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, fontSizeSmall);
-    DLBS::SetupLabel(this, pitchBendRangeLabel, "Bend",        txt, fontSizeSmall);
+    const juce::Font::FontStyleFlags style = juce::Font::bold;
+    GuiHelpers::SetupLabel(this, oscLabel,            "OSC",         txt, fontSizeLarge, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, morphOscLabel,       "MORPH",       txt, fontSizeSmall, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, subLabel,            "SUB",         txt, fontSizeLarge, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, morphSubLabel,       "MORPH",       txt, fontSizeSmall, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, fontSizeSmall);
+    GuiHelpers::SetupLabel(this, pitchBendRangeLabel, "Bend",        txt, fontSizeSmall);
 
     subOctave.Setup(*res.apvts, "sub_osc_octave"
                     , juce::StringArray({"0", "-1", "-2"})
@@ -73,11 +75,11 @@ OscPanel::OscPanel(GuiResources &res)
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);
 
-    DLBS::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw");
-    DLBS::SetTip(subMorphSlider,       "Morph Sub oscillator: Sine - Square - Saw");
-    DLBS::SetTip(subGainSlider,        "Sub oscillator gain\n0.0dB is unity with Main Oscillator");
-    DLBS::SetTip(pitchBendRangeSlider, "Pitch Bend Range");
-    DLBS::SetTip(subOctave,            "Sub Osc number of octaves below Main Osc");
+    GuiHelpers::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw");
+    GuiHelpers::SetTip(subMorphSlider,       "Morph Sub oscillator: Sine - Square - Saw");
+    GuiHelpers::SetTip(subGainSlider,        "Sub oscillator gain\n0.0dB is unity with Main Oscillator");
+    GuiHelpers::SetTip(pitchBendRangeSlider, "Pitch Bend Range");
+    GuiHelpers::SetTip(subOctave,            "Sub Osc number of octaves below Main Osc");
 }
 
 void OscPanel::resized()

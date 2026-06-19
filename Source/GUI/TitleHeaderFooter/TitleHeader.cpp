@@ -9,7 +9,7 @@
 */
 
 #include "TitleHeader.h"
-#include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ TitleHeader::TitleHeader(GuiResources &res)
             patchControls.Update();   // reflect new dirty/name state immediately
         }
     };
-    DLBS::SetTip(randomizeButton, "Randomize parameter values");
+    GuiHelpers::SetTip(randomizeButton, "Randomize parameter values");
     
     addAndMakeVisible(patchControls);
 
@@ -47,7 +47,7 @@ TitleHeader::TitleHeader(GuiResources &res)
             resources.midiPanic();
     };
     addAndMakeVisible(panicButton);
-    DLBS::SetTip(panicButton, "MIDI Panic: Click to kill stuck MIDI");
+    GuiHelpers::SetTip(panicButton, "MIDI Panic: Click to kill stuck MIDI");
 
     // === Plugin-name label ===
     // Painted style mirrors what the old paint() routine drew: primaryAccent,

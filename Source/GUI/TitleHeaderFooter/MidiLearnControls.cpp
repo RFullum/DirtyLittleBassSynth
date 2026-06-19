@@ -7,7 +7,7 @@
 */
 
 #include "MidiLearnControls.h"
-#include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -50,8 +50,8 @@ MidiLearnControls::MidiLearnControls(GuiResources &res)
     };
     addChildComponent(clearMapsButton);   // hidden by default; Update() shows it in learn mode
 
-    DLBS::SetTip(learnButton,     "Enter/Leave MIDI Learn Mode");
-    DLBS::SetTip(clearMapsButton, "Clears MIDI Mappings"); 
+    GuiHelpers::SetTip(learnButton,     "Enter/Leave MIDI Learn Mode");
+    GuiHelpers::SetTip(clearMapsButton, "Clears MIDI Mappings");
 }
 
 void MidiLearnControls::resized()

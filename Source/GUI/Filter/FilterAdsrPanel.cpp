@@ -8,6 +8,7 @@
 
 #include "FilterAdsrPanel.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -19,12 +20,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
-    DLBS::SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
-    DLBS::SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
-    DLBS::SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
-    DLBS::SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
-    DLBS::SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, fltAttackSlider,    juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, fltDecaySlider,     juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, fltSustainSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, fltReleaseSlider,   juce::Slider::SliderStyle::LinearHorizontal,             accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, adsrToCutoffSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, adsrToResSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, accent, thumb, txt);
 
     fltAttackSlider   .setLookAndFeel(res.dialLookAndFeel);
     fltDecaySlider    .setLookAndFeel(res.dialLookAndFeel);
@@ -35,14 +36,14 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
     
     // TODO: To CO and To Rez - remove slider value label?
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Filter Env", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, fltAttackLabel,    "A",         txt, 14.0f);
-    DLBS::SetupLabel(this, fltDecayLabel,     "D",         txt, 14.0f);
-    DLBS::SetupLabel(this, fltSustainLabel,   "S",         txt, 14.0f);
-    DLBS::SetupLabel(this, fltReleaseLabel,   "R",         txt, 14.0f);
-    DLBS::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 14.0f);
-    DLBS::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 14.0f);
+    GuiHelpers::SetupLabel(this, fltAttackLabel,    "A",         txt, 14.0f);
+    GuiHelpers::SetupLabel(this, fltDecayLabel,     "D",         txt, 14.0f);
+    GuiHelpers::SetupLabel(this, fltSustainLabel,   "S",         txt, 14.0f);
+    GuiHelpers::SetupLabel(this, fltReleaseLabel,   "R",         txt, 14.0f);
+    GuiHelpers::SetupLabel(this, adsrToCutoffLabel, "To Cutoff", txt, 14.0f);
+    GuiHelpers::SetupLabel(this, adsrToResLabel,    "To Rez",    txt, 14.0f);
 
     attackAtt   = DLBS::AttachSlider(*res.apvts, "filtEnv_attack",  fltAttackSlider);
     decayAtt    = DLBS::AttachSlider(*res.apvts, "filtEnv_decay",   fltDecaySlider);
@@ -66,12 +67,12 @@ FilterAdsrPanel::FilterAdsrPanel(GuiResources &res)
 
     addAndMakeVisible(adsrVisual);
 
-    DLBS::SetTip(fltAttackSlider,    "Filter Attack");
-    DLBS::SetTip(fltDecaySlider,     "Filter Decay");
-    DLBS::SetTip(fltSustainSlider,   "Filter Sustain");
-    DLBS::SetTip(fltReleaseSlider,   "Filter Release");
-    DLBS::SetTip(adsrToCutoffSlider, "Envelop to Cutoff Frequency Amount");
-    DLBS::SetTip(adsrToResSlider,    "Envelop to Resonance Frequency Amount"); 
+    GuiHelpers::SetTip(fltAttackSlider,    "Filter Attack");
+    GuiHelpers::SetTip(fltDecaySlider,     "Filter Decay");
+    GuiHelpers::SetTip(fltSustainSlider,   "Filter Sustain");
+    GuiHelpers::SetTip(fltReleaseSlider,   "Filter Release");
+    GuiHelpers::SetTip(adsrToCutoffSlider, "Envelop to Cutoff Frequency Amount");
+    GuiHelpers::SetTip(adsrToResSlider,    "Envelop to Resonance Frequency Amount"); 
 }
 
 void FilterAdsrPanel::resized()

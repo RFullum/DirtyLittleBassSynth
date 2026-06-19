@@ -7,6 +7,7 @@
 */
 
 #include "ModifierPanel.h"
+#include "GUI/GuiHelpers.h"
 #include "GuiHelpers.h"
 
 //==============================================================================
@@ -22,15 +23,15 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, portaSlider,         juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
-    DLBS::SetupSlider(this, foldbackSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    DLBS::SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
-    DLBS::SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
-    DLBS::SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
-    DLBS::SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    DLBS::SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    DLBS::SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
-    DLBS::SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    GuiHelpers::SetupSlider(this, portaSlider,         juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, primary, thumb, txt);
+    GuiHelpers::SetupSlider(this, foldbackSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    GuiHelpers::SetupSlider(this, ringToneSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    GuiHelpers::SetupSlider(this, ringPitchSlider,     juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    GuiHelpers::SetupSlider(this, ringDryWetSlider,    juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, pink,    thumb, txt);
+    GuiHelpers::SetupSlider(this, frqShftPitchSlider,  juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    GuiHelpers::SetupSlider(this, frqShftDryWetSlider, juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    GuiHelpers::SetupSlider(this, sHPitchSlider,       juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
+    GuiHelpers::SetupSlider(this, sHDryWetSlider,      juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag, orange,  thumb, txt);
 
     portaSlider        .setLookAndFeel(res.dialLookAndFeel);
     foldbackSlider     .setLookAndFeel(res.dialLookAndFeel);
@@ -56,16 +57,16 @@ ModifierPanel::ModifierPanel(GuiResources &res)
     sHPitchSlider      .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     sHDryWetSlider     .setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Modifiers", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, portaLabel,    "Portamento",           txt, 14.0f);
-    DLBS::SetupLabel(this, foldbackLabel, "Foldback\nDistortion", txt, 14.0f);
-    DLBS::SetupLabel(this, ringLabel,     "Ring Mod",             txt, 14.0f);
-    DLBS::SetupLabel(this, frqShftLabel,  "Freq Shift",           txt, 14.0f);
-    DLBS::SetupLabel(this, sHLabel,       "Sample & Hold",        txt, 14.0f);
-    DLBS::SetupLabel(this, toneLabel,     "Tone",                 txt, 12.0f);
-    DLBS::SetupLabel(this, pitchLabel,    "Pitch",                txt, 12.0f);
-    DLBS::SetupLabel(this, dryWetLabel,   "Dry/Wet",              txt, 12.0f);
+    GuiHelpers::SetupLabel(this, portaLabel,    "Portamento",           txt, 14.0f);
+    GuiHelpers::SetupLabel(this, foldbackLabel, "Foldback\nDistortion", txt, 14.0f);
+    GuiHelpers::SetupLabel(this, ringLabel,     "Ring Mod",             txt, 14.0f);
+    GuiHelpers::SetupLabel(this, frqShftLabel,  "Freq Shift",           txt, 14.0f);
+    GuiHelpers::SetupLabel(this, sHLabel,       "Sample & Hold",        txt, 14.0f);
+    GuiHelpers::SetupLabel(this, toneLabel,     "Tone",                 txt, 12.0f);
+    GuiHelpers::SetupLabel(this, pitchLabel,    "Pitch",                txt, 12.0f);
+    GuiHelpers::SetupLabel(this, dryWetLabel,   "Dry/Wet",              txt, 12.0f);
 
     portaAtt         = DLBS::AttachSlider(*res.apvts, "porta_time",       portaSlider);
     foldbackAtt      = DLBS::AttachSlider(*res.apvts, "foldback_dist",    foldbackSlider);
@@ -98,17 +99,17 @@ ModifierPanel::ModifierPanel(GuiResources &res)
 
     RefreshPortaLook();
 
-    DLBS::SetTip(portaSlider,         "Portamento glide time");
-    DLBS::SetTip(foldbackSlider,      "Foldback Distortion Amount");
-    DLBS::SetTip(ringToneSlider,      "Ring Mod Tone");
-    DLBS::SetTip(ringPitchSlider,     "Ring Mod Pitch");
-    DLBS::SetTip(ringDryWetSlider,    "Ring Mod Dry/Wet");
-    DLBS::SetTip(frqShftPitchSlider,  "Frequency Shift Pitch");
-    DLBS::SetTip(frqShftDryWetSlider, "Frequency Shift Dry/Wet");
-    DLBS::SetTip(sHPitchSlider,       "Sample and Hold Pitch");
-    DLBS::SetTip(sHDryWetSlider,      "Sample and Hold Dry/Wet");
-    DLBS::SetTip(portaOnButton,       "Portamento On/Off");
-    DLBS::SetTip(portaLegatoButton,   "Portamento\nAlways: glides every note\nLegato: only glides on overlapping notes"); 
+    GuiHelpers::SetTip(portaSlider,         "Portamento glide time");
+    GuiHelpers::SetTip(foldbackSlider,      "Foldback Distortion Amount");
+    GuiHelpers::SetTip(ringToneSlider,      "Ring Mod Tone");
+    GuiHelpers::SetTip(ringPitchSlider,     "Ring Mod Pitch");
+    GuiHelpers::SetTip(ringDryWetSlider,    "Ring Mod Dry/Wet");
+    GuiHelpers::SetTip(frqShftPitchSlider,  "Frequency Shift Pitch");
+    GuiHelpers::SetTip(frqShftDryWetSlider, "Frequency Shift Dry/Wet");
+    GuiHelpers::SetTip(sHPitchSlider,       "Sample and Hold Pitch");
+    GuiHelpers::SetTip(sHDryWetSlider,      "Sample and Hold Dry/Wet");
+    GuiHelpers::SetTip(portaOnButton,       "Portamento On/Off");
+    GuiHelpers::SetTip(portaLegatoButton,   "Portamento\nAlways: glides every note\nLegato: only glides on overlapping notes"); 
 }
 
 ModifierPanel::~ModifierPanel()

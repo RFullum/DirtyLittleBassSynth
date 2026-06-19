@@ -8,6 +8,7 @@
 
 #include "MasterColumn.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -20,15 +21,15 @@ MasterColumn::MasterColumn(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Master", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Master", res.theme.textSecondary);
 
-    DLBS::SetupSlider(this
-                      , masterGainSlider
-                      , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
-                      , accent
-                      , thumb
-                      , txt);
-    DLBS::SetupLabel(this, masterGainLabel, "Out Gain", txt, 14.0f);
+    GuiHelpers::SetupSlider(this
+                            , masterGainSlider
+                            , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
+                            , accent
+                            , thumb
+                            , txt);
+    GuiHelpers::SetupLabel(this, masterGainLabel, "Out Gain", txt, 14.0f);
 
     masterGainSlider.setLookAndFeel(res.dialLookAndFeel);
 
@@ -45,13 +46,13 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     ceilingOnAtt = DLBS::AttachButton(*res.apvts, "limiter_on", ceilingOnButton);
 
-    DLBS::SetupSlider(this
-                      , ceilingSlider
-                      , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
-                      , res.theme.pinkAccent
-                      , thumb
-                      , txt);
-    DLBS::SetupLabel(this, ceilingLabel, "Ceiling", txt, 14.0f);
+    GuiHelpers::SetupSlider(this
+                            , ceilingSlider
+                            , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
+                            , res.theme.pinkAccent
+                            , thumb
+                            , txt);
+    GuiHelpers::SetupLabel(this, ceilingLabel, "Ceiling", txt, 14.0f);
 
     ceilingSlider.setLookAndFeel    (res.dialLookAndFeel);
     ceilingSlider.setTextValueSuffix(" dB");
@@ -60,13 +61,13 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     res.apvts->addParameterListener("limiter_on", this);
 
-    DLBS::SetupSlider(this
-                      , wideSlider
-                      , juce::Slider::SliderStyle::LinearHorizontal
-                      , accent
-                      , thumb
-                      , txt);
-    DLBS::SetupLabel(this, wideLabel, "Wide", txt, 14.0f);
+    GuiHelpers::SetupSlider(this
+                            , wideSlider
+                            , juce::Slider::SliderStyle::LinearHorizontal
+                            , accent
+                            , thumb
+                            , txt);
+    GuiHelpers::SetupLabel(this, wideLabel, "Wide", txt, 14.0f);
 
     wideSlider.setLookAndFeel           (res.dialLookAndFeel);
     wideSlider.setTextBoxStyle          (juce::Slider::NoTextBox, false, 0, 0);
@@ -77,13 +78,13 @@ MasterColumn::MasterColumn(GuiResources &res)
 
     wideAtt = DLBS::AttachSlider(*res.apvts, "master_wide", wideSlider);
 
-    DLBS::SetupSlider(this
-                      , monoCrossoverSlider
-                      , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
-                      , res.theme.orangeAccent
-                      , thumb
-                      , txt);
-    DLBS::SetupLabel(this, monoCrossoverLabel, "Mono Below", txt, 14.0f);
+    GuiHelpers::SetupSlider(this
+                            , monoCrossoverSlider
+                            , juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag
+                            , res.theme.orangeAccent
+                            , thumb
+                            , txt);
+    GuiHelpers::SetupLabel(this, monoCrossoverLabel, "Mono Below", txt, 14.0f);
 
     monoCrossoverSlider.setLookAndFeel    (res.dialLookAndFeel);
     monoCrossoverSlider.setTextValueSuffix(" Hz");
@@ -105,11 +106,11 @@ MasterColumn::MasterColumn(GuiResources &res)
     ceilingOnButton.setButtonText(ceilingOnButton.getToggleState() ? "ON" : "OFF");
     RefreshCeilingEnabledLook();
 
-    DLBS::SetTip(masterGainSlider,    "Master Output Gain"); 
-    DLBS::SetTip(ceilingOnButton,     "Ceiling Limiter On/Off");
-    DLBS::SetTip(ceilingSlider,       "Ceiling Limiter Threshold");
-    DLBS::SetTip(wideSlider,          "Haas widener\nSlider position delays opposite stereo chanel");
-    DLBS::SetTip(monoCrossoverSlider, "Mono frequencies below crossover frequency");
+    GuiHelpers::SetTip(masterGainSlider,    "Master Output Gain");
+    GuiHelpers::SetTip(ceilingOnButton,     "Ceiling Limiter On/Off");
+    GuiHelpers::SetTip(ceilingSlider,       "Ceiling Limiter Threshold");
+    GuiHelpers::SetTip(wideSlider,          "Haas widener\nSlider position delays opposite stereo chanel");
+    GuiHelpers::SetTip(monoCrossoverSlider, "Mono frequencies below crossover frequency");
 }
 
 MasterColumn::~MasterColumn()
@@ -128,7 +129,7 @@ void MasterColumn::paint(juce::Graphics &g)
     if (gainReductionDb > 0.001f)
     {
         const float norm  = juce::jlimit(0.0f, 1.0f, gainReductionDb / maxGRDb);
-        const int   fillH = (int) (grMeterRect.getHeight() * norm);
+        const int   fillH = (int)(grMeterRect.getHeight() * norm);
 
         const auto fillRect = juce::Rectangle<int>(grMeterRect.getX(),
                                                    grMeterRect.getY(),

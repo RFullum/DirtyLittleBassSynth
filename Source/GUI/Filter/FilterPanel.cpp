@@ -8,6 +8,7 @@
 
 #include "FilterPanel.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -24,17 +25,17 @@ FilterPanel::FilterPanel(GuiResources &res)
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
-    DLBS::SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, cutoffSlider, juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
+    GuiHelpers::SetupSlider(this, resSlider,    juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
 
     cutoffSlider.setLookAndFeel(res.dialLookAndFeel);
     cutoffSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     resSlider   .setLookAndFeel(res.dialLookAndFeel);
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Filter", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
-    DLBS::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
+    GuiHelpers::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
+    GuiHelpers::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
     filterType.Setup(*res.apvts
                      , "filter_type"
@@ -55,9 +56,9 @@ FilterPanel::FilterPanel(GuiResources &res)
 
     addAndMakeVisible(filterVisual);
 
-    DLBS::SetTip(cutoffSlider, "Filter Cutoff Frequency");
-    DLBS::SetTip(resSlider,    "Filter Resonance");
-    DLBS::SetTip(filterType,   "Filter Type:\n2 Pole, 4 Pole, 8 Pole, Notch");
+    GuiHelpers::SetTip(cutoffSlider, "Filter Cutoff Frequency");
+    GuiHelpers::SetTip(resSlider,    "Filter Resonance");
+    GuiHelpers::SetTip(filterType,   "Filter Type:\n2 Pole, 4 Pole, 8 Pole, Notch");
 }
 
 void FilterPanel::resized()

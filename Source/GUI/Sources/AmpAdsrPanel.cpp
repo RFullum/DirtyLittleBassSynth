@@ -8,6 +8,7 @@
 
 #include "AmpAdsrPanel.h"
 #include "GuiHelpers.h"
+#include "GUI/GuiHelpers.h"
 
 //==============================================================================
 
@@ -19,22 +20,23 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
     auto thumb   = res.theme.textPrimary;
     auto txt     = res.theme.textPrimary;
 
-    DLBS::SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
-    DLBS::SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
-    DLBS::SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
-    DLBS::SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
+    GuiHelpers::SetupSlider(this, oscAttackSlider,  juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
+    GuiHelpers::SetupSlider(this, oscDecaySlider,   juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
+    GuiHelpers::SetupSlider(this, oscSustainSlider, juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
+    GuiHelpers::SetupSlider(this, oscReleaseSlider, juce::Slider::SliderStyle::LinearHorizontal, primary, thumb, txt);
 
     oscAttackSlider .setLookAndFeel(res.dialLookAndFeel);
     oscDecaySlider  .setLookAndFeel(res.dialLookAndFeel);
     oscSustainSlider.setLookAndFeel(res.dialLookAndFeel);
     oscReleaseSlider.setLookAndFeel(res.dialLookAndFeel);
 
-    DLBS::SetupSectionLabel(this, sectionLabel, "Amp", res.theme.textSecondary);
+    GuiHelpers::SetupSectionLabel(this, sectionLabel, "Amp", res.theme.textSecondary);
 
-    DLBS::SetupLabel(this, oscAttackLabel,  "A", txt, 16.0f, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, oscDecayLabel,   "D", txt, 16.0f, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f, juce::Justification::centredRight);
-    DLBS::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f, juce::Justification::centredRight);
+    const juce::Font::FontStyleFlags style = juce::Font::bold;
+    GuiHelpers::SetupLabel(this, oscAttackLabel,  "A", txt, 16.0f, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, oscDecayLabel,   "D", txt, 16.0f, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, oscSustainLabel, "S", txt, 16.0f, style, juce::Justification::centredRight);
+    GuiHelpers::SetupLabel(this, oscReleaseLabel, "R", txt, 16.0f, style, juce::Justification::centredRight);
 
     attackAtt  = DLBS::AttachSlider(*res.apvts, "amp_attack",  oscAttackSlider);
     decayAtt   = DLBS::AttachSlider(*res.apvts, "amp_decay",   oscDecaySlider);
@@ -56,10 +58,10 @@ AmpAdsrPanel::AmpAdsrPanel(GuiResources &res)
 
     addAndMakeVisible(adsrVisual);
 
-    DLBS::SetTip(oscAttackSlider,  "Main & Sub Attack"); 
-    DLBS::SetTip(oscDecaySlider,   "Main & Sub Decay");
-    DLBS::SetTip(oscSustainSlider, "Main & Sub Sustain");
-    DLBS::SetTip(oscReleaseSlider, "Main & Sub Release");
+    GuiHelpers::SetTip(oscAttackSlider,  "Main & Sub Attack");
+    GuiHelpers::SetTip(oscDecaySlider,   "Main & Sub Decay");
+    GuiHelpers::SetTip(oscSustainSlider, "Main & Sub Sustain");
+    GuiHelpers::SetTip(oscReleaseSlider, "Main & Sub Release");
 }
 
 void AmpAdsrPanel::resized()

@@ -14,72 +14,7 @@
 
 namespace DLBS
 {
-    // Styles a slider with our textbox layout (right of horizontal, below others).
-    inline void SetupSlider(juce::Component             *parent
-                            , juce::Slider              &slider
-                            , juce::Slider::SliderStyle  style
-                            , juce::Colour               fillColor
-                            , juce::Colour               thumbColor
-                            , juce::Colour               textColor)
-    {
-        slider.setSliderStyle(style);
 
-        const auto tbPos = (style == juce::Slider::SliderStyle::LinearHorizontal)
-                              ? juce::Slider::TextBoxRight
-                              : juce::Slider::TextBoxBelow;
-
-        // 48px right fits "100 ms"-"999 ms"; 56px below fits "-XX.X dB".
-        const int tbW = (tbPos == juce::Slider::TextBoxRight) ? 48 : 56;
-        const int tbH = 14;
-
-        slider.setTextBoxStyle(tbPos, false, tbW, tbH);
-        slider.setColour      (juce::Slider::textBoxOutlineColourId,    juce::Colours::transparentBlack);
-        slider.setColour      (juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-        slider.setColour      (juce::Slider::textBoxTextColourId,       textColor);
-
-        if (style == juce::Slider::SliderStyle::LinearHorizontal
-            || style == juce::Slider::SliderStyle::LinearVertical)
-            slider.setColour(juce::Slider::trackColourId, fillColor);
-        else if (style == juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag)
-            slider.setColour(juce::Slider::rotarySliderFillColourId, fillColor);
-
-        slider.setColour(juce::Slider::thumbColourId, thumbColor);
-
-        parent->addAndMakeVisible(slider);
-    }
-
-    inline void SetupLabel(juce::Component       *parent
-                           , juce::Label         &label
-                           , juce::String         labelText
-                           , juce::Colour         color
-                           , float                fontSize
-                           , juce::Justification  just = juce::Justification::centred)
-    {
-        label.setFont             (juce::FontOptions("helvetica", fontSize, 1));
-        label.setText             (labelText, juce::dontSendNotification);
-        label.setJustificationType(juce::Justification::centred);
-        label.setColour           (juce::Label::textColourId, color);
-        label.setJustificationType(just);
-
-        parent->addAndMakeVisible(label);
-    }
-
-    // Small uppercase letter-spaced section header.
-    inline void SetupSectionLabel(juce::Component *parent
-                                  , juce::Label   &label
-                                  , juce::String   text
-                                  , juce::Colour   color)
-    {
-        auto font = juce::Font(juce::FontOptions("helvetica", 10.0f, juce::Font::bold))
-                       .withExtraKerningFactor(0.18f);
-
-        label.setFont             (font);
-        label.setText             (text.toUpperCase(), juce::dontSendNotification);
-        label.setJustificationType(juce::Justification::centredLeft);
-        label.setColour           (juce::Label::textColourId, color);
-
-        parent->addAndMakeVisible(label);
-    }
 
     // Formats as "X ms" under 1s, "X.XX s" otherwise. Used by ADSR sliders.
     inline juce::String FormatTime(double seconds)
@@ -129,17 +64,6 @@ namespace DLBS
         slider.updateText();
     }
 
-    inline void SetupComboBox(juce::Component     *parent
-                              , juce::ComboBox    &box
-                              , juce::StringArray  items)
-    {
-        box.addItemList         (items, 1);
-        box.setJustificationType(juce::Justification::centred);
-        box.setSelectedItemIndex(0);
-
-        parent->addAndMakeVisible(box);
-    }
-
     // Attach* helpers tag the component with "paramID" so MidiLearnOverlay
     // can resolve a click to its bound APVTS parameter. Always use these for
     // learnable controls.
@@ -162,9 +86,4 @@ namespace DLBS
         return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID, button);
     }
 
-    // Single chokepoint for tooltip text so we can grep / gate / transform later.
-    inline void SetTip(juce::SettableTooltipClient &control, const juce::String &text)
-    {
-        control.setTooltip(text);
-    }
 }
