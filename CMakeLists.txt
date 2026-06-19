@@ -154,6 +154,9 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/FourPoleLPF.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/EightPoleLPF.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/NotchFilter.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/Crossover.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/HaasWidener.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/CeilingLimiter.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
