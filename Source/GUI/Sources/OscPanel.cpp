@@ -14,28 +14,33 @@
 //==============================================================================
 
 OscPanel::OscPanel(GuiResources &res)
+: subOctave(*res.apvts
+            , "sub_osc_octave"
+            , res.theme
+            , juce::StringArray({"0","-1","-2"})
+            , juce::FontOptions("Helvetica", 12.0f, juce::Font::bold))
 {
     setOpaque(false);
     auto accent = res.theme.primaryAccent;
     auto thumb  = res.theme.textPrimary;
     auto txt    = res.theme.textPrimary;
-
+    
     GuiHelpers::SetupSlider(this, oscMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
     GuiHelpers::SetupSlider(this, subMorphSlider,       juce::Slider::SliderStyle::LinearHorizontal, accent, thumb, txt);
     GuiHelpers::SetupSlider(this, subGainSlider,        juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
     GuiHelpers::SetupSlider(this, pitchBendRangeSlider, juce::Slider::SliderStyle::LinearVertical,   accent, thumb, txt);
-
+    
     // No textbox: track spans the full width of the visual above.
     oscMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     subMorphSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-
+    
     oscMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subMorphSlider      .setLookAndFeel(res.dialLookAndFeel);
     subGainSlider       .setLookAndFeel(res.dialLookAndFeel);
     pitchBendRangeSlider.setLookAndFeel(res.dialLookAndFeel);
-
+    
     GuiHelpers::SetupSectionLabel(this, sectionLabel, "Oscillator", res.theme.textSecondary);
-
+    
     static constexpr float fontSizeLarge = 24.0f;
     static constexpr float fontSizeSmall = 13.0f;
     const juce::Font::FontStyleFlags style = juce::Font::bold;
@@ -45,42 +50,38 @@ OscPanel::OscPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, morphSubLabel,       "MORPH",       txt, fontSizeSmall, style, juce::Justification::centredRight);
     GuiHelpers::SetupLabel(this, subGainLabel,        "Sub Gain",    txt, fontSizeSmall);
     GuiHelpers::SetupLabel(this, pitchBendRangeLabel, "Bend",        txt, fontSizeSmall);
-
-    subOctave.Setup(*res.apvts, "sub_osc_octave"
-                    , juce::StringArray({"0", "-1", "-2"})
-                    , accent
-                    , res.theme.structure
-                    , res.theme.textSecondary);
+    
+    subOctave.getProperties().set("paramID", "sub_osc_octave");
     addAndMakeVisible(subOctave);
-
+    
     oscMorphAtt       = DLBS::AttachSlider(*res.apvts, "osc_morph",     oscMorphSlider);
     subMorphAtt       = DLBS::AttachSlider(*res.apvts, "sub_osc_morph", subMorphSlider);
     subGainAtt        = DLBS::AttachSlider(*res.apvts, "sub_osc_gain",  subGainSlider);
-
+    
     // Raw attachment (not DLBS::AttachSlider): keeps pitch_bend_range out of
     // MIDI Learn — setup param, not a live-tweak control.
     pitchBendRangeAtt = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(*res.apvts, "pitch_bend_range", pitchBendRangeSlider);
-
+    
     Format::SetSliderTextFormat(subGainSlider, Format::GainDb);
-
+    
     auto bg     = res.theme.background;
     auto bgFade = res.theme.background.darker();
-
+    
     oscVisual   .SetColors(accent, bg, bgFade);
     subOscVisual.SetColors(accent, bg, bgFade);
-
+    
     oscVisual   .Init(res.apvts->getRawParameterValue("osc_morph"),     /*useSquare*/ false);
     subOscVisual.Init(res.apvts->getRawParameterValue("sub_osc_morph"), /*useSquare*/ true,
                       res.apvts->getRawParameterValue("sub_osc_gain"));
-
+    
     addAndMakeVisible(oscVisual);
     addAndMakeVisible(subOscVisual);
-
+    
     GuiHelpers::SetTip(oscMorphSlider,       "Morph Main oscillator: Sine - Spike - Saw");
     GuiHelpers::SetTip(subMorphSlider,       "Morph Sub oscillator: Sine - Square - Saw");
     GuiHelpers::SetTip(subGainSlider,        "Sub oscillator gain\n0.0dB is unity with Main Oscillator");
     GuiHelpers::SetTip(pitchBendRangeSlider, "Pitch Bend Range");
-    GuiHelpers::SetTip(subOctave,            "Sub Osc number of octaves below Main Osc");
+    subOctave.SetTooltip("Sub Osc number of octaves below Main Osc");
 }
 
 void OscPanel::resized()

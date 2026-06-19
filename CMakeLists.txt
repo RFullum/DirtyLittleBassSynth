@@ -143,6 +143,7 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/PatchSelectionPopup.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/FullumLookAndFeel.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/TitleFooter.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/Selector.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
@@ -152,6 +153,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModu
 # directives keep working without per-file path prefixes.
 target_include_directories(DirtyLittleBassSynth PRIVATE
     FullumModules            # root → shared modules referenced folder-rooted, e.g. "State/PatchManager.h"
+    FullumModules/Libraries
     Source/Plugin
     Source/Plugin/PatchEngine
     Source/DSP

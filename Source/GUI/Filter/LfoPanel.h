@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "OscVisual.h"
-#include "SegmentedControl.h"
+#include "GUI/Selector.h"
 
 //==============================================================================
 
@@ -41,7 +41,7 @@ private:
     juce::Slider     lfoSyncDivSlider;    // visible in SYNC mode
     juce::Slider     lfoAmountSlider;
 
-    SegmentedControl lfoSyncControl;
+    Selector lfoSyncControl;
 
     juce::Label sectionLabel;
     juce::Label lfoRateLabel;             // "Freq" or "Sync" depending on mode

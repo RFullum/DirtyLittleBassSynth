@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "OscVisual.h"
-#include "SegmentedControl.h"
+#include "GUI/Selector.h"
 
 //==============================================================================
 
@@ -33,7 +33,7 @@ private:
     juce::Slider     subMorphSlider;
     juce::Slider     subGainSlider;
     juce::Slider     pitchBendRangeSlider;
-    SegmentedControl subOctave;
+    Selector         subOctave;
 
     juce::Label sectionLabel;
     juce::Label oscLabel;

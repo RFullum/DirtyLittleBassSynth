@@ -14,6 +14,11 @@
 
 LfoPanel::LfoPanel(GuiResources &res)
 : resources(res)
+, lfoSyncControl(*res.apvts
+                 , "filtLFO_sync"
+                 , res.theme
+                 , juce::StringArray({"FRQ","SYNC"})
+                 , juce::FontOptions("Helvetica", 12.0f, juce::Font::bold))
 {
     setOpaque(false);
     
@@ -59,9 +64,7 @@ LfoPanel::LfoPanel(GuiResources &res)
         lfoSyncDivSlider.updateText();
     }
 
-    lfoSyncControl.Setup(*res.apvts, "filtLFO_sync",
-                         juce::StringArray({"FRQ", "SYNC"}),
-                         accent, res.theme.structure, res.theme.textSecondary);
+    lfoSyncControl.getProperties().set("paramID", "filtLFO_sync");
     addAndMakeVisible(lfoSyncControl);
 
     auto bg     = res.theme.background;
@@ -79,7 +82,7 @@ LfoPanel::LfoPanel(GuiResources &res)
     GuiHelpers::SetTip(lfoFreqSlider,    "LFO frequency in Hz");
     GuiHelpers::SetTip(lfoSyncDivSlider, "LFO Sync Rate");
     GuiHelpers::SetTip(lfoAmountSlider,  "LFO to Filter Amount");
-    GuiHelpers::SetTip(lfoSyncControl,   "Set LFO to Frequency or Sync modes"); 
+    lfoSyncControl.SetTooltip("Set LFO to Frequency or Sync modes");
 }
 
 LfoPanel::~LfoPanel()
@@ -144,7 +147,7 @@ void LfoPanel::parameterChanged(const juce::String &parameterID, float newValue)
 
 void LfoPanel::RefreshSyncModeLook()
 {
-    const bool sync = lfoSyncControl.GetSelectedIndex() == 1;
+    const bool sync = lfoSyncControl.SelectedIndex.get() == 1;
 
     lfoFreqSlider   .setVisible(! sync);
     lfoSyncDivSlider.setVisible(  sync);

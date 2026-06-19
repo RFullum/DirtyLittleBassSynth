@@ -15,6 +15,11 @@
 
 FilterPanel::FilterPanel(GuiResources &res)
 : resources(res)
+, filterType(*res.apvts
+             , "filter_type"
+             , res.theme
+             , juce::StringArray({"-12","-24","-48","Notch"})
+             , juce::FontOptions("Helvetica", 12.0f, juce::Font::bold))
 {
     setOpaque(false);
 
@@ -38,12 +43,7 @@ FilterPanel::FilterPanel(GuiResources &res)
     GuiHelpers::SetupLabel(this, cutoffLabel, "Cutoff", txt, 15.0f);
     GuiHelpers::SetupLabel(this, resLabel,    "Rez",    txt, 15.0f);
 
-    filterType.Setup(*res.apvts
-                     , "filter_type"
-                     , juce::StringArray({"-12", "-24", "-48", "Notch"})
-                     , accent
-                     , res.theme.structure
-                     , res.theme.textSecondary);
+    filterType.getProperties().set("paramID", "filter_type");
     addAndMakeVisible(filterType);
 
     cutoffAtt = DLBS::AttachSlider(*res.apvts, "filter_cutoff", cutoffSlider);
@@ -59,7 +59,7 @@ FilterPanel::FilterPanel(GuiResources &res)
 
     GuiHelpers::SetTip(cutoffSlider, "Filter Cutoff Frequency");
     GuiHelpers::SetTip(resSlider,    "Filter Resonance");
-    GuiHelpers::SetTip(filterType,   "Filter Type:\n2 Pole, 4 Pole, 8 Pole, Notch");
+    filterType.SetTooltip("Filter Type:\n2 Pole, 4 Pole, 8 Pole, Notch");
 }
 
 void FilterPanel::resized()
@@ -114,7 +114,7 @@ void FilterPanel::Update()
     const float resHeadroom = (2.0f - baseRes) * resAmt;
     const float effRes      = juce::jlimit(1.0f, 2.0f, baseRes + envVal * resHeadroom);
 
-    filterVisual.drawFilterShape(filterType.GetSelectedIndex() + 1
+    filterVisual.drawFilterShape(filterType.SelectedIndex.get() + 1
                                  , effCutoff
                                  , effRes);
 }

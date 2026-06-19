@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "GuiResources.h"
 #include "FilterVisual.h"
-#include "SegmentedControl.h"
+#include "GUI/Selector.h"
 
 //==============================================================================
 
@@ -32,7 +32,7 @@ private:
 
     juce::Slider     cutoffSlider;
     juce::Slider     resSlider;
-    SegmentedControl filterType;
+    Selector         filterType;
 
     juce::Label sectionLabel;
     juce::Label cutoffLabel;
