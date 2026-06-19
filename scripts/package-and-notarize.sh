@@ -1,9 +1,15 @@
 #!/bin/bash
 # ==============================================================================
-# Dirty Little Bass Synth — Package + Notarize
+# Dirty Little Bass Synth — Package + Notarize  (CMake build)
 # ==============================================================================
 # Builds a signed, notarized, stapled .pkg installer for distribution.
 # Ships VST3, AU, and the Standalone .app.
+#
+# Build system: CMake (the Projucer/.jucer build has been retired). The plugin
+# bundles are Developer-ID signed *during the build* by the code-signing block in
+# CMakeLists.txt, which activates when the DLBS_SIGN_IDENTITY environment
+# variable is set. This script exports it automatically (from SIGN_IDENTITY
+# below), so you do not need to export it yourself.
 #
 # Prereqs (one-time):
 #   - Developer ID Application + Developer ID Installer certs in login keychain
@@ -34,17 +40,19 @@ readonly TEAM_ID="A26T94CMW9"
 readonly SIGN_IDENTITY="Developer ID Application: Robert Fullum (${TEAM_ID})"
 readonly INSTALLER_IDENTITY="Developer ID Installer: Robert Fullum (${TEAM_ID})"
 
+# CMake targets to build (Release, universal). Standalone is shipped too, so —
+# unlike Center Space — we build all three formats here.
+readonly TARGET_VST3="DirtyLittleBassSynth_VST3"
+readonly TARGET_AU="DirtyLittleBassSynth_AU"
+readonly TARGET_APP="DirtyLittleBassSynth_Standalone"
+
 # Derived paths
 readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly XCODE_PROJ="${PROJECT_ROOT}/Builds/MacOSX/Dirty Little Bass Synth.xcodeproj"
-readonly DERIVED_DATA="${PROJECT_ROOT}/Builds/MacOSX/build/DerivedData"
-# Final products land in SYMROOT (Builds/MacOSX/build/Release/), not in
-# DerivedData/Build/Products — that's how the .jucer-generated pbxproj
-# configures SYMROOT.
-readonly BUILD_PRODUCTS="${PROJECT_ROOT}/Builds/MacOSX/build/Release"
+readonly CMAKELISTS="${PROJECT_ROOT}/CMakeLists.txt"
+readonly BUILD_DIR="${PROJECT_ROOT}/build/macos"
+readonly ARTEFACTS_DIR="${BUILD_DIR}/DirtyLittleBassSynth_artefacts/Release"
 readonly DIST_DIR="${PROJECT_ROOT}/dist"
 readonly STAGING_DIR="${DIST_DIR}/staging"
-readonly JUCER_FILE="${PROJECT_ROOT}/Wavetable5.jucer"
 
 # ---- Helpers -----------------------------------------------------------------
 
@@ -53,10 +61,10 @@ log() { echo "==> $*"; }
 
 # ---- Preflight ---------------------------------------------------------------
 
-command -v xcodebuild  >/dev/null || err "xcodebuild not found"
-command -v codesign    >/dev/null || err "codesign not found"
-command -v pkgbuild    >/dev/null || err "pkgbuild not found"
-command -v xcrun       >/dev/null || err "xcrun not found"
+command -v cmake     >/dev/null || err "cmake not found"
+command -v codesign  >/dev/null || err "codesign not found"
+command -v pkgbuild  >/dev/null || err "pkgbuild not found"
+command -v xcrun     >/dev/null || err "xcrun not found"
 
 security find-identity -v -p codesigning | grep -q "${SIGN_IDENTITY}" \
     || err "Application identity not found: ${SIGN_IDENTITY}"
@@ -66,45 +74,43 @@ security find-identity -v -p basic | grep -q "${INSTALLER_IDENTITY}" \
 xcrun notarytool history --keychain-profile "${NOTARY_PROFILE}" >/dev/null 2>&1 \
     || err "Notarytool profile '${NOTARY_PROFILE}' not found in keychain"
 
-# Parse version from .jucer (top-level <JUCERPROJECT version="X.Y.Z" ...>)
-VERSION=$(grep -oE 'version="[0-9]+\.[0-9]+\.[0-9]+"' "${JUCER_FILE}" \
-    | head -1 | sed -E 's/version="(.*)"/\1/')
-[[ -n "${VERSION}" ]] || err "Could not parse version from ${JUCER_FILE}"
+# Parse version from CMakeLists.txt — the single source of truth now that the
+# .jucer is gone. Line form: project(DirtyLittleBassSynth VERSION X.Y.Z ...).
+VERSION=$(grep -E "^project\(DirtyLittleBassSynth VERSION" "${CMAKELISTS}" \
+    | sed -E 's/.*VERSION ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+[[ -n "${VERSION}" ]] || err "Could not parse version from ${CMAKELISTS}"
 log "Building version ${VERSION}"
 
 log "Application identity: ${SIGN_IDENTITY}"
 log "Installer identity:   ${INSTALLER_IDENTITY}"
 
 # ---- Step 1: Build Release (signed during build) -----------------------------
-# CODE_SIGN_IDENTITY override is picked up by Projucer's per-target shell-script
-# codesign phase via ${EXPANDED_CODE_SIGN_IDENTITY:-${CODE_SIGN_IDENTITY}}.
-# ARCHS="arm64 x86_64" + ONLY_ACTIVE_ARCH=NO forces a universal binary even
-# though the .jucer is configured 64BitIntel — the pbxproj's VALID_ARCHS allows
-# arm64.
+# Signing is driven by the DLBS_SIGN_IDENTITY env var, which the CMakeLists.txt
+# code-signing block reads at configure time and turns into Xcode
+# CODE_SIGN_IDENTITY / entitlements / hardened-runtime attributes on each target.
+# Export it here so the configure below activates Developer-ID signing.
+export DLBS_SIGN_IDENTITY="${SIGN_IDENTITY}"
 
-build_target() {
-    local target="$1"
-    log "Building target: ${target}"
-    xcodebuild \
-        -project "${XCODE_PROJ}" \
-        -scheme "${target}" \
-        -configuration Release \
-        -derivedDataPath "${DERIVED_DATA}" \
-        CODE_SIGN_IDENTITY="${SIGN_IDENTITY}" \
-        CODE_SIGN_STYLE=Manual \
-        DEVELOPMENT_TEAM="${TEAM_ID}" \
-        ARCHS="arm64 x86_64" \
-        ONLY_ACTIVE_ARCH=NO \
-        CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
-        2>&1 | grep -E "error:|fatal error|Signing Identity:|BUILD " | sed 's/^/    /' \
-        || true
-}
+log "Configuring CMake (Release; signing enabled via DLBS_SIGN_IDENTITY)"
+# Full configure output is shown so the "DLBS: Developer ID signing ENABLED"
+# status lines are visible and a configure failure aborts (set -e).
+cmake --preset=macos
 
-build_target "Dirty Little Bass Synth - VST3"
-build_target "Dirty Little Bass Synth - AU"
-build_target "Dirty Little Bass Synth - Standalone Plugin"
+log "Building ${TARGET_VST3} (Release, signed)"
+cmake --build --preset=macos-release --target "${TARGET_VST3}"
+log "Building ${TARGET_AU} (Release, signed)"
+cmake --build --preset=macos-release --target "${TARGET_AU}"
+log "Building ${TARGET_APP} (Release, signed)"
+cmake --build --preset=macos-release --target "${TARGET_APP}"
 
 # ---- Step 2: Verify bundles & signatures -------------------------------------
+# We display the signing authority + hardened-runtime flag for each bundle but
+# do NOT try to extract entitlements with `codesign -d --entitlements`: its
+# output format varies across macOS releases (false negatives on macOS 26+), and
+# plugin bundles intentionally carry no embedded entitlements anyway (only the
+# Standalone .app does — verified against the shipped, notarized Center Space
+# pkg). If signing is actually broken, notarytool rejects the submission with a
+# precise error and `xcrun notarytool log <id>` shows what to fix.
 
 verify_bundle() {
     local bundle="$1"
@@ -116,9 +122,9 @@ verify_bundle() {
         | sed 's/^/    /'
 }
 
-VST3_PATH="${BUILD_PRODUCTS}/${BUNDLE_VST3}"
-AU_PATH="${BUILD_PRODUCTS}/${BUNDLE_AU}"
-APP_PATH="${BUILD_PRODUCTS}/${BUNDLE_APP}"
+VST3_PATH="${ARTEFACTS_DIR}/VST3/${BUNDLE_VST3}"
+AU_PATH="${ARTEFACTS_DIR}/AU/${BUNDLE_AU}"
+APP_PATH="${ARTEFACTS_DIR}/Standalone/${BUNDLE_APP}"
 
 verify_bundle "${VST3_PATH}"
 verify_bundle "${AU_PATH}"
@@ -136,6 +142,7 @@ mkdir -p "${STAGING_DIR}/Library/Audio/Plug-Ins/VST3"
 mkdir -p "${STAGING_DIR}/Library/Audio/Plug-Ins/Components"
 mkdir -p "${STAGING_DIR}/Applications"
 
+# ditto preserves extended attributes / code signatures across the copy.
 ditto "${VST3_PATH}" "${STAGING_DIR}/Library/Audio/Plug-Ins/VST3/${BUNDLE_VST3}"
 ditto "${AU_PATH}"   "${STAGING_DIR}/Library/Audio/Plug-Ins/Components/${BUNDLE_AU}"
 ditto "${APP_PATH}"  "${STAGING_DIR}/Applications/${BUNDLE_APP}"
@@ -185,4 +192,9 @@ spctl --assess --type install --verbose=2 "${PKG_PATH}" 2>&1 | sed 's/^/    /'
 log "Cleaning staging directory"
 rm -rf "${STAGING_DIR}"
 
-log "Done. Output: ${PKG_PATH}"
+echo
+echo "=============================================================="
+echo "  SUCCESS"
+echo "  ${PKG_PATH}"
+echo "  Signed, notarized, stapled, Gatekeeper-approved."
+echo "=============================================================="

@@ -25,7 +25,7 @@ void TitleFooter::paint(juce::Graphics &g)
     g.setColour(theme->textSecondary);
     g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
                  .withExtraKerningFactor(0.08f));
-    g.drawText("VERSION 2.0.0", versionRect, juce::Justification::centredLeft);
+    g.drawText("VERSION " + juce::String(ProjectInfo::versionString), versionRect, juce::Justification::centredLeft);
 
     g.setFont(juce::Font(juce::FontOptions("Helvetica", 9.0f, 0))
                  .withExtraKerningFactor(0.06f));

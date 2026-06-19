@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        Hardened-runtime entitlements for Dirty Little Bass Synth.
+
+        disable-library-validation: required for audio plugins. AU/VST3 hosts
+        load our bundle into their address space. Without this, the system
+        rejects the load because the host's signature doesn't match ours.
+
+        allow-unsigned-executable-memory + allow-jit: left OFF. JUCE's audio
+        path doesn't JIT, and enabling them weakens the hardened runtime
+        without benefit for this plugin.
+
+        com.apple.security.device.audio-input: NOT needed by DLBS (a synth — it
+        produces audio, it doesn't read from a microphone device). The
+        Standalone .app would only inherit a mic-permission prompt if it opened
+        an input device; we don't.
+    -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>

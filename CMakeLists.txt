@@ -42,21 +42,23 @@ else()
     set(DLBS_COPY_AFTER_BUILD TRUE)
 endif()
 
-# Settings mirror Wavetable5.jucer:
-#   pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-#   pluginManufacturerCode="FulM"  pluginCode="Dlbs"
+# Plugin characteristics: synth, MIDI in + MIDI out.
+#   manufacturer code "FulM"  plugin code "Dlbs"
 # AU is listed for macOS completeness; on Linux only the VST3 and Standalone
 # targets are built (AU is an Apple-only format and JUCE skips it off-Apple).
 juce_add_plugin(DirtyLittleBassSynth
     PRODUCT_NAME                "Dirty Little Bass Synth"
-    VERSION                     2.0.1
+    # Single-sourced from project(... VERSION) above. ProjectInfo::versionString
+    # (used by the title footer) and JucePlugin_VersionString both derive from
+    # this, so bumping the project() version is the only edit needed per release.
+    VERSION                     ${PROJECT_VERSION}
     COMPANY_NAME                "FullumMusic"
     COMPANY_WEBSITE             "https://www.fullummusic.com/"
     BUNDLE_ID                   "com.FullumMusic.DirtyLittleBassSynth"
     PLUGIN_MANUFACTURER_CODE    FulM
     PLUGIN_CODE                 Dlbs
-    # App/plugin icon (mirrors the .jucer bigIcon/smallIcon). Primarily used by
-    # the Standalone (window/taskbar icon) and baked into the macOS bundle.
+    # App/plugin icon. Primarily used by the Standalone (window/taskbar icon)
+    # and baked into the macOS bundle.
     ICON_BIG                    "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png"
     ICON_SMALL                  "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png"
     FORMATS                     VST3 AU Standalone
@@ -71,10 +73,9 @@ juce_add_plugin(DirtyLittleBassSynth
     HARDENED_RUNTIME_ENABLED    TRUE
     COPY_PLUGIN_AFTER_BUILD     ${DLBS_COPY_AFTER_BUILD})
 
-# Compile-time JUCE options. Mirrors the .jucer JUCEOPTIONS plus a couple of
-# build-system specifics:
-#   JUCE_VST3_CAN_REPLACE_VST2=0   — DLBS never had a VST2 ancestor (from .jucer).
-#   JUCE_STRICT_REFCOUNTEDPOINTER=1 — from .jucer.
+# Compile-time JUCE options:
+#   JUCE_VST3_CAN_REPLACE_VST2=0   — DLBS never had a VST2 ancestor.
+#   JUCE_STRICT_REFCOUNTEDPOINTER=1
 #   JUCE_WEB_BROWSER=0             — DLBS has no WebBrowserComponent. Disabling it
 #       drops the GTK/WebKit dependency that juce_gui_extra otherwise pulls in on
 #       Linux (juce_gui_extra.cpp -> <gtk/gtk.h>). Inert on macOS.
@@ -107,8 +108,7 @@ target_sources(DirtyLittleBassSynth PRIVATE ${DLBS_SOURCES})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Source" PREFIX "Source" FILES ${DLBS_SOURCES})
 
 # Source subdirectories on the include path so existing #include "Foo.h"
-# directives keep working without per-file path prefixes (mirrors the .jucer
-# headerPath list).
+# directives keep working without per-file path prefixes.
 target_include_directories(DirtyLittleBassSynth PRIVATE
     Source/Plugin
     Source/Plugin/PatchEngine
@@ -125,9 +125,9 @@ target_include_directories(DirtyLittleBassSynth PRIVATE
 # --- Embedded binary data (icon) ----------------------------------------------
 # JUCE has no Linux app-icon mechanism (juceaide only emits .icns/.ico), so the
 # Standalone window icon is set at runtime from this embedded PNG — see
-# PluginEditor::ApplyStandaloneWindowIconIfNeeded(). The symbol name matches the
-# Projucer-generated BinaryData (FullumMusic_Icon_Spectrum_1024_png) so the same
-# source compiles under both build systems.
+# PluginEditor::ApplyStandaloneWindowIconIfNeeded(). juce_add_binary_data derives
+# the symbol name from the file name (FullumMusic_Icon_Spectrum_1024_png), which
+# is what that source references.
 juce_add_binary_data(DirtyLittleBassSynth_Data
     SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Resources/FullumMusic_Icon_Spectrum_1024.png")
 # Static lib linked into the .so plugin targets — must be PIC on Linux.
@@ -139,7 +139,7 @@ juce_generate_juce_header(DirtyLittleBassSynth)
 
 # --- Module linkage -----------------------------------------------------------
 # juce_audio_plugin_client and juce_audio_processors are linked automatically by
-# juce_add_plugin. The rest mirror the .jucer MODULES list.
+# juce_add_plugin. The rest are the JUCE modules this plugin uses.
 # Warning suppressions are applied AFTER juce_recommended_warning_flags so they
 # sit last on the command line. Clang-gated, so inert under Linux GCC.
 add_library(dlbs_warning_overrides INTERFACE)
@@ -255,8 +255,58 @@ elseif(WIN32)
     endif()
 endif()
 
+# --- Code signing (opt-in) ----------------------------------------------------
+# Enables Developer ID signing + hardened runtime entitlements on each plugin
+# bundle. Opt-in via the DLBS_SIGN_IDENTITY environment variable so contributors
+# without an Apple Developer cert still get clean (ad-hoc "Sign to Run Locally")
+# builds.
+#
+# Usage:
+#   export DLBS_SIGN_IDENTITY="Developer ID Application: Robert Fullum (A26T94CMW9)"
+#   cmake --build --preset=macos-release --target DirtyLittleBassSynth_All
+#
+# This step ONLY signs the .vst3 / .component / .app bundles. The .pkg installer
+# is built and signed separately by scripts/package-and-notarize.sh (which also
+# handles notarization + stapling). HARDENED_RUNTIME_ENABLED in juce_add_plugin
+# above writes the matching Info.plist flag; the entitlements file below carries
+# the disable-library-validation entitlement that AU/VST3 hosts require when
+# loading us into their address space.
+#
+# Implementation note: JUCE's Xcode generator emits a built-in CodeSign build
+# phase that ad-hoc signs the bundle ("Sign to Run Locally") AFTER any
+# add_custom_command(POST_BUILD) we attach. So a custom codesign step gets
+# silently overwritten. Instead, we override the Xcode CODE_SIGN_IDENTITY /
+# entitlements attributes on the target — Xcode's built-in CodeSign step then
+# applies our Developer ID with hardened runtime + entitlements directly.
+if(APPLE)
+    set(DLBS_SIGN_IDENTITY_ENV "$ENV{DLBS_SIGN_IDENTITY}")
+    if(DLBS_SIGN_IDENTITY_ENV)
+        set(DLBS_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/Resources/DirtyLittleBassSynth.entitlements")
+        # Parse Team ID out of identity string of form
+        # "Developer ID Application: Robert Fullum (A26T94CMW9)".
+        string(REGEX MATCH "\\(([A-Z0-9]+)\\)" _team_match "${DLBS_SIGN_IDENTITY_ENV}")
+        set(DLBS_TEAM_ID "${CMAKE_MATCH_1}")
+        message(STATUS "DLBS: Developer ID signing ENABLED")
+        message(STATUS "  Identity: ${DLBS_SIGN_IDENTITY_ENV}")
+        message(STATUS "  Team ID:  ${DLBS_TEAM_ID}")
+
+        foreach(plugin_target IN ITEMS DirtyLittleBassSynth_VST3 DirtyLittleBassSynth_AU DirtyLittleBassSynth_Standalone)
+            if(TARGET ${plugin_target})
+                set_target_properties(${plugin_target} PROPERTIES
+                    XCODE_ATTRIBUTE_CODE_SIGN_STYLE                 "Manual"
+                    XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY              "${DLBS_SIGN_IDENTITY_ENV}"
+                    XCODE_ATTRIBUTE_DEVELOPMENT_TEAM                "${DLBS_TEAM_ID}"
+                    XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS          "${DLBS_ENTITLEMENTS}"
+                    XCODE_ATTRIBUTE_OTHER_CODE_SIGN_FLAGS           "--timestamp --options=runtime"
+                    XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME         "YES")
+            endif()
+        endforeach()
+    else()
+        message(STATUS "DLBS: Developer ID signing disabled (set DLBS_SIGN_IDENTITY to enable)")
+    endif()
+endif()
+
 # --- Per-config Xcode build settings ------------------------------------------
-# Mirrors the .jucer Xcode configurations:
 #   Debug   — host arch only (fast iteration), -O0
 #   Release — Universal Binary (arm64 + x86_64), -O3, LTO
 foreach(plugin_target IN ITEMS DirtyLittleBassSynth DirtyLittleBassSynth_Standalone

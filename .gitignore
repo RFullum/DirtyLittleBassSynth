@@ -1,7 +1,3 @@
-# ---- JUCE / Projucer ----
-/Builds/
-*.jucer.bak
-
 # ---- macOS ----
 .DS_Store
 .AppleDouble
@@ -74,7 +70,7 @@ ipch/
 *.component
 *.aaxplugin
 
-# ---- CMake (in case you migrate later) ----
+# ---- CMake ----
 CMakeCache.txt
 CMakeFiles/
 CMakeScripts/

@@ -305,14 +305,19 @@ git submodule update --init --recursive
 
 ### macOS
 
-The signed, notarized release is built with Projucer + Xcode from `Wavetable5.jucer`
-(see `scripts/package-and-notarize.sh`). The CMake presets below also build on macOS
-for local development (without signing):
+Uses the Xcode generator and produces a Universal Binary (arm64 + x86_64). For
+local development (ad-hoc signed):
 
 ```sh
 cmake --preset=macos
 cmake --build --preset=macos-release
 ```
+
+The signed, notarized release `.pkg` (VST3 + AU + Standalone) is produced by
+`scripts/package-and-notarize.sh`, which drives this same CMake build with
+Developer ID signing enabled (via the `DLBS_SIGN_IDENTITY` environment variable
+the script sets). See the script header for the one-time keychain / notarytool
+setup.
 
 ### Linux
 
