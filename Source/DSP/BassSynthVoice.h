@@ -18,7 +18,12 @@
 #include "DSP/Effects/RingMod.h"
 #include "DSP/Effects/FrequencyShifter.h"
 #include "DSP/Effects/SampleAndHold.h"
-#include "FilterSection.h"
+#include "Filters/Filter.h"
+#include "Filters/TwoPoleLPF.h"
+#include "Filters/FourPoleLPF.h"
+#include "Filters/EightPoleLPF.h"
+#include "Filters/NotchFilter.h"
+#include "FilterModulation.h"
 #include "TempoSnapshot.h"
 
 //======================================================
@@ -161,7 +166,7 @@ private:
 
     // Selected filter for the current block. Set in PrepareDspForBlock so the per-sample
     // loop calls ProcessFilter instead of switching on every sample.
-    Filter *activeFilter = nullptr;
+    FullumFilters::Filter *activeFilter = nullptr;
 
     bool playing = false;
     bool ending  = false;
@@ -241,10 +246,11 @@ private:
     
     
     // Filter
-    TwoPoleLPF   twoPoleLPF;
-    FourPoleLPF  fourPoleLPF;
-    EightPoleLPF eightPoleLPF;
-    NotchFilter  notchFilter;
+    FullumFilters::TwoPoleLPF   twoPoleLPF;
+    FullumFilters::FourPoleLPF  fourPoleLPF;
+    FullumFilters::EightPoleLPF eightPoleLPF;
+    FullumFilters::NotchFilter  notchFilter;
+    FilterModulation            filterMod;   
     
     
     // Filter Parameters

@@ -586,15 +586,15 @@ float BassSynthVoice::ProcessFilterChain(float input, float filtEnvVal, float fi
     lastFiltLFOSample              = filtLFOSample;   // capture for end-of-block UI snapshot
     const float filtCutoffSmoothed = filterCutoffFreqSmooth.getNextValue();
 
-    return activeFilter->ProcessFilter(freq
-                                       , filtCutoffSmoothed
-                                       , filterResonanceVal
-                                       , input
-                                       , filtEnvVal
-                                       , filterADSRCutOffAmountVal
-                                       , filterADSRResAmountVal
-                                       , filtLFOSample
-                                       , filtLFOAmtVal);
+    filterMod.KeyMapTracked(freq, filtCutoffSmoothed);
+    filterMod.resonance = filterResonanceVal;
+    filterMod.ApplyEnvAndLfo(filtEnvVal
+                             , filterADSRCutOffAmountVal
+                             , filterADSRResAmountVal
+                             , filtLFOSample
+                             , filtLFOAmtVal);
+
+    return activeFilter->Process(input, filterMod.cutoffLFO, filterMod.resonanceScale);
 }
 
 float BassSynthVoice::PitchBendCents()

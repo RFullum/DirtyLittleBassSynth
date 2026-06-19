@@ -150,6 +150,10 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/RingMod.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/FrequencyShifter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/SampleAndHold.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/TwoPoleLPF.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/FourPoleLPF.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/EightPoleLPF.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Filters/NotchFilter.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
