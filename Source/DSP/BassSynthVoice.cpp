@@ -31,7 +31,7 @@ void BassSynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     // multiplication happens in renderNextBlock.
     SetPitchBend(currentPitchWheelPosition);
 
-    freq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+    freq = (float)juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
 
     // === Portamento mode handling ===
     // Off               instant jump to the new note's frequency.
@@ -102,7 +102,7 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         const float portaFreq = portamento.getNextValue();
         const float finalFreq = portaFreq * shiftHz;
 
-        if (previousFinalFreq != finalFreq)
+        if (!juce::approximatelyEqual(previousFinalFreq, finalFreq))
         {
             wtSine .SetIncrement(finalFreq);
             wtSaw  .SetIncrement(finalFreq);
@@ -118,19 +118,22 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
             previousIncrementDenom = incrementDenominator;
         }
 
-        if (previousFinalFreq != finalFreq || prevRingModPitch != ringModPitchVal)
+        if (!juce::approximatelyEqual(previousFinalFreq, finalFreq)
+            || !juce::approximatelyEqual(prevRingModPitch, ringModPitchVal))
         {
             ringMod.ModFreq(finalFreq, ringModPitchVal);
             prevRingModPitch = ringModPitchVal;
         }
 
-        if (previousFinalFreq != finalFreq || prevFreqShiftPitch != freqShiftPitchVal)
+        if (!juce::approximatelyEqual(previousFinalFreq, finalFreq)
+            || !juce::approximatelyEqual(prevFreqShiftPitch, freqShiftPitchVal))
         {
             freqShift.ModFreq(finalFreq, freqShiftPitchVal);
             prevFreqShiftPitch = freqShiftPitchVal;
         }
 
-        if (previousFinalFreq != finalFreq || prevSAndHPitch != sAndHPitchVal)
+        if (!juce::approximatelyEqual(previousFinalFreq, finalFreq)
+            || !juce::approximatelyEqual(prevSAndHPitch, sAndHPitchVal))
         {
             sAndH.ModFreq(finalFreq, sAndHPitchVal);
             prevSAndHPitch = sAndHPitchVal;
@@ -396,9 +399,9 @@ void BassSynthVoice::SetFilterADSRParamPointers(std::atomic<float>   *attack
     filterADSRResAmount    = amtRes;
 }
 
-void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *freq, std::atomic<float> *amount, std::atomic<float> *shape)
+void BassSynthVoice::SetFilterLFOParamPointers(std::atomic<float> *fq, std::atomic<float> *amount, std::atomic<float> *shape)
 {
-    filtLFOFreq  = freq;
+    filtLFOFreq  = fq;
     filtLFOAmt   = amount;
     filtLFOShape = shape;
 }
