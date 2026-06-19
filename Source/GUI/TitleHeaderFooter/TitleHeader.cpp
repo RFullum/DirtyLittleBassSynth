@@ -17,11 +17,25 @@ TitleHeader::TitleHeader(GuiResources &res)
 : resources(res)
 , tempoControls(res)
 , midiLearnControls(res)
-, patchControls(res)
+, patchControls(res.theme, *res.patchManager, &randomizeButton, nullptr)
 {
     setOpaque(false);
     addAndMakeVisible(tempoControls);
     addAndMakeVisible(midiLearnControls);
+    
+    randomizeButton.setButtonText("RANDOM");
+    randomizeButton.setColour(juce::TextButton::buttonColourId,  res.theme.structure);
+    randomizeButton.setColour(juce::TextButton::textColourOffId, res.theme.textSecondary);
+    randomizeButton.onClick = [this]()
+    {
+        if (resources.patchManager != nullptr)
+        {
+            resources.patchManager->RandomizeAll();
+            patchControls.Update();   // reflect new dirty/name state immediately
+        }
+    };
+    DLBS::SetTip(randomizeButton, "Randomize parameter values");
+    
     addAndMakeVisible(patchControls);
 
     panicButton.setButtonText      ("PANIC");

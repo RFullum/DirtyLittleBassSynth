@@ -15,7 +15,7 @@
 #include "GuiResources.h"
 #include "TempoControls.h"
 #include "MidiLearnControls.h"
-#include "PatchControls.h"
+#include "GUI/PatchControls.h"
 
 //==============================================================================
 
@@ -56,6 +56,7 @@ private:
     
     TempoControls     tempoControls;
     MidiLearnControls midiLearnControls;
+    juce::TextButton  randomizeButton;
     PatchControls     patchControls;
 
     juce::TextButton  panicButton;

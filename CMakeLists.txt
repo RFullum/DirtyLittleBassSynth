@@ -139,6 +139,8 @@ endforeach()
 # Add each module's .cpp here as it is migrated in and its Source/ copy deleted.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/State/PatchManager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/PatchControls.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/GUI/PatchSelectionPopup.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
@@ -158,7 +160,8 @@ target_include_directories(DirtyLittleBassSynth PRIVATE
     Source/GUI/Master
     Source/GUI/GUIUtils
     Source/GUI/TitleHeaderFooter
-    Source/GUI/MIDI)
+    Source/GUI/MIDI
+    FullumModules/State)
 
 # --- Embedded binary data (icon) ----------------------------------------------
 # JUCE has no Linux app-icon mechanism (juceaide only emits .icns/.ico), so the
