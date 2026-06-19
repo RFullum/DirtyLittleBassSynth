@@ -24,7 +24,7 @@
 #include "Filters/EightPoleLPF.h"
 #include "Filters/NotchFilter.h"
 #include "FilterModulation.h"
-#include "TempoSnapshot.h"
+#include "DSP/Utils/TempoSnapshot.h"
 
 //======================================================
 

@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
-#include "TempoSnapshot.h"
+#include "DSP/Utils/TempoSnapshot.h"
 
 //==============================================================================
 

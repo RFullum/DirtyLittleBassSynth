@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "ColorPalette.h"
 #include "DSP/Utils/ScopeBuffer.h"
-#include "TempoSnapshot.h"
+#include "DSP/Utils/TempoSnapshot.h"
 #include "State/MidiLearnManager.h"
 #include "State/PatchManager.h"
 
