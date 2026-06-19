@@ -147,6 +147,9 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Oscillators.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Wavetable.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/SubOscillator.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/RingMod.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/FrequencyShifter.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules/DSP/Effects/SampleAndHold.cpp"
     PROPERTIES HEADER_FILE_ONLY FALSE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/FullumModules" PREFIX "FullumModules"
@@ -168,7 +171,8 @@ target_include_directories(DirtyLittleBassSynth PRIVATE
     Source/GUI/GUIUtils
     Source/GUI/TitleHeaderFooter
     Source/GUI/MIDI
-    FullumModules/State)
+    FullumModules/State
+    FullumModules/DSP)
 
 # --- Embedded binary data (icon) ----------------------------------------------
 # JUCE has no Linux app-icon mechanism (juceaide only emits .icns/.ico), so the

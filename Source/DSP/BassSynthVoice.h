@@ -14,8 +14,10 @@
 #include "DSP/Wavetable.h"
 #include "DSP/SubOscillator.h"
 #include "OscillatorParameterControls.h"
-#include "DryWet.h"
-#include "Modifiers.h"
+#include "DSP/Utils/DryWet.h"
+#include "DSP/Effects/RingMod.h"
+#include "DSP/Effects/FrequencyShifter.h"
+#include "DSP/Effects/SampleAndHold.h"
 #include "FilterSection.h"
 #include "TempoSnapshot.h"
 
@@ -216,7 +218,7 @@ private:
     juce::SmoothedValue<float> foldbackDistortionSmooth;
     
     // Ring Mod
-    RingMod ringMod;
+    FullumFX::RingMod ringMod;
 
     std::atomic<float>         *ringModPitch = nullptr;
     std::atomic<float>         *ringModTone  = nullptr;
@@ -224,14 +226,14 @@ private:
     juce::SmoothedValue<float>  ringMixSmooth;
 
     // Frequency Shifter
-    FrequencyShifter freqShift;
+    FullumFX::FrequencyShifter freqShift;
     
     std::atomic<float>         *freqShiftPitch  = nullptr;
     std::atomic<float>         *freqShiftMixVal = nullptr;
     juce::SmoothedValue<float>  freqShiftMixValSmooth;
 
     // Sample and Hold
-    SampleAndHold sAndH;
+    FullumFX::SampleAndHold sAndH;
     
     std::atomic<float>         *sAndHPitch  = nullptr;
     std::atomic<float>         *sAndHMixVal = nullptr;

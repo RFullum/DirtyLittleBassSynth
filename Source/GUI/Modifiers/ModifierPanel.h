@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "GuiResources.h"
-#include "DryWetSlider.h"
+#include "GUI/DryWetSlider.h"
 
 //==============================================================================
 

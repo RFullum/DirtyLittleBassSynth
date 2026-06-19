@@ -9,7 +9,9 @@
 */
 
 #include "BassSynthVoice.h"
+#include "DSP/Effects/Foldback.h"
 
+//======================================================
 
 
 BassSynthVoice::BassSynthVoice() = default;
@@ -174,16 +176,16 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
 
         // Foldback is the most aggressive running it at 4× SR
         // keeps the harmonics it creates above audible Nyquist.
-        float s = std::sin(upData[i] * foldbackAmt);
+        float s = FullumFX::SineFoldback(upData[i], foldbackAmt);
 
         const float ringSample = s * ringMod.Process() * envVal;
-        const float oscRing    = DryWetLinear(s, ringSample, ringMix);
+        const float oscRing    = FullumDspUtils::DryWetLinear(s, ringSample, ringMix);
 
         const float freqShiftSample = freqShift.Process() * envVal;
-        const float oscShift        = DryWetEP(oscRing, freqShiftSample, freqMix);
+        const float oscShift        = FullumDspUtils::DryWetEP(oscRing, freqShiftSample, freqMix);
 
         const float sandhSample = sAndH.ProcessSH(oscShift) * envVal;
-        upData[i] = DryWetEP(oscShift, sandhSample, sAndHMix);
+        upData[i] = FullumDspUtils::DryWetEP(oscShift, sandhSample, sAndHMix);
     }
 
     oversampling->processSamplesDown(baseBlock);
