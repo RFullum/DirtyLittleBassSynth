@@ -173,7 +173,7 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         const int   baseIdx     = i / oversamplingFactor;
         const float envVal      = envValsCache     [(size_t) baseIdx];
         const float foldbackAmt = foldbackCache    [(size_t) baseIdx];
-        const float ringMix     = ringMixCache     [(size_t) baseIdx];
+        const float ringModMix  = ringMixCache     [(size_t) baseIdx];
         const float freqMix     = freqShiftMixCache[(size_t) baseIdx];
         const float sAndHMix    = sAndHMixCache    [(size_t) baseIdx];
 
@@ -182,7 +182,7 @@ void BassSynthVoice::renderNextBlock(juce::AudioSampleBuffer &outputBuffer, int 
         float s = FullumFX::SineFoldback(upData[i], foldbackAmt);
 
         const float ringSample = s * ringMod.Process() * envVal;
-        const float oscRing    = FullumDspUtils::DryWetLinear(s, ringSample, ringMix);
+        const float oscRing    = FullumDspUtils::DryWetLinear(s, ringSample, ringModMix);
 
         const float freqShiftSample = freqShift.Process() * envVal;
         const float oscShift        = FullumDspUtils::DryWetEP(oscRing, freqShiftSample, freqMix);
